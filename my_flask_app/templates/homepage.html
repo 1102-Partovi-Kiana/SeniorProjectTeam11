@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Home - WARE</title>
+{% endblock %}
+
+<!-- Body -->
+{% block body %}
+<section>
+	<div class="jumbotron bg-light mb-0">
+		<div class="container">
+			<div class="row d-flex justify-content-center">
+				<div class="col-12 col-md-9 text-left text-md-center">
+					<h1 class="home-title">Online development platform for robotics students</h1>
+					<p class="home-summary">
+						WARE is an online platform for developing robotics reinforcement learning algorithms.
+						Utilizing the Open AI Gym libraries and a code editor with syntax
+						highlighting, WARE provides a way for students to develop machine learning algorithms with
+						minimal performance overhead.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="cta">
+	<div class="container">
+		<div class="row justify-content-md-between">
+			<div class="col-12 col-md-7 col-lg-6">
+				<h2 class="cta-title">Built on open source software</h2>
+				<p class="cta-paragraph">WARE incorporates the open-source OpenAI Gym libraries, a popular toolkit used for
+					developing
+					reinforcement learning algorithms. Students develop code within WARE and receive feedback with a
+					generated video of the robot and terminal output
+				</p>
+			</div>
+			<div class="col-md-5 text-center">
+				<svg class="bi" fill="currentColor">
+					<use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#layers-fill" />
+				</svg>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- Further content -->
+{% endblock %}

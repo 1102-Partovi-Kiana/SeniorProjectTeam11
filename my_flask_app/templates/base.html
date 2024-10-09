@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	{% block title %}{% endblock %}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	{# Bootstrap stylesheet #}
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/bootstrap.css') }}">
+
+	{# Global stylesheets #}
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/ware.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/hamburger.css') }}">
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap">
+
+	{% block extra_css %}
+	{# Override this in templates to add extra stylesheets #}
+	{% endblock extra_css %}
+
+</head>
+
+<body>
+	{% include 'snippets/navbar.html' %}
+	{% block body %}{% endblock %}
+	{% include 'snippets/footer.html' %}
+	{# Global javascript #}
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"></script>
+	<script src="{{ url_for('static', filename='styles/js/bootstrap.bundle.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/navbar-toggler.js') }}"></script>
+
+	{% block extra_js %}
+	{# Override this in templates to add extra javascript #}
+	{% endblock extra_js %}
+
+</body>
+
+</html>

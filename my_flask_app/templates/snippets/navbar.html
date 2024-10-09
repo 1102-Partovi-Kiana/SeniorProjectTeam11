@@ -1,0 +1,36 @@
+<header>
+	<nav class="navbar navbar-ware navbar-expand-lg navbar-light bg-light fixed-top">
+		<div class="container px-0">
+			<a class="navbar-brand d-flex align-items-center py-0 px-1 mt-0 mt-lg-auto rounded"
+				href="{{ url_for('RenderHomepage') }}">
+				<svg class="bi mr-2" fill="currentColor">
+					<use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#joystick" />
+				</svg>
+				ware
+			</a>
+			<button class="hamburger hamburger--elastic d-block d-lg-none" data-toggle="collapse"
+				data-target="#navbarContent" type="button" aria-controls="navbarContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="hamburger-box">
+					<span class="hamburger-inner"></span>
+				</span>
+			</button>
+			<div class="collapse navbar-collapse flex-column-reverse flex-lg-column pb-5 pb-lg-0" id="navbarContent">
+				<ul class="navbar-nav navbar-help mr-auto ml-lg-auto mr-lg-0 mt-3 mt-lg-0">
+					<li class="nav-item">
+						<a class="nav-link text-uppercase" href="">Contact</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-uppercase" href="https://zwiles-unr.github.io/ware.info/">About</a>
+					</li>
+                    <li class="nav-item">
+                        <a class="nav-link text-uppercase" href="{{ url_for('RenderRoboticEnvironment') }}">Robotic Environment</a>
+                    </li>                    
+				</ul>
+				<ul class="navbar-nav navbar-main mr-auto ml-lg-auto mr-lg-0">
+					<!-- Removed login and sign-up links -->
+				</ul>
+			</div>
+		</div>
+	</nav>
+</header>
