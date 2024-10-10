@@ -9,20 +9,17 @@
     <div class="container-fluid">
         <div class="row d-flex">
             <!-- Code editor on the left -->
-            <div class="col-md-6">
+            <div class="col-md-6" style="margin-top: 200px;">
                 <div class="code-editor">
-                    <h4>Python</h4>
+                    <h4>Python Code Editor</h4>
                     <textarea id="code-editor" rows="20" placeholder="# Your code here!"></textarea>
                 </div>
             </div>
 
             <!-- Video player on the right -->
-            <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <div class="col-md-6 d-flex justify-content-center align-items-center" style="margin-top: 200px;">
                 <div class="video-container">
-                    <video controls width="100%">
-                        <source src="path_to_video.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
+                    <img src="{{ url_for('video_feed') }}" width="100%">
                 </div>
             </div>
         </div>
@@ -38,4 +35,23 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.getElementById('run-code').addEventListener('click', function() {
+        const code = document.getElementById('code-editor').value;
+
+        const formData = new FormData();
+        formData.append('code', code);
+
+        fetch('/run-code', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        });
+    });
+</script>
+
 {% endblock %}
