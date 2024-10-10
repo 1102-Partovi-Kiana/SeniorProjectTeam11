@@ -1,9 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, Response, request, redirect, url_for
 import gym
-import numpy as np
-import base64
-from io import BytesIO
-from PIL import Image
+import cv2
 
 app = Flask(__name__)
 
@@ -11,29 +8,40 @@ app = Flask(__name__)
 env = gym.make("FetchReach-v1")
 env.reset()
 
-def encode_frame(frame):
-    # Convert the frame (numpy array) to a PIL Image
-    image = Image.fromarray(frame)
-    buffer = BytesIO()
-    image.save(buffer, format='PNG')
-    buffer.seek(0)
-    # Encode the image as base64
-    return base64.b64encode(buffer.read()).decode('utf-8')
-
-@app.route('/')
-def home():
-    frames = []
-    for _ in range(100):  # Reduce the number of frames for demonstration
-        frame = env.render(mode='rgb_array')  # Capture RGB array frame
-        encoded_frame = encode_frame(frame)  # Encode frame to base64
-        frames.append(encoded_frame)
-
-        # Perform a random action for demonstration
+def generate_frames():
+    while True:
+        frame = env.render(mode='rgb_array')
         obs, reward, done, info = env.step(env.action_space.sample())
         if done:
             env.reset()
 
-    return render_template('index.html', frames=frames)
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+        ret, buffer = cv2.imencode('.jpg', frame)
+
+        if not ret:
+            continue
+
+        frame_bytes = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/echo', methods=['POST'])
+def echo():
+    user_input = request.form.get('input', '')
+    
+    # Print the input to the command prompt
+    print(f"User typed: {user_input}")
+
+    # Redirect back to home after submission
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True)

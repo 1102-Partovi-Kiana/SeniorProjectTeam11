@@ -3,14 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>Gym Video Stream</title>
+    <style>
+        /* Basic styling for layout */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 20px; /* Space between video and textbox */
+        }
+
+        #videoPlayer {
+            border: 1px solid #000; /* Optional border for the video */
+        }
+
+        .textbox-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .textbox-container label {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .textbox-container textarea {
+            width: 300px;
+            height: 480px;
+            resize: none; /* Prevent resizing the textbox */
+            font-size: 16px;
+        }
+
+        .textbox-container button {
+            margin-top: 10px;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World</h1>
 
-    {% for frame in frames %}
-        <img src="data:image/png;base64,{{ frame }}" alt="Gym Frame">
-    {% endfor %}
+    <div class="container">
+        <!-- Video Stream -->
+        <img id="videoPlayer" src="{{ url_for('video_feed') }}" width="640" height="480" alt="Gym Stream">
+
+        <!-- Textbox next to video -->
+        <div class="textbox-container">
+            <form action="/echo" method="POST">
+                <label for="userInput">Type your notes here:</label>
+                <textarea id="userInput" name="input" placeholder="Enter your text here..." required>Hello World</textarea>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
 
 </body>
 </html>
