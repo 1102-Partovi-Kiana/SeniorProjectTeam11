@@ -1,14 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for
-from flask import Flask, render_template, Response, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 import mujoco_py
 import numpy as np
 import cv2  # Import OpenCV
 from reach import ReachEnv  # Ensure this imports your ReachEnv class
-
+import requests  # Import requests library for API communication
 
 app = Flask(__name__, static_folder='static')
 
 env = ReachEnv()  # Initialize your environment here
+
 # Route for the homepage
 @app.route('/')
 def RenderHomepage():
@@ -17,6 +17,61 @@ def RenderHomepage():
 @app.route('/robotic-environment')
 def RenderRoboticEnvironment():
     return render_template('robotic_environment.html')
+
+@app.route('/Chatbot')
+def RenderChatbot():
+    return render_template('chatbot.html')
+
+@app.route('/chatbot-api', methods=['POST'])
+def ChatbotAPI():
+    user_message = request.json.get('message')  # Get user's message from frontend
+    if not user_message:
+        return jsonify({'error': 'Message is required'}), 400
+
+    try:
+        api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent"
+        api_key = "AIzaSyDpL6NsK8v8alk8JPVmu9S1QF8oRNhCJDU"  # Replace with your actual API key
+
+        payload = {
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": user_message
+                        }
+                    ]
+                }
+            ]
+        }
+
+        response = requests.post(f"{api_url}?key={api_key}", headers={
+            'Content-Type': 'application/json'
+        }, json=payload)
+
+        # Debugging: Print the full API response
+        print("API Response:", response.text)  # Log the full response for inspection
+
+        if response.status_code != 200:
+            return jsonify({'error': f'Error from API: {response.text}'}), 500
+
+        response_json = response.json()
+
+        # Updated response parsing
+        if 'candidates' in response_json and len(response_json['candidates']) > 0:
+            if 'content' in response_json['candidates'][0] and 'parts' in response_json['candidates'][0]['content'] and len(response_json['candidates'][0]['content']['parts']) > 0:
+                chatbot_response = response_json['candidates'][0]['content']['parts'][0].get('text', 'No response')
+            else:
+                chatbot_response = 'No parts available in the response'
+        else:
+            chatbot_response = 'No contents available in the response'
+
+        return jsonify({'reply': chatbot_response})  # Send response back to the frontend
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+
 
 @app.route('/environments')
 def RenderEnvironmentList():
@@ -34,7 +89,6 @@ def RenderEnvironmentList():
 
 @app.route('/environment/<int:environment_id>')
 def RenderEnvironment(environment_id):
-    # Example logic to find the environment by id
     environments = [
         {
             'id': 1,
@@ -45,7 +99,6 @@ def RenderEnvironment(environment_id):
         # Add more environments as needed
     ]
     
-    # Find the environment with the given ID
     environment = next((env for env in environments if env['id'] == environment_id), None)
     
     if environment is None:
@@ -56,19 +109,14 @@ def RenderEnvironment(environment_id):
 @app.route('/signup', methods=['GET', 'POST'])
 def RenderSignup():
     if request.method == 'POST':
-        # Handle sign-up logic here, e.g., validate inputs and create the account
         first_name = request.form.get('inputFirstName')
         last_name = request.form.get('inputLastName')
         email = request.form.get('inputEmail')
         password = request.form.get('inputPassword')
         # Perform validation and account creation logic here
-        # You would typically save the user information in the database here
-        
-        return redirect(url_for('RenderHomepage'))  # Redirect after successful sign-up
+        return redirect(url_for('RenderHomepage'))
 
-    # If the request method is GET, return the signup form
     return render_template('account/signup.html')
-
 
 @app.route('/login')
 def RenderLogin():
@@ -90,22 +138,15 @@ def RenderDarrenEnv():
 def generate_frames():
     global env  # Access the global environment instance
     while True:
-
-        # Capture a frame from the MuJoCo viewer
         frame = env.render(mode='rgb_array')
-
-        # Convert frame to a format suitable for streaming
         _, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
-
-        # Yield the frame as part of the response
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 @app.route('/video_feed')
 def video_feed():
-    return Response(generate_frames(),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/run-code', methods=['POST'])
 def run_code():
@@ -113,12 +154,10 @@ def run_code():
     code = request.form.get('code')  # Get the code from form data
     print("Executing code:", code)  # Log the code to the console
     try:
-        # Execute the code with the environment in the global context
         exec(code, {'__builtins__': None, 'env': env})  # Pass the global env
         return jsonify({'message': 'Code executed successfully.'})
     except Exception as e:
         return jsonify({'error': str(e)})
 
-# Debug mode allows for automatic reloading and better error messages
 if __name__ == '__main__':
     app.run(debug=True)
