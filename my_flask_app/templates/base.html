@@ -10,12 +10,19 @@
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/bootstrap.css') }}">
 
 	{# Global stylesheets #}
-	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/ware.css') }}">
 	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/hamburger.css') }}">
 
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/custom.css') }}">
+	<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap">
+	<link  rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap">
+
 
 	{% block extra_css %}
 	{# Override this in templates to add extra stylesheets #}
@@ -28,11 +35,10 @@
 	{% block body %}{% endblock %}
 	{% include 'snippets/footer.html' %}
 	{# Global javascript #}
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-		crossorigin="anonymous"></script>
 	<script src="{{ url_for('static', filename='styles/js/bootstrap.bundle.js') }}"></script>
 	<script src="{{ url_for('static', filename='styles/js/navbar-toggler.js') }}"></script>
+	<!-- Popper.js from CDN -->
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 
 	{% block extra_js %}
 	{# Override this in templates to add extra javascript #}

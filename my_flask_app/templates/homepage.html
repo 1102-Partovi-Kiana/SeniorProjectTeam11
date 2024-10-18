@@ -1,46 +1,140 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Home - WARE</title>
+<title>Home - CORE</title>
 {% endblock %}
 
 <!-- Body -->
 {% block body %}
-<section>
-	<div class="jumbotron bg-light mb-0">
-		<div class="container">
-			<div class="row d-flex justify-content-center">
-				<div class="col-12 col-md-9 text-left text-md-center">
-					<h1 class="home-title">Online development platform for robotics students</h1>
-					<p class="home-summary">
-						WARE is an online platform for developing robotics reinforcement learning algorithms.
-						Utilizing the Open AI Gym libraries and a code editor with syntax
-						highlighting, WARE provides a way for students to develop machine learning algorithms with
-						minimal performance overhead.
-					</p>
-				</div>
-			</div>
-		</div>
-	</div>
+<section class="hero-section bg-light text-dark py-5">
+    <div class="container-fluid text-center">
+        <div class="row justify-content-center">
+            <div class="col-md-9">
+				<section class="text-center cursive-ware-section">
+					<h1 class="cursive-core">Core</h1>
+				</section>
+                <h1 class="display-4 fw-bold">Online Platform for Robotics Students</h1>
+                <p class="lead mt-4">
+                    CORE is an online platform for developing robotics reinforcement learning algorithms.
+                    Using OpenAI Gym libraries and an integrated code editor with syntax highlighting,
+                    CORE offers a seamless environment for students to build machine learning algorithms with
+                    minimal performance overhead.
+                </p>
+                <a class="btn btn-white btn-lg mt-4 px-5" href="{{ url_for('RenderSignup') }}">Join Now</a>
+            </div>
+        </div>
+    </div>
 </section>
-<section class="cta">
-	<div class="container">
-		<div class="row justify-content-md-between">
-			<div class="col-12 col-md-7 col-lg-6">
-				<h2 class="cta-title">Built on open source software</h2>
-				<p class="cta-paragraph">WARE incorporates the open-source OpenAI Gym libraries, a popular toolkit used for
-					developing
-					reinforcement learning algorithms. Students develop code within WARE and receive feedback with a
-					generated video of the robot and terminal output
-				</p>
-			</div>
-			<div class="col-md-5 text-center">
-				<svg class="bi" fill="currentColor">
-					<use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#layers-fill" />
-				</svg>
-			</div>
-		</div>
-	</div>
+
+<section class="cta py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="cta-title">Built on Open Source Software</h2>
+                <p class="cta-paragraph mb-5 mb-md-3">
+                    CORE is powered by open-source OpenAI Gym libraries, a widely used toolkit for developing
+                    reinforcement learning algorithms. Students develop and submit code within CORE, receiving feedback through
+                    generated robot simulation videos and terminal output.
+                </p>
+            </div>
+            <div class="col-lg-6 text-center">
+                <svg class="bi" fill="currentColor">
+                    <use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#layers-fill" />
+                </svg>
+            </div>
+        </div>
+    </div>
 </section>
-<!-- Further content -->
+
+<section class="cta bg-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center order-lg-1"> <!-- Moved icon to the left on large screens -->
+                <svg class="bi" fill="currentColor">
+                    <use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#speedometer" />
+                </svg>
+            </div>
+            <div class="col-lg-6 order-lg-2"> <!-- Text on the right on large screens -->
+                <h2 class="cta-title">Lightweight Development</h2>
+                <p class="cta-paragraph mb-5 mb-md-3">
+                    All code compilation takes place in the cloud, giving users the flexibility to develop using any device,
+                    without needing to install local software.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="cta-title">Built for Students and Teachers</h2>
+                <p class="cta-paragraph mb-5 mb-md-3">
+                    CORE enables instructors to manage virtual classrooms, track student progress, and review submitted code 
+                    from each environment.
+                </p>
+            </div>
+            <div class="col-lg-6 text-center">
+                <svg class="bi" fill="currentColor">
+                    <use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#people-fill" />
+                </svg>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta bg-light py-5 last-cta">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center order-lg-1">
+                <div class="d-flex justify-content-start align-items-end custom-shift-left">
+					<svg class="bi" fill="currentColor">
+                        <use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#phone" />
+                    </svg>
+                    <svg class="bi" fill="currentColor">
+                        <use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#tablet" />
+                    </svg>
+                    <svg class="bi" fill="currentColor">
+                        <use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#laptop" />
+                    </svg>
+                </div>
+            </div>
+            <div class="col-lg-6 order-lg-2">
+                <h2 class="cta-title">Optimized for All Devices</h2>
+                <p class="cta-paragraph mb-5 mb-md-3">
+                    CORE is fully responsive and optimized for smartphones, tablets, and desktops, providing a smooth user experience
+                    across all platforms.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 text-white custom-margin-section" style="background: linear-gradient(45deg, #6ea3f5, #3467c4);">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Left column for heading -->
+            <div class="col-lg-6">
+                <h2 class="fw-bold">
+                    Learn the principles of robotics in a <span class="cursive-live">live</span> coding environment.
+                </h2>
+            </div>
+            <!-- Right column for the list -->
+            <div class="col-lg-6">
+                <ul class="list-unstyled mt-4">
+                    <li class="mb-3">
+                        <i class="bi bi-check-circle fs-5 me-2"></i> Understand-and-apply teaching methodology
+                    </li>
+                    <li class="mb-3">
+                        <i class="bi bi-check-circle fs-5 me-2"></i> Real-time code compilation and instant feedback
+                    </li>
+                    <li class="mb-3">
+                        <i class="bi bi-check-circle fs-5 me-2"></i> Manage multiple classes and track student progress
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

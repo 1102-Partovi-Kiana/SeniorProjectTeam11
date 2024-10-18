@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Login - CORE</title>
+{% endblock %}
+
+{% block body %}
+
+<section class="login-container py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 bg-white p-4 account-form mb-2 mb-md-5">
+                <h1 class="mb-5 text-center">Sign In</h1>
+                {% include "alert/full.html" %}
+                <form action="{{ url_for('RenderLogin') }}" method="post">
+                    <!-- Email Field -->
+                    <div class="mb-4">
+                        <label for="inputEmail" class="form-label">Email Address</label>
+                        <input type="email" class="form-control rounded-0" name="inputEmail_login" id="inputEmail" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <!-- Password Field -->
+                    <div class="mb-4">
+                        <label for="inputPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control rounded-0" name="inputPassword_login" id="inputPassword" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <!-- Sign In Button -->
+                    <button type="submit" class="btn btn-primary rounded-pill">Sign In</button>
+                </form>
+                
+                <div class="form-addendum mt-4 text-center">
+                    <div class="signup-info">
+                        Need an account? <a href="{{ url_for('RenderSignup') }}">Sign up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock body %}
