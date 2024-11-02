@@ -24,18 +24,32 @@ def RenderChatbot():
     return render_template('chatbot.html')
 
 attempt_counter = 0
+user_submitted_code = ""
 api_key = "AIzaSyDpL6NsK8v8alk8JPVmu9S1QF8oRNhCJDU"  
-
 @app.route('/chatbot-api', methods=['POST'])
 def ChatbotAPI():
     print("Chatbot API called")  # Check if the function is called
     global attempt_counter, user_submitted_code
     user_message = request.json.get('message')
-    
-    print("Received user message:", user_message)  # Verify message received
+    print("Received user message:", user_message) 
+    print("User submitted code in ChatbotAPI:", user_submitted_code)
 
-    if not user_message:
-        return jsonify({'error': 'Message is required'}), 400
+    if not user_submitted_code:
+        return jsonify({'reply': "Please submit your code before asking for help!"})
+
+    # Construct prompt using stored code
+    prompt = f"""
+    Analyze the following Python code intended to make a robotic gripper move towards a ball. Identify any potential issues in the logic and provide specific hints for improvement.
+
+    User Code:
+    {user_submitted_code}
+
+    Problem Context: This code is supposed to move the gripper towards the ball until it reaches a close range. Key factors include:
+    - Ensuring the distance threshold is set low enough for the gripper to stop close to the ball.
+    - Verifying the direction vector is normalized to ensure the gripper moves towards the ball consistently.
+
+    User's Question: {user_message}
+    """
 
     # Increment the attempt counter
     attempt_counter += 1
@@ -49,7 +63,7 @@ def ChatbotAPI():
                 {
                     "parts": [
                         {
-                            "text": user_message
+                            "text": prompt
                         }
                     ]
                 }
@@ -184,9 +198,11 @@ def video_feed():
 
 @app.route('/run-code', methods=['POST'])
 def run_code():
-    global env  # Access the global environment instance
+    global env, user_submitted_code  # Access the global environment instance
     code = request.form.get('code')  # Get the code from form data
+    user_submitted_code = code
     print("Executing code:", code)  # Log the code to the console
+    print("User submitted code:", user_submitted_code) 
     try:
         exec(code, {'__builtins__': None, 'env': env})  # Pass the global env
         return jsonify({'message': 'Code executed successfully.'})
