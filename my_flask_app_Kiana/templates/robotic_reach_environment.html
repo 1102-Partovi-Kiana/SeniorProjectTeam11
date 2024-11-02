@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Robotic Environment</title>
+{% endblock %}
+
+{% block body %}
+<section>
+    <div class="container-fluid">
+        <div class="row d-flex">
+            <!-- Code editor on the left -->
+            <div class="col-md-6" style="margin-top: 200px;">
+                <div class="code-editor">
+                    <h4>Python Code Editor</h4>
+                    <textarea id="code-editor" rows="20">
+ball_position = current_env.get_ball_position()
+gripper_position = current_env.get_gripper_position()
+direction = np.array(ball_position) - np.array(gripper_position)
+distance_threshold = 0.01
+step_size = 0.05
+
+while np.linalg.norm(direction) > distance_threshold:
+    action = np.append(direction / np.linalg.norm(direction) * step_size, [1])
+    
+    current_env.step(action)
+    
+    gripper_position = current_env.get_gripper_position()
+    direction = np.array(ball_position) - np.array(gripper_position)
+
+print("Final Gripper Position:", gripper_position)
+print("Reached near the ball.")
+                    </textarea>
+                </div>
+            </div>
+
+            <!-- Video player on the right -->
+            <div class="col-md-6 d-flex justify-content-center align-items-center" style="margin-top: 200px;">
+                <div class="video-container">
+                    <img src="{{ url_for('video_feed') }}" width="100%">
+                </div>
+            </div>
+        </div>
+        <!-- Collision notification -->
+        <div id="collision-notification" class="alert alert-success" style="display: none; margin-top: 20px;">
+            Collision detected between the gripper and the ball!
+        </div>
+        <!-- Display positions -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h5>Ball Position:</h5>
+                <p id="ball-position">X: --, Y: --, Z: --</p>
+                <h5>Gripper Position:</h5>
+                <p id="gripper-position">X: --, Y: --, Z: --</p>
+            </div>
+            <div class="col-md-6 text-right">
+                <button id="run-code" class="btn btn-success">Run</button>
+            </div>
+        </div>
+        <div class="col-md-6" style="margin-top: 20px;">
+            <h4>Output</h4>
+            <div id="output-box" style="border: 1px solid #ddd; padding: 10px; height: 150px; overflow-y: auto;">
+                <!-- Output will appear here -->
+            </div>
+        </div>        
+    </div>
+</section>
+
+<script>
+    function updatePositions() {
+        fetch('/get-ball-position')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ball-position').textContent = 
+                    `X: ${data.x.toFixed(2)}, Y: ${data.y.toFixed(2)}, Z: ${data.z.toFixed(2)}`;
+            });
+        fetch('/get-gripper-position')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('gripper-position').textContent = 
+                    `X: ${data.x.toFixed(2)}, Y: ${data.y.toFixed(2)}, Z: ${data.z.toFixed(2)}`;
+            });
+    }
+
+    function checkCollision() {
+        fetch('/check-collision')
+            .then(response => response.json())
+            .then(data => {
+                const notification = document.getElementById('collision-notification');
+                if (data.collision) {
+                    notification.style.display = 'block';
+                } else {
+                    notification.style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error checking collision:', error));
+    }
+
+    document.getElementById('run-code').addEventListener('click', function() {
+        const code = document.getElementById('code-editor').value;
+
+        const formData = new FormData();
+        formData.append('code', code);
+
+        fetch('/run-code', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            const outputBox = document.getElementById('output-box');
+            outputBox.innerHTML = '';
+            if (data.error) {
+                outputBox.innerHTML += `<p style="color: red;">Error: ${data.error}</p>`;
+            } else {
+                outputBox.innerHTML += `<p>${data.message}</p>`;
+                document.getElementById('ball-position').textContent = 
+                    `X: ${data.ball_position.x.toFixed(2)}, Y: ${data.ball_position.y.toFixed(2)}, Z: ${data.ball_position.z.toFixed(2)}`;
+                document.getElementById('gripper-position').textContent = 
+                    `X: ${data.gripper_position.x.toFixed(2)}, Y: ${data.gripper_position.y.toFixed(2)}, Z: ${data.gripper_position.z.toFixed(2)}`;
+                
+                checkCollision();
+            }
+        })
+        .catch(error => {
+            console.error('Error running code:', error);
+        });
+    });
+    window.addEventListener('load', updatePositions);
+</script>
+
+
+{% endblock %}

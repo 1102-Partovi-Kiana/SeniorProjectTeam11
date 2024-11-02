@@ -1,15 +1,16 @@
 from flask import Flask, render_template, request, jsonify, Response
 import mujoco_py
 import numpy as np
-import cv2  # Import OpenCV
+import cv2 
 from reach import ReachEnv  # Ensure this imports your ReachEnv class
+from pickandplace import FetchPickAndPlaceEnv
 import requests  # Import requests library for API communication
 
 app = Flask(__name__, static_folder='static')
 
-env = ReachEnv()  # Initialize your environment here
+#current_env = FetchPickAndPlaceEnv()
+current_env = ReachEnv()
 
-# Route for the homepage
 @app.route('/')
 def RenderHomepage():
     return render_template('homepage.html')
@@ -24,13 +25,13 @@ def RenderChatbot():
 
 @app.route('/chatbot-api', methods=['POST'])
 def ChatbotAPI():
-    user_message = request.json.get('message')  # Get user's message from frontend
+    user_message = request.json.get('message')
     if not user_message:
         return jsonify({'error': 'Message is required'}), 400
 
     try:
         api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent"
-        api_key = "AIzaSyDpL6NsK8v8alk8JPVmu9S1QF8oRNhCJDU"  # Replace with your actual API key
+        api_key = "AIzaSyDpL6NsK8v8alk8JPVmu9S1QF8oRNhCJDU" # Our API Key
 
         payload = {
             "contents": [
@@ -48,15 +49,11 @@ def ChatbotAPI():
             'Content-Type': 'application/json'
         }, json=payload)
 
-        # Debugging: Print the full API response
-        print("API Response:", response.text)  # Log the full response for inspection
-
         if response.status_code != 200:
             return jsonify({'error': f'Error from API: {response.text}'}), 500
 
         response_json = response.json()
 
-        # Updated response parsing
         if 'candidates' in response_json and len(response_json['candidates']) > 0:
             if 'content' in response_json['candidates'][0] and 'parts' in response_json['candidates'][0]['content'] and len(response_json['candidates'][0]['content']['parts']) > 0:
                 chatbot_response = response_json['candidates'][0]['content']['parts'][0].get('text', 'No response')
@@ -65,25 +62,39 @@ def ChatbotAPI():
         else:
             chatbot_response = 'No contents available in the response'
 
-        return jsonify({'reply': chatbot_response})  # Send response back to the frontend
+        return jsonify({'reply': chatbot_response}) 
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# Select environment to use (in progress)
+@app.route('/select-environment/<env_type>', methods=['GET'])
+def select_environment(env_type):
+    global current_env
+    if env_type == 'reach':
+        current_env = ReachEnv()
+    elif env_type == 'pickandplace':
+        current_env = FetchPickAndPlaceEnv()
+    else:
+        return jsonify({'error': 'Invalid environment type'}), 400
 
-
+    return jsonify({'message': f'Selected environment: {env_type}'})
 
 @app.route('/environments')
 def RenderEnvironmentList():
     environments = [
-        # Example list of environment data
         {
             'id': 1,
             'name': 'FetchPickAndPlace-v1',
             'brief_description': 'Move the box to the floating goal position.',
             'preview_filename': 'fetchpickandplace.mp4'
         },
-        # Add more environments as needed
+        {
+            'id': 2,
+            'name': 'Reach-v1',
+            'brief_description': 'Reach for the ball and manipulate it.',
+            'preview_filename': 'reach.mp4' 
+        },
     ]
     return render_template('environments-landing.html', environments=environments)
 
@@ -96,7 +107,12 @@ def RenderEnvironment(environment_id):
             'brief_description': 'Move the box to the floating goal position.',
             'preview_filename': 'fetchpickandplace.mp4'
         },
-        # Add more environments as needed
+        {
+            'id': 2,
+            'name': 'Reach-v1',
+            'brief_description': 'Reach for the ball and manipulate it.',
+            'preview_filename': 'reach.mp4' 
+        },
     ]
     
     environment = next((env for env in environments if env['id'] == environment_id), None)
@@ -113,36 +129,35 @@ def RenderSignup():
         last_name = request.form.get('inputLastName')
         email = request.form.get('inputEmail')
         password = request.form.get('inputPassword')
-        # Perform validation and account creation logic here
         return redirect(url_for('RenderHomepage'))
 
     return render_template('account/signup.html')
 
 @app.route('/login')
 def RenderLogin():
-    if request.method == 'POST':
-        first_name = request.form.get('inputFirstName')
-        last_name = request.form.get('inputLastName')
-        email = request.form.get('inputEmail')
-        password = request.form.get('inputPassword')
-    return render_template('account/login.html')
+    return render_template('account/login.html') 
 
 @app.route('/courses')
 def RenderCourses():
     return render_template('courses.html')
 
-@app.route('/DarrenPage')
-def RenderDarrenEnv():
-    return render_template('robotic_environment.html')
+@app.route('/ReachPage')
+def RenderFetchReachEnv():
+    return render_template('robotic_reach_environment.html')
+
+@app.route('/PickAndPlacePage')
+def RenderFetchPickAndPlaceEnv():
+    return render_template('robotic_pick_and_place_environment.html')
 
 def generate_frames():
-    global env  # Access the global environment instance
+    global current_env
     while True:
-        frame = env.render(mode='rgb_array')
-        _, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        if current_env is not None:
+            frame = current_env.render(mode='rgb_array')
+            _, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 @app.route('/video_feed')
 def video_feed():
@@ -150,14 +165,57 @@ def video_feed():
 
 @app.route('/run-code', methods=['POST'])
 def run_code():
-    global env  # Access the global environment instance
-    code = request.form.get('code')  # Get the code from form data
-    print("Executing code:", code)  # Log the code to the console
+    code = request.form['code']
+    
+    if current_env is None:
+        return jsonify({'error': 'No environment selected'}), 400
+    
     try:
-        exec(code, {'__builtins__': None, 'env': env})  # Pass the global env
-        return jsonify({'message': 'Code executed successfully.'})
+        local_context = {}
+        exec(code, globals(), local_context)
+
+        ball_position = local_context.get('ball_position', current_env.get_ball_position())
+        gripper_position = local_context.get('gripper_position', current_env.get_gripper_position())
+        #box_position = local_context.get('box_position', current_env.get_box_position())
+
+        return jsonify({
+            'message': 'Code executed successfully.',
+            'ball_position': {'x': ball_position[0], 'y': ball_position[1], 'z': ball_position[2]},
+            'gripper_position': {'x': gripper_position[0], 'y': gripper_position[1], 'z': gripper_position[2]},
+            #'box_position': {'x': box_position[0], 'y': box_position[1], 'z': box_position[2]},
+            'error': None,
+        })
     except Exception as e:
-        return jsonify({'error': str(e)})
+        return jsonify({
+            'error': str(e),
+        })
+
+@app.route('/get-ball-position', methods=['GET'])
+def get_ball_position():
+    position = current_env.get_ball_position() 
+    return jsonify({'x': position[0], 'y': position[1], 'z': position[2]})
+
+@app.route('/get-gripper-position', methods=['GET'])
+def get_gripper_position():
+    position = current_env.get_gripper_position()  
+    return jsonify({'x': position[0], 'y': position[1], 'z': position[2]})
+
+@app.route('/get-box-position', methods=['GET'])
+def get_box_position():
+    position = current_env.get_box_position() 
+    return jsonify({'x': position[0], 'y': position[1], 'z': position[2]})
+
+@app.route('/check-collision', methods=['GET'])
+def check_collision():
+    ball_position = current_env.get_ball_position()
+    gripper_position = current_env.get_gripper_position()
+    # box_position = current_env.get_box_position()
+    
+    threshold_distance = 0.01 
+    distance = np.linalg.norm(np.array(ball_position) - np.array(gripper_position))
+
+    collision_detected = bool(distance < threshold_distance)
+    return jsonify({'collision': collision_detected})
 
 if __name__ == '__main__':
     app.run(debug=True)
