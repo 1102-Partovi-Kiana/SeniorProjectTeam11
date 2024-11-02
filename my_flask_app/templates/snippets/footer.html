@@ -4,9 +4,7 @@
 			<ul class="nav flex-column flex-md-row align-items-center">
 				<li class="nav-item">
 					<a class="btn btn-link btn-logo" id="footer-logo" href="{{ url_for('RenderHomepage') }}">
-						<svg class="bi me-1" width="30" height="30" fill="currentColor">
-							<use xlink:href="/static/img/bootstrap-icons.svg#joystick" />
-						</svg>
+						<img src="{{ url_for('static', filename='img/logo.png') }}" alt="CORE Logo" style="width: 40px; height: 40px;">
 						core
 					</a>
 				</li>
