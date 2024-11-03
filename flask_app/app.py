@@ -4,6 +4,7 @@ import numpy as np
 import cv2  # Import OpenCV
 from reach import ReachEnv  # Ensure this imports your ReachEnv class
 import requests  # Import requests library for API communication
+import random
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = "12345999999"
@@ -34,12 +35,75 @@ def ChatbotAPI():
     print("Received user message:", user_message) 
     print("User submitted code in ChatbotAPI:", user_submitted_code)
 
+    robot_jokes = [
+        "Why did the robot cross the road? To recharge on the other side!",
+        "What do you call a robot who always runs late? A bit slow in processing!",
+        "How do robots pay for things? With cache!",
+        "Why was the robot so bad at soccer? Because it kept kicking up errors!",
+        "What’s a robot’s favorite genre of music? Heavy metal!",
+        "Why did the robot go on a diet? It had too many bytes!",
+    ]
+
+    # Defining common acknowledgment phrases
+    acknowledgment_phrases = [
+    "ok cool", "thank you", "thanks", "sounds good", "great", "awesome", 
+    "nice", "alright", "got it", "understood", "makes sense", "perfect", 
+    "cool", "okay", "all set", "roger that", "good to know", "fine", 
+    "will do", "no problem", "much appreciated", "I see", "noted", "gotcha"
+    ]
+
+    long_acknowledgment_phrases = [
+    "That makes a lot of sense, thank you!", 
+    "Got it, I appreciate the help!", 
+    "Perfect, that's exactly what I needed to know.", 
+    "Thanks for clarifying that!", 
+    "Alright, that really clears things up, thanks!",
+    "Thanks a bunch! That explanation was super helpful.", 
+    "Awesome, thanks for pointing me in the right direction!", 
+    "Okay, that answers my question perfectly.", 
+    "Great, I feel much more confident about this now.", 
+    "Excellent, that was the info I was looking for!", 
+    "Got it, that’s really helpful, thanks!", 
+    "Thank you, I think I’m on the right track now.", 
+    "Cool, I think I understand it fully now!", 
+    "Awesome, you really made it easy to understand!", 
+    "This is exactly what I needed, thank you so much!", 
+    "Thanks, now I can move forward with confidence!", 
+    "Alright, that totally makes sense, appreciate it!", 
+    "Gotcha, thanks for helping me figure this out!", 
+    "Perfect, that explanation really helped a lot!", 
+    "Thank you! That was really helpful and clear.", 
+    "Got it, this is really helpful guidance, thank you.", 
+    "Thanks for helping me wrap my head around this!", 
+    "Nice, that clarifies everything for me. Thanks!", 
+    "Much appreciated, this is really helpful information.", 
+    "Alright, I think I’m all set now. Thanks a ton!"
+    ]
+
+    random_joke = random.choice(robot_jokes)
+    if attempt_counter == 0 and user_submitted_code == "":
+        welcome_message = (
+            f"Hi there! I'm your friendly coding assistant, ready to help you with your project. 😊\n\n"
+            f"Here's a robot joke to get started: {random_joke}\n\n"
+            "Feel free to submit your code or ask any questions about your coding challenges!"
+        )
+        attempt_counter += 1  # Increment attempt counter to avoid repeating the welcome message
+        return jsonify({'reply': welcome_message})
+
+    all_acknowledgment_phrases = acknowledgment_phrases + long_acknowledgment_phrases
+
     if not user_submitted_code:
         return jsonify({'reply': "Please submit your code before asking for help!"})
+    
+    # If the user message contains an acknowledgment, respond accordingly
+    if any(phrase in user_message.lower() for phrase in all_acknowledgment_phrases):
+        return jsonify({'reply': "I'm glad to hear that! Let me know if you have more questions or need further assistance."})
 
     # Construct prompt using stored code
     prompt = f"""
-    Analyze the following Python code intended to make a robotic gripper move towards a ball. Identify any potential issues in the logic and provide specific hints for improvement.
+
+    You are a helpful chatbot for a robotics coding environment. If the user's message contains acknowledgment or expressions like "thanks," "got it," "okay," or other similar acknowledgment phrases, respond with a friendly encouragement or acknowledgment without giving any hint or solution. 
+    Otherwise, analyze the following Python code intended to make a robotic gripper move towards a ball. Identify any potential issues in the logic and provide specific hints for improvement.
 
     User Code:
     {user_submitted_code}
@@ -47,6 +111,21 @@ def ChatbotAPI():
     Problem Context: This code is supposed to move the gripper towards the ball until it reaches a close range. Key factors include:
     - Ensuring the distance threshold is set low enough for the gripper to stop close to the ball.
     - Verifying the direction vector is normalized to ensure the gripper moves towards the ball consistently.
+
+    A general solution to the environment is 
+        ball_position = current_env.get_ball_position()
+        gripper_position = current_env.get_gripper_position()
+        direction = np.array(ball_position) - np.array(gripper_position)
+        distance_threshold = 0.01
+        step_size = 0.05
+        while np.linalg.norm(direction) > distance_threshold:
+            action = np.append(direction / np.linalg.norm(direction) * step_size, [1])
+            current_env.step(action)
+            gripper_position = current_env.get_gripper_position()
+            direction = np.array(ball_position) - np.array(gripper_position)
+
+        print("Final Gripper Position:", gripper_position)
+        print("Reached near the ball.")
 
     User's Question: {user_message}
     """
@@ -93,7 +172,7 @@ def ChatbotAPI():
         return jsonify({'error': str(e)}), 500
 
     # Apply the hint and solution logic based on the attempt count
-    if attempt_counter < 3:
+    if attempt_counter < 4:
         hint = "Hint: Try checking the distance threshold to ensure the gripper reaches close enough to the ball."
         final_response = f"{chatbot_response}\n\n{hint}"
         print("Final Response with Hint:", final_response)  # Confirm response with hint
