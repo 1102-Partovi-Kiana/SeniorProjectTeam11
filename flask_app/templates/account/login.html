@@ -1,35 +1,35 @@
 {% extends "base.html" %}
-{% block title %}
-<title>Login - CORE</title>
+{% block page_title %}
+<title>Login Page - CORE</title>
 {% endblock %}
 
 {% block body %}
 
-<section class="login-container py-5">
+<section class="login-section py-5">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6 bg-white p-4 account-form mb-2 mb-md-5">
-                <h1 class="mb-5 text-center">Sign In</h1>
+            <div class="col-md-6 p-4 login-form-container mb-2 mb-md-5">
+                <h1 class="mb-5 text-center">Log In</h1>
                 {% include "alert/full.html" %}
                 <form action="{{ url_for('RenderLogin') }}" method="post">
                     <!-- Email Field -->
                     <div class="mb-4">
-                        <label for="inputEmail" class="form-label">Email Address</label>
-                        <input type="email" class="form-control rounded-0" name="inputEmail_login" id="inputEmail" placeholder="Enter your email" required>
+                        <input type="email" class="form-control rounded-0" name="inputEmail" id="inputEmail" placeholder="Enter your email address" required>
                     </div>
                     
                     <!-- Password Field -->
                     <div class="mb-4">
-                        <label for="inputPassword" class="form-label">Password</label>
-                        <input type="password" class="form-control rounded-0" name="inputPassword_login" id="inputPassword" placeholder="Enter your password" required>
+                        <input type="password" class="form-control rounded-0" name="inputPassword" id="inputPassword" placeholder="Enter your password" required>
                     </div>
                     
                     <!-- Sign In Button -->
-                    <button type="submit" class="btn btn-primary rounded-pill">Sign In</button>
+                    <div class="text-center">
+                        <button type="submit" class="aesthetic-button">Log In</button>
+                    </div>
                 </form>
                 
-                <div class="form-addendum mt-4 text-center">
-                    <div class="signup-info">
+                <div class="mt-4 text-center">
+                    <div class="signup-link">
                         Need an account? <a href="{{ url_for('RenderSignup') }}">Sign up</a>
                     </div>
                 </div>

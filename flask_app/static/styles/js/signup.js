@@ -1,28 +1,28 @@
 function ShowClassID() {
-    document.getElementById('classID').classList.remove('d-none');
-    document.getElementById('classIDField').setAttribute('required', true);
+    document.getElementById('class-id-section').classList.remove('d-none');
+    document.getElementById('class-id-input').setAttribute('required', true);
 }
 
 function HideClassID() {
-    document.getElementById('classID').classList.add('d-none');
-    document.getElementById('classIDField').removeAttribute('required');
+    document.getElementById('class-id-section').classList.add('d-none');
+    document.getElementById('class-id-input').removeAttribute('required');
 }
 
-document.getElementById("signupForm").addEventListener("submit", function(event) {
+document.getElementById("signup-form").addEventListener("submit", function(event) {
     event.preventDefault();
 
-    const firstName = document.getElementById("inputFirstName");
-    const lastName = document.getElementById("inputLastName");
-    const email = document.getElementById("inputEmail");
-    const password = document.getElementById("inputPassword");
-    const classID = document.getElementById("classIDField");
+    const firstName = document.getElementById("first-name");
+    const lastName = document.getElementById("last-name");
+    const email = document.getElementById("email-address");
+    const password = document.getElementById("password-field");
+    const classID = document.getElementById("class-id-input");
     const accountType = document.querySelector('input[name="accountType"]:checked').value;
     
-    const firstNameError = document.getElementById("firstNameError");
-    const lastNameError = document.getElementById("lastNameError");
-    const emailError = document.getElementById("emailError");
-    const passwordError = document.getElementById("passwordError");
-    const classIDError = document.getElementById("classIDError");
+    const firstNameError = document.getElementById("first-name-error");
+    const lastNameError = document.getElementById("last-name-error");
+    const emailError = document.getElementById("email-error");
+    const passwordError = document.getElementById("password-error");
+    const classIDError = document.getElementById("class-id-error");
 
     clearError(firstNameError, lastNameError, emailError, passwordError, classIDError);
 

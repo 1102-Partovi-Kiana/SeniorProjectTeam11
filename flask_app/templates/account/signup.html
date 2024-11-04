@@ -1,75 +1,73 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Sign Up - CORE</title>
+<title>Sign Up Page - CORE</title>
 {% endblock %}
 
 {% block extra_css %}
 {% endblock extra_css %}
 
 {% block body %}
-<section class="signin-container py-5">
+<section class="signup-section py-5">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8 bg-white p-4 account-form mb-2 mb-md-5">
+            <div class="col-md-8 p-4 signup-form-wrapper mb-2 mb-md-5">
                 <h1 class="mb-4">Sign Up</h1>
                 {% include "alert/full.html" %}
-                <form id="signupForm" action="/signup" method="post">
+                <form id="signup-form" action="/signup" method="post">
                     <!-- First Name -->
                     <div class="mb-4">
-                        <label for="inputFirstName" class="form-label">First Name</label>
-                        <input type="text" class="form-control rounded-0" id="inputFirstName" name="inputFirstName" required>
-                        <div class="error-message" id="firstNameError"></div> <!-- Error message -->
+                        <input type="text" class="form-control rounded-0" id="first-name" name="firstName" placeholder="First name" required>
+                        <div class="error-feedback" id="first-name-error"></div> <!-- Error message -->
                     </div>
                     
                     <!-- Last Name -->
                     <div class="mb-4">
-                        <label for="inputLastName" class="form-label">Last Name</label>
-                        <input type="text" class="form-control rounded-0" id="inputLastName" name="inputLastName" required>
-                        <div class="error-message" id="lastNameError"></div> <!-- Error message -->
+                        <input type="text" class="form-control rounded-0" id="last-name" name="lastName" placeholder="Last name" required>
+                        <div class="error-feedback" id="last-name-error"></div> <!-- Error message -->
                     </div>
                     
                     <!-- Email Address -->
                     <div class="mb-4">
-                        <label for="inputEmail" class="form-label">Email Address</label>
-                        <input type="email" class="form-control rounded-0" id="inputEmail" name="inputEmail" required>
-                        <div class="error-message" id="emailError"></div> <!-- Error message -->
+                        <input type="email" class="form-control rounded-0" id="email-address" name="email" placeholder="Email address" required>
+                        <div class="error-feedback" id="email-error"></div> <!-- Error message -->
                     </div>
                     
                     <!-- Password -->
                     <div class="mb-4">
-                        <label for="inputPassword" class="form-label">Password</label>
-                        <input type="password" class="form-control rounded-0" id="inputPassword" name="inputPassword" required>
-                        <div class="error-message" id="passwordError"></div> <!-- Error message -->
+                        <input type="password" class="form-control rounded-0" id="password-field" name="password" placeholder="Desired password" required>
+                        <div class="error-feedback" id="password-error"></div> <!-- Error message -->
                     </div>
 
                     <!-- Account Type Radio Buttons -->
-                    <div class="account-type mb-5">
+                    <div class="account-type-section mb-5">
                         <label class="mb-3">Type of Account</label><br>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="accountType" id="accountTypeInstructor" value="option1" onclick="HideClassID()" checked>
-                            <label class="form-check-label" for="accountTypeInstructor">
+                            <input class="form-check-input" type="radio" name="accountType" id="account-type-instructor" value="instructor" onclick="HideClassID()" checked>
+                            <label class="form-check-label" for="account-type-instructor">
                                 Instructor
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="accountType" id="accountTypeStudent" value="option2" onclick="ShowClassID()">
-                            <label class="form-check-label" for="accountTypeStudent">
+                            <input class="form-check-input" type="radio" name="accountType" id="account-type-student" value="student" onclick="ShowClassID()">
+                            <label class="form-check-label" for="account-type-student">
                                 Student
                             </label>
                         </div>
                     </div>
 
                     <!-- Class ID Field (Hidden by Default) -->
-                    <div class="form-group class-id mb-5 d-none" id="classID">
-                        <label for="inputClassID" class="form-label">Class ID*</label>
-                        <input type="text" class="form-control rounded-0" id="classIDField" name="inputClassID">
-                        <div class="form-text" id="classIDHelp">Please enter the Class ID provided by your instructor.</div>
-                        <div class="error-message" id="classIDError"></div> <!-- Error message -->
+                    <div class="form-group class-id-field mb-5 d-none" id="class-id-section">
+                        <label for="class-id-input" class="form-label">Class ID</label>
+                        <input type="text" class="form-control rounded-0" id="class-id-input" name="classID">
+                        <div class="text-prompt" id="class-id-help">Please enter the Class ID provided by your instructor.</div>
+                        <div class="error-feedback" id="class-id-error"></div> <!-- Error message -->
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" class="btn btn-primary rounded-pill">Sign Up</button>
+                    <div class="text-center">
+                        <button type="submit" class="aesthetic-button">Sign Up</button>
+                    </div>
                 </form>
             </div>
         </div>
