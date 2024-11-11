@@ -7,6 +7,11 @@ app = Flask(__name__, static_folder='static')
 def RenderHomepage():
     return render_template('homepage.html')
 
+# Route for other homepage
+@app.route('/home')
+def RenderOtherHomepage():
+    return render_template('home.html')
+
 @app.route('/robotic-environment')
 def RenderRoboticEnvironment():
     return render_template('robotic_environment.html')
