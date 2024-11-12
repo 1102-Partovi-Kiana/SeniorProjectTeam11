@@ -1,4 +1,3 @@
-
 /* -------------------HOMEPAGE------------------- */
 
 /* Added padding for the body to prevent overlap with fixed navbar --> */
@@ -12,19 +11,6 @@ body {
     }
 }
 
-.cursive-core {
-    font-family: 'Pacifico', cursive;
-    font-size: 9rem; 
-    
-    /* Gradient from darker white (#f0f0f0) to pure white (#ffffff) */
-    background: linear-gradient(90deg, #f0f0f0, #ffffff); /* Light gray to white */
-    
-    -webkit-background-clip: text; /* Makes the gradient apply to the text */
-    -webkit-text-fill-color: transparent; /* Ensures the text is transparent so the gradient shows */
-
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 .cursive-live {
     font-family: 'Pacifico', cursive;
     font-size: 2rem; 
@@ -32,10 +18,6 @@ body {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.cursive-ware-section {
-    margin-top: 0;
-    padding-top: 0; 
-}
 
 .hero-section {
     background-image: url('/static/img/pretty.png');
@@ -43,6 +25,7 @@ body {
     background-position: center;
     color: white;
     height: calc(100vh - 100px) + 200px;
+    height: 100vh;
   }
 
 .hero-section h1,
@@ -50,27 +33,6 @@ body {
     color: whitesmoke;
 }
 
-.btn-white {
-    font-size: 1rem; 
-    background: linear-gradient(90deg, #f0f0f0, #ffffff); 
-    color: #082882; 
-    border: none; 
-    padding: 12px 24px; 
-    font-weight: 700;
-    border-radius: 6px; 
-    text-decoration: none; 
-    /* Text shadow to match "Core" */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    /* Add a soft box shadow for some depth */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease, color 0.3s ease; 
-}
-
-.btn-white:hover {
-    background: linear-gradient(90deg, #e0e0e0, #f8f8f8);
-    color: #082882; 
-    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3); 
-}
 
 .cta {
     margin-top: 56px;
@@ -134,6 +96,508 @@ body {
 
 .custom-margin-section ul {
     margin-left: 20px; 
+}
+
+.cursive-core {
+    font-family: 'Pacifico', cursive;
+    font-size: 9rem; 
+    /* Gradient from darker white (#f0f0f0) to pure white (#ffffff) */
+    background: linear-gradient(90deg, #f0f0f0, #ffffff); /* Light gray to white */
+    -webkit-background-clip: text; /* Makes the gradient apply to the text */
+    -webkit-text-fill-color: transparent; /* Text is transparent so the gradient shows */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cursive-live {
+    font-family: 'Pacifico', cursive;
+    font-size: 2rem; 
+
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cursive-ware-section {
+    margin-top: 0;
+    padding-top: 0; 
+}
+
+.hero-section {
+    background-image: url('/static/img/pretty.png');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    height: calc(100vh - 100px) + 200px;
+    height: 100vh; 
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers vertically */
+    align-items: center; /* Centers horizontally */
+    text-align: center;
+    padding-top: 50px; /* Adds additional padding at the top */
+    box-sizing: border-box;
+  }
+
+.lead {
+    margin-bottom: 40px; 
+}
+
+.hero-section h1,
+.hero-section p {
+    color: whitesmoke;
+}
+
+/* Robot Area */
+
+.robotics-features-section h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem; 
+    letter-spacing: 1px;
+}
+
+.robotics-features-section {
+    padding-top: 80px; 
+    padding-bottom: 80px;
+    background-color: #f9f9f9;
+}
+
+.robotics-features-section .row {
+    display: flex;
+    justify-content: center;
+    gap: 5px; 
+    margin: 0;
+    padding: 0;
+}
+
+.robotics-features-section .col-md-3 {
+    flex: 1 1 200px; 
+    max-width: 250px; 
+    padding: 0;
+    margin: 0;
+}
+
+.robotics-features-section .feature-item-container {
+    width: 100%;
+    height: 400px; 
+    overflow: hidden;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.robotics-features-section .feature-item-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    display: block;
+}
+
+.robotics-features-section h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    letter-spacing: 1px;
+    margin-bottom: 5px !important; 
+}
+
+.robotics-features-section .lead {
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 0 !important; 
+}
+
+/* Open Source */
+
+.open-source-section .container {
+    padding-top: 100px; 
+    padding-bottom: 100px; 
+    /* Or margin for spacing outside the container */
+    /* margin-top: 100px; */
+    /* margin-bottom: 40px; */
+}
+
+.animation-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    grid-template-rows: 1fr 1fr; 
+    gap: 20px; 
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 700px; /* Height of card */
+    width: 540px; /* Width of card */
+    margin: 0 auto;
+}
+
+#animatedSquare {
+    grid-column: 1 / span 2; 
+    grid-row: 1 / span 2; 
+    width: 150px;
+    height: 150px;
+    background-color: #007bff;
+    background-image: linear-gradient(45deg, #007bff, #007bff);
+    transition: transform 1.5s ease, opacity 0.5s ease 1.5s;
+    animation: swirlGradient 5s ease forwards;
+    transform: translate(-50%, -50%);
+    transform: translateX(100px);
+    position: relative;
+    left: 180px;
+}
+
+@keyframes swirlGradient {
+    0% {
+        background-image: linear-gradient(45deg, #007bff, #007bff); 
+        transform: rotate(0deg) scale(1); /* Initial state */
+    }
+    25% {
+        background-image: linear-gradient(45deg, #007bff, #ff9800); 
+        transform: rotate(180deg) scale(0.8); /* Halfway through the swirl */
+    }
+    50% {
+        background-image: linear-gradient(45deg, #ff9800, #4caf50); 
+        transform: rotate(360deg) scale(0.6);
+    }
+    75% {
+        background-image: linear-gradient(45deg, #4caf50, #9c27b0); 
+        transform: rotate(540deg) scale(0.4);
+    }
+    100% {
+        background-image: linear-gradient(45deg, #007bff, #ff9800, #4caf50, #9c27b0); /* Final gradient with all colors */
+        transform: rotate(720deg) scale(0); 
+        opacity: 0;
+    }
+}
+
+.expand {
+    transform: rotate(720deg) scale(0); 
+    opacity: 0;
+}
+
+.card {
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+    width: 100%; 
+    height: 100%; 
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.card-content.front {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #007bff; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    transition: opacity 0.5s;
+}
+
+/* Back hiden at first */
+.card-content.back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    color: black;
+    opacity: 0;
+    padding: 20px;
+    text-align: center;
+    transition: opacity 0.5s;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%; /* Full height for alignment */
+    color: white;
+}
+
+/* Grid alignment */
+#card1 { grid-column: 1; grid-row: 1; }
+#card2 { grid-column: 2; grid-row: 1; }
+#card3 { grid-column: 1; grid-row: 2; }
+#card4 { grid-column: 2; grid-row: 2; }
+
+.reveal-cards {
+    opacity: 1; /* Fade in */
+}
+
+.card:hover .front {
+    opacity: 0; /* Card flip on hover */
+}
+
+.card:hover .back {
+    opacity: 1;
+}
+
+#card1 .front { background-color: #007bff; } 
+#card2 .front { background-color: #ff9800; } 
+#card3 .front { background-color: #4caf50; } 
+#card4 .front { background-color: #9c27b0; } 
+
+.card-line {
+    width: 100%;
+    height: 5px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-radius: 0 0 8px 8px;
+    background-color: transparent;
+}
+
+#card-line1 { background-color: #007bff; } 
+#card-line2 { background-color: #ff9800; } 
+#card-line3 { background-color: #4caf50; } 
+#card-line4 { background-color: #9c27b0; } 
+
+.card a {
+    color: inherit;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.card a:hover {
+    text-decoration: underline;
+}
+
+#card1 .read-more {
+    color: #007bff; 
+}
+
+#card2 .read-more {
+    color: #ff9800;
+}
+
+#card3 .read-more {
+    color: #4caf50; 
+}
+
+#card4 .read-more {
+    color: #9c27b0; 
+}
+
+#card1 .read-more:hover,
+#card2 .read-more:hover,
+#card3 .read-more:hover,
+#card4 .read-more:hover {
+    text-decoration: underline;
+}
+
+.label {
+    font-size: 1.2em;
+    color: white;
+    text-align: center;
+    margin-bottom: 20px; 
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; 
+    height: 100px; /* Height of logo */
+    overflow: hidden; 
+}
+
+.logo-container img {
+    max-width: 80px; /* Maximum width */
+    max-height: 80px; /* Maximum height */
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.text-section {
+    background: linear-gradient(to right, #f7f9fc, #ffffff); /* Soft gradient background */
+    padding: 40px;
+    border-radius: 8px;
+    max-width: 400px;
+    font-family: Arial, sans-serif;
+}
+
+.text-section p {
+    line-height: 1.6;
+}
+
+/* Built for Students and Instructors Section */
+
+.built-for-section {
+    padding: 100px 0;
+    height: 100vh;
+}
+
+.section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    color: #555;
+    max-width: 600px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+}
+
+.user-type-card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: left;
+    margin: 15px 0;
+}
+
+.user-type-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.student-card {
+    background-color: #e3f7fb; /* Soft cyan */
+}
+
+.instructor-card {
+    background-color: #ffe6cc; /* Soft peach */
+}
+
+.card-title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.card-description {
+    color: #555;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.features-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.features-list li {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.features-list li::before {
+    content: "✔";
+    position: absolute;
+    left: 0;
+    color: #39FF14; /* Bright green */
+    font-weight: bold;
+}
+
+/* Responsive Spacing */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2.5rem;
+    }
+    .section-subtitle {
+        font-size: 1rem;
+    }
+    .card-title {
+        font-size: 1.4rem;
+    }
+}
+
+.built-for-section {
+    position: relative;
+    overflow: hidden; 
+}
+
+.built-for-section .background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    
+}
+
+.overlay-content {
+    position: relative;
+    z-index: 1;
+    color: #fff; 
+}
+
+.user-type-card {
+    background-color: rgba(0, 0, 0, 0.9); /* Transparent black background */
+    padding: 2rem;
+    border-radius: 10px;
+}
+
+.section-subtitle {
+    color: #000;
+    font-weight: 400; /* Make text a bit bolder */
+}
+
+/* Cute Area */
+
+.bi-check-circle {
+    color: #39FF14;
+}
+
+/* Back to Top Button  */
+
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: none; 
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 1000;
+}
+
+.back-to-top:hover {
+    background-color: #0056b3;
+}
+
+.back-to-top.show {
+    display: inline-block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.back-to-top.hide {
+    opacity: 0;
+    transform: translateY(100px); 
 }
 
 /* -------------------NAVBAR------------------- */
@@ -239,6 +703,7 @@ body {
     background-image: url("/static/img/signup.png");
     background-size: cover;
     padding-top: 50px;
+    height: 100vh; 
 }
 
 .signup-section {
@@ -247,7 +712,7 @@ body {
     background-size: cover;
     background-attachment: fixed; /* Fixes the background */
     padding-top: 50px;
-
+    height: 100vh; 
 }
 
 .login-form-container,
@@ -391,6 +856,50 @@ body {
     text-align: center;
 }
 
+    /* ---- Media Queries ---- */
+/* Tablet (iPad) - Screen width 768px to 1024px */
+@media (max-width: 1024px) {
+    .login-form-container, .signup-form-wrapper {
+        max-width: 500px; /* Increase slightly for tablets */
+        padding: 25px; /* Slightly less padding for more space */
+    }
+    
+    .login-form-container h1, .signup-section h1 {
+        font-size: 1.8rem; /* Reduce font size for heading */
+    }
+
+    .form-control {
+        font-size: 0.95rem; /* Slightly smaller text */
+    }
+}
+
+/* Mobile (iPhone), iPad in portrait orientation - Screen width less than 768px */
+@media (max-width: 768px) {
+    .login-section, .signup-section {
+        padding-top: 20px;
+    }
+
+    .login-form-container, .signup-form-wrapper {
+        max-width: 90%; /* Fill most of the screen */
+        padding: 20px; /* Less padding for smaller screens */
+        margin-top: 20px;
+    }
+
+    .login-form-container h1, .signup-section h1 {
+        font-size: 1.5rem; /* Reduce heading size */
+    }
+
+    .form-control {
+        font-size: 0.9rem; /* Smaller text for inputs */
+        padding: 8px 5px;
+    }
+
+    .signup-link {
+        font-size: 0.9rem; /* Smaller font for link text */
+    }
+}
+
+
 /* -------------------COURSESPAGE------------------- */
 .course-container {
     display: flex;
@@ -510,6 +1019,7 @@ body {
     position: relative;
     transition: all 0.5s ease;
     outline: none;
+    text-decoration: none;
 }
 
 .aesthetic-button::before, .aesthetic-button::after {

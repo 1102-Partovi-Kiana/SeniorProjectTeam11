@@ -44,6 +44,8 @@ def ChatbotAPI():
         "Why did the robot go on a diet? It had too many bytes!",
     ]
 
+    emojis = ["😊", "🤖", "😂", "🤓", "👍", "✨", "🚀", "💡"]
+
     # Defining common acknowledgment phrases
     acknowledgment_phrases = [
     "ok cool", "thank you", "thanks", "sounds good", "great", "awesome", 
@@ -81,10 +83,11 @@ def ChatbotAPI():
     ]
 
     random_joke = random.choice(robot_jokes)
+    random_emoji = random.choice(emojis)
     if attempt_counter == 0 and user_submitted_code == "":
         welcome_message = (
             f"Hi there! I'm your friendly coding assistant, ready to help you with your project. 😊\n\n"
-            f"Here's a robot joke to get started: {random_joke}\n\n"
+            f"Here's a robot joke to get started: {random_joke} {random_emoji}\n\n"
             "Feel free to submit your code or ask any questions about your coding challenges!"
         )
         attempt_counter += 1  # Increment attempt counter to avoid repeating the welcome message
@@ -102,8 +105,8 @@ def ChatbotAPI():
     # Construct prompt using stored code
     prompt = f"""
 
-    You are a helpful chatbot for a robotics coding environment. If the user's message contains acknowledgment or expressions like "thanks," "got it," "okay," or other similar acknowledgment phrases, respond with a friendly encouragement or acknowledgment without giving any hint or solution. 
-    Otherwise, analyze the following Python code intended to make a robotic gripper move towards a ball. Identify any potential issues in the logic and provide specific hints for improvement.
+    You are a technical assistant for a coding environment, and your primary role is to analyze code for specific issues and provide clear, actionable feedback. If the user's message contains general questions, help with debugging their code. Do not respond with motivational phrases or encouragement unless the user's message contains acknowledgment or expressions like "thanks," "got it," "okay," or other similar acknowledgment phrases, respond with a friendly encouragement or acknowledgment without giving any hint or solution. 
+    Now I am going to give you the Python code the student has sumbitted. Analyze the following Python code intended to make a robotic gripper move towards a ball. Identify any potential issues in the logic and provide specific hints for improvement.
 
     User Code:
     {user_submitted_code}
@@ -173,13 +176,13 @@ def ChatbotAPI():
 
     # Apply the hint and solution logic based on the attempt count
     if attempt_counter < 4:
-        hint = "Hint: Try checking the distance threshold to ensure the gripper reaches close enough to the ball."
-        final_response = f"{chatbot_response}\n\n{hint}"
+        final_response = f"{chatbot_response}\n\n"
         print("Final Response with Hint:", final_response)  # Confirm response with hint
         return jsonify({'reply': final_response})
     else:
         # Provide solution after 3 attempts and reset counter
-        solution = """Here’s how to solve it:
+        solution = """You have reached your attempt limit. Here is the solution to the environment. 
+        Here’s how to solve it:
             ball_position = current_env.get_ball_position()
             gripper_position = current_env.get_gripper_position()
             direction = np.array(ball_position) - np.array(gripper_position)
