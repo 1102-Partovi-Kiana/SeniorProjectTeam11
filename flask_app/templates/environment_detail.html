@@ -12,7 +12,24 @@
             <div class="col-md-6" style="margin-top: 200px;">
                 <div class="code-editor">
                     <h4>Python Code Editor</h4>
-                    <textarea id="code-editor" rows="20" placeholder="# Your code here!"></textarea>
+                    <textarea id="code-editor" rows="20">
+ball_position = current_env.get_ball_position()
+gripper_position = current_env.get_gripper_position()
+direction = np.array(ball_position) - np.array(gripper_position)
+distance_threshold = 0.01
+step_size = 0.05
+
+while np.linalg.norm(direction) > distance_threshold:
+    action = np.append(direction / np.linalg.norm(direction) * step_size, [1])
+    
+    current_env.step(action)
+    
+    gripper_position = current_env.get_gripper_position()
+    direction = np.array(ball_position) - np.array(gripper_position)
+
+print("Final Gripper Position:", gripper_position)
+print("Reached near the ball.")
+                    </textarea>
                 </div>
             </div>
 

@@ -5,40 +5,136 @@
 {% endblock %}
 
 {% block body %}
-<section>
+<section class="robotic-environment">
     <div class="container-fluid">
-        <div class="row d-flex">
+        <div class="row" style="min-height: 80vh;">
+            <!-- Coding Area and Simulation Side by Side -->
+              <div class="row d-flex align-items-center" style="min-height: 80vh;">
             <!-- Code editor on the left -->
-            <div class="col-md-6" style="margin-top: 200px;">
-                <div class="code-editor">
-                    <h4>Python Code Editor</h4>
-                    <textarea id="code-editor" rows="20" placeholder="# Your code here!"></textarea>
+            <div class="col-md-6">
+                <div class="code-editor" style="height: 100%;">
+                    <textarea id="code-editor" rows="20">
+# Sample pre-rendered code for the robotics environment
+ball_position = env.get_ball_position()
+gripper_position = env.get_gripper_position()
+direction = np.array(ball_position) - np.array(gripper_position)
+distance_threshold = 0.01
+step_size = 0.05
+
+while np.linalg.norm(direction) > distance_threshold:
+    action = np.append(direction / np.linalg.norm(direction) * step_size, [1])
+    env.step(action)
+    gripper_position = env.get_gripper_position()
+    direction = np.array(ball_position) - np.array(gripper_position)
+
+print("Final Gripper Position:", gripper_position)
+print("Reached near the ball.")
+                    </textarea>
                 </div>
             </div>
-
-            <!-- Video player on the right -->
-            <div class="col-md-6 d-flex justify-content-center align-items-center" style="margin-top: 200px;">
-                <div class="video-container">
-                    <img src="{{ url_for('video_feed') }}" width="100%">
+            <div class="col-md-6">
+                <div class="card simulation-card">
+                    <div class="card-header">Simulation</div>
+                    <div class="card-body d-flex justify-content-center align-items-center">
+                        <img src="{{ url_for('video_feed') }}" class="simulation-video">
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- File upload and Run button at the bottom -->
+          <!-- Output Terminal -->
+          <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card output-card">
+                    <div class="card-header">Output Terminal</div>
+                    <div class="card-body" id="output-box">
+                        <!-- Output will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collision notification -->
+        <div id="collision-notification" class="alert alert-success mt-4" style="display: none;">
+            Collision detected between the gripper and the ball!
+        </div>
+
+        <!-- Ball and Gripper Position, Run Button -->
         <div class="row mt-4">
             <div class="col-md-6">
-                <input type="file" id="file-upload" class="form-control">
+                <h5>Ball Position:</h5>
+                <p id="ball-position">X: --, Y: --, Z: --</p>
+                <h5>Gripper Position:</h5>
+                <p id="gripper-position">X: --, Y: --, Z: --</p>
             </div>
             <div class="col-md-6 text-right">
-                <button id="run-code" class="btn btn-success">Run</button>
+                <button id="run-code" class="aesthetic-button">Run</button>
             </div>
         </div>
+
+      
     </div>
 </section>
 
+<!-- CodeMirror and Script Initialization -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+
 <script>
+    // Initialize CodeMirror
+    const codeEditor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
+        lineNumbers: true,
+        mode: "python",
+        theme: "default",
+        tabSize: 4,
+        indentUnit: 4,
+        autoCloseBrackets: true,
+        viewportMargin: Infinity
+    });
+
+    const MIN_LINE_COUNT = 100;
+    function ensureMinLines() {
+        const lineCount = codeEditor.lineCount();
+        for (let i = lineCount; i < MIN_LINE_COUNT; i++) {
+            codeEditor.replaceRange("\n", CodeMirror.Pos(i));
+        }
+    }
+    ensureMinLines();
+
+    codeEditor.setSize("100%", "calc(80vh - 100px)");
+
+    function updatePositions() {
+        fetch('/get-ball-position')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ball-position').textContent = 
+                    `X: ${data.x.toFixed(2)}, Y: ${data.y.toFixed(2)}, Z: ${data.z.toFixed(2)}`;
+            });
+        fetch('/get-gripper-position')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('gripper-position').textContent = 
+                    `X: ${data.x.toFixed(2)}, Y: ${data.y.toFixed(2)}, Z: ${data.z.toFixed(2)}`;
+            });
+    }
+
+    function checkCollision() {
+        fetch('/check-collision')
+            .then(response => response.json())
+            .then(data => {
+                const notification = document.getElementById('collision-notification');
+                if (data.collision) {
+                    notification.style.display = 'block';
+                } else {
+                    notification.style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error checking collision:', error));
+    }
+
     document.getElementById('run-code').addEventListener('click', function() {
-        const code = document.getElementById('code-editor').value;
+        const code = codeEditor.getValue();
 
         const formData = new FormData();
         formData.append('code', code);
@@ -49,9 +145,25 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            const outputBox = document.getElementById('output-box');
+            outputBox.innerHTML = '';
+            if (data.error) {
+                outputBox.innerHTML += `<p style="color: red;">Error: ${data.error}</p>`;
+            } else {
+                outputBox.innerHTML += `<p>${data.message}</p>`;
+                document.getElementById('ball-position').textContent = 
+                    `X: ${data.ball_position.x.toFixed(2)}, Y: ${data.ball_position.y.toFixed(2)}, Z: ${data.ball_position.z.toFixed(2)}`;
+                document.getElementById('gripper-position').textContent = 
+                    `X: ${data.gripper_position.x.toFixed(2)}, Y: ${data.gripper_position.y.toFixed(2)}, Z: ${data.gripper_position.z.toFixed(2)}`;
+                
+                checkCollision();
+            }
+        })
+        .catch(error => {
+            console.error('Error running code:', error);
         });
     });
-</script>
 
+    window.addEventListener('load', updatePositions);
+</script>
 {% endblock %}

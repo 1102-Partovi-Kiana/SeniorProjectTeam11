@@ -2,10 +2,8 @@ import os
 from gym import utils
 from gym.envs.robotics import fetch_env
 
-
-# Ensure we get the path separator correct on windows
+# Ensure we get the path separator correct on Windows
 MODEL_XML_PATH = os.path.join('fetch', 'reach.xml')
-
 
 class ReachEnv(fetch_env.FetchEnv, utils.EzPickle):
     def __init__(self, reward_type='sparse'):
@@ -16,7 +14,17 @@ class ReachEnv(fetch_env.FetchEnv, utils.EzPickle):
         }
         fetch_env.FetchEnv.__init__(
             self, MODEL_XML_PATH, has_object=False, block_gripper=True, n_substeps=20,
-            gripper_extra_height=0.2, target_in_the_air=True, target_offset=0.0,
+            gripper_extra_height=0.2, target_in_the_air=False, target_offset=0.0,
             obj_range=0.15, target_range=0.15, distance_threshold=0.05,
             initial_qpos=initial_qpos, reward_type=reward_type)
         utils.EzPickle.__init__(self)
+
+    def get_ball_position(self):
+        ball_id = self.sim.model.site_name2id('target0')
+        ball_position = self.sim.data.site_xpos[ball_id]
+        return ball_position
+
+    def get_gripper_position(self):
+        gripper_geom_id = self.sim.model.geom_name2id('robot0:l_gripper_finger_link')
+        gripper_position = self.sim.data.geom_xpos[gripper_geom_id]
+        return gripper_position 

@@ -546,3 +546,126 @@ body {
     background-position: center calc(var(--gradoffset) - 0.75em);
     background: linear-gradient(180deg, hsl(210, 30%, 98%), hsl(210, 30%, 90%)); 
 }
+
+/* -------------------CODE MIRROR------------------- */
+
+/* Scoped styles for the Robotic Environment section */
+.robotic-environment {
+    min-height: 100vh;
+    background-color:  #f5f5f5;
+}
+
+.robotic-environment .code-editor {
+    height: 100%;
+}
+
+/* CodeMirror editor styling */
+.robotic-environment .CodeMirror {
+    width: 100%;
+    height: calc(80vh - 100px);
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+    color: #ffffff;
+    border-radius: 8px;;
+    padding: 10px; 
+    line-height: 1.6; 
+}
+
+/* Video container styling */
+.robotic-environment .video-container img {
+    width: 100%;
+    height: auto;
+}
+
+/* Collision notification styling */
+.robotic-environment #collision-notification {
+    display: none;
+    margin-top: 20px;
+}
+
+.robotic-environment .output-container {
+    width: 100%;
+    max-width: 100%; /* Matches the width of the code editor's container */
+    margin: 0 auto; /* Centers the output box within the container */
+    display: flex;
+    justify-content: center;
+}
+
+.robotic-environment #output-box {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    line-height: 1.6;
+    width: 100%; 
+    position: relative;
+}
+
+.robotic-environment #output-box::before {
+    content: "Terminal";
+    display: block;
+    background-color: #333;
+    color: #d4d4d4;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-size: 13px; /* Slightly larger for better readability */
+    text-align: left;
+    line-height: 30px; /* Match height if necessary */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+}
+
+/* Adjust output content to be below the header */
+.robotic-environment #output-box .output-content {
+    margin-top: 30px; /* Space to account for header bar */
+}
+
+/* Styling for error messages in output box */
+.robotic-environment #output-box p.error {
+    color: #ff4c4c; /* Red color for errors */
+    font-weight: bold;
+}
+
+/* Adds padding and space for each output message */
+.robotic-environment #output-box p {
+    margin: 5px 0;
+}
+
+/* Styling for error messages in output box */
+.robotic-environment #output-box p.error {
+    color: #ff4c4c; /* Red color for errors */
+    font-weight: bold;
+}
+
+/* Adds padding and space for each output message */
+.robotic-environment #output-box p {
+    margin: 5px 0;
+}
+
+.robotic-environment .btn-success:hover {
+    background-color: #005a9e;
+    border-color: #005a9e;
+}
+
+/* Styling for the Ball and Gripper Position text */
+.robotic-environment h5 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.robotic-environment p {
+    font-size: 14px;
+    margin: 0;
+}

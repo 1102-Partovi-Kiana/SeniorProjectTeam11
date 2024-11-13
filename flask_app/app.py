@@ -277,16 +277,57 @@ def video_feed():
 
 @app.route('/run-code', methods=['POST'])
 def run_code():
-    global env, user_submitted_code  # Access the global environment instance
-    code = request.form.get('code')  # Get the code from form data
-    user_submitted_code = code
-    print("Executing code:", code)  # Log the code to the console
-    print("User submitted code:", user_submitted_code) 
+    code = request.form['code']
+    
+    if env is None:
+        return jsonify({'error': 'No environment selected'}), 400
+    
     try:
-        exec(code, {'__builtins__': None, 'env': env})  # Pass the global env
-        return jsonify({'message': 'Code executed successfully.'})
+        local_context = {}
+        exec(code, globals(), local_context)
+
+        ball_position = local_context.get('ball_position', env.get_ball_position())
+        gripper_position = local_context.get('gripper_position', env.get_gripper_position())
+        #box_position = local_context.get('box_position', current_env.get_box_position())
+
+        return jsonify({
+            'message': 'Code executed successfully.',
+            'ball_position': {'x': ball_position[0], 'y': ball_position[1], 'z': ball_position[2]},
+            'gripper_position': {'x': gripper_position[0], 'y': gripper_position[1], 'z': gripper_position[2]},
+            #'box_position': {'x': box_position[0], 'y': box_position[1], 'z': box_position[2]},
+            'error': None,
+        })
     except Exception as e:
-        return jsonify({'error': str(e)})
+        return jsonify({
+            'error': str(e),
+        })
+
+@app.route('/get-ball-position', methods=['GET'])
+def get_ball_position():
+    position = env.get_ball_position() 
+    return jsonify({'x': position[0], 'y': position[1], 'z': position[2]})
+
+@app.route('/get-gripper-position', methods=['GET'])
+def get_gripper_position():
+    position = env.get_gripper_position()  
+    return jsonify({'x': position[0], 'y': position[1], 'z': position[2]})
+
+@app.route('/get-box-position', methods=['GET'])
+def get_box_position():
+    position = env.get_box_position() 
+    return jsonify({'x': position[0], 'y': position[1], 'z': position[2]})
+
+@app.route('/check-collision', methods=['GET'])
+def check_collision():
+    ball_position = env.get_ball_position()
+    gripper_position = env.get_gripper_position()
+    # box_position = current_env.get_box_position()
+    
+    threshold_distance = 0.01 
+    distance = np.linalg.norm(np.array(ball_position) - np.array(gripper_position))
+
+    collision_detected = bool(distance < threshold_distance)
+    return jsonify({'collision': collision_detected})
 
 if __name__ == '__main__':
     app.run(debug=True)
