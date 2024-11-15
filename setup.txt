@@ -16,7 +16,9 @@ sudo apt install build-essential -y
 sudo apt install -y libglib2.0-0 -y
 sudo apt install libglu1-mesa libgl1 -y
 sudo apt install libgl1-mesa-dev libglu1-mesa-dev libosmesa6-dev -y
-sudo apt install patchelf
+sudo apt install patchelf -y
+sudo apt install libpq-dev -y
+sudo apt install postgresql postgresql-contrib -y
 
 4.) Create a virtual environment:
 sudo apt install python3.8-venv -y
@@ -35,8 +37,24 @@ mkdir -p ~/.mujoco
 cd ~/.mujoco
 wget https://mujoco.org/download/mujoco210-linux-x86_64.tar.gz
 tar -xvf mujoco210-linux-x86_64.tar.gz
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/tang/.mujoco/mujoco210/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/<user>/.mujoco/mujoco210/bin
 
 8.) Run the example code "code.py":
 python3.8 code.py
 *Note: If you are given a black screen, do "export LIBGL_ALWAYS_SOFTWARE=1"
+
+9.) Download PostgreSQL:
+sudo apt install postgres
+
+To switch to the PostgreSQL default admin user and enter the command-line interface:
+sudo -i -u postgres
+psql
+
+To create a new database
+CREATE DATABASE <database_name>
+
+To connect to the database
+\c <database_name>
+
+To exit the psql prompt:
+\q
