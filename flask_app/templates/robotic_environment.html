@@ -6,14 +6,12 @@
 
 {% block body %}
 <section class="robotic-environment">
-    <div class="container-fluid">
-        <div class="row" style="min-height: 80vh;">
+    <div class="container-fluid content-background">
+        <div class="row" style="min-height: 100vh; padding-top: 10px;"> <!-- Adjusted padding-top to bring content up -->
             <!-- Coding Area and Simulation Side by Side -->
-              <div class="row d-flex align-items-center" style="min-height: 80vh;">
-            <!-- Code editor on the left -->
-            <div class="col-md-6">
-                <div class="code-editor" style="height: 100%;">
-                    <textarea id="code-editor" rows="20">
+            <div class="col-md-6 d-flex flex-column">
+                <div class="code-editor h-100">
+                    <textarea id="code-editor" rows="20" style="height: 100%;">
 # Sample pre-rendered code for the robotics environment
 ball_position = env.get_ball_position()
 gripper_position = env.get_gripper_position()
@@ -31,20 +29,35 @@ print("Final Gripper Position:", gripper_position)
 print("Reached near the ball.")
                     </textarea>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card simulation-card">
-                    <div class="card-header">Simulation</div>
-                    <div class="card-body d-flex justify-content-center align-items-center">
-                        <img src="{{ url_for('video_feed') }}" class="simulation-video">
+
+                <!-- Ball and Gripper Position, Run Button, Collision Notification -->
+                <div class="row align-items-start" style="margin-top: 5px;"> <!-- Reduced margin-top -->
+                    <div class="col-md-8">
+                        <h5>Ball Position:</h5>
+                        <p id="ball-position">X: --, Y: --, Z: --</p>
+                        <h5>Gripper Position:</h5>
+                        <p id="gripper-position">X: --, Y: --, Z: --</p>
+                    </div>
+                    <div class="col-md-4 d-flex justify-content-end">
+                        <button id="run-code" class="aesthetic-button">Run</button>
                     </div>
                 </div>
-            </div>
-        </div>
 
-          <!-- Output Terminal -->
-          <div class="row mt-4">
-            <div class="col-md-6">
+                <!-- Collision Notification -->
+                <div id="collision-notification" class="alert alert-success" style="margin-top: 5px; display: none;">
+                    Collision detected between the gripper and the ball!
+                </div>
+            </div>
+
+            <div class="col-md-6 d-flex flex-column">
+                <div class="card simulation-card h-80">
+                    <div class="card-header">Simulation</div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <img src="{{ url_for('video_feed') }}" width="100%" class="simulation-video">
+                    </div>
+                </div>
+
+                <!-- Output Terminal - Placed Below Simulation -->
                 <div class="card output-card">
                     <div class="card-header">Output Terminal</div>
                     <div class="card-body" id="output-box">
@@ -53,28 +66,11 @@ print("Reached near the ball.")
                 </div>
             </div>
         </div>
-
-        <!-- Collision notification -->
-        <div id="collision-notification" class="alert alert-success mt-4" style="display: none;">
-            Collision detected between the gripper and the ball!
-        </div>
-
-        <!-- Ball and Gripper Position, Run Button -->
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <h5>Ball Position:</h5>
-                <p id="ball-position">X: --, Y: --, Z: --</p>
-                <h5>Gripper Position:</h5>
-                <p id="gripper-position">X: --, Y: --, Z: --</p>
-            </div>
-            <div class="col-md-6 text-right">
-                <button id="run-code" class="aesthetic-button">Run</button>
-            </div>
-        </div>
-
-      
     </div>
 </section>
+
+
+
 
 <!-- CodeMirror and Script Initialization -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
@@ -86,7 +82,7 @@ print("Reached near the ball.")
     const codeEditor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
         lineNumbers: true,
         mode: "python",
-        theme: "default",
+        theme: "monokai",
         tabSize: 4,
         indentUnit: 4,
         autoCloseBrackets: true,

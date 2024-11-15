@@ -549,6 +549,10 @@ body {
 
 /* -------------------CODE MIRROR------------------- */
 
+.content-background {
+    padding-top: 30px;
+}
+
 /* Scoped styles for the Robotic Environment section */
 .robotic-environment {
     min-height: 100vh;
@@ -575,6 +579,7 @@ body {
 .robotic-environment .video-container img {
     width: 100%;
     height: auto;
+    max-height: 400px;
 }
 
 /* Collision notification styling */
@@ -607,7 +612,8 @@ body {
     position: relative;
 }
 
-.robotic-environment #output-box::before {
+/* Took this out to fix the output terminal margining */
+/* .robotic-environment #output-box::before {
     content: "Terminal";
     display: block;
     background-color: #333;
@@ -617,18 +623,18 @@ body {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     font-size: 13px; /* Slightly larger for better readability */
-    text-align: left;
+    /* text-align: left;
     line-height: 30px; /* Match height if necessary */
-    position: absolute;
+    /* position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 30px;
-}
+    height: 30px; 
+} */ 
 
 /* Adjust output content to be below the header */
 .robotic-environment #output-box .output-content {
-    margin-top: 30px; /* Space to account for header bar */
+    padding-top: 35px; /* Adjust this to match the header height */
 }
 
 /* Styling for error messages in output box */

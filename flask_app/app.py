@@ -3,13 +3,14 @@ import mujoco_py
 import numpy as np
 import cv2  # Import OpenCV
 from reach import ReachEnv  # Ensure this imports your ReachEnv class
+from pickandplace import FetchPickAndPlaceEnv
 import requests  # Import requests library for API communication
 import random
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = "12345999999"
 
-env = ReachEnv()  # Initialize your environment here
+env = None  # Initialize your environment here
 
 # Route for the homepage
 @app.route('/')
@@ -260,12 +261,20 @@ def RenderCourses():
 
 @app.route('/DarrenPage')
 def RenderDarrenEnv():
+    global env
+    env = ReachEnv()
     return render_template('robotic_environment.html')
+
+@app.route('/PickAndPlacePage')
+def RenderPickAndPlaceEnv():
+    global env
+    env = FetchPickAndPlaceEnv()
+    return render_template('robotic_pick_and_place_environment.html')
 
 def generate_frames():
     global env  # Access the global environment instance
     while True:
-        frame = env.render(mode='rgb_array')
+        frame = env.render(mode='rgb_array', width=1440, height=1080)
         _, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
         yield (b'--frame\r\n'

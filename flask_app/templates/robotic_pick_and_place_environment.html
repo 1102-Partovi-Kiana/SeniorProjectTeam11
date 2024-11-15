@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Robotic Environment</title>
+{% endblock %}
+
+{% block body %}
+<section class="robotic-environment">
+    <div class="container-fluid content-background">
+        <div class="row" style="min-height: 100vh; padding-top: 10px;"> <!-- Adjusted padding-top to bring content up -->
+            <!-- Coding Area and Simulation Side by Side -->
+            <div class="col-md-6 d-flex flex-column">
+                <div class="code-editor h-100">
+                    <textarea id="code-editor" rows="20" style="height: 100%;">
+distance_threshold = 0.01
+close_grip_action = np.array([0, 0, 0, -1])
+open_grip_action = np.array([0, 0, 0, 1])
+lift_action = np.array([0, 0, 0.1, 0])
+
+ball_position = env.sim.data.get_site_xpos('target0')
+env.step(open_grip_action)
+
+while True:
+    box_position = env.sim.data.get_site_xpos('object0')
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+
+    horizontal_distance = np.linalg.norm(box_position[:2] - gripper_position[:2])
+
+    if horizontal_distance <= distance_threshold:
+        break
+
+    direction = box_position - gripper_position
+    direction_normalized = direction / (np.linalg.norm(direction[:2]) + 1e-8)
+
+    horizontal_action = np.array([
+        direction_normalized[0] * 0.1,
+        direction_normalized[1] * 0.1,
+        0,
+        0
+    ])
+    env.step(horizontal_action)
+
+while True:
+    box_position = env.sim.data.get_site_xpos('object0')
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+
+    vertical_distance = box_position[2] - gripper_position[2]
+
+    if abs(vertical_distance) <= distance_threshold:
+        break
+
+    descend_action = np.array([0, 0, vertical_distance * 0.1, 0])
+    env.step(descend_action)
+
+env.step(close_grip_action)
+
+for _ in range(10):
+    env.step(np.array([0, 0, 0, 0]))
+
+box_to_ball_threshold = 0.03
+
+num_steps = 100  # Adjust this number based on your needs
+
+for _ in range(num_steps):
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+    box_position = env.sim.data.get_site_xpos('object0')
+    env.step(close_grip_action)
+
+    distance_to_ball = np.linalg.norm(ball_position - gripper_position)
+    distance_to_box = np.linalg.norm(ball_position - box_position)
+    
+    if distance_to_box <= box_to_ball_threshold:  
+        break
+
+    direction_to_ball = ball_position - gripper_position
+    direction_normalized = direction_to_ball / (np.linalg.norm(direction_to_ball) + 1e-8)
+    
+    move_to_ball_action = np.array([
+        direction_normalized[0] * 0.3,
+        direction_normalized[1] * 0.3,
+        direction_normalized[2] * 0.3,
+        0
+    ])
+    
+    # Step through the environment with the gripper closing and moving
+    env.step(close_grip_action)
+    env.step(move_to_ball_action)
+                    </textarea>
+                </div>
+
+                <!-- Ball and Gripper Position, Run Button, Collision Notification -->
+                <div class="row align-items-start" style="margin-top: 5px;"> <!-- Reduced margin-top -->
+                    <div class="col-md-8">
+                        <h5>Ball Position:</h5>
+                        <p id="ball-position">X: --, Y: --, Z: --</p>
+                        <h5>Gripper Position:</h5>
+                        <p id="gripper-position">X: --, Y: --, Z: --</p>
+                    </div>
+                    <div class="col-md-4 d-flex justify-content-end">
+                        <button id="run-code" class="aesthetic-button">Run</button>
+                    </div>
+                </div>
+
+                <!-- Collision Notification -->
+                <div id="collision-notification" class="alert alert-success" style="margin-top: 5px; display: none;">
+                    Collision detected between the gripper and the ball!
+                </div>
+            </div>
+
+            <div class="col-md-6 d-flex flex-column">
+                <div class="card simulation-card h-80">
+                    <div class="card-header">Simulation</div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <img src="{{ url_for('video_feed') }}" width="100%" class="simulation-video">
+                    </div>
+                </div>
+
+                <!-- Output Terminal - Placed Below Simulation -->
+                <div class="card output-card">
+                    <div class="card-header">Output Terminal</div>
+                    <div class="card-body" id="output-box">
+                        <!-- Output will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<!-- CodeMirror and Script Initialization -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+
+<script>
+    // Initialize CodeMirror
+    const codeEditor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
+        lineNumbers: true,
+        mode: "python",
+        theme: "monokai",
+        tabSize: 4,
+        indentUnit: 4,
+        autoCloseBrackets: true,
+        viewportMargin: Infinity
+    });
+
+    const MIN_LINE_COUNT = 100;
+    function ensureMinLines() {
+        const lineCount = codeEditor.lineCount();
+        for (let i = lineCount; i < MIN_LINE_COUNT; i++) {
+            codeEditor.replaceRange("\n", CodeMirror.Pos(i));
+        }
+    }
+    ensureMinLines();
+
+    codeEditor.setSize("100%", "calc(80vh - 100px)");
+
+    function updatePositions() {
+        fetch('/get-ball-position')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ball-position').textContent = 
+                    `X: ${data.x.toFixed(2)}, Y: ${data.y.toFixed(2)}, Z: ${data.z.toFixed(2)}`;
+            });
+        fetch('/get-gripper-position')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('gripper-position').textContent = 
+                    `X: ${data.x.toFixed(2)}, Y: ${data.y.toFixed(2)}, Z: ${data.z.toFixed(2)}`;
+            });
+    }
+
+    function checkCollision() {
+        fetch('/check-collision')
+            .then(response => response.json())
+            .then(data => {
+                const notification = document.getElementById('collision-notification');
+                if (data.collision) {
+                    notification.style.display = 'block';
+                } else {
+                    notification.style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error checking collision:', error));
+    }
+
+    document.getElementById('run-code').addEventListener('click', function() {
+        const code = codeEditor.getValue();
+
+        const formData = new FormData();
+        formData.append('code', code);
+
+        fetch('/run-code', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            const outputBox = document.getElementById('output-box');
+            outputBox.innerHTML = '';
+            if (data.error) {
+                outputBox.innerHTML += `<p style="color: red;">Error: ${data.error}</p>`;
+            } else {
+                outputBox.innerHTML += `<p>${data.message}</p>`;
+                document.getElementById('ball-position').textContent = 
+                    `X: ${data.ball_position.x.toFixed(2)}, Y: ${data.ball_position.y.toFixed(2)}, Z: ${data.ball_position.z.toFixed(2)}`;
+                document.getElementById('gripper-position').textContent = 
+                    `X: ${data.gripper_position.x.toFixed(2)}, Y: ${data.gripper_position.y.toFixed(2)}, Z: ${data.gripper_position.z.toFixed(2)}`;
+                
+                checkCollision();
+            }
+        })
+        .catch(error => {
+            console.error('Error running code:', error);
+        });
+    });
+
+    window.addEventListener('load', updatePositions);
+</script>
+{% endblock %}
