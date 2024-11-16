@@ -941,13 +941,133 @@ body {
 
 
 /* -------------------COURSESPAGE------------------- */
-.course-container {
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-    padding-top: 30px;
+.greeting {
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    padding-top: 80px;
+    background-color: #e8f5fe; /* Soft background color */
+    border-radius: 10px;
 }
 
+.greeting h1 {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #1d4ed8; /* Blue color to match theme */
+    letter-spacing: 0.5px; 
+    margin: 0;
+}
+
+.greeting .username {
+    color: #1a73e8; /* Different shade of blue for the username */
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.greeting h1 span.username {
+    font-style: italic;
+    font-size: 1.2em;
+}
+
+.course-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    background-color: #e8f5fe;
+    min-height: 100vh; 
+    height: auto; /* Removes any fixed height */
+    overflow: visible; 
+    overflow-y: auto; 
+}
+
+.modules-overview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 1200px;
+    justify-content: center;
+    padding-bottom: 100px;
+}
+
+.module-card {
+    background-color: #ffffff;
+    width: 280px;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between; 
+    flex-direction: column;
+    text-align: left;
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin: 10px;
+    overflow-y: auto; 
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background-color: #d4f1d0;
+    padding: 8px 0;
+    color: #1d4ed8;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 10px; 
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: 100%; 
+    box-sizing: border-box;
+    font-size: 0.75em;
+}
+
+.module-card h2 a {
+    color: #1d4ed8;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: 600;
+    line-height: 1.3;
+    padding: 10px 20px; /* Adds spacing around title */
+    display: block;
+}
+
+.module-card p {
+    color: #4b5563;
+    font-size: 0.95em;
+    line-height: 1.6;
+    margin: 10px 20px; /* Adjusts spacing within the card */
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85em;
+    color: #6b7280;
+    padding: 10px 20px;
+    border-top: 1px solid #e5e7eb;
+    margin-top: auto;
+}
+
+.level, .duration {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.level::before {
+    content: "📈"; /* Icon placeholder */
+    font-size: 1em;
+}
+
+.duration::before {
+    content: "⏰"; /* Icon placeholder */
+    font-size: 1em;
+}
+
+/* Sidebar Styling */
 .course-sidebar {
     flex: 0 0 25%;
     max-width: 25%;
@@ -957,16 +1077,17 @@ body {
     overflow-y: auto;
 }
 
-.course-main-content {
-    flex: 1;
-    padding: 20px;
-    background-color: white;
-    overflow-y: auto;
+.course-sidebar-header {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1rem;
 }
 
 .course-list {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .course-item {
@@ -996,12 +1117,21 @@ body {
     font-size: 0.9rem;
 }
 
+/* --- Main Content Styling --- */
+.course-main-content {
+    flex: 1;
+    padding: 30px;
+    background-color: white;
+    overflow-y: auto;
+}
+
+/* Video Section Styling */
 .course-video-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: calc(100vh - 100px);
+    padding-bottom: 20px;
 }
 
 .course-video {
@@ -1009,20 +1139,103 @@ body {
     max-width: 800px;
     border-radius: 8px;
     margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Title and Description Styling */
 .course-title {
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: #333;
-    margin-bottom: 10px;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
     text-align: center;
 }
 
 .course-description {
     color: #555;
-    font-size: 1rem;
+    font-size: 1.1rem;
     text-align: center;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
 }
+
+.course-list .sub-list {
+    display: none;
+    margin-left: 20px;
+}
+
+.course-item.active .sub-list {
+    display: block;
+}
+
+
+/* --- Module Section Styling --- */
+.module-section {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.module-section h3 {
+    font-size: 1.5rem;
+    color: #2a5ca0;
+    margin-bottom: 0.5rem;
+    border-left: 4px solid #2a5ca0;
+    padding-left: 10px;
+}
+
+.module-section p {
+    color: #333;
+    line-height: 1.6;
+}
+
+/* List Styling */
+.module-section ul {
+    padding-left: 1.5em;
+    color: #444;
+    margin: 10px 0;
+}
+
+.module-section li {
+    font-size: 1rem;
+    margin-bottom: 0.5em;
+}
+
+.module-section h3::before {
+    content: "\1F916"; /* Robot emoji icon */
+    margin-right: 8px;
+    font-size: 1.2em;
+    color: #1d4ed8;
+}
+
+/* Image Styling */
+.module-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin: 15px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Code Block Styling */
+pre {
+    background-color: #272822;
+    color: #f8f8f2;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 0.95em;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+code {
+    font-family: 'Courier New', monospace;
+}
+
+
 
 /* -------------------BUTTONS------------------- */
 
@@ -1096,3 +1309,5 @@ body {
     background-position: center calc(var(--gradoffset) - 0.75em);
     background: linear-gradient(180deg, hsl(210, 30%, 98%), hsl(210, 30%, 90%)); 
 }
+
+

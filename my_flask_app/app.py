@@ -81,6 +81,15 @@ def RenderLogin():
 def RenderCourses():
     return render_template('courses.html')
 
+@app.route('/module/introduction')
+def module_intro():
+    return render_template('module_intro.html') 
+
+@app.route('/module/libraries')
+def module_libraries():
+    return render_template('module_libraries.html') 
+
+
 # Debug mode allows for automatic reloading and better error messages
 if __name__ == '__main__':
     app.run(debug=True)

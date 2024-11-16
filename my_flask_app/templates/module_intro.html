@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Introduction to Robotics Programming - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item active">
+                <a href="#overview" class="course-link">Definition and Overview of Robotics</a>
+                <ul class="sub-list">
+                    <li><a href="#what-is-robot">What is a robot?</a></li>
+                    <li><a href="#intro-field-robotics">Introduction to the field of robotics</a></li>
+                    <li><a href="#goals-applications">Goals and applications</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#history" class="course-link">History of Robotics</a>
+                <ul class="sub-list">
+                    <li><a href="#development">The development of robotics</a></li>
+                    <li><a href="#milestones">Key milestones</a></li>
+                    <li><a href="#influential-systems">Influential robotics systems</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#types" class="course-link">Types of Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#industrial">Industrial robots</a></li>
+                    <li><a href="#humanoid">Humanoid robots</a></li>
+                    <li><a href="#mobile">Mobile robots</a></li>
+                    <li><a href="#collaborative-tools">Collaborative tools</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#applications" class="course-link">Importance and Applications of Robotics</a>
+                <ul class="sub-list">
+                    <li><a href="#manufacturing">Manufacturing</a></li>
+                    <li><a href="#healthcare">Healthcare</a></li>
+                    <li><a href="#exploration">Exploration</a></li>
+                    <li><a href="#agriculture">Agriculture</a></li>
+                    <li><a href="#entertainment">Entertainment</a></li>
+                </ul>
+            </li>
+            <!-- Add other topics similarly -->
+        </ul>
+    </div>
+
+    <!-- Main Content for the module -->
+    <div class="course-main-content">
+        <!-- Video or Header Section -->
+        <div class="course-video-section">
+            <video controls class="course-video">
+                <source src="{{ url_for('static', filename='videos/intro-to-robotics.mp4') }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <h2 class="course-title">Introduction to Robotics Programming</h2>
+            <p class="course-description">This module covers the basics of robotics programming, including the anatomy of robots, simulations, and foundational programming concepts.</p>
+        </div>
+
+        <!-- Section 1: What is a robot? -->
+        <div class="module-section" id="overview">
+            <h3>What is a robot?</h3>
+            <p>Robot: An embodied agent that can be programmed to carry out a complex series of actions. A robot is an autonomous or partially autonomous machine capable of sensing its environment and making decisions based on computations. There are a variety of robots with unique qualities and capabilities.</p>
+            <p>To compute, this involves everything from small electronic circuits to multicore processors or even a cluster of networked computers. In action, robots vary the most, as some robots can move around, manipulate objects, perform specific tasks, while others can do many things.</p>
+        </div>
+
+        <!-- Section 2: Robotics as a field of study -->
+        <div class="module-section" id="anatomy">
+            <h3>Understanding Robot Anatomy</h3>
+            <p>Robotics is a young and continuously growing interdisciplinary field. It involves the development and construction of systems that combine electrical and mechanical components with a computer for calculations. This includes the creation of machines that assist humans with repetitive, precise, or dangerous tasks. Robotics includes core disciplines such as electrical engineering, mechanical engineering, and computer science, but also intertwines with artificial intelligence, computer vision, applied mathematics, etc.</p>
+            <ul>
+                <li><strong>Actuators</strong>: Motors that create movement.</li>
+                <li><strong>Sensors</strong>: Devices that allow the robot to perceive its environment (e.g., cameras, touch sensors).</li>
+                <li><strong>Controllers</strong>: The "brain" of the robot that processes inputs and sends commands to actuators.</li>
+                <li><strong>Power Systems</strong>: Components that supply energy to the robot, like batteries.</li>
+            </ul>
+            <p>Each component plays a critical role in enabling the robot to complete tasks and respond to its environment. Below is a basic diagram of a robot's anatomy:</p>
+            <img src="{{ url_for('static', filename='images/robot-anatomy.png') }}" alt="Robot Anatomy" class="module-image">
+        </div>
+
+        <!-- Section 3: Simulation Environments -->
+        <div class="module-section" id="simulation">
+            <h3>Simulation Environments</h3>
+            <p>Simulation environments allow developers to test and train robots in virtual settings, which is crucial for minimizing risks and optimizing designs before building physical robots.</p>
+            <p>Some popular simulation platforms include:</p>
+            <ul>
+                <li><strong>MuJoCo</strong>: A physics-based engine for simulating robots and dynamic systems.</li>
+                <li><strong>OpenAI Gym</strong>: A toolkit for developing and comparing reinforcement learning algorithms, providing various robotics environments.</li>
+            </ul>
+            <p>Using simulations, you can safely experiment with different robot behaviors and algorithms.</p>
+            <pre>
+                <code>
+import gym
+env = gym.make('FetchReach-v1')
+env.reset()
+                </code>
+            </pre>
+        </div>
+
+        <!-- Section 4: Basic Programming for Robots -->
+        <div class="module-section" id="programming">
+            <h3>Basic Programming for Robots</h3>
+            <p>In this section, we’ll go through the basics of coding for robots. Here’s a simple code snippet to get started:</p>
+            <pre>
+                <code>
+import gym
+
+# Create a simulation environment
+env = gym.make('FetchReach-v1')
+observation = env.reset()
+
+# Take a random action to see the robot move
+action = env.action_space.sample()
+observation, reward, done, info = env.step(action)
+
+print("Observation:", observation)
+                </code>
+            </pre>
+        </div>
+    </div>
+</div>
+{% endblock %}

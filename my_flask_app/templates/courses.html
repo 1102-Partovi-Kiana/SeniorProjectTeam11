@@ -4,50 +4,149 @@
 <title>Robotics Courses - CORE</title>
 {% endblock %}
 
-{% block extra_css %}
-{% endblock %}
-
 {% block body %}
-<div class="course-container">
-    <!-- Sidebar -->
-    <div class="course-sidebar">
-        <div class="course-sidebar-header">
-            <i class="fas fa-list"></i>
-            <span>Contents</span>
-        </div>
-        <ul class="course-list">
-            <li class="course-item active">
-                <a href="#" class="course-link">
-                    <span>Introduction to Robotics</span>
-                    <span class="course-duration">1m 31s</span>
-                </a>
-            </li>
-            <li class="course-item">
-                <a href="#" class="course-link">
-                    <span>Robotic Sensors</span>
-                    <span class="course-duration">2m 01s</span>
-                </a>
-            </li>
-            <li class="course-item">
-                <a href="#" class="course-link">
-                    <span>Path Planning</span>
-                    <span class="course-duration">2m 23s</span>
-                </a>
-            </li>
-            <!-- More items can be added here -->
-        </ul>
-    </div>
 
-    <!-- Main Content -->
-    <div class="course-main-content">
-        <div class="course-video-section">
-            <video controls class="course-video">
-                <source src="{{ url_for('static', filename='videos/your-video-file.mp4') }}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <h2 class="course-title">Introduction to Robotics</h2>
-            <p class="course-description">Learn the basics of robotics and its applications in modern technology.</p>
+<!-- Greet the user -->
+<div class="greeting">
+    <h1>Hello, {{ username }}! Welcome to your course catalog</h1>
+</div>
+
+<div class="course-container">
+    <div class="modules-overview">
+        <!-- Course Card 1 -->
+        <div class="module-card">
+            <div class="card-header">
+                <span class="course-type">Free course</span>
+            </div>
+            <h2><a href="{{ url_for('module_intro') }}">Introduction to Robotics</a></h2>
+            <p>Learn the basics of robotics, from robot anatomy to coding simulations.</p>
+            <div class="card-footer">
+                <span class="level">Beginner Friendly</span>
+                <span class="duration">30 minutes</span>
+            </div>
         </div>
+<!-- <p>Every big journey in robotics starts with a single code line!</p> -->
+        <!-- Course Card 2 -->
+        <div class="module-card">
+            <div class="card-header">
+                <span class="course-type">Free course</span>
+            </div>
+            <h2><a href="#">Types of Robots</a></h2>
+            <p>Gain insights into how robots serve unique roles and reshape the future with innovative applications.</p>
+            <div class="card-footer">
+                <span class="level">Beginner Friendly</span>
+                <span class="duration">3 hours</span>
+            </div>
+        </div>
+
+        <!-- Course Card 3 -->
+        <div class="module-card">
+            <div class="card-header">
+                <span class="course-type">Free course</span>
+            </div>
+            <h2><a href="#">Fetch Robot</a></h2>
+            <p>Master the skills required to program and control the Fetch Robot through hands-on techniques and advanced algorithms.</p>
+            <div class="card-footer">
+                <span class="level">Beginner Friendly</span>
+                <span class="duration">3 hours</span>
+            </div>
+        </div>
+
+        <!-- Course Card 4 -->
+        <div class="module-card">
+            <div class="card-header">
+                <span class="course-type">Free course</span>
+            </div>
+            <h2><a href="#">Fetch Reach Robot</a></h2>
+            <p>Master the art of precision and control as you learn to maneuver the Fetch Reach Robot.</p>
+            <div class="card-footer">
+                <div class="certificate">
+                    <span>With Certificate</span>
+                </div>
+                <span class="level">Beginner Friendly</span>
+                <span class="duration">3 hours</span>
+            </div>
+        </div>
+
+        <!-- Course Card 5 -->
+        <div class="module-card">
+            <div class="card-header">
+                <span class="course-type">Free course</span>
+            </div>
+            <h2><a href="#">Fetch Push Robot</a></h2>
+            <p>Explore the mechanics of robotic pushing with the Fetch Push Robot.</p>
+            <div class="card-footer">
+                <span class="level">Beginner Friendly</span>
+                <span class="duration">3 hours</span>
+            </div> <!-- Closing tag added here -->
+        </div>
+
+        <!-- Course Card 6 -->
+        <div class="module-card">
+            <div class="card-header">
+                <span class="course-type">Free course</span>
+            </div>
+            <h2><a href="#">Fetch Slide Robot</a></h2>
+            <p>Learn how to program the Fetch Slide Robot to smoothly transport objects using sliding techniques.</p>
+            <div class="card-footer">
+                <span class="level">Beginner Friendly</span>
+                <span class="duration">3 hours</span>
+            </div>
+        </div>
+
+        <!-- Course Card 7 -->
+        <div class="module-card">
+            <div class="card-header">
+                <span class="course-type">Free course</span>
+            </div>
+            <h2><a href="#">Fetch Pick and Place Robot</a></h2>
+            <p>Become proficient in robotic object manipulation with the Fetch Pick and Place Robot.
+                Discover techniques for grasping, lifting, and placing objects accurately using advanced robotic algorithms.</p>
+            <div class="card-footer">
+                <span class="level">Intermediate</span>
+                <span class="duration">3 hours</span>
+            </div>
+        </div>
+
+        <!-- Course Card 8 -->
+        <div class="module-card">
+            <div class="card-header">
+                <span class="course-type">Free course</span>
+            </div>
+            <h2><a href="#">Dextrous Hand Robot</a></h2>
+            <p>Unlock the secrets of human-like dexterity with the Dexterous Hand Robot.</p>
+            <div class="card-footer">
+                <span class="level">Intermediate</span>
+                <span class="duration">3 hours</span>
+            </div>
+        </div>
+
+          <!-- Course Card 9 -->
+          <div class="module-card">
+            <div class="card-header">
+                <span class="course-type">Free course</span>
+            </div>
+            <h2><a href="#">Hand Reach</a></h2>
+            <p>Perfect the ability to extend robotic reach with the Hand Reach Robot.</p>
+            <div class="card-footer">
+                <span class="level">Intermediate</span>
+                <span class="duration">3 hours</span>
+            </div>
+        </div>
+
+         <!-- Course Card 10 -->
+         <div class="module-card">
+            <div class="card-header">
+                <span class="course-type">Free course</span>
+            </div>
+            <h2><a href="#">Hand Manipulate Block</a></h2>
+            <p>Unlock the potential of robotics by learning to manipulate objects with the Hand Manipulate Block.</p>
+            <div class="card-footer">
+                <span class="level">Intermediate</span>
+                <span class="duration">3 hours</span>
+            </div>
+        </div>
+
     </div>
 </div>
 {% endblock %}
