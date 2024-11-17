@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Introduction to Robotics Programming - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item active"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="#overview" class="course-link">Definition and Overview of Robotics</a>
+                <ul class="sub-list">
+                    <li><a href="#what-is-robot">What is a robot?</a></li>
+                    <li><a href="#intro-field-robotics">Robotics as a Field of Study</a></li>
+                    <li><a href="#goals-applications">Goals and Applications</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#history" class="course-link">History of Robotics</a>
+                <ul class="sub-list">
+                    <li><a href="#development">The development of robotics</a></li>
+                    <li><a href="#milestones">Key milestones</a></li>
+                    <li><a href="#influential-systems">Influential robotics systems</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#types" class="course-link">Types of Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#industrial">Industrial robots</a></li>
+                    <li><a href="#humanoid">Humanoid robots</a></li>
+                    <li><a href="#mobile">Mobile robots</a></li>
+                    <li><a href="#collaborative-tools">Collaborative tools</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#applications" class="course-link">Importance and Applications of Robotics</a>
+                <ul class="sub-list">
+                    <li><a href="#manufacturing">Manufacturing</a></li>
+                    <li><a href="#healthcare">Healthcare</a></li>
+                    <li><a href="#exploration">Exploration</a></li>
+                    <li><a href="#agriculture">Agriculture</a></li>
+                    <li><a href="#entertainment">Entertainment</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Main Content for the module -->
+    <div class="course-main-content">
+        <!-- Title and Objectives Section -->
+         <div class="container objectives-section">
+            <h1 class="module-h1-title">Introduction to Robotics</h1>
+            <h2 class="module1-section-title">What You Will Learn</h2>
+            <p class="module1-section-subtitle">Here are the key skills and knowledge you'll gain from this module</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="objective-card">
+                        <div class="icon">
+                            <img src="/static/img/book.png" alt="Definition and Overview">
+                        </div>
+                        <h4>Defintion and Overview</h4>
+                        <p>Understand what robotics is and its fundamental concepts.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="objective-card">
+                        <div class="icon">
+                            <img src="/static/img/clock.png" alt="History of Robotics">
+                        </div>
+                        <h4>History of Robotics</h4>
+                        <p>Learn how robotics has evolved over time and its key milestones.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="objective-card">
+                        <div class="icon">
+                            <img src="/static/img/humanoid.png" alt="Types of Robots">
+                        </div>
+                        <h4>Types of Robots</h4>
+                        <p>Explore different categories of robots and their purposes.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="objective-card">
+                        <div class="icon">
+                            <img src="/static/img/earth.png" alt="Applications of Robots">
+                        </div>
+                        <h4>Importance and Applications</h4>
+                        <p>Discover how robots are transforming industries and daily life.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="objective-card">
+                        <div class="icon">
+                            <img src="/static/img/robotarm.png" alt="Robot Anatomy">
+                        </div>
+                        <h4>Robot Anatomy</h4>
+                        <p>Understand the components and structure of modern robots.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="objective-card">
+                        <div class="icon">
+                            <img src="/static/img/puzzle.png" alt="Challenges in Robotics">
+                        </div>
+                        <h4>Challenges in Robotics</h4>
+                        <p>Identify the technical, social, and ethical challenges robots face.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="objective-card">
+                        <div class="icon">
+                            <img src="/static/img/coding.png" alt="Robot Programming">
+                        </div>
+                        <h4>Robot Programming</h4>
+                        <p>Learn to code and simulate robot behaviors.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="objective-card">
+                        <div class="icon">
+                            <img src="/static/img/people.png" alt="Social and Ethical Implications">
+                        </div>
+                        <h4>Social & Ethical Implications</h4>
+                        <p>Understand the impact of robtics on society and ethics</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="objective-card">
+                        <div class="icon">
+                            <img src="/static/img/future.png" alt="Future Trends">
+                        </div>
+                        <h4>Future Trends</h4>
+                        <p>Explore emerging technologies and the future of robotics.</p>
+                    </div>
+                </div>
+         </div>
+         <div class="next-button text-right mt-4">
+            <a href="{{ url_for('overview') }}" class="btn btn-primary">Next: Definition and Overview</a>
+        </div>
+{% endblock %}

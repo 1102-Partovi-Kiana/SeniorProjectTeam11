@@ -259,6 +259,14 @@ def RenderLogin():
 def RenderCourses():
     return render_template('courses.html')
 
+@app.route('/module1/introduction')
+def module_intro():
+    return render_template('course1-content/module_intro.html') 
+
+@app.route('/module1/introduction/overview')
+def overview():
+    return render_template('course1-content/overview.html')
+
 @app.route('/DarrenPage')
 def RenderDarrenEnv():
     global env

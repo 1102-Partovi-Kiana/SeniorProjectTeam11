@@ -1,116 +1,201 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Home - CORE</title>
+<title>Home - CORE Educational Platform</title>
 {% endblock %}
 
-<!-- Body -->
 {% block body %}
 <section class="hero-section bg-light text-dark py-5">
     <div class="container-fluid text-center">
         <div class="row justify-content-center">
-            <div class="col-md-9">
-				<section class="text-center cursive-ware-section">
-					<h1 class="cursive-core">Core</h1>
-				</section>
-                <h1 class="display-4 fw-bold">Online Platform for Robotics Students</h1>
+            <div class="col-md-9 pb-5">
+                <section class="text-center cursive-ware-section">
+                    <h1 class="cursive-core">Core</h1>
+                </section>
+                <h1 class="display-4 fw-bold">Virtual Lab for Robotics Students</h1>
                 <p class="lead mt-4">
                     CORE is an online platform for developing robotics reinforcement learning algorithms.
                     Using OpenAI Gym libraries and an integrated code editor with syntax highlighting,
-                    CORE offers a seamless environment for students to build machine learning algorithms with
+                    CORE offers a seamless environment for students to code robots with
                     minimal performance overhead.
                 </p>
-                <a class="btn btn-white btn-lg mt-4 px-5" href="{{ url_for('RenderSignup') }}">Join Now</a>
+                <a class="aesthetic-button" href="#">Join Now</a>
             </div>
         </div>
     </div>
 </section>
 
-<section class="cta py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h2 class="cta-title">Built on Open Source Software</h2>
-                <p class="cta-paragraph mb-5 mb-md-3">
-                    CORE is powered by open-source OpenAI Gym libraries, a widely used toolkit for developing
-                    reinforcement learning algorithms. Students develop and submit code within CORE, receiving feedback through
-                    generated robot simulation videos and terminal output.
-                </p>
-            </div>
-            <div class="col-lg-6 text-center">
-                <svg class="bi" fill="currentColor">
-                    <use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#layers-fill" />
-                </svg>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="cta bg-light py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 text-center order-lg-1"> <!-- Moved icon to the left on large screens -->
-                <svg class="bi" fill="currentColor">
-                    <use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#speedometer" />
-                </svg>
-            </div>
-            <div class="col-lg-6 order-lg-2"> <!-- Text on the right on large screens -->
-                <h2 class="cta-title">Lightweight Development</h2>
-                <p class="cta-paragraph mb-5 mb-md-3">
-                    All code compilation takes place in the cloud, giving users the flexibility to develop using any device,
-                    without needing to install local software.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="cta py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h2 class="cta-title">Built for Students and Teachers</h2>
-                <p class="cta-paragraph mb-5 mb-md-3">
-                    CORE enables instructors to manage virtual classrooms, track student progress, and review submitted code 
-                    from each environment.
-                </p>
-            </div>
-            <div class="col-lg-6 text-center">
-                <svg class="bi" fill="currentColor">
-                    <use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#people-fill" />
-                </svg>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="cta bg-light py-5 last-cta">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 text-center order-lg-1">
-                <div class="d-flex justify-content-start align-items-end custom-shift-left">
-					<svg class="bi" fill="currentColor">
-                        <use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#phone" />
-                    </svg>
-                    <svg class="bi" fill="currentColor">
-                        <use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#tablet" />
-                    </svg>
-                    <svg class="bi" fill="currentColor">
-                        <use xlink:href="{{ url_for('static', filename='img/bootstrap-icons.svg') }}#laptop" />
-                    </svg>
+<!-- Robotics Features Section -->
+<section class="robotics-features-section bg-white text-dark py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Develop Reinforcement Algorithms</h2>
+        <p class="lead mb-5">Take your skills to the next level with immersive, hands-on simulations designed to build your confidence.</p>
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <div class="feature-item-container">
+                    <video autoplay loop muted playsinline>
+                        <source src="/static/videos/HandRobot.mov" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
             </div>
-            <div class="col-lg-6 order-lg-2">
-                <h2 class="cta-title">Optimized for All Devices</h2>
-                <p class="cta-paragraph mb-5 mb-md-3">
-                    CORE is fully responsive and optimized for smartphones, tablets, and desktops, providing a smooth user experience
-                    across all platforms.
-                </p>
+            <div class="col-md-3">
+                <div class="feature-item-container">
+                    <video autoplay loop muted playsinline>
+                        <source src="/static/videos/SlideRobot.mov" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-item-container">
+                    <video autoplay loop muted playsinline>
+                        <source src="/static/videos/FrankaKitchen.mov" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="feature-item-container">
+                    <video autoplay loop muted playsinline>
+                        <source src="/static/videos/Pick.mov" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- Open Source Software Section -->
+<section class="open-source-section bg-light text-dark py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Left Text Section -->
+            <div class="col-md-6">
+                <div class="text-section">
+                    <h2 class="mb-4">Powering Your Learning with Open Source Software</h2>
+                    <!-- Divider line directly under the title -->
+                        <hr style="width: 70%; margin: 10px auto; border-top: 2px solid #ccc;">
+                        <p>CORE leverages the capabilities of OpenAI Gym, a widely-used toolkit designed to develop and test reinforcement learning algorithms.</p>
+                        <p><strong>Build, test, and refine your skills—all in one place.</strong></p>
+                </div>
+            </div>
+            <!-- Right Animation Section -->
+            <div class="col-md-6">
+                <div class="animation-container">
+                    <!-- Square that will animate independently -->
+                    <div class="square" id="animatedSquare"></div>
+                    <!-- Cards that will appear after the square animates -->
+                    <div class="card" id="card1">
+                        <div class="card-content front">
+                            <h5 class="label">OpenAI Gym</h5>
+                            <div class="logo-container"> 
+                                <img src="/static/img/openaigym.svg" alt="OpenAI Gym Logo" class="card-logo">
+                            </div>
+                        </div>
+                        <div class="card-content back">
+                            <h5>OpenAI Gym</h5>
+                            <p>Open-source API written in Python for solving reinforcement learning algorithms.</p>
+                            <a href="https://www.gymlibrary.dev/index.html" target="_blank" rel="noopener noreferrer" class="read-more">Read More ↗</a>
+                            <div class="card-line" id="card-line1"></div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="card2">
+                        <div class="card-content front">
+                            <h5 class="label">PostgressSQL</h5>
+                            <div class="logo-container"> 
+                                <img src="/static/img/postgresql.svg" alt="PostgressSQL Logo" class="card-logo">
+                            </div>
+                        </div>
+                        <div class="card-content back">
+                            <h5>PostgressSQL Database</h5>
+                            <p>Powerful, open-source database management system trusted for handling complex data efficiently. PostgreSQL stores and manages data for robotics environments, user interactions, and more.</p>
+                            <a href="https://www.postgresql.org" target="_blank" rel="noopener noreferrer" class="read-more">Read More ↗</a>
+                            <div class="card-line" id="card-line2"></div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="card3">
+                        <div class="card-content front">
+                            <h5 class="label">Flask Server</h5>
+                            <div class="logo-container"> 
+                                <img src="/static/img/flask.svg" alt="Flask Server Logo" class="card-logo">
+                            </div>
+                        </div>
+                        <div class="card-content back">
+                            <h5>Flask Web Framework</h5>
+                            <p>Lightweight back-end software which receives and distributes content.</p>
+                            <a href="https://flask.palletsprojects.com/en/stable/" target="_blank" rel="noopener noreferrer" class="read-more">Read More ↗</a>
+                            <div class="card-line" id="card-line3"></div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="card4">
+                        <div class="card-content front">
+                            <h5 class="label">Bootstrap</h5>
+                            <div class="logo-container"> 
+                                <img src="/static/img/bootstrap.svg" alt="Bootstrap Logo" class="card-logo">
+                            </div>
+                        </div>
+                        <div class="card-content back">
+                            <h5>Bootstrap Framework</h5>
+                            <p>Popular front-end toolkit for building responsive websites. Bootstrap provides a consistent design foundation, allowing us to create clean, professional layouts.</p>
+                            <a href="https://getbootstrap.com" target="_blank" rel="noopener noreferrer" class="read-more">Read More ↗</a>
+                            <div class="card-line" id="card-line4"></div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </div>
+</section>
+
+
+<!-- Built for Students and Instructors Section  -->
+<section class="built-for-section py-5">
+    <!-- Video Background -->
+    <video autoplay loop muted playsinline class="background-video">
+        <source src="/static/videos/MyMovie9.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="container text-center">
+        <h2 class="section-title">Built for Students and Instructors</h2>
+        <p class="section-subtitle">CORE is designed to support the learning journey of students and empower instructors with the tools they need.</p>
+        
+        <div class="row justify-content-center align-items-start">
+            <div class="col-md-5">
+                <div class="user-type-card student-card">
+                    <h3 class="card-title">For Students</h3>
+                    <p class="card-description">Explore hands-on simulations, practice coding robots, and build confidence in reinforcement learning concepts with an intuitive platform.</p>
+                    <ul class="features-list">
+                        <li>Interactive labs and exercises</li>
+                        <li>Real-world robotics scenarios</li>
+                        <li>Instant feedback on code</li>
+                        <li>Learning progress tracking</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="user-type-card instructor-card">
+                    <h3 class="card-title">For Instructors</h3>
+                    <p class="card-description">Equip your students with a structured learning environment. Monitor progress, assign tasks, and provide personalized support.</p>
+                    <ul class="features-list">
+                        <li>Dashboard for tracking student progress</li>
+                        <li>Customizable assignments and labs</li>
+                        <li>Insights on student performance</li>
+                        <li>Easy integration with course materials</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cute ARea -->
 <section class="py-5 text-white custom-margin-section" style="background: linear-gradient(45deg, #6ea3f5, #3467c4);">
     <div class="container">
         <div class="row align-items-center">
@@ -137,4 +222,10 @@
         </div>
     </div>
 </section>
+
+<!-- Back to Top Button -->
+<button id="backToTop" class="back-to-top">
+    ↑ Back to Top
+</button>
+
 {% endblock %}
