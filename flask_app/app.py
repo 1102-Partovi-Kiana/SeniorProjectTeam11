@@ -7,6 +7,7 @@ import requests  # Import requests library for API communication
 import random
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_mail import Mail, Message
 from config import Config
 from auth_func import *
 from classes import db, User
@@ -16,6 +17,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
+
 
 env = ReachEnv()  # Initialize your environment here
 

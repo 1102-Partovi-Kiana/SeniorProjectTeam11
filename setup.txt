@@ -44,7 +44,7 @@ python3.8 code.py
 *Note: If you are given a black screen, do "export LIBGL_ALWAYS_SOFTWARE=1"
 
 9.) Download PostgreSQL:
-sudo apt install postgres
+sudo apt install postgresql
 
 To switch to the PostgreSQL default admin user and enter the command-line interface:
 sudo -i -u postgres
@@ -58,3 +58,9 @@ To connect to the database
 
 To exit the psql prompt:
 \q
+
+To create a new user
+CREATE USER my_user WITH PASSWORD 'password' <additional options>;
+
+To login to new user
+psql-U <username> -d <database>
