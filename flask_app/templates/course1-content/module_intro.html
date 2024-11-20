@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Introduction to Robotics Programming - CORE</title>
+<title>Introduction to Robotics Programming Objectives - CORE</title>
 {% endblock %}
 
 {% block body %}
@@ -27,9 +27,10 @@
             <li class="course-item">
                 <a href="#history" class="course-link">History of Robotics</a>
                 <ul class="sub-list">
-                    <li><a href="#development">The development of robotics</a></li>
-                    <li><a href="#milestones">Key milestones</a></li>
-                    <li><a href="#influential-systems">Influential robotics systems</a></li>
+                    <li><a href="#industrial">Industrial Robots</a></li>
+                    <li><a href="#humanoid">Humanoid Robots</a></li>
+                    <li><a href="#mobile">Mobile Robots</a></li>
+                    <li><a href="#collaborative-robots">Collaborative Robots</a></li>
                 </ul>
             </li>
             <li class="course-item">
@@ -51,13 +52,22 @@
                     <li><a href="#entertainment">Entertainment</a></li>
                 </ul>
             </li>
+            <li class="course-item">
+                <a href="#anatomy" class="course-link">Robot Anatomy</a>
+                <ul class="sub-list">
+                    <li><a href="#actuators">Actuators</a></li>
+                    <li><a href="#sensors">Sensors</a></li>
+                    <li><a href="#controllers">Controllers</a></li>
+                    <li><a href="#effectors">End Effectors</a></li>
+                </ul>
+            </li>
         </ul>
-    </div>
+    </div> <!-- End of course-sidebar -->
     
     <!-- Main Content for the module -->
     <div class="course-main-content">
         <!-- Title and Objectives Section -->
-         <div class="container objectives-section">
+        <div class="container objectives-section">
             <h1 class="module-h1-title">Introduction to Robotics</h1>
             <h2 class="module1-section-title">What You Will Learn</h2>
             <p class="module1-section-subtitle">Here are the key skills and knowledge you'll gain from this module</p>
@@ -67,7 +77,7 @@
                         <div class="icon">
                             <img src="/static/img/book.png" alt="Definition and Overview">
                         </div>
-                        <h4>Defintion and Overview</h4>
+                        <h4>Definition and Overview</h4>
                         <p>Understand what robotics is and its fundamental concepts.</p>
                     </div>
                 </div>
@@ -131,7 +141,7 @@
                             <img src="/static/img/people.png" alt="Social and Ethical Implications">
                         </div>
                         <h4>Social & Ethical Implications</h4>
-                        <p>Understand the impact of robtics on society and ethics</p>
+                        <p>Understand the impact of robotics on society and ethics.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -143,8 +153,11 @@
                         <p>Explore emerging technologies and the future of robotics.</p>
                     </div>
                 </div>
-         </div>
-         <div class="next-button text-right mt-4">
-            <a href="{{ url_for('overview') }}" class="btn btn-primary">Next: Definition and Overview</a>
+            </div> <!-- End of row -->
+        </div> <!-- End of objectives-section -->
+        <div class="next-button text-right mt-4">
+            <a href="{{ url_for('overview') }}" class="secondary-button"> Next: Definition and Overview</a>
         </div>
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Introduction to Robotics Programming - CORE</title>
+<title>Introduction to Robotics Programming Content - CORE</title>
 {% endblock %}
 
 {% block body %}
@@ -13,7 +13,7 @@
             <span>Contents</span>
         </div>
         <ul class="course-list">
-            <li class="course-item"> 
+            <li class="course-item">
                 <a href="#objectives" class="course-link">Objectives</a>
             </li>
             <li class="course-item active">
@@ -35,10 +35,10 @@
             <li class="course-item">
                 <a href="#types" class="course-link">Types of Robots</a>
                 <ul class="sub-list">
-                    <li><a href="#industrial">Industrial robots</a></li>
-                    <li><a href="#humanoid">Humanoid robots</a></li>
-                    <li><a href="#mobile">Mobile robots</a></li>
-                    <li><a href="#collaborative-tools">Collaborative tools</a></li>
+                    <li><a href="#industrial">Industrial Robots</a></li>
+                    <li><a href="#humanoid">Humanoid Robots</a></li>
+                    <li><a href="#mobile">Mobile Robots</a></li>
+                    <li><a href="#collaborative-robots">Collaborative Robots</a></li>
                 </ul>
             </li>
             <li class="course-item">
@@ -51,34 +51,80 @@
                     <li><a href="#entertainment">Entertainment</a></li>
                 </ul>
             </li>
+            <li class="course-item">
+                <a href="#anatomy" class="course-link">Robot Anatomy</a>
+                <ul class="sub-list">
+                    <li><a href="#actuators">Actuators</a></li>
+                    <li><a href="#sensors">Sensors</a></li>
+                    <li><a href="#controllers">Controllers</a></li>
+                    <li><a href="#effectors">End Effectors</a></li>
+                </ul>
+            </li>
         </ul>
-    </div>
-               
-    <!-- Video Section -->
-    <div class="course-video-section">
-        <video controls class="course-video">
-            <source src="{{ url_for('static', filename='videos/IntroVid.mov') }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </div>
+    </div> <!-- End of course-sidebar -->
 
-    <!-- Section 1: What is a robot? -->
-    <div class="module-section" id="what-is-robot">
-        <h3>What is a robot?</h3>
-        <p>Robot: An embodied agent that can be programmed to carry out a complex series of actions. A robot is an <strong>autonomous</strong> or partially autonomous machine capable of <strong>sensing its environment</strong> and <strong>making decisions based on computations</strong>. There are a variety of robots with unique qualities and capabilities.</p>
-        <p>To compute, this involves everything from small electronic circuits to multicore processors or even a cluster of networked computers. In action, robots vary the most, as some robots can move around, manipulate objects, perform specific tasks, while others can do many things.</p>
-    </div>
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Introduction to Robotics Programming</h1>
+            <p class="page-description">Discover the foundations of robotics as a field of study, including its definition, core principles, and the exciting goals driving innovation. Explore real-world applications and how robotics is transforming industries across the globe.</p>
+        </header>
 
-    <!-- Section 2: Robotics as a field of study -->
-    <div class="module-section" id="#intro-field-robotics">
-        <h3>Robotics as a Field of Study</h3>
-        <p>Robotics is a young and continuously growing interdisciplinary field. It involves the development and construction of systems that combine electrical and mechanical components with a computer for calculations. This includes the creation of machines that assist humans with repetitive, precise, or dangerous tasks. Robotics includes core disciplines such as electrical engineering, mechanical engineering, and computer science, but also intertwines with artificial intelligence, computer vision, applied mathematics, etc.</p>
-    </div>
+        <!-- Page Divider -->
+        <div class="divider">
+            <span class="divider-text">Let's Dive In</span>
+        </div>
 
-    <!-- Section 3: Simulation Environments -->
-    <div class="module-section" id="#goals-applications">
-        <h3>Goals and Applications</h3>
-        <p>Robotics can be organized based on their applications. As mentioned above, robots are useful for completing tasks that require a lot of precision, repetitive and monotonous work. Robots can be found in manufacturing industries for welding, material handling, painting, assembling, picking, packing, and palletizing, etc.  Similarly, robots can be found in agriculture for repetitive tasks like seeding, harvesting, weed control, optimal soil detection. Another common place to see robots in action is in healthcare, helping doctors with performing surgical procedures and providing therapy for patients. On the other hand, robots have revolutionized exploration, as robots can explore places where humans cannot get to easily, like the depths of the ocean or outer space. Moreover, other sectors where robots are useful are entertainment, customer service, food preparation, security, etc. </p>  
-    </div>
-</div>
+        <!-- Video Section -->
+        <div class="course-video-section">
+            <h1 class="video-title">A Glimpse into the World of Robotics</h1>
+            <video controls class="course-video">
+                <source src="{{ url_for('static', filename='videos/IntroVid.mov') }}" type="video/mp4">
+                Your browser does not support the video.
+            </video>
+        </div> <!-- End of course-video-section -->
+        
+        <!-- Section 1: What is a robot? -->
+        <div class="module-section" id="what-is-robot">
+            <h3>What is a robot?</h3>
+            <p>Robot: An embodied agent that can be programmed to carry out a complex series of actions. A robot is an <strong>autonomous</strong> or partially autonomous machine capable of <strong>sensing its environment</strong> and <strong>making decisions based on computations</strong>. There are a variety of robots with unique qualities and capabilities.</p>
+            <p>To compute, this involves everything from small electronic circuits to multicore processors or even a cluster of networked computers. In action, robots vary the most, as some robots can move around, manipulate objects, perform specific tasks, while others can do many things.</p>
+        </div> <!-- End of module-section -->
+
+        <div class="module-section" id="what-is-robot">
+            <h3>Robots Typically Do 3 Things</h3>
+            <div class="cards-container">
+                <div class="card" id="sense-card">
+                    <h4>Sense</h4>
+                    <p>Robots gather information from their surroundings using sensors.</p>
+                </div>
+                <div class="card" id="think-card">
+                    <h4>Think</h4>
+                    <p>Robots process data and make decisions based on programming or AI algorithms.</p>
+                </div>
+                <div class="card" id="act-card">
+                    <h4>Act</h4>
+                    <p>Robots perform actions using actuators like motors, arms, or wheels.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Robotics as a field of study -->
+        <div class="module-section" id="intro-field-robotics">
+            <h3>Robotics as a Field of Study</h3>
+            <p>Robotics is a young and continuously growing interdisciplinary field. It involves the development and construction of systems that combine electrical and mechanical components with a computer for calculations. This includes the creation of machines that assist humans with repetitive, precise, or dangerous tasks. Robotics includes core disciplines such as electrical engineering, mechanical engineering, and computer science, but also intertwines with artificial intelligence, computer vision, applied mathematics, etc.</p>
+        </div> <!-- End of module-section -->
+
+        <!-- Section 3: Goals and Applications -->
+        <div class="module-section" id="goals-applications">
+            <h3>Goals and Applications</h3>
+            <p>Robotics can be organized based on their applications. As mentioned above, robots are useful for completing tasks that require a lot of precision, repetitive and monotonous work. Robots can be found in manufacturing industries for welding, material handling, painting, assembling, picking, packing, and palletizing, etc. Similarly, robots can be found in agriculture for repetitive tasks like seeding, harvesting, weed control, optimal soil detection. Another common place to see robots in action is in healthcare, helping doctors with performing surgical procedures and providing therapy for patients. On the other hand, robots have revolutionized exploration, as robots can explore places where humans cannot get to easily, like the depths of the ocean or outer space. Moreover, other sectors where robots are useful are entertainment, customer service, food preparation, security, etc.</p>
+        </div> <!-- End of module-section -->
+
+        <!-- Next Button -->
+        <div class="next-button text-right mt-4">
+            <a href="{{ url_for('history') }}" class="secondary-button">Next: History of Robotics</a>
+        </div>
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
 {% endblock %}

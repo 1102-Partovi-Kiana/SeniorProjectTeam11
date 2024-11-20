@@ -267,6 +267,22 @@ def module_intro():
 def overview():
     return render_template('course1-content/overview.html')
 
+@app.route('/module1/introduction/history')
+def history():
+    return render_template('course1-content/history_of_robotics.html')
+
+@app.route('/module1/introduction/typesofrobots')
+def typesofrobots():
+    return render_template('course1-content/types_of_robots.html')
+
+@app.route('/module1/introduction/importanceandapplicationsofrobotics')
+def importanceandapp():
+    return render_template('course1-content/importance_and_app.html')
+
+@app.route('/module1/introduction/robotanatomy')
+def robotanatomy():
+    return render_template('course1-content/robot_anatomy.html')
+
 @app.route('/DarrenPage')
 def RenderDarrenEnv():
     global env
