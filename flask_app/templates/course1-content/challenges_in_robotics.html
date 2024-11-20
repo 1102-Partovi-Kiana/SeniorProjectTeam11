@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Types of Robots - CORE</title>
+<title>Robot Anatomy - CORE</title>
 {% endblock %}
 
 {% block body %}
@@ -32,7 +32,7 @@
                     <li><a href="#influential-systems">Influential robotics systems</a></li>
                 </ul>
             </li>
-            <li class="course-item active">
+            <li class="course-item">
                 <a href="#types" class="course-link">Types of Robots</a>
                 <ul class="sub-list">
                     <li><a href="#industrial">Industrial Robots</a></li>
@@ -60,7 +60,7 @@
                     <li><a href="#effectors">End Effectors</a></li>
                 </ul>
             </li>
-            <li class="course-item">
+            <li class="course-item active">
                 <a href="#challenges" class="course-link">Challenges In Robotics</a>
                 <ul class="sub-list">
                     <li><a href="#navandmapping">Navigation and Mapping</a></li>
@@ -91,61 +91,74 @@
     <div class="course-main-content">
         <!-- Page Header -->
         <header class="page-header">
-            <h1 class="page-title">Types of Robots</h1>
-            <p class="page-description">Robots are versatile machines that come in various forms and serve a wide range of purposes. Understanding the different categories of robots based on their structure, mobility, and applications is essential for gaining insights into their capabilities and potential uses. The four primary categories of robots: industrial robots, humanoid robots, mobile robots, and collaborative robots.</p>
+            <h1 class="page-title">Challenges in Robotics</h1>
+            <p class="page-description">While robotics has made significant advancements, there are several challenges that researchers and developers face in harnessing the full potential of this technology. </p>
         </header>
 
         <div class="divider">
             <span class="divider-text">Let's Dive In</span>
         </div>
 
-        <!-- Section 1: Industrial Robots  -->
-        <div class="module-section" id="industrial">
-            <h3>Industrial Robots</h3>
-            <p>Industrial robots are designed to perform repetitive tasks in manufacturing and industrial environments. They are typically large, stationary machines with multiple axes of motion and are often used in assembly lines, material handling, welding, and painting. Industrial robots are known for their precision, speed, and reliability, and they have significantly increased productivity in industries worldwide.</p>
-             <!-- Key Characteristics -->
+        <!-- Section 1: Navigation and Mapping  -->
+        <div class="module-section" id="navandmapping">
+            <h3>Navigation and Mapping</h3>
+            <p>Navigation and mapping are essential for robots to understand and maneuver within their environments. Robots need to accurately perceive and interpret their surroundings, plan optimal paths, and navigate safely. This challenge becomes more pronounced in dynamic and unstructured environments. For example, autonomous vehicles must navigate complex road networks, avoiding obstacles and adhering to traffic rules, while drones require precise navigation to deliver packages in urban settings.</p>
+            <!-- Examples - Navigation and Mapping -->
             <div class="subsection">
-                <h4>Key Characteristics</h4>
+                <h4>Examples</h4>
                 <ul>
-                    <li>Stationary and fixed in place.</li>
-                    <li>Equipped with multiple axes of motion for precise movements.</li>
-                    <li>Often used for repetitive tasks in manufacturing and assembly processes.</li>
-                </ul>
-            </div>
-            
-            <!-- Common Applications -->
-            <div class="subsection">
-                <h4>Common Applications</h4>
-                <ul>
-                    <li>Welding</li>
-                    <li>Painting</li>
-                    <li>Material handling</li>
+                    <li>Autonomous cars navigating busy intersections and complex traffic scenarios.</li>
+                    <li>Robots mapping and exploring unknown or hazardous environments, such as disaster zones or space missions.</li>
                 </ul>
             </div>
         </div> <!-- End of module-section -->
 
-        <!-- Section 2: Humanoid Robots -->
-        <div class="module-section" id="humanoid">
-            <h3>Humanoid Robots</h3>
-            <p>Humanoid robots are designed to resemble humans in their appearance and movement. They are typically equipped with a human-like body structure, including a head, torso, arms, and legs. Humanoid robots aim to interact and communicate with humans, mimicking human actions and expressions.</p>
+         <!-- Section 2: Human-Robot Interaction-->
+         <div class="module-section" id="humanrobot">
+            <h3>Human-Robot Interaction</h3>
+            <p>Enabling natural and effective interaction between humans and robots is a significant challenge. Robots should be capable of understanding and responding to human commands, gestures, and emotions. Human-robot collaboration also involves ensuring the safety and trustworthiness of robots working alongside humans. Designing intuitive interfaces and communication mechanisms that bridge the gap between human and machine is crucial for successful human-robot interaction.</p>
+            <!-- Examples - Human-Robot Interaction-->
+            <div class="subsection">
+                <h4>Examples</h4>
+                <ul>
+                    <li>Social robots engaging in conversations and understanding human emotions for companionship or healthcare assistance.</li>
+                    <li>Collaborative robots working alongside humans in manufacturing, requiring seamless coordination and communication.</li>
+                </ul>
+            </div>
         </div> <!-- End of module-section -->
 
-        <!-- Section 3: Mobile Robots -->
-        <div class="module-section" id="mobile">
-            <h3>Mobile Robots</h3>
-            <p>Mobile robots are designed to navigate and operate in various environments autonomously or with minimal human intervention. They can move from one place to another and perform tasks while on the move. Mobile robots can have different forms, such as wheeled robots, legged robots, or drones, depending on the terrain and tasks they are designed for.</p>
+        <!-- Section 3: Exploration -->
+        <div class="module-section" id="perception">
+            <h3>Perception and Recognition</h3>
+            <p>Robots need robust perception capabilities to understand and interpret their environment. This involves recognizing and identifying objects, people, and obstacles, as well as understanding spatial relationships and context. Perception challenges include dealing with varying lighting conditions, occlusions, and the ability to generalize from limited data. Accurate perception and recognition are crucial for tasks such as object manipulation, scene understanding, and autonomous decision-making.</p>
+            <!-- Examples - Perception and Recognition -->
+            <div class="subsection">
+                <h4>Examples</h4>
+                <ul>
+                    <li>Industrial robots identifying and manipulating objects on a conveyor belt in a manufacturing assembly line.</li>
+                    <li>Service robots navigate a cluttered home environment while recognizing furniture, doors, and other obstacles.</li>
+                </ul>
+            </div>
         </div> <!-- End of module-section -->
 
-        <!-- Section 4: Collaborative Robots -->
-        <div class="module-section" id="collaborative-robots">
-            <h3>Collaborative Robots</h3>
-            <p>Collaborative robots, also known as cobots, are designed to work alongside humans in a shared workspace safely. Unlike traditional industrial robots that are isolated in cages, cobots are equipped with advanced sensors and control systems to detect and respond to human presence. They are designed to assist humans in tasks that require cooperation, such as assembly, inspection, and packaging. Cobots have opened up new possibilities for human-robot collaboration and are being increasingly used in industries to enhance productivity and safety.</p>
+        <!-- Section 4: Perception and Recognition -->
+        <div class="module-section" id="ethics">
+            <h3>Ethical Considerations</h3>
+            <p>As robots become more integrated into society, ethical considerations arise. These include issues related to privacy, security, job displacement, and the impact on social dynamics. Questions around the ethical use of autonomous weapons, biases in AI algorithms, and the accountability of robots in the event of accidents or harm need careful attention. Ensuring that robots are designed and deployed in an ethical and responsible manner is essential for building public trust and mitigating potential risks.</p>
+               <!-- Examples - Perception and Recognition -->
+               <div class="subsection">
+                <h4>Examples</h4>
+                <ul>
+                    <li>Drones and surveillance robots raising concerns about privacy invasion.</li>
+                    <li>Autonomous systems used in military applications, raising questions about the ethics of decision-making and potential unintended consequences.</li>
+            </div>
         </div> <!-- End of module-section -->
 
         <!-- Next Button -->
         <div class="next-button text-right mt-4">
-            <a href="{{ url_for('challenges') }}" class="secondary-button">Next: Importance and Applications of Robotics</a>
+            <a href="{{ url_for('robotprogramming') }}" class="secondary-button">Next: Robot Programming</a>
         </div>
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->
 {% endblock %}
+

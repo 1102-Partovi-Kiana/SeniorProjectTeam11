@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Types of Robots - CORE</title>
+<title>Robot Programming - CORE</title>
 {% endblock %}
 
 {% block body %}
@@ -32,7 +32,7 @@
                     <li><a href="#influential-systems">Influential robotics systems</a></li>
                 </ul>
             </li>
-            <li class="course-item active">
+            <li class="course-item">
                 <a href="#types" class="course-link">Types of Robots</a>
                 <ul class="sub-list">
                     <li><a href="#industrial">Industrial Robots</a></li>
@@ -69,7 +69,7 @@
                     <li><a href="#ethics">Ethical Considerations</a></li>
                 </ul>
             </li>
-            <li class="course-item">
+            <li class="course-item active">
                 <a href="#robotprogramming" class="course-link">Robot Programming</a>
                 <ul class="sub-list">
                     <li><a href="#lowlevel">Low-Level Programming</a></li>
@@ -91,61 +91,60 @@
     <div class="course-main-content">
         <!-- Page Header -->
         <header class="page-header">
-            <h1 class="page-title">Types of Robots</h1>
-            <p class="page-description">Robots are versatile machines that come in various forms and serve a wide range of purposes. Understanding the different categories of robots based on their structure, mobility, and applications is essential for gaining insights into their capabilities and potential uses. The four primary categories of robots: industrial robots, humanoid robots, mobile robots, and collaborative robots.</p>
+            <h1 class="page-title">Robot Programming</h1>
+            <p class="page-description">Robot programming is a fundamental aspect of enabling robots to perform tasks autonomously or under human guidance. This is an overview of robot programming that explores different programming languages, including low-level and high-level languages. Additionally, we will examine programming interfaces that facilitate interaction between humans and robots, enabling seamless control and customization.</p>
         </header>
 
         <div class="divider">
             <span class="divider-text">Let's Dive In</span>
         </div>
 
-        <!-- Section 1: Industrial Robots  -->
-        <div class="module-section" id="industrial">
-            <h3>Industrial Robots</h3>
-            <p>Industrial robots are designed to perform repetitive tasks in manufacturing and industrial environments. They are typically large, stationary machines with multiple axes of motion and are often used in assembly lines, material handling, welding, and painting. Industrial robots are known for their precision, speed, and reliability, and they have significantly increased productivity in industries worldwide.</p>
-             <!-- Key Characteristics -->
+        <!-- Section 1: Low-Level Programming  -->
+        <div class="module-section" id="navandmapping">
+            <h3>Low-Level Programming</h3>
+            <p>Low-level programming involves directly controlling the robot's hardware and specifying individual motor movements or sensor interactions. This level of programming provides precise control but requires deep knowledge of the robot's hardware architecture. Common examples of low-level programming languages for robotics include Assembly language, C/C++, and Arduino. These languages allow fine-grained control over the robot's actuators and sensors, making them suitable for tasks that require precise manipulation and real-time responsiveness.</p>
+            <!-- Examples - Low-Level Programming -->
             <div class="subsection">
-                <h4>Key Characteristics</h4>
+                <h4>Examples</h4>
                 <ul>
-                    <li>Stationary and fixed in place.</li>
-                    <li>Equipped with multiple axes of motion for precise movements.</li>
-                    <li>Often used for repetitive tasks in manufacturing and assembly processes.</li>
-                </ul>
-            </div>
-            
-            <!-- Common Applications -->
-            <div class="subsection">
-                <h4>Common Applications</h4>
-                <ul>
-                    <li>Welding</li>
-                    <li>Painting</li>
-                    <li>Material handling</li>
+                    <li>Writing low-level code in C/C++ to control the joint angles and movements of a robotic arm in an assembly line to perform precise pick-and-place operations.</li>
                 </ul>
             </div>
         </div> <!-- End of module-section -->
 
-        <!-- Section 2: Humanoid Robots -->
-        <div class="module-section" id="humanoid">
-            <h3>Humanoid Robots</h3>
-            <p>Humanoid robots are designed to resemble humans in their appearance and movement. They are typically equipped with a human-like body structure, including a head, torso, arms, and legs. Humanoid robots aim to interact and communicate with humans, mimicking human actions and expressions.</p>
+         <!-- Section 2: High-Level Programming-->
+         <div class="module-section" id="humanrobot">
+            <h3>High-Level Programming</h3>
+            <p>Enabling natural and effective interaction between humans and robots is a significant challenge. Robots should be capable of understanding and responding to human commands, gestures, and emotions. Human-robot collaboration also involves ensuring the safety and trustworthiness of robots working alongside humans. Designing intuitive interfaces and communication mechanisms that bridge the gap between human and machine is crucial for successful human-robot interaction.</p>
+            <!-- Examples - High-Level Programming-->
+            <div class="subsection">
+                <h4>Examples</h4>
+                <ul>
+                    <li>Using Python to develop a path planning algorithm for a mobile robot to autonomously navigate through a cluttered environment.</li>
+                </ul>
+            </div>
         </div> <!-- End of module-section -->
 
-        <!-- Section 3: Mobile Robots -->
-        <div class="module-section" id="mobile">
-            <h3>Mobile Robots</h3>
-            <p>Mobile robots are designed to navigate and operate in various environments autonomously or with minimal human intervention. They can move from one place to another and perform tasks while on the move. Mobile robots can have different forms, such as wheeled robots, legged robots, or drones, depending on the terrain and tasks they are designed for.</p>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 4: Collaborative Robots -->
-        <div class="module-section" id="collaborative-robots">
-            <h3>Collaborative Robots</h3>
-            <p>Collaborative robots, also known as cobots, are designed to work alongside humans in a shared workspace safely. Unlike traditional industrial robots that are isolated in cages, cobots are equipped with advanced sensors and control systems to detect and respond to human presence. They are designed to assist humans in tasks that require cooperation, such as assembly, inspection, and packaging. Cobots have opened up new possibilities for human-robot collaboration and are being increasingly used in industries to enhance productivity and safety.</p>
+        <!-- Section 3: Programming Interfaces -->
+        <div class="module-section" id="perception">
+            <h3>Programming Interfaces</h3>
+            <p>Robots need robust perception capabilities to understand and interpret their environment. This involves recognizing and identifying objects, people, and obstacles, as well as understanding spatial relationships and context. Perception challenges include dealing with varying lighting conditions, occlusions, and the ability to generalize from limited data. Accurate perception and recognition are crucial for tasks such as object manipulation, scene understanding, and autonomous decision-making.</p>
+            <!-- Examples - Programming Interfaces -->
+            <div class="subsection">
+                <h4>Examples</h4>
+                <ul>
+                    <li><strong>Robot Operating System (ROS):&nbsp;</strong>A framework for robot programming that provides tools, libraries, and protocols for software development, supporting C++, Python, MATLAB, and more.</li>
+                    <li><strong>Blockly:&nbsp;</strong>  A visual programming interface that allows users to drag and drop blocks to create robot behaviors. It is particularly suitable for beginners or educational settings.</li>
+                    <li><strong>LabVIEW:&nbsp;</strong>  A graphical programming environment commonly used in robotics and automation. It enables users to visually design control systems and interact with various hardware components.</li>
+                </ul>
+            </div>
         </div> <!-- End of module-section -->
 
         <!-- Next Button -->
         <div class="next-button text-right mt-4">
-            <a href="{{ url_for('challenges') }}" class="secondary-button">Next: Importance and Applications of Robotics</a>
+            <a href="{{ url_for('implications') }}" class="secondary-button">Next: Social and Ethical Implications </a>
         </div>
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->
 {% endblock %}
+

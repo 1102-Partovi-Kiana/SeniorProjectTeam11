@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Types of Robots - CORE</title>
+<title>Social and ethical implications - CORE</title>
 {% endblock %}
 
 {% block body %}
@@ -32,7 +32,7 @@
                     <li><a href="#influential-systems">Influential robotics systems</a></li>
                 </ul>
             </li>
-            <li class="course-item active">
+            <li class="course-item">
                 <a href="#types" class="course-link">Types of Robots</a>
                 <ul class="sub-list">
                     <li><a href="#industrial">Industrial Robots</a></li>
@@ -77,7 +77,7 @@
                     <li><a href="#programminginterface">Programming Interfaces</a></li>
                 </ul>
             </li>
-            <li class="course-item">
+            <li class="course-item active">
                 <a href="#implications" class="course-link">Social and Ethical Implications</a>
                 <ul class="sub-list">
                     <li><a href="#privacy">Privacy</a></li>
@@ -91,61 +91,47 @@
     <div class="course-main-content">
         <!-- Page Header -->
         <header class="page-header">
-            <h1 class="page-title">Types of Robots</h1>
-            <p class="page-description">Robots are versatile machines that come in various forms and serve a wide range of purposes. Understanding the different categories of robots based on their structure, mobility, and applications is essential for gaining insights into their capabilities and potential uses. The four primary categories of robots: industrial robots, humanoid robots, mobile robots, and collaborative robots.</p>
+            <h1 class="page-title">Social and Ethical Implications</h1>
+            <p class="page-description">The rapid advancement of robotics has not only revolutionized various industries but also brought forth significant social, ethical, and economic implications.</p>
         </header>
 
         <div class="divider">
             <span class="divider-text">Let's Dive In</span>
         </div>
 
-        <!-- Section 1: Industrial Robots  -->
-        <div class="module-section" id="industrial">
-            <h3>Industrial Robots</h3>
-            <p>Industrial robots are designed to perform repetitive tasks in manufacturing and industrial environments. They are typically large, stationary machines with multiple axes of motion and are often used in assembly lines, material handling, welding, and painting. Industrial robots are known for their precision, speed, and reliability, and they have significantly increased productivity in industries worldwide.</p>
-             <!-- Key Characteristics -->
+        <!-- Section 1: Privacy -->
+        <div class="module-section" id="navandmapping">
+            <h3>Privacy</h3>
+            <p>With the increasing presence of robots and AI systems in our environments, privacy concerns arise. Robots equipped with cameras, sensors, and data storage capabilities raise questions about surveillance, data collection, and information security. Maintaining individuals' privacy rights and ensuring responsible data handling become paramount. Striking a balance between the benefits of robotic technologies and privacy protection is essential.</p>
+            <!-- Examples - Privacy -->
             <div class="subsection">
-                <h4>Key Characteristics</h4>
+                <h4>Examples of Possible Consequences</h4>
                 <ul>
-                    <li>Stationary and fixed in place.</li>
-                    <li>Equipped with multiple axes of motion for precise movements.</li>
-                    <li>Often used for repetitive tasks in manufacturing and assembly processes.</li>
-                </ul>
-            </div>
-            
-            <!-- Common Applications -->
-            <div class="subsection">
-                <h4>Common Applications</h4>
-                <ul>
-                    <li>Welding</li>
-                    <li>Painting</li>
-                    <li>Material handling</li>
+                    <li><strong>Unauthorized data collection:&nbsp;</strong> Robots collect personal information without explicit consent, leading to potential privacy breaches and misuse of data.</li>
+                    <li><strong>Surveillance concerns:&nbsp;</strong> Surveillance robots monitoring public spaces or workplaces, raising questions about individuals' right to privacy and the potential for abuse or misuse of surveillance data</li>
                 </ul>
             </div>
         </div> <!-- End of module-section -->
 
-        <!-- Section 2: Humanoid Robots -->
-        <div class="module-section" id="humanoid">
-            <h3>Humanoid Robots</h3>
-            <p>Humanoid robots are designed to resemble humans in their appearance and movement. They are typically equipped with a human-like body structure, including a head, torso, arms, and legs. Humanoid robots aim to interact and communicate with humans, mimicking human actions and expressions.</p>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 3: Mobile Robots -->
-        <div class="module-section" id="mobile">
-            <h3>Mobile Robots</h3>
-            <p>Mobile robots are designed to navigate and operate in various environments autonomously or with minimal human intervention. They can move from one place to another and perform tasks while on the move. Mobile robots can have different forms, such as wheeled robots, legged robots, or drones, depending on the terrain and tasks they are designed for.</p>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 4: Collaborative Robots -->
-        <div class="module-section" id="collaborative-robots">
-            <h3>Collaborative Robots</h3>
-            <p>Collaborative robots, also known as cobots, are designed to work alongside humans in a shared workspace safely. Unlike traditional industrial robots that are isolated in cages, cobots are equipped with advanced sensors and control systems to detect and respond to human presence. They are designed to assist humans in tasks that require cooperation, such as assembly, inspection, and packaging. Cobots have opened up new possibilities for human-robot collaboration and are being increasingly used in industries to enhance productivity and safety.</p>
+         <!-- Section 2: Job Displacement-->
+         <div class="module-section" id="humanrobot">
+            <p>Enabling natural and effective interaction between humans and robots is a significant challenge. Robots should be capable of understanding and responding to human commands, gestures, and emotions. Human-robot collaboration also involves ensuring the safety and trustworthiness of robots working alongside humans. Designing intuitive interfaces and communication mechanisms that bridge the gap between human and machine is crucial for successful human-robot interaction.</p>
+            <h3>Job Displacement</h3>
+            <p>As robots become more capable and automated systems advance, there is a legitimate concern about job displacement. Some tasks traditionally performed by humans are now being automated, leading to potential unemployment and economic disruption. Ensuring a smooth transition and creating opportunities for upskilling and reskilling of the workforce become critical considerations.</p>
+            <!-- Examples - Job Displacement-->
+            <div class="subsection">
+                <h4>Examples of Possible Consequences:</h4>
+                <ul>
+                    <li>Using Python to develop a path planning algorithm for a mobile robot to autonomously navigate through a cluttered environment.</li>
+                </ul>
+            </div>
         </div> <!-- End of module-section -->
 
         <!-- Next Button -->
         <div class="next-button text-right mt-4">
-            <a href="{{ url_for('challenges') }}" class="secondary-button">Next: Importance and Applications of Robotics</a>
+            <a href="{{ url_for('challenges') }}" class="secondary-button">Next: </a>
         </div>
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->
 {% endblock %}
+

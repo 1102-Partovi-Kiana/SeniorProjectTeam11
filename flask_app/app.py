@@ -321,6 +321,18 @@ def importanceandapp():
 def robotanatomy():
     return render_template('course1-content/robot_anatomy.html')
 
+@app.route('/module1/introduction/challenges')
+def challenges():
+    return render_template('course1-content/challenges_in_robotics.html')
+
+@app.route('/module1/introduction/robotprogramming')
+def robotprogramming():
+    return render_template('course1-content/robot_programming.html')
+
+@app.route('/module1/introduction/socialandethicalimplications')
+def implications():
+    return render_template('course1-content/social_and_ethical_imp.html')
+
 @app.route('/DarrenPage')
 def RenderDarrenEnv():
     global env

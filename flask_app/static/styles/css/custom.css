@@ -273,7 +273,9 @@ body {
     opacity: 0;
 }
 
-.card {
+
+/* Renamed .card to .homepage-card to avoid conflicts */
+.homepage-card {
     padding: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -286,7 +288,7 @@ body {
     border-radius: 8px;
 }
 
-.card-content.front {
+.homepage-card-content.front {
     position: absolute;
     top: 0;
     left: 0;
@@ -302,7 +304,7 @@ body {
 }
 
 /* Back hidden at first */
-.card-content.back {
+.homepage-card-content.back {
     position: absolute;
     top: 0;
     left: 0;
@@ -316,7 +318,7 @@ body {
     transition: opacity 0.5s;
 }
 
-.card-content {
+.homepage-card-content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -336,11 +338,11 @@ body {
     opacity: 1; /* Fade in */
 }
 
-.card:hover .front {
+.homepage-card:hover .front {
     opacity: 0; /* Card flip on hover */
 }
 
-.card:hover .back {
+.homepage-card:hover .back {
     opacity: 1;
 }
 
@@ -349,7 +351,7 @@ body {
 #card3 .front { background-color: #4caf50; } 
 #card4 .front { background-color: #9c27b0; } 
 
-.card-line {
+.homepage-card-line {
     width: 100%;
     height: 5px;
     position: absolute;
@@ -364,13 +366,13 @@ body {
 #card-line3 { background-color: #4caf50; } 
 #card-line4 { background-color: #9c27b0; } 
 
-.card a {
+.homepage-card a {
     color: inherit;
     font-weight: bold;
     text-decoration: none;
 }
 
-.card a:hover {
+.homepage-card a:hover {
     text-decoration: underline;
 }
 
@@ -456,14 +458,12 @@ body {
 }
 
 .user-type-card {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    padding: 25px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 2rem;
     border-radius: 10px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #ffffff;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
     text-align: left;
-    margin: 15px 0;
 }
 
 .user-type-card:hover {
@@ -472,25 +472,27 @@ body {
 }
 
 .student-card {
-    background-color: #e3f7fb; /* Soft cyan */
+    background-color: #e3f7fb; 
 }
 
 .instructor-card {
-    background-color: #ffe6cc; /* Soft peach */
+    background-color: #ffe6cc; 
 }
 
 .card-title {
     font-size: 1.6rem;
     font-weight: bold;
-    color: #333;
+    color: #ffffff; 
     margin-bottom: 15px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); 
 }
 
 .card-description {
-    color: #555;
+    color: #e0e0e0; 
     font-size: 1rem;
     margin-bottom: 20px;
-    line-height: 1.5;
+    line-height: 1.6; 
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); 
 }
 
 .features-list {
@@ -499,18 +501,19 @@ body {
 }
 
 .features-list li {
-    font-size: 0.95rem;
-    color: #666;
-    margin-bottom: 10px;
-    padding-left: 20px;
+    font-size: 1rem; 
+    color: #ffffff; 
+    margin-bottom: 12px;
+    padding-left: 25px;
     position: relative;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); 
 }
 
 .features-list li::before {
     content: "✔";
     position: absolute;
     left: 0;
-    color: #39FF14; /* Bright green */
+    color: #39FF14; 
     font-weight: bold;
 }
 
@@ -568,37 +571,67 @@ body {
 
 /* Back to Top Button  */
 
-.back-to-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
+.Btn {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(#50c878, #39fad7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
     cursor: pointer;
+    position: fixed; /* Keeps the button fixed on the screen */
+    bottom: 30px; /* Distance from the bottom */
+    left: 30px; /* Distance from the left */
+    border: none;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    display: none; 
-    transition: opacity 0.3s ease, transform 0.3s ease;
     z-index: 1000;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    display: none; /* Initially hidden */
 }
 
-.back-to-top:hover {
-    background-color: #0056b3;
+.arrow path {
+    fill: white;
 }
 
-.back-to-top.show {
-    display: inline-block;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.back-to-top.hide {
+.text {
+    font-size: 0.7em;
+    position: absolute;
+    color: white;
+    bottom: -35px; /* Increased to move the text further below */
     opacity: 0;
-    transform: translateY(100px); 
+    transition: opacity 0.7s ease;
+    white-space: nowrap; /* Prevents wrapping of the text */
 }
+
+.Btn:hover .text {
+    opacity: 1;
+}
+
+.Btn:hover .arrow {
+    animation: slide-in-bottom 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+@keyframes slide-in-bottom {
+    0% {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.Btn.show {
+    display: flex; /* Make the button visible */
+}
+
+.Btn.hide {
+    opacity: 0;
+    transform: translateY(100px); /* Move it out of view */
+}
+
 
 /* -------------------NAVBAR------------------- */
 
@@ -699,26 +732,45 @@ body {
 
 /* -------------------SIGNUPPAGE + LOGINPAGE------------------- */
 
-.login-section  {
+.login-section {
     background-color: transparent;
     background: radial-gradient(ellipse, #0033cc, #66b2ff, #e6f7ff) #b3d9ff;
     background-size: cover;
-    padding-top: 50px;
+    background-attachment: fixed;
     height: 100vh; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    position: relative;
 }
 
 .signup-section {
     background-color: transparent;
     background: radial-gradient(ellipse, #0033cc, #66b2ff, #e6f7ff) #b3d9ff;
     background-size: cover;
-    background-attachment: fixed; /* Fixes the background */
+    background-attachment: fixed; 
     padding-top: 50px;
-    padding-bottom: 100px; 
-    height: auto; 
-    position: relative; 
+    padding-bottom: 50px; 
+    min-height: 100vh; 
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
-.login-form-container,
+.login-form-container {
+    background-color: rgba(255, 255, 255, 0.2); 
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(15px); 
+    border: 1.9px solid rgba(255, 255, 255, 0.7); 
+    border-radius: 0.75rem; 
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); 
+    padding: 30px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center; 
+}
+
 .signup-form-wrapper {
     background-color: rgba(255, 255, 255, 0.2); 
     backdrop-filter: blur(10px); 
@@ -1177,7 +1229,7 @@ body {
 }
 
 
-/* -------------------COURSESPAGE------------------- */
+/* -------------------COURSESPAGE- COURSE CATALOG------------------- */
 .greeting {
     width: 100%;
     text-align: center;
@@ -1206,7 +1258,7 @@ body {
     font-size: 1.2em;
 }
 
-.course-container {
+.course-catalog-container {
     display: flex;
     justify-content: center;
     padding: 20px;
@@ -1233,17 +1285,42 @@ body {
     border-radius: 10px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     display: flex;
-    justify-content: space-between; 
     flex-direction: column;
     text-align: left;
     transition: transform 0.3s, box-shadow 0.3s;
     margin: 10px;
-    overflow-y: auto; 
+    overflow: hidden; 
+    height: auto; 
 }
 
-.module-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
+.module-card h2 a {
+    color: #1d4ed8;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: 600;
+    line-height: 1.3;
+    padding: 10px 20px; 
+    display: block;
+    min-height: 130px;
+}
+
+.module-card p {
+    color: #4b5563;
+    font-size: 0.95em;
+    line-height: 1.6;
+    margin: 10px 20px;
+    min-height: 60px; 
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85em;
+    color: #6b7280;
+    padding: 10px 20px;
+    border-top: 1px solid #e5e7eb;
+    margin-top: auto;
 }
 
 .card-header {
@@ -1258,34 +1335,6 @@ body {
     width: 100%; 
     box-sizing: border-box;
     font-size: 0.75em;
-}
-
-.module-card h2 a {
-    color: #1d4ed8;
-    text-decoration: none;
-    font-size: 1.2em;
-    font-weight: 600;
-    line-height: 1.3;
-    padding: 10px 20px; /* Adds spacing around title */
-    display: block;
-}
-
-.module-card p {
-    color: #4b5563;
-    font-size: 0.95em;
-    line-height: 1.6;
-    margin: 10px 20px; /* Adjusts spacing within the card */
-}
-
-.card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.85em;
-    color: #6b7280;
-    padding: 10px 20px;
-    border-top: 1px solid #e5e7eb;
-    margin-top: auto;
 }
 
 .level, .duration {
@@ -1895,5 +1944,3 @@ code {
     height: 30px;
     object-fit: contain; 
 }
-
-

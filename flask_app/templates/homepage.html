@@ -76,9 +76,9 @@
                 <div class="text-section">
                     <h2 class="mb-4">Powering Your Learning with Open Source Software</h2>
                     <!-- Divider line directly under the title -->
-                        <hr style="width: 70%; margin: 10px auto; border-top: 2px solid #ccc;">
-                        <p>CORE leverages the capabilities of OpenAI Gym, a widely-used toolkit designed to develop and test reinforcement learning algorithms.</p>
-                        <p><strong>Build, test, and refine your skills—all in one place.</strong></p>
+                    <hr style="width: 70%; margin: 10px auto; border-top: 2px solid #ccc;">
+                    <p>CORE leverages the capabilities of OpenAI Gym, a widely-used toolkit designed to develop and test reinforcement learning algorithms.</p>
+                    <p><strong>Build, test, and refine your skills—all in one place.</strong></p>
                 </div>
             </div>
             <!-- Right Animation Section -->
@@ -87,70 +87,68 @@
                     <!-- Square that will animate independently -->
                     <div class="square" id="animatedSquare"></div>
                     <!-- Cards that will appear after the square animates -->
-                    <div class="card" id="card1">
-                        <div class="card-content front">
+                    <div class="homepage-card" id="card1">
+                        <div class="homepage-card-content front">
                             <h5 class="label">OpenAI Gym</h5>
                             <div class="logo-container"> 
                                 <img src="/static/img/openaigym.svg" alt="OpenAI Gym Logo" class="card-logo">
                             </div>
                         </div>
-                        <div class="card-content back">
+                        <div class="homepage-card-content back">
                             <h5>OpenAI Gym</h5>
                             <p>Open-source API written in Python for solving reinforcement learning algorithms.</p>
                             <a href="https://www.gymlibrary.dev/index.html" target="_blank" rel="noopener noreferrer" class="read-more">Read More ↗</a>
-                            <div class="card-line" id="card-line1"></div>
+                            <div class="homepage-card-line" id="card-line1"></div>
                         </div>
                     </div>
 
-                    <div class="card" id="card2">
-                        <div class="card-content front">
+                    <div class="homepage-card" id="card2">
+                        <div class="homepage-card-content front">
                             <h5 class="label">PostgressSQL</h5>
                             <div class="logo-container"> 
                                 <img src="/static/img/postgresql.svg" alt="PostgressSQL Logo" class="card-logo">
                             </div>
                         </div>
-                        <div class="card-content back">
+                        <div class="homepage-card-content back">
                             <h5>PostgressSQL Database</h5>
                             <p>Powerful, open-source database management system trusted for handling complex data efficiently. PostgreSQL stores and manages data for robotics environments, user interactions, and more.</p>
                             <a href="https://www.postgresql.org" target="_blank" rel="noopener noreferrer" class="read-more">Read More ↗</a>
-                            <div class="card-line" id="card-line2"></div>
+                            <div class="homepage-card-line" id="card-line2"></div>
                         </div>
                     </div>
 
-                    <div class="card" id="card3">
-                        <div class="card-content front">
+                    <div class="homepage-card" id="card3">
+                        <div class="homepage-card-content front">
                             <h5 class="label">Flask Server</h5>
                             <div class="logo-container"> 
                                 <img src="/static/img/flask.svg" alt="Flask Server Logo" class="card-logo">
                             </div>
                         </div>
-                        <div class="card-content back">
+                        <div class="homepage-card-content back">
                             <h5>Flask Web Framework</h5>
                             <p>Lightweight back-end software which receives and distributes content.</p>
                             <a href="https://flask.palletsprojects.com/en/stable/" target="_blank" rel="noopener noreferrer" class="read-more">Read More ↗</a>
-                            <div class="card-line" id="card-line3"></div>
+                            <div class="homepage-card-line" id="card-line3"></div>
                         </div>
                     </div>
 
-                    <div class="card" id="card4">
-                        <div class="card-content front">
+                    <div class="homepage-card" id="card4">
+                        <div class="homepage-card-content front">
                             <h5 class="label">Bootstrap</h5>
                             <div class="logo-container"> 
                                 <img src="/static/img/bootstrap.svg" alt="Bootstrap Logo" class="card-logo">
                             </div>
                         </div>
-                        <div class="card-content back">
+                        <div class="homepage-card-content back">
                             <h5>Bootstrap Framework</h5>
                             <p>Popular front-end toolkit for building responsive websites. Bootstrap provides a consistent design foundation, allowing us to create clean, professional layouts.</p>
                             <a href="https://getbootstrap.com" target="_blank" rel="noopener noreferrer" class="read-more">Read More ↗</a>
-                            <div class="card-line" id="card-line4"></div>
+                            <div class="homepage-card-line" id="card-line4"></div>
                         </div>
                     </div>
-
-                    
                 </div>
             </div>
-</section>
+    </section>
 
 
 <!-- Built for Students and Instructors Section  -->
@@ -225,11 +223,17 @@
             <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Chatbot Logo" class="chatbot-logo">
         </div>
     </div>
+    
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="Btn">
+        <svg height="1.2em" class="arrow" viewBox="0 0 512 512">
+        <path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"></path>
+        </svg>
+        <p class="text">Back to Top</p>
+    </button>
+  
 </section>
 
-<!-- Back to Top Button -->
-<button id="backToTop" class="back-to-top">
-    ↑ Back to Top
-</button>
+
 
 {% endblock %}
