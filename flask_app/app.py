@@ -4,6 +4,8 @@ import numpy as np
 import cv2  # Import OpenCV
 from reach import ReachEnv  # Ensure this imports your ReachEnv class
 from pickandplace import FetchPickAndPlaceEnv
+from organize import FetchOrganizeEnv
+from stack import FetchStackEnv
 import requests  # Import requests library for API communication
 import random
 
@@ -270,6 +272,19 @@ def RenderPickAndPlaceEnv():
     global env
     env = FetchPickAndPlaceEnv()
     return render_template('robotic_pick_and_place_environment.html')
+
+@app.route('/FetchStackPage')
+def RenderFetchStackEnv():
+    global env
+    env = FetchStackEnv()
+    return render_template('fetch_stack_environment.html')
+
+
+@app.route('/FetchOrganizePage')
+def RenderFetchOrganizeEnv():
+    global env
+    env = FetchOrganizeEnv()
+    return render_template('robotic_organize_environment.html')
 
 def generate_frames():
     global env  # Access the global environment instance

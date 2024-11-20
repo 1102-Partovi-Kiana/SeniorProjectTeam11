@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+<title>Fetch Pick and Place Environment</title>
+{% endblock %}
+
+
+{% block body %}
+<section>
+    <div class="container-fluid">
+        <div class="row d-flex">
+            <!-- Code editor on the left -->
+            <div class="col-md-6" style="margin-top: 200px;">
+                <div class="code-editor">
+                    <h4>Python Code Editor</h4>
+                    <textarea id="code-editor" rows="20">
+distance_threshold = 0.01
+close_grip_action = np.array([0, 0, 0, -1])
+open_grip_action = np.array([0, 0, 0, 1])
+lift_action = np.array([0, 0, 0.1, 0])
+
+
+box0_position = env.sim.data.get_site_xpos('object0')
+env.step(open_grip_action)
+
+
+while True:
+    box1_position = env.sim.data.get_site_xpos('object1')
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+
+
+    horizontal_distance = np.linalg.norm(box1_position[:2] - gripper_position[:2])
+
+
+    if horizontal_distance <= distance_threshold:
+        break
+
+
+    direction = box1_position - gripper_position
+    direction_normalized = direction / (np.linalg.norm(direction[:2]) + 1e-8)
+
+
+    horizontal_action = np.array([
+        direction_normalized[0] * 0.1,
+        direction_normalized[1] * 0.1,
+        0,
+        0
+    ])
+    env.step(horizontal_action)
+
+
+while True:
+    box1_position = env.sim.data.get_site_xpos('object1')
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+
+
+    vertical_distance = box1_position[2] - gripper_position[2]
+
+
+    if abs(vertical_distance) <= distance_threshold:
+        break
+
+
+    descend_action = np.array([0, 0, vertical_distance * 0.1, 0])
+    env.step(descend_action)
+
+
+env.step(close_grip_action)
+
+
+for _ in range(10):
+    env.step(np.array([0, 0, 0, 0]))
+
+
+for _ in range (40):
+    box1_position = env.sim.data.get_site_xpos('object1')
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+
+
+    env.step(close_grip_action)
+    ascend_action = np.array([0, 0, .13, 0])
+    env.step(ascend_action)
+    env.step(close_grip_action)
+
+
+    box_to_box_threshold = 0.01
+
+
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')[:2]  # Only x and y
+    box0_position = env.sim.data.get_site_xpos('object0')[:2]        # Only x and y
+   
+    distance_to_box0 = np.linalg.norm(box0_position - gripper_position)
+   
+while distance_to_box0 > box_to_box_threshold:
+    direction_to_box0 = box0_position - gripper_position
+    direction_normalized = direction_to_box0 / (np.linalg.norm(direction_to_box0) + 1e-8)
+
+
+    move_to_box_action = np.array([
+        direction_normalized[0] * 0.3,
+        direction_normalized[1] * 0.3,
+        0,
+        0
+    ])
+
+
+    env.step(move_to_box_action)
+
+
+    env.step(close_grip_action)
+
+
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')[:2]
+    box0_position = env.sim.data.get_site_xpos('object0')[:2]
+    distance_to_box0 = np.linalg.norm(box0_position - gripper_position)
+
+
+env.step(open_grip_action)
+
+
+for _ in range(10):
+    env.step(np.array([0, 0, 0, 0]))
+
+
+box2_position = env.sim.data.get_site_xpos('object2')
+env.step(open_grip_action)
+
+
+while True:
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+    horizontal_distance = np.linalg.norm(box2_position[:2] - gripper_position[:2])
+
+
+    if horizontal_distance <= distance_threshold:
+        break
+
+
+    direction = box2_position - gripper_position
+    direction_normalized = direction / (np.linalg.norm(direction[:2]) + 1e-8)
+
+
+    horizontal_action = np.array([
+        direction_normalized[0] * 0.1,
+        direction_normalized[1] * 0.1,
+        0,
+        0
+    ])
+    env.step(horizontal_action)
+
+
+while True:
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+    vertical_distance = box2_position[2] - gripper_position[2]
+
+
+    if abs(vertical_distance) <= distance_threshold:
+        break
+
+
+    descend_action = np.array([0, 0, vertical_distance * 0.1, 0])
+    env.step(descend_action)
+
+
+env.step(close_grip_action)
+
+
+for _ in range(10):
+    env.step(np.array([0, 0, 0, 0]))
+
+
+for _ in range(40):
+    env.step(close_grip_action)
+    ascend_action = np.array([0, 0, 0.13, 0])
+    env.step(ascend_action)
+
+
+box1_position = env.sim.data.get_site_xpos('object1')[:2]
+gripper_position = env.sim.data.get_site_xpos('robot0:grip')[:2]
+distance_to_box1 = np.linalg.norm(box1_position - gripper_position)
+
+
+while distance_to_box1 > distance_threshold:
+    direction_to_box1 = box1_position - gripper_position
+    direction_normalized = direction_to_box1 / (np.linalg.norm(direction_to_box1) + 1e-8)
+
+
+    move_to_box_action = np.array([
+        direction_normalized[0] * 0.3,  # Scaled movement in x
+        direction_normalized[1] * 0.3,  # Scaled movement in y
+        0,
+        0
+    ])
+    env.step(move_to_box_action)
+    env.step(close_grip_action)
+
+
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')[:2]
+    distance_to_box1 = np.linalg.norm(box1_position - gripper_position)
+
+
+
+
+env.step(open_grip_action)
+
+
+for _ in range(10):
+    env.step(np.array([0, 0, 0, 0]))
+
+
+for _ in range(40):
+    lift_action = np.array([0, 0, 0.13, 0])
+    env.step(lift_action)
+
+
+box_positions = ['object0', 'object1', 'object2']
+stack_threshold=0.01
+height_threshold=0.05
+                    </textarea>
+                </div>
+            </div>
+
+
+            <!-- Video player on the right -->
+            <div class="col-md-6 d-flex justify-content-center align-items-center" style="margin-top: 200px;">
+                <div class="video-container">
+                    <img src="{{ url_for('video_feed') }}" width="90%">
+                </div>
+            </div>
+        </div>
+       
+        <!-- Collision notification -->
+        <div id="collision-notification" class="alert alert-success" style="display: none; margin-top: 20px;">
+            Collision detected between the gripper and the object!
+        </div>
+       
+        <!-- Display positions -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h5>Ball Position:</h5>
+                <p id="ball-position">X: --, Y: --, Z: --</p>
+                <h5>Gripper Position:</h5>
+                <p id="gripper-position">X: --, Y: --, Z: --</p>
+            </div>
+            <div class="col-md-6 text-right">
+                <button id="run-code" class="btn btn-success">Run</button>
+            </div>
+        </div>
+       
+        <div class="col-md-6" style="margin-top: 20px;">
+            <h4>Output</h4>
+            <div id="output-box" style="border: 1px solid #ddd; padding: 10px; height: 150px; overflow-y: auto;">
+                <!-- Output will appear here -->
+            </div>
+        </div>        
+    </div>
+</section>
+
+
+<script>
+    function updatePositions() {
+        fetch('/get-ball-position')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ball-position').textContent =
+                    `X: ${data.x.toFixed(2)}, Y: ${data.y.toFixed(2)}, Z: ${data.z.toFixed(2)}`;
+            });
+        fetch('/get-gripper-position')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('gripper-position').textContent =
+                    `X: ${data.x.toFixed(2)}, Y: ${data.y.toFixed(2)}, Z: ${data.z.toFixed(2)}`;
+            });
+    }
+
+
+    function checkCollision() {
+        fetch('/check-collision')
+            .then(response => response.json())
+            .then(data => {
+                const notification = document.getElementById('collision-notification');
+                if (data.collision) {
+                    notification.style.display = 'block';
+                } else {
+                    notification.style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error checking collision:', error));
+    }
+
+
+    document.getElementById('run-code').addEventListener('click', function() {
+        const code = document.getElementById('code-editor').value;
+
+
+        const formData = new FormData();
+        formData.append('code', code);
+
+
+        fetch('/run-code', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            const outputBox = document.getElementById('output-box');
+            outputBox.innerHTML = '';
+            if (data.error) {
+                outputBox.innerHTML += `<p style="color: red;">Error: ${data.error}</p>`;
+            } else {
+                outputBox.innerHTML += `<p>${data.message}</p>`;
+                document.getElementById('ball-position').textContent =
+                    `X: ${data.ball_position.x.toFixed(2)}, Y: ${data.ball_position.y.toFixed(2)}, Z: ${data.ball_position.z.toFixed(2)}`;
+                document.getElementById('gripper-position').textContent =
+                    `X: ${data.gripper_position.x.toFixed(2)}, Y: ${data.gripper_position.y.toFixed(2)}, Z: ${data.gripper_position.z.toFixed(2)}`;
+               
+                checkCollision();
+            }
+        })
+        .catch(error => {
+            console.error('Error running code:', error);
+        });
+    });
+
+
+    window.addEventListener('load', updatePositions);
+</script>
+
+
+{% endblock %}
+
+
+
