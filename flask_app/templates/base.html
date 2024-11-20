@@ -21,6 +21,7 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;600&display=swap">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap">
 	{# Font for our logo #}
 	<link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
@@ -30,9 +31,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
-	<!-- CodeMirror CSS and Theme -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+
 
 	{% block extra_css %}
 	{# Override this in templates to add extra stylesheets #}
@@ -49,12 +48,10 @@
 	<script src="{{ url_for('static', filename='styles/js/navbar-toggler.js') }}"></script>
 	<script src="{{ url_for('static', filename='styles/js/home.js') }}"></script>
 	<script src="{{ url_for('static', filename='styles/js/back-to-top.js') }}"></script>
+	<script src="{{ url_for('static', filename='/styles/js/scroll-highlight.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/stars.js') }}"></script>
 	<!-- Popper.js from CDN -->
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-
-	<!-- CodeMirror JS and Python Mode -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
 
 	{% block extra_js %}
 	{# Override this in templates to add extra javascript #}
