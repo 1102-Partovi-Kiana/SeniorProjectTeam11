@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Flask, render_template, request, jsonify, Response, flash, redirect, url_for
 import mujoco_py
 import numpy as np
 import cv2  # Import OpenCV
@@ -8,9 +8,19 @@ from organize import FetchOrganizeEnv
 from stack import FetchStackEnv
 import requests  # Import requests library for API communication
 import random
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_mail import Mail, Message
+from config import Config
+from auth_func import *
+from classes import db, User
 
-app = Flask(__name__, static_folder='static')
-app.secret_key = "12345999999"
+
+app = Flask(__name__)
+app.config.from_object(Config)
+db.init_app(app)
+migrate = Migrate(app, db)
+
 
 env = None  # Initialize your environment here
 
@@ -239,22 +249,48 @@ def RenderEnvironment(environment_id):
 @app.route('/signup', methods=['GET', 'POST'])
 def RenderSignup():
     if request.method == 'POST':
-        first_name = request.form.get('inputFirstName')
-        last_name = request.form.get('inputLastName')
-        email = request.form.get('inputEmail')
-        password = request.form.get('inputPassword')
-        # Perform validation and account creation logic here
-        return redirect(url_for('RenderHomepage'))
+        username = request.form.get('username')
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        if not check_password_requirements(password):
+            return render_template('account/signup.html')
+        
+        new_user = User()
+
+        new_user.first_name = first_name
+        new_user.last_name = last_name
+        new_user.email = email
+        new_user.username = username
+        new_user.password = hash_password(password)
+        new_user.secret_key = "DefaultSecretKey"
+        new_user.user_type = "DefaultUserType"
+
+        if (check_default_values(new_user) == False):
+            if User.query.filter_by(username=username).first():
+                flash("Username is already taken.")
+                return render_template('account/signup.html')
+            if User.query.filter_by(email=email).first():
+                flash("Email is already taken.")
+                return render_template('account/signup.html')
+            db.session.add(new_user)
+            db.session.commit()
+            flash("Registration Successful")
+            return render_template('account/signup.html')
 
     return render_template('account/signup.html')
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def RenderLogin():
     if request.method == 'POST':
-        first_name = request.form.get('inputFirstName')
-        last_name = request.form.get('inputLastName')
-        email = request.form.get('inputEmail')
-        password = request.form.get('inputPassword')
+        login_username = request.form.get('login_username')
+        login_password = request.form.get('login_password')
+
+        if(check_valid_user(login_username, login_password)):
+            flash("Successfully Logged In!")
+
     return render_template('account/login.html')
 
 @app.route('/courses')

@@ -15,15 +15,21 @@
                 <h1 class="mb-4">Sign Up</h1>
                 {% include "alert/full.html" %}
                 <form id="signup-form" action="/signup" method="post">
+                    <!-- Username -->
+                    <div class="mb-4">
+                        <input type="text" class="form-control rounded-0" id="username" name="username" placeholder="Username" required>
+                        <div class="error-feedback" id="first-name-error"></div> <!-- Error message -->
+                    </div>
+                    
                     <!-- First Name -->
                     <div class="mb-4">
-                        <input type="text" class="form-control rounded-0" id="first-name" name="firstName" placeholder="First name" required>
+                        <input type="text" class="form-control rounded-0" id="first-name" name="first_name" placeholder="First name" required>
                         <div class="error-feedback" id="first-name-error"></div> <!-- Error message -->
                     </div>
                     
                     <!-- Last Name -->
                     <div class="mb-4">
-                        <input type="text" class="form-control rounded-0" id="last-name" name="lastName" placeholder="Last name" required>
+                        <input type="text" class="form-control rounded-0" id="last-name" name="last_name" placeholder="Last name" required>
                         <div class="error-feedback" id="last-name-error"></div> <!-- Error message -->
                     </div>
                     
