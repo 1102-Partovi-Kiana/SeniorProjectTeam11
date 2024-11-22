@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Social and ethical implications - CORE</title>
+<title>Quiz 1 - CORE</title>
 {% endblock %}
 
 {% block body %}
@@ -51,6 +51,9 @@
                     <li><a href="#entertainment">Entertainment</a></li>
                 </ul>
             </li>
+            <li class="course-item active">
+                <a href="#course1-quiz1" class="course-link">Quiz 1</a>
+            </li>
             <li class="course-item">
                 <a href="#anatomy" class="course-link">Robot Anatomy</a>
                 <ul class="sub-list">
@@ -70,19 +73,28 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#robotprogramming" class="course-link">Robot Programming</a>
+                <a href="#robot-programming" class="course-link">Robot Programming</a>
                 <ul class="sub-list">
                     <li><a href="#lowlevel">Low-Level Programming</a></li>
                     <li><a href="#highlevel">High-Level Programming</a></li>
-                    <li><a href="#programminginterface">Programming Interfaces</a></li>
+                    <li><a href="#programming-interface">Programming Interfaces</a></li>
                 </ul>
             </li>
-            <li class="course-item active">
+            <li class="course-item">
                 <a href="#implications" class="course-link">Social and Ethical Implications</a>
                 <ul class="sub-list">
                     <li><a href="#privacy">Privacy</a></li>
-                    <li><a href="#jobdisplacement">Job Displacement</a></li>
+                    <li><a href="#job-displacement">Job Displacement</a></li>
                     <li><a href="#human-robot-interaction">Human-Robot Interaction</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#future-trends" class="course-link">Future Trends</a>
+                <ul class="sub-list">
+                    <li><a href="#AI">Artificial Intelligence (AI) in Robotics</a></li>
+                    <li><a href="#soft-robotics">Soft Robotics</a></li>
+                    <li><a href="#swarm-robotics">Swarm Robotics</a></li>
+                    <li><a href="#hri">Human-Robot Interaction (HRI)</a></li>
                 </ul>
             </li>
         </ul>
@@ -91,47 +103,22 @@
     <div class="course-main-content">
         <!-- Page Header -->
         <header class="page-header">
-            <h1 class="page-title">Social and Ethical Implications</h1>
-            <p class="page-description">The rapid advancement of robotics has not only revolutionized various industries but also brought forth significant social, ethical, and economic implications.</p>
+            <h1 class="page-title">Quiz 1</h1>
+            <p class="page-description">Test Your Knowledge</p>
         </header>
-
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
+        <!-- Quiz Section -->
+        <div class="module-section" id="quiz-1">
+            <h3>Quiz: Importance and Applications of Robotics</h3>
+            <div id="quiz-container">
+                <!-- This will be dynamically populated by JavaScript -->
+            </div>
         </div>
-
-        <!-- Section 1: Privacy -->
-        <div class="module-section" id="navandmapping">
-            <h3>Privacy</h3>
-            <p>With the increasing presence of robots and AI systems in our environments, privacy concerns arise. Robots equipped with cameras, sensors, and data storage capabilities raise questions about surveillance, data collection, and information security. Maintaining individuals' privacy rights and ensuring responsible data handling become paramount. Striking a balance between the benefits of robotic technologies and privacy protection is essential.</p>
-            <!-- Examples - Privacy -->
-            <div class="subsection">
-                <h4>Examples of Possible Consequences</h4>
-                <ul>
-                    <li><strong>Unauthorized data collection:&nbsp;</strong> Robots collect personal information without explicit consent, leading to potential privacy breaches and misuse of data.</li>
-                    <li><strong>Surveillance concerns:&nbsp;</strong> Surveillance robots monitoring public spaces or workplaces, raising questions about individuals' right to privacy and the potential for abuse or misuse of surveillance data</li>
-                </ul>
-            </div>
-        </div> <!-- End of module-section -->
-
-         <!-- Section 2: Job Displacement-->
-         <div class="module-section" id="humanrobot">
-            <p>Enabling natural and effective interaction between humans and robots is a significant challenge. Robots should be capable of understanding and responding to human commands, gestures, and emotions. Human-robot collaboration also involves ensuring the safety and trustworthiness of robots working alongside humans. Designing intuitive interfaces and communication mechanisms that bridge the gap between human and machine is crucial for successful human-robot interaction.</p>
-            <h3>Job Displacement</h3>
-            <p>As robots become more capable and automated systems advance, there is a legitimate concern about job displacement. Some tasks traditionally performed by humans are now being automated, leading to potential unemployment and economic disruption. Ensuring a smooth transition and creating opportunities for upskilling and reskilling of the workforce become critical considerations.</p>
-            <!-- Examples - Job Displacement-->
-            <div class="subsection">
-                <h4>Examples of Possible Consequences:</h4>
-                <ul>
-                    <li>Using Python to develop a path planning algorithm for a mobile robot to autonomously navigate through a cluttered environment.</li>
-                </ul>
-            </div>
-        </div> <!-- End of module-section -->
-
+        
         <!-- Next Button -->
         <div class="next-button text-right mt-4">
-            <a href="{{ url_for('challenges') }}" class="secondary-button">Next: </a>
+            <a href="{{ url_for('robotanatomy') }}" class="secondary-button">Next: Robot Anatomy</a>
         </div>
     </div> <!-- End of course-main-content -->
+
 </div> <!-- End of course-container -->
 {% endblock %}
-

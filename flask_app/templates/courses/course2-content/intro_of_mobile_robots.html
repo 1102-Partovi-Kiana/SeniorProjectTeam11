@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Introduction to Robotics Programming Content - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item active"> 
+                <a href="#introduction-of-mobile-robotics" class="course-link">Introduction of Mobile Robotics</a>
+                <ul class="sub-list">
+                    <li><a href="#agent">Agent</a></li>
+                    <li><a href="#autonomy">Autonomy</a></li>
+                    <li><a href="#shakey">First Mobile Robot</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#industrial-robots" class="course-link">Industrial Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#robotic-arms">Robotic Arms</a></li>
+                    <li><a href="#robotic-arm-configurations">Types of Robotic Arm Configurations</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#service-robots" class="course-link">Service Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#healthcare-robots">Healthcare Robots</a></li>
+                    <li><a href="#hospitality-robots">Hospitality Robots</a></li>
+                    <li><a href="#cleaning-robots">Cleaning Robots</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#mobile-robots" class="course-link">Mobile Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#wheeled-robots">Wheeled Robots</a></li>
+                    <li><a href="#legged-robots">Legged Robots</a></li>
+                    <li><a href="#aerial-drones">Aerial Drones</a></li>
+                    <li><a href="#underwater-robots">Underwater Robots</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#humanoid-robots" class="course-link">Humanoid Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#applications-in-research">Applications in Research</a></li>
+                    <li><a href="#entertainment-robots">Entertainment Robots</a></li>
+                    <li><a href="#human-robot-interaction">Human-Robot Interaction</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#agricultural-robots" class="course-link">Agricultural Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#crop-monitoring">Crop Monitoring</a></li>
+                    <li><a href="#harvesting">Harvesting</a></li>
+                    <li><a href="#seeding">Seeding</a></li>
+                    <li><a href="#precision-farming">Precision Farming</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#medical-robots" class="course-link">Medical Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#surgical-robots">Surgical Robots</a></li>
+                    <li><a href="#rehabilitation-robots">Rehabilitation Robots</a></li>
+                    <li><a href="#robot-prosthetics">Robot Prosthetics</a></li>
+                    <li><a href="#robotic-exoskeletons">Robotic Exoskeletons</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#exploration-robots" class="course-link">Exploration Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#planetary-rovers">Planetary Rovers</a></li>
+                    <li><a href="#underwater-exploration-robots">Underwater Exploration Robots</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#military-defense-robots" class="course-link">Military and Defense Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#unmanned-aerial-vehicles">Unmanned Aerial Vehicles</a></li>
+                    <li><a href="#bomb-disposal-robots">Bomb Disposal Robots</a></li>
+                    <li><a href="#reconnaissance-robots">Reconnaissance Robots</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#educational-robots" class="course-link">Educational Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#programmable-robotics-education">Programmable Robotics for Education</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#entertainment-robots" class="course-link">Entertainment Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#robotic-companions">Robotic Companions</a></li>
+                    <li><a href="#interactive-toys">Interactive Toys</a></li>
+                    <li><a href="#robot-performers">Robot Performers</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#collaborative-robots-cobots" class="course-link">Collaborative Robots (Cobots)</a>
+                <ul class="sub-list">
+                    <li><a href="#social-robots">Social Robots</a></li>
+                    <li><a href="#therapy">Therapy</a></li>
+                    <li><a href="#companionship">Companionship</a></li>
+                    <li><a href="#social-interaction">Social Interaction</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#exoskeleton-robots" class="course-link">Exoskeleton Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#rehabilitation">Rehabilitation</a></li>
+                    <li><a href="#assistive-devices">Assistive Devices</a></li>
+                    <li><a href="#industrial-settings">Industrial Settings</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#bio-inspired-robots" class="course-link">Bio-inspired Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#swarm-robots">Swarm Robots</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Introduction of Mobile robotics</h1>
+            <p class="page-description">Mobile robotics demands a combination of various disciplines, including computer science, engineering, artificial intelligence, social and cognitive sciences, psychology, mathematics, etc. Mobile robots are computers that perceive the external environment through its sensors and are able to perform certain tasks, while autonomous mobile robots are intelligent agents that are able to do complex tasks by identifying features, detecting patterns from previous experiences. Autonomous robots follow the characteristics of the old concept of robots, an agent or machine that mimics living beings like animals or humans. The core focuses of mobile robotics are locomotion, perception, cognition and navigation. With a wide range of practical applications, these devices have made significant contributions to human social, agricultural, technical, and economic progress.</p>
+        </header>
+
+        <!-- Page Divider -->
+        <div class="divider">
+            <span class="divider-text">Let's Dive In</span>
+        </div>
+        
+        <!-- Section 1: Agent -->
+        <div class="module-section" id="agent">
+            <h3>Agent - A Technical Term</h3>
+            <p>An agent is an entity that produces an effect. Robots are physical machines that complete tasks that create an effect, therefore, in this context, a robot is an agent.</p>
+        </div> <!-- End of module-section -->
+
+        <!-- Section 2: Autonomy -->
+        <div class="module-section" id="autonomy">
+            <h3>Autonomy - A Technical Term</h3>
+            <p>In the context of robotics, autonomy refers to having power of self-government and undertaking tasks without outside interference. </p>
+        </div> <!-- End of module-section -->
+
+        <!-- Section 3: The First Mobile Robot -->
+        <div class="module-section" id="shakey">
+            <h3>Shakey - The First Mobile Robot</h3>
+            <p>The first mobile robot that reasoned its actions, <em>Shakey</em>, was developed at Stanford Research Institute in the 1970’s. This robot paved the way for the evolution of artificial intelligence. <em>Shakey</em> did simple searches and was the reason the A* search algorithm was created. </p>
+        </div> <!-- End of module-section -->
+
+        <!-- Next Button -->
+        <div class="next-button text-right mt-4">
+            <a href="{{ url_for('industrial_robots') }}" class="secondary-button">Next: Industrial Robots</a>
+        </div>
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

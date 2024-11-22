@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, Response, flash, redirect, url_for
+from flask import Flask, render_template, request, jsonify, Response, flash, redirect, url_for, session
 import mujoco_py
 import numpy as np
 import cv2  # Import OpenCV
@@ -8,6 +8,7 @@ from organize import FetchOrganizeEnv
 from stack import FetchStackEnv
 import requests  # Import requests library for API communication
 import random
+import jedi
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail, Message
@@ -20,18 +21,351 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
+app.secret_key = 'secret-key-for-session'
 
+CUSTOM_KEYWORDS = [
+    "def", "class", "import", "while", "for", "if", "else", "elif", "try", "except", "finally", "with",
+    "return", "print", "len", "range", "input", "open", "type", "isinstance", "id", "dir", "sorted",
+    "enumerate", "zip", "map", "filter", "sum", "min", "max", "np.array", "np.linalg.norm", "np.append",
+    "env.get_ball_position", "env.get_gripper_position", "env.step"
+]
 
 env = None  # Initialize your environment here
+
+
+# Quiz data
+quiz = {
+    "questions": {
+        "easy": [
+            {
+                "question": "What is a robot?",
+                "options": [
+                    "A machine that looks like a human",
+                    "An embodied agent capable of sensing and decision-making",
+                    "A tool used only in manufacturing",
+                    "An AI system without physical form"
+                ],
+                "answer": 1
+            },
+            {
+                "question": "What is the main purpose of robotics?",
+                "options": [
+                    "To build machines that can sense and interact with their environment",
+                    "To entertain people",
+                    "To replace human jobs",
+                    "To make machines that look like humans"
+                ],
+                "answer": 1
+            },
+            {
+                "question": "What are the three main functions typically performed by robots?",
+                "options": [
+                    "Sense, Compute, Act",
+                    "Build, Program, Learn",
+                    "Move, Interact, Process",
+                    "Detect, React, Develop"
+                ],
+                "answer": 0
+            },
+            {
+                "question": "What are collaborative robots (cobots) designed to do?",
+                "options": [
+                    "Work safely with humans",
+                    "Use sensors to detect and interact with humans",
+                    "Help with tasks like teamwork",
+                    "Perform tasks without human involvement"
+                ],
+                "answer": 3
+            },
+            {
+                "question": "In which industry are industrial robots most commonly used?",
+                "options": [
+                    "Healthcare",
+                    "Manufacturing",
+                    "Exploration",
+                    "Entertainment"
+                ],
+                "answer": 1
+            },
+            {
+                "question": "Which of the following disciplines does NOT play a core role in robotics?",
+                "options": [
+                    "Electrical Engineering",
+                    "Mechanical Engineering",
+                    "Computer Science",
+                    "Linguistics"
+                ],
+                "answer": 3
+            },
+            {
+                "question": "Which type of robot is designed to resemble and interact like humans?",
+                "options": [
+                    "Mobile Robots",
+                    "Industrial Robots",
+                    "Humanoid Robots",
+                    "Collaborative Robots"
+                ],
+                "answer": 2
+            },
+            {
+                "question": "Which of these is an example of where robots are commonly used?",
+                "options": [
+                    "Teaching students in a classroom",
+                    "Performing surgeries in hospitals",
+                    "Reading books to children",
+                    "Walking pets in the park"
+                ],
+                "answer": 1
+            },
+            {
+                "question": "What are agricultural robots (agribots) NOT designed to do?",
+                "options": [
+                    "Harvest and sort crops",
+                    "Build greenhouses",
+                    "Planting and seeding",
+                    "Design buildings"
+                ],
+                "answer": 3
+            },
+            {
+                "question": "What is one benefit of using robots in manufacturing?",
+                "options": [
+                    "They require no programming",
+                    "They replace all human workers",
+                    "They never need maintenance or repairs",
+                    "They work faster and with greater precision than humans"
+                ],
+                "answer": 3
+            }
+        ],
+        "medium": [
+            {
+                "question": "What topics does robotics intertwine with?",
+                "options": [
+                    "Artificial Intelligence",
+                    "Computer Vision",
+                    "Quantum Mechanics",
+                    "Applied Mathematics"
+                ],
+                "answer": 2
+            },
+            {
+                "question": "Which category of robots is specifically designed to navigate and operate in various environments autonomously or with minimal human intervention?",
+                "options": [
+                    "Industrial Robots",
+                    "Humanoid Robots",
+                    "Mobile Robots",
+                    "Collaborative Robots"
+                ],
+                "answer": 2
+            },
+            {
+                "question": "In robotics, what does the term manipulator refer to?",
+                "options": [
+                    "The sensory system of a robot",
+                    "The central processing unit",
+                    "The robotic arm used for moving objects",
+                    "The mobile base of a robot"
+                ],
+                "answer": 2
+            },
+            {
+                "question": "Which of these is an example of a collaborative robot (cobot)?",
+                "options": [
+                    "Atlas",
+                    "UR5",
+                    "Roomba",
+                    "Unimate"
+                ],
+                "answer": 1
+            },
+            {
+                "question": "Who coined the term 'robot'?",
+                "options": [
+                    "Isaac Asimov",
+                    "Karel Čapek",
+                    "George Devol",
+                    "Ada Lovelace"
+                ],
+                "answer": 1
+            },
+            {
+                "question": "Which invention by Charles Babbage helped influence robotics?",
+                "options": [
+                    "Analytical Engine",
+                    "Water Clock",
+                    "Jacquard Loom",
+                    "Difference Engine"
+                ],
+                "answer": 0
+            },
+            {
+                "question": "Which task is commonly performed by industrial robots?",
+                "options": [
+                    "Painting cars",
+                    "Playing chess",
+                    "Walking on two legs",
+                    "Making medical diagnoses"
+                ],
+                "answer": 0
+            },
+            {
+                "question": "Which invention by Joseph Jacquard in 1801 significantly influenced the development of programmable machines?",
+                "options": [
+                    "Water clock (Clepsydra)",
+                    "Analytical Engine",
+                    "Jacquard Loom",
+                    "Flute player automaton"
+                ],
+                "answer": 2
+            },
+            {
+                "question": "Which of these robots was designed for minimally invasive surgeries?",
+                "options": [
+                    "PR2",
+                    "Da Vinci Surgical System",
+                    "Unimate",
+                    "Sophia"
+                ],
+                "answer": 1
+            },
+            {
+                "question": "Which robot developed by Stanford University could reason about its environment?",
+                "options": [
+                    "Shakey",
+                    "PR2",
+                    "Spot",
+                    "Da Vinci Surgical System"
+                ],
+                "answer": 0
+            }
+        ],
+        "hard": [
+            {
+                "question": "Which robotics company developed robots like Atlas, Spot, and Handle?",
+                "options": [
+                    "Boston Dynamics",
+                    "Universal Robots",
+                    "Hanson Robotics",
+                    "Willow Garage"
+                ],
+                "answer": 0
+            },
+            {
+                "question": "What significant advancement in robotics was demonstrated by the Mars rovers such as Curiosity and Perseverance?",
+                "options": [
+                    "Development of humanoid mobility",
+                    "Autonomous navigation and scientific data collection in extreme environments",
+                    "Enhanced human-robot interaction capabilities",
+                    "Implementation of soft robotics materials"
+                ],
+                "answer": 1
+            },
+            {
+                "question": "What is a primary way in which animatronics and humanoid robots blur the lines between technology and entertainment in theme parks?",
+                "options": [
+                    "By performing repetitive tasks without interaction.",
+                    "By entertaining, educating, and creating immersive experiences for visitors, blurring the boundaries between technology and entertainment.",
+                    "By limiting their roles to backstage operations.",
+                    "By focusing solely on mechanical movements without narrative elements."
+                ],
+                "answer": 1
+            },
+            {
+                "question": "What key feature differentiates autonomous robots from other types of robots?",
+                "options": [
+                    "Ability to manipulate objects",
+                    "Capability to make decisions without human intervention",
+                    "Designed to resemble humans",
+                    "Equipped with multiple axes of motion"
+                ],
+                "answer": 1
+            },
+            {
+                "question": "Which of the following robotic systems integrates machine learning and artificial intelligence to adapt and make intelligent decisions based on environmental data?",
+                "options": [
+                    "Unimate",
+                    "PR2",
+                    "Da Vinci Surgical System",
+                    "Sophia"
+                ],
+                "answer": 3
+            },
+            {
+                "question": "How have collaborative robots (cobots) transformed human-robot collaboration in industrial settings compared to traditional industrial robots?",
+                "options": [
+                    "Cobots require extensive safety barriers, limiting interaction with humans",
+                    "Cobots are designed to operate independently without human intervention",
+                    "Cobots can safely work alongside humans, enhancing flexibility and productivity",
+                    "Cobots are exclusively used for hazardous tasks, away from human workers."
+                ],
+                "answer": 2
+            },
+            {
+                "question": "Which material is primarily used in soft robotics?",
+                "options": [
+                    "Metal",
+                    "Elastomers",
+                    "Carbon Fiber",
+                    "Plastic"
+                ],
+                "answer": 1
+            },
+            {
+                "question": "What is a collaborative robot (cobot) primarily designed to do?",
+                "options": [
+                    "Operate autonomously in hazardous environments",
+                    "Work safely alongside humans in a shared workspace",
+                    "Replace human workers in factories",
+                    "Navigate challenging terrains autonomously"
+                ],
+                "answer": 1
+            },
+            {
+                "question": "Which robot was the first industrial robot used in manufacturing?",
+                "options": [
+                    "Da Vinci Surgical System",
+                    "PR2",
+                    "Unimate",
+                    "Baxter"
+                ],
+                "answer": 2
+            },
+            {
+                "question": "Which robot developed by Boston Dynamics is known for its humanoid agility?",
+                "options": [
+                    "Atlas",
+                    "Spot",
+                    "Shakey",
+                    "Baxter"
+                ],
+                "answer": 0
+            }
+        ]
+    }
+}
 
 # Route for the homepage
 @app.route('/')
 def RenderHomepage():
     return render_template('homepage.html')
 
-@app.route('/robotic-environment')
-def RenderRoboticEnvironment():
-    return render_template('robotic_environment.html')
+@app.route('/get-suggestions', methods=['POST'])
+def get_suggestions():
+    data = request.json
+    code = data.get('code', '')
+    line = data.get('line', 0)
+    column = data.get('column', 0)
+
+    try:
+        script = jedi.Script(code, line, column)
+        jedi_suggestions = [completion.name for completion in script.complete()]
+    except Exception as e:
+        jedi_suggestions = []
+
+    suggestions = list(set(CUSTOM_KEYWORDS + jedi_suggestions)) 
+    suggestions.sort()  
+    return jsonify(suggestions)
 
 @app.route('/Chatbot')
 def RenderChatbot():
@@ -40,6 +374,63 @@ def RenderChatbot():
 attempt_counter = 0
 user_submitted_code = ""
 api_key = "AIzaSyDpL6NsK8v8alk8JPVmu9S1QF8oRNhCJDU"  
+
+@app.route('/chatbot-api-2', methods=['POST'])
+def ChatbotAPI2():
+    print("Chatbot API 2 called")  
+    user_message = request.json.get('message')
+    page_context = request.json.get('page_context', "general") 
+    print("Received user message:", user_message)
+    print("Page context:", page_context)
+
+    general_prompts = {
+        "Homepage": "You are a helpful chatbot for the homepage of a robotics education platform. Provide an overview of features, navigation tips, and highlight key sections of the platform.",
+        "Contact": "You are a helpful chatbot for the contact page. Assist users with information on how to reach out for support, provide email or phone details, or guide them to submit a query through the contact form.",
+        "Courses": "You are a helpful chatbot for the courses page. Provide information about available robotics courses, their descriptions, and how to enroll or access them.",
+        "General": "You are a general-purpose chatbot for a robotics education platform. Help users with their questions about the platform, navigating the site, or any robotics-related queries they might have."
+    }
+
+    prompt = general_prompts.get(page_context, general_prompts["General"])
+
+    full_prompt = f"""
+    {prompt}
+
+    User Message: {user_message}
+    Respond concisely and helpfully. If the question is unclear, ask for clarification.
+    """
+
+    api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent"
+    payload = {
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "text": full_prompt
+                    }
+                ]
+            }
+        ]
+    }
+
+    try:
+        response = requests.post(f"{api_url}?key={api_key}", headers={
+            'Content-Type': 'application/json'
+        }, json=payload)
+
+        if response.status_code == 200:
+            response_json = response.json()
+            chatbot_response = response_json.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', 'No response')
+            return jsonify({'reply': chatbot_response})
+        else:
+            print("Error:", response.status_code, response.text)  
+            return jsonify({'error': f"Error: {response.status_code}, {response.text}"}), response.status_code
+
+    except Exception as e:
+        print("Error occurred:", e)
+        return jsonify({'error': str(e)}), 500
+
+
+
 @app.route('/chatbot-api', methods=['POST'])
 def ChatbotAPI():
     print("Chatbot API called")  # Check if the function is called
@@ -299,39 +690,59 @@ def RenderCourses():
 
 @app.route('/module1/introduction')
 def module_intro():
-    return render_template('course1-content/module_intro.html') 
+    return render_template('courses/course1-content/module_intro.html') 
 
 @app.route('/module1/introduction/overview')
 def overview():
-    return render_template('course1-content/overview.html')
+    return render_template('courses/course1-content/overview.html')
 
 @app.route('/module1/introduction/history')
 def history():
-    return render_template('course1-content/history_of_robotics.html')
+    return render_template('courses/course1-content/history_of_robotics.html')
 
-@app.route('/module1/introduction/typesofrobots')
+@app.route('/module1/introduction/types-of-robots')
 def typesofrobots():
-    return render_template('course1-content/types_of_robots.html')
+    return render_template('courses/course1-content/types_of_robots.html')
 
-@app.route('/module1/introduction/importanceandapplicationsofrobotics')
+@app.route('/module1/introduction/importance-and-applications-of-robotics')
 def importanceandapp():
-    return render_template('course1-content/importance_and_app.html')
+    return render_template('courses/course1-content/importance_and_app.html')
 
-@app.route('/module1/introduction/robotanatomy')
+@app.route('/module1/introduction/course1-quiz-1')
+def course1quiz1():
+    return render_template('courses/course1-content/course1-quiz1.html')
+
+@app.route('/module1/introduction/robot-anatomy')
 def robotanatomy():
-    return render_template('course1-content/robot_anatomy.html')
+    return render_template('courses/course1-content/robot_anatomy.html')
 
 @app.route('/module1/introduction/challenges')
 def challenges():
-    return render_template('course1-content/challenges_in_robotics.html')
+    return render_template('courses/course1-content/challenges_in_robotics.html')
 
-@app.route('/module1/introduction/robotprogramming')
+@app.route('/module1/introduction/robot-programming')
 def robotprogramming():
-    return render_template('course1-content/robot_programming.html')
+    return render_template('courses/course1-content/robot_programming.html')
 
-@app.route('/module1/introduction/socialandethicalimplications')
+@app.route('/module1/introduction/social-and-ethical-implications')
 def implications():
-    return render_template('course1-content/social_and_ethical_imp.html')
+    return render_template('courses/course1-content/social_and_ethical_imp.html')
+
+@app.route('/module1/introduction/future-trends')
+def futuretrends():
+    return render_template('courses/course1-content/future_trends.html')
+
+@app.route('/module2/introduction')
+def module_two():
+    return render_template('courses/course2-content/module_two.html') 
+
+@app.route('/module2/introduction/introduction-of-mobile-robots')
+def intro_of_mobile_robots():
+    return render_template('courses/course2-content/intro_of_mobile_robots.html')
+
+@app.route('/module2/introduction/idustrial-robots')
+def industrial_robots():
+    return render_template('courses/course2-content/industrial_robots.html')
 
 @app.route('/DarrenPage')
 def RenderDarrenEnv():
@@ -373,7 +784,9 @@ def video_feed():
 
 @app.route('/run-code', methods=['POST'])
 def run_code():
+    global user_submitted_code
     code = request.form['code']
+    user_submitted_code = code 
     
     if env is None:
         return jsonify({'error': 'No environment selected'}), 400
@@ -424,6 +837,76 @@ def check_collision():
 
     collision_detected = bool(distance < threshold_distance)
     return jsonify({'collision': collision_detected})
+
+@app.route('/next-question', methods=['POST'])
+def next_question():
+    data = request.json
+
+    # Extract state from the request
+    questions_served = data.get('questions_served', 0)
+    score = data.get('score', 0)
+    difficulty = data.get('difficulty', 'easy')
+    used_questions = data.get('used_questions', [])
+    last_correct = data.get('last_correct', True)  # Indicates if the last answer was correct
+
+    if questions_served >= 10:
+        return jsonify({
+            "message": "Quiz complete!",
+            "done": True,
+            "score": score
+        })
+
+    # Adjust difficulty based on the correctness of the last answer
+    if questions_served > 0:
+        if last_correct and difficulty == "easy":
+            difficulty = "medium"
+        elif last_correct and difficulty == "medium":
+            difficulty = "hard"
+        elif not last_correct and difficulty == "medium":
+            difficulty = "easy"
+        elif not last_correct and difficulty == "hard":
+            difficulty = "medium"
+
+    # Update score if the last answer was correct
+    if last_correct:
+        score += 1
+
+    current_difficulty = difficulty
+    available_questions = [
+        q for q in quiz["questions"][current_difficulty]
+        if q not in used_questions
+    ]
+
+    if not available_questions:
+        if current_difficulty == "hard":
+            current_difficulty = "medium"
+        elif current_difficulty == "medium":
+            current_difficulty = "easy"
+        available_questions = [
+            q for q in quiz["questions"][current_difficulty]
+            if q not in used_questions
+        ]
+
+    if not available_questions:
+        return jsonify({"message": "No more questions available!", "done": True, "score": score})
+
+    question = random.choice(available_questions)
+    used_questions.append(question)
+    questions_served += 1
+
+    return jsonify({
+        "question": question,
+        "difficulty": current_difficulty,
+        "questions_served": questions_served,
+        "score": score,
+        "used_questions": used_questions,
+        "done": False
+    })
+
+@app.route('/quiz1', methods=['GET'])
+def render_quiz_page():
+    # Render the quiz page with initial state handled on the client side
+    return render_template('quiz1.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

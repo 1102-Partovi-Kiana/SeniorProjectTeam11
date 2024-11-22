@@ -280,7 +280,7 @@ CREATE TABLE public.users (
     first_name character varying(100),
     last_name character varying(100),
     email character varying(100),
-    password bytea,
+    password text,
     role_id integer
 );
 

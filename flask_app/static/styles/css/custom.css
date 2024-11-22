@@ -1026,6 +1026,172 @@ body {
     background: linear-gradient(180deg, hsl(210, 30%, 98%), hsl(210, 30%, 90%)); 
 }
 
+:root {
+    --hue-green: 120deg; 
+    --sat-green: 40%; 
+    --blur-green: 0px;
+}
+
+.aesthetic-green-button {
+    --hue2-green: 120deg; 
+    --sat2-green: 35%; 
+    --clr-green: hsl(var(--hue-green), var(--sat-green), 98%);
+    --clr2-green: hsl(var(--hue2-green), var(--sat2-green), 85%);
+    --text-green: hsla(120, 20%, 20%, 0.9);
+    --gradoffset-green: 45%;
+    --gradgap-green: 30%;
+    
+    text-decoration: none;
+    font-size: 1.2rem;
+    color: var(--text-green);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    background-color: var(--clr-green);
+    background-image: linear-gradient(180deg, var(--clr2-green) var(--gradgap-green), transparent calc(100% - var(--gradgap-green)));
+    background-repeat: no-repeat;
+    background-position: center var(--gradoffset-green);
+    background-size: 100% 200%;
+    padding: 0.5em 3em; 
+    min-width: 200px;
+    border-radius: 2em;
+    border: none;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
+    position: relative;
+    transition: all 0.5s ease;
+    outline: none;
+}
+
+.aesthetic-green-button::before, .aesthetic-green-button::after {
+    content: "";
+    inset: 0;
+    position: absolute;
+    border-radius: 5em;
+}
+
+.aesthetic-green-button::before {
+    background-image: radial-gradient(ellipse, hsla(var(--hue-green), 100%, 98%, 0.8) 20%, transparent 50%, transparent 200%), 
+        linear-gradient(90deg, hsl(120, 10%, 25%) -10%, transparent 30%, transparent 70%, hsl(120, 10%, 25%) 110%);
+    box-shadow: inset 0 .25em .75em hsla(0deg, 0%, 0%, 0.8), 
+        inset 0 -.05em .2em rgba(255, 255, 255, 0.4), 
+        inset 0 -1px 3px hsla(var(--hue-green), 80%, 50%, 0.75);
+    background-blend-mode: overlay;
+    background-repeat: no-repeat;
+    background-size: 200% 80%, cover;
+    background-position: center 220%;
+    mix-blend-mode: overlay;
+    filter: blur(calc(var(--blur-green) * 0.5));
+}
+
+.aesthetic-green-button::after {
+    background: linear-gradient(180deg, hsla(var(--hue2-green), 100%, 90%, 0.9), hsla(var(--hue2-green), calc(var(--sat2-green) * 0.7), 50%, 0.75) 40%, transparent 80%);
+    top: 0.075em;
+    left: 0.75em;
+    right: 0.75em;
+    bottom: 1.4em;
+    filter: blur(var(--blur-green));
+    mix-blend-mode: screen;
+}
+
+.aesthetic-green-button:hover, .aesthetic-green-button:focus {
+    outline: none;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    background-position: center calc(var(--gradoffset-green) - 0.75em);
+    background: linear-gradient(180deg, hsl(120, 40%, 98%), hsl(120, 40%, 90%)); 
+}
+
+.aesthetic-green-button-dark {
+    --hue-green-dark: 120deg; 
+    --sat-green-dark: 30%; 
+    --clr-green-dark: hsl(var(--hue-green-dark), var(--sat-green-dark), 25%);
+    --clr2-green-dark: hsl(var(--hue-green-dark), var(--sat-green-dark), 35%);
+    --text-green-dark: hsla(120, 70%, 90%, 0.9);
+    --gradoffset-green-dark: 45%;
+    --gradgap-green-dark: 30%;
+
+    text-decoration: none;
+    font-size: 1.2rem;
+    color: var(--text-green-dark);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    background-color: var(--clr-green-dark);
+    background-image: linear-gradient(
+        180deg,
+        var(--clr2-green-dark) var(--gradgap-green-dark),
+        transparent calc(100% - var(--gradgap-green-dark))
+    );
+    background-repeat: no-repeat;
+    background-position: center var(--gradoffset-green-dark);
+    background-size: 100% 200%;
+    padding: 0.5em 3em;
+    min-width: 200px;
+    border-radius: 2em;
+    border: none;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    position: relative;
+    transition: all 0.5s ease;
+    outline: none;
+}
+
+.aesthetic-green-button-dark::before,
+.aesthetic-green-button-dark::after {
+    content: "";
+    inset: 0;
+    position: absolute;
+    border-radius: 5em;
+}
+
+.aesthetic-green-button-dark::before {
+    background-image: radial-gradient(
+            ellipse,
+            hsla(var(--hue-green-dark), 50%, 30%, 0.8) 20%,
+            transparent 50%,
+            transparent 200%
+        ),
+        linear-gradient(
+            90deg,
+            hsl(120, 20%, 15%) -10%,
+            transparent 30%,
+            transparent 70%,
+            hsl(120, 20%, 15%) 110%
+        );
+    box-shadow: inset 0 0.25em 0.75em hsla(0deg, 0%, 0%, 0.8),
+        inset 0 -0.05em 0.2em rgba(255, 255, 255, 0.2),
+        inset 0 -1px 3px hsla(var(--hue-green-dark), 50%, 25%, 0.75);
+    background-blend-mode: overlay;
+    background-repeat: no-repeat;
+    background-size: 200% 80%, cover;
+    background-position: center 220%;
+    mix-blend-mode: overlay;
+}
+
+.aesthetic-green-button-dark::after {
+    background: linear-gradient(
+        180deg,
+        hsla(var(--hue-green-dark), 50%, 45%, 0.9),
+        hsla(var(--hue-green-dark), 40%, 25%, 0.75) 40%,
+        transparent 80%
+    );
+    top: 0.075em;
+    left: 0.75em;
+    right: 0.75em;
+    bottom: 1.4em;
+    mix-blend-mode: screen;
+}
+
+.aesthetic-green-button-dark:hover,
+.aesthetic-green-button-dark:focus {
+    outline: none;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    background-position: center calc(var(--gradoffset-green-dark) - 0.75em);
+    background: linear-gradient(
+        180deg,
+        hsl(var(--hue-green-dark), 30%, 35%),
+        hsl(var(--hue-green-dark), 30%, 45%)
+    );
+}
+
 .secondary-button {
     position: relative;
     display: inline-block;
@@ -1121,7 +1287,6 @@ body {
     height: calc(80vh - 100px);
     font-family: 'Source Code Pro', monospace;
     font-size: 14px;
-    color: #ffffff;
     border-radius: 8px;;
     padding: 10px; 
     line-height: 1.6; 
@@ -1226,6 +1391,232 @@ body {
 .robotic-environment p {
     font-size: 14px;
     margin: 0;
+}
+
+.robotic-environment .simulation-card {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    border: 1px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.robotic-environment .simulation-card .card-header {
+    background-color: #333;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.robotic-environment .output-card {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    border: 1px solid #333;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.robotic-environment .output-card .card-header {
+    background-color: #333;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.robotic-environment .output-card .card-body {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    padding: 15px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+    height: 200px;
+    overflow-y: auto;
+    border-radius: 0 0 8px 8px;
+}
+
+.robotic-environment .code-editor {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    border: 1px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    height: 100%;
+}
+
+.robotic-environment .code-editor .card-header {
+    background-color: #333;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 1px solid #444;
+    border-radius: 8px 8px 0 0;
+}
+
+.robotic-environment .code-editor textarea {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    border: none;
+    width: 100%;
+    height: calc(100% - 20px);
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 8px;
+    overflow-y: auto;
+    resize: none;
+    line-height: 1.6;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+#coding-pet-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+#coding-pet {
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+}
+
+.run-button-container {
+    display: flex;
+    justify-content: flex-end; 
+    padding: 10px 0;
+}
+
+.coding-options {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #121212;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #2c2c2c;
+    border-radius: 8px 8px 0 0;
+}
+
+.coding-options .tab-button {
+    background: #1a1a1a;
+    border: 1px solid #444;
+    color: #d4d4d4;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2.5rem; 
+    height: 2.5rem;
+}
+
+.coding-options .tab-button:hover,
+.coding-options .tab-button:focus {
+    background-color: #333;
+    color: #fff;
+    outline: none;
+}
+
+.coding-options .tab-button.active {
+    background-color: #1e1e1e;
+    color: #90ee90;
+}
+
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #333;
+    padding: 10px 0;
+    margin: 0;
+    list-style: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    width: max-content;
+}
+
+.dropdown-item {
+    color: #fff;
+    padding: 5px 15px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+}
+
+.dropdown-item:hover {
+    background-color: white;
+}
+
+.dropdown-container:hover .dropdown-menu {
+    display: block;
+}
+
+/* Chat Bot */
+.chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.chatbox {
+    height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+}
+
+.chat-input-container {
+    display: flex;
+    padding: 5px;
+}
+
+#userInput {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#sendBtn {
+    padding: 5px 10px;
+    margin-left: 5px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#sendBtn:hover {
+    background-color: #0056b3;
 }
 
 
@@ -1914,6 +2305,45 @@ code {
 .subsection + .subsection {
     margin-top: 15px; 
 }
+
+.subsection ul ul {
+    list-style-type: circle; 
+    padding-left: 40px; 
+    margin-top: 5px; 
+    line-height: 1.6; 
+}
+
+.subsection ul ul li {
+    position: relative; 
+    margin-bottom: 5px; 
+    font-size: 0.95rem; 
+    color: #64748b; 
+    padding-left: 20px; 
+}
+
+.subsection ul ul li::before {
+    content: "●"; 
+    color: #1d4ed8; 
+    font-size: 1rem; 
+    position: absolute; 
+    left: 0; 
+    top: 50%; 
+    transform: translateY(-50%);
+}
+
+/* Quiz Content */
+
+.quiz-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: "Poppins", sans-serif;
+    height: 100vh;
+}
+
 
 /* -------------------COURSESPAGE------------------- */
 .chatbot-button {
