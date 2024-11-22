@@ -19,6 +19,14 @@
                     CORE offers a seamless environment for students to code robots with
                     minimal performance overhead.
                 </p>
+                <!-- Second Chatbot Interface -->
+                <!-- <div class="chatbot-container" id="chatbot2-container">
+                    <div id="chatbox2" class="chatbox"></div>
+                    <div class="chat-input-container">
+                        <input type="text" id="userInput2" placeholder="Type a message">
+                        <button id="sendBtn2">Send</button>
+                    </div>
+                </div> -->
                 <a class="aesthetic-button" href="#">Join Now</a>
             </div>
         </div>
@@ -219,8 +227,26 @@
             </div>
         </div>
         <!-- Chatbot Button -->
-        <div class="chatbot-button">
-            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Chatbot Logo" class="chatbot-logo">
+        <!-- <div class="chatbot-button">
+            <img src="{{ url_for('static', filename='img/blinking.gif') }}" alt="Chatbot Logo" class="chatbot-logo">
+        </div> -->
+
+        <!-- Chatbot Button -->
+        <div class="chatbot-label-container">
+            <div class="chatbot-label">Hi! I'm CORA, your personal assistant. Click me!</div>
+            <div class="chatbot-button">
+                <img src="{{ url_for('static', filename='img/blinking.gif') }}" alt="Chatbot Logo" class="chatbot-logo">
+            </div>
+        </div>
+        
+
+        <!-- Second Chatbot  -->
+        <div class="chatbot-container" id="chatbot2-container" style="display: none;">
+            <div id="chatbox2" class="chatbox"></div>
+            <div class="chat-input-container">
+                <input type="text" id="userInput2" placeholder="Type a message">
+                <button id="sendBtn2">Send</button>
+            </div>
         </div>
     </div>
     
