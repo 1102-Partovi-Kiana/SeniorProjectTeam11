@@ -5,8 +5,9 @@
                 <img src="{{ url_for('static', filename='img/logo.png') }}" alt="CORE Logo" style="width: 40px; height: 40px;">
                 <span class="navbar-logo">core</span> <!-- Apply the navbar-logo class here -->
             </a>
+            
             <!-- Bootstrap 5 updated button for toggling navbar -->
-            <button class="hamburger hamburger--elastic d-block d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="hamburger hamburger--elastic d-block d-lg-none ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="hamburger-box">
                     <span class="hamburger-inner"></span>
                 </span>
@@ -40,7 +41,7 @@
                         <a class="nav-link text-uppercase" href="{{ url_for('RenderCourses') }}">Courses</a>
                     </li>
 					<li class="nav-item">
-						<a class="nav-link text-uppercase" href="{{ url_for('RenderDarrenEnv') }}">Darren Env</a>
+						<a class="nav-link text-uppercase" href="{{ url_for('RenderFetchReachRobotSimulation') }}">Fetch Reach</a>
 					</li>
                 </ul>
             </div>

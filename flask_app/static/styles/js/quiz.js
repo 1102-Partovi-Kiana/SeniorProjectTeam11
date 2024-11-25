@@ -1,5 +1,3 @@
-// static/js/quiz.js
-
 $(document).ready(function () {
     // Initialize the quiz state
     let state = {

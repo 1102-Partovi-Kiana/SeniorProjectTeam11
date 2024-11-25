@@ -115,10 +115,21 @@
         <!-- Video Section -->
         <div class="course-video-section">
             <h1 class="video-title">A Glimpse into the World of Robotics</h1>
-            <video controls class="course-video">
-                <source src="{{ url_for('static', filename='videos/IntroVid.mov') }}" type="video/mp4">
-                Your browser does not support the video.
-            </video>
+            <div class="course-video-container">
+                <button class="btn_ripple" id="playButton">
+                    <i class="fa fa-play"></i>
+                </button>
+                <video controls id="videoPlayer" class="course-video">
+                    <source src="{{ url_for('static', filename='videos/IntroVid.mov') }}" type="video/mp4">
+                    Your browser does not support the video.
+                </video>
+                <div class="reference-section">
+                    <h3>Reference</h3>
+                    <p>
+                        The Wall Street Journal. (2017, December 5). <em>The Robot Revolution: The New Age of Manufacturing | Moving Upstream</em> [Video]. YouTube. <a href="https://www.youtube.com/watch?v=HX6M4QunVmA&t=1s" target="_blank">https://www.youtube.com/watch?v=HX6M4QunVmA&t=1s</a>
+                    </p>
+                </div>                
+            </div>
         </div> <!-- End of course-video-section -->
         
         <!-- Section 1: What is a robot? -->

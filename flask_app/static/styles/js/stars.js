@@ -1,7 +1,7 @@
 document.querySelector('.page-header').addEventListener('mouseenter', () => {
     const header = document.querySelector('.page-header');
 
-    for (let i = 0; i < 20; i++) { // Generate 20 stars
+    for (let i = 0; i < 19; i++) { 
         const star = document.createElement('div');
         star.classList.add('star');
 

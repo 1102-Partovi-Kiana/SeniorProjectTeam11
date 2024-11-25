@@ -1,5 +1,3 @@
-// static/js/mujoco-render.js
-
 document.addEventListener("DOMContentLoaded", function() {
     const canvas = document.getElementById('mujoco-canvas');
     const ctx = canvas.getContext('2d');

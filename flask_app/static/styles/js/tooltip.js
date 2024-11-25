@@ -15,7 +15,7 @@ tippy('#coding-pets', {
     },
   });
   
-  tippy('#light-mode', {
+tippy('#light-mode', {
     content: "Switch to Light Mode",
     animation: 'fade',
     onShow(instance) {
@@ -32,7 +32,7 @@ tippy('#coding-pets', {
     },
   });
   
-  tippy('#syntax-highlight', {
+tippy('#syntax-highlight', {
     content: "Toggle Syntax Highlighting",
     animation: 'fade',
     onShow(instance) {
@@ -49,7 +49,7 @@ tippy('#coding-pets', {
     },
   });
   
-  tippy('#autocomplete', {
+tippy('#autocomplete', {
     content: "Enable Autocomplete",
     animation: 'fade',
     onShow(instance) {
@@ -66,3 +66,19 @@ tippy('#coding-pets', {
     },
   });
   
+tippy('#hints-button', {
+    content: "Show Hints",
+    animation: 'fade',
+    onShow(instance) {
+        const tooltip = instance.popper.querySelector('.tippy-box');
+        if (tooltip) {
+            tooltip.classList.add('animate__animated', 'animate__jello');
+        }
+    },
+    onHidden(instance) {
+        const tooltip = instance.popper.querySelector('.tippy-box');
+        if (tooltip) {
+            tooltip.classList.remove('animate__animated', 'animate__jello');
+        }
+    },
+});

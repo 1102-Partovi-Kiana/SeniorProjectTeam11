@@ -4,7 +4,7 @@ from gym.envs.robotics import fetch_env
 
 
 # Ensure we get the path separator correct on windows
-MODEL_XML_PATH = "/mnt/c/Users/kpartovi/Desktop/CS425/SeniorProjectTeam11/venv38/lib/python3.8/site-packages/gym/envs/robotics/assets/fetch/organize.xml"
+MODEL_XML_PATH = "/mnt/c/Users/kpartovi/Desktop/CS425/SeniorProjectTeam11/venv38/lib/python3.8/site-packages/gym/envs/robotics/assets/fetch/"
 
 
 class FetchOrganizeEnv(fetch_env.FetchEnv, utils.EzPickle):

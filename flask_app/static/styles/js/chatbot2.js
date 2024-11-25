@@ -6,6 +6,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatbotContainer = document.getElementById('chatbot2-container');
     const chatbotLabel = document.querySelector('.chatbot-label'); 
 
+    // Pages for more personalized experience
+    const pageContexts = {
+        '/': 'Homepage',
+        '/signup': 'Sign Up',
+        '/login': 'Log In',
+        '/courses': 'Courses',
+    };
+
+    const currentPath = window.location.pathname;
+    const pageContext = pageContexts[currentPath] || 'General'; 
+
     setTimeout(() => {
         if (chatbotLabel) {
             chatbotLabel.style.opacity = '0'; 
@@ -40,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify({
                 message: userMessage,
-                page_context: 'Homepage'
+                page_context: pageContext 
             })
         })
             .then(response => response.json())

@@ -1,16 +1,5 @@
 /* -------------------HOMEPAGE------------------- */
 
-/* Added padding for the body to prevent overlap with fixed navbar --> */
-body {
-    padding-top: 120px; 
-}
-
-@media (min-width: 992px) {
-    body {
-        padding-top: 40px;
-    }
-}
-
 .cursive-live {
     font-family: 'Pacifico', cursive;
     font-size: 2rem; 
@@ -635,14 +624,24 @@ body {
 
 /* -------------------NAVBAR------------------- */
 
+nav {
+    margin: 0;
+    padding: 0;
+}
+
+
 .navbar {
     background: #333;
     height: 60px; /* Reduced height */
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1rem; 
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+    position: relative;
 }
+
 
 .navbar-container {
     display: flex;
@@ -651,9 +650,10 @@ body {
     height: 60px;
     z-index: 1;
     width: 100%;
-    max-width: 1200px; 
+    max-width: 1200px;
     padding: 0 10px; /* Reduced padding */
 }
+
 
 .navbar-logo {
     color: #082882;
@@ -666,15 +666,19 @@ body {
     font-weight: 700;
 }
 
+
 .navbar-brand {
+    display: flex;
     position: absolute;
     left: 0; /* Position at the left edge */
     padding-left: 10px;
 }
 
+
 .navbar-nav.ms-auto {
     margin-left: auto; /* Pushes items to the right */
 }
+
 
 .nav-menu {
     display: flex;
@@ -683,18 +687,20 @@ body {
     text-align: center;
 }
 
+
 .nav-item {
     height: 60px; /* Reduced height */
     display: flex;
     align-items: center;
     padding: 0 0.5rem; /* Reduced padding for closer spacing */
-    transition: background-color 0.3s ease; 
+    transition: background-color 0.3s ease;
 }
+
 
 .nav-links {
     color: #fff;
     text-decoration: none;
-    font-size: 1rem; 
+    font-size: 1rem;
     width: 100%;
     height: 100%;
     display: flex;
@@ -703,31 +709,47 @@ body {
     transition: color 0.3s ease;
 }
 
+
 .nav-item:hover {
     background-color: #fff;
 }
+
 
 .nav-item:hover .nav-links {
     color: #333;
 }
 
 /* -------------------FOOTER------------------- */
+
 .footer {
     background-color: #1c284c; 
 }
+
 .footer .btn-logo {
+    display: flex; 
+    align-items: center; 
+    gap: 0.5rem; 
     font-size: 1.7rem; 
     font-family: 'Righteous', cursive;
     font-weight: 700;
     color: #fff; 
     text-decoration: none;
 }
-.footer .nav-link {
-    color: #fff; 
+
+.footer .footer-nav {
+    display: flex;
+    flex-direction: column; 
 }
 
-.footer .nav-link:hover {
-    text-decoration: underline; 
+.footer .footer-item {
+    list-style: none; 
+    margin: 0 1rem;
+}
+
+.footer .footer-link {
+    color: #fff;
+    text-decoration: none; 
+    font-size: 1rem; 
 }
 
 /* -------------------SIGNUPPAGE + LOGINPAGE------------------- */
@@ -862,6 +884,14 @@ body {
     font-size: 1rem; 
     font-family: 'Poppins', sans-serif; 
     color: #333; 
+}
+
+.small {
+    color: #004085; 
+    font-weight: 600; 
+    text-decoration: none; 
+    position: relative; 
+    transition: color 0.3s ease; 
 }
 
 .signup-link a {
@@ -1271,17 +1301,20 @@ body {
     padding-top: 30px;
 }
 
-/* Scoped styles for the Robotic Environment section */
 .robotic-environment {
     min-height: 100vh;
-    background-color:  #f5f5f5;
+    background-color:  black;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding-bottom: 50px;
 }
 
 .robotic-environment .code-editor {
     height: 100%;
 }
 
-/* CodeMirror editor styling */
 .robotic-environment .CodeMirror {
     width: 100%;
     height: calc(80vh - 100px);
@@ -1292,14 +1325,12 @@ body {
     line-height: 1.6; 
 }
 
-/* Video container styling */
 .robotic-environment .video-container img {
     width: 100%;
     height: auto;
     max-height: 400px;
 }
 
-/* Collision notification styling */
 .robotic-environment #collision-notification {
     display: none;
     margin-top: 20px;
@@ -1478,8 +1509,8 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     z-index: 10;
     pointer-events: none;
 }
@@ -1488,12 +1519,19 @@ body {
     width: 100%;
     height: auto;
     pointer-events: none;
+    transform: scaleX(1); 
+    transition: transform 0.3s ease-in-out;
+}
+
+#coding-pet.flipped {
+    transform: scaleX(-1) rotate(1deg);
 }
 
 .run-button-container {
     display: flex;
     justify-content: flex-end; 
     padding: 10px 0;
+    margin-left: auto; 
 }
 
 .coding-options {
@@ -1569,6 +1607,265 @@ body {
 
 .dropdown-container:hover .dropdown-menu {
     display: block;
+}
+
+.hint-dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.hint-dropdown-menu {
+    display: none; 
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    background-color: #333;
+    padding: 10px 0;
+    margin: 0;
+    list-style: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    width: max-content;
+}
+
+.hint-dropdown-item {
+    color: #fff;
+    padding: 8px 15px;
+    text-decoration: none;
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+    display: block;
+}
+
+.hint-dropdown-item:hover {
+    background-color: #555;
+}
+
+.hint-dropdown-menu:hover,
+.hint-dropdown-container:hover .hint-dropdown-menu {
+    display: block;
+}
+
+/* Light Mode */
+
+/* Light Mode Navbar */
+.robotic-environment.light-mode .navbar {
+    background: purple;
+    color: purple;
+    border-bottom: 1px solid #ddd; 
+}
+
+.robotic-environment.light-mode .navbar-logo {
+    color: purple; 
+}
+
+.robotic-environment.light-mode .nav-links {
+    color: purple; 
+}
+
+.robotic-environment.light-mode .nav-item:hover {
+    background-color: purple; 
+}
+
+.robotic-environment.light-mode .nav-item:hover .nav-links {
+    color: purple; 
+}
+
+.robotic-environment.light-mode {
+    min-height: 100vh;
+    background-color: #f3f3f3;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding-bottom: 50px;
+}
+
+.robotic-environment.light-mode .content-background {
+    background-color: #f3f3f3; 
+}
+
+.robotic-environment.light-mode .card-header {
+    background-color: #e9ecef;
+    color: #000;
+}
+
+.robotic-environment.light-mode .simulation-card {
+    background-color: #ffffff;
+    color: #000000;          
+    border: 1px solid #ccc;  
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.robotic-environment.light-mode .code-editor {
+    background-color: #ffffff; 
+    color: #000000;           
+    border: 1px solid #ccc;   
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 15px;
+    height: 100%;
+}
+
+.robotic-environment.light-mode .code-editor textarea {
+    background-color: #ffffff;
+    color: #000000;        
+    border: 1px solid #ccc;   
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); 
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 8px;
+    overflow-y: auto;
+    resize: none;
+    line-height: 1.6;
+    position: relative;
+    overflow: hidden;
+}
+
+.robotic-environment.light-mode .coding-options {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f8f9fa; 
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #ddd; 
+    border-radius: 8px 8px 0 0;
+}
+
+.robotic-environment.light-mode .tab-button {
+    background-color: #007bff; 
+    color: #ffffff;
+}
+
+.robotic-environment.light-mode .aesthetic-green-button {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+.robotic-environment.light-mode .tab-button:hover,
+.robotic-environment.light-mode .tab-button:focus {
+    background-color: #0056b3; 
+    border-color: #0056b3; 
+    color: #ffffff;
+}
+
+.robotic-environment.light-mode .tab-button {
+    background-color: #007bff; 
+    color: #ffffff;
+    border: 1px solid #007bff; 
+}
+
+.robotic-environment.light-mode .output-card {
+    background-color: #ffffff; 
+    color: #000000;           
+    border: 1px solid #ccc;   
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.robotic-environment.light-mode .output-card .card-header {
+    background-color: #f8f9fa;
+    color: #000000;       
+    border-bottom: 1px solid #ccc; 
+}
+
+.robotic-environment.light-mode .output-card .card-body {
+    background-color: #ffffff; 
+    color: #000000;          
+    border-radius: 0 0 8px 8px;
+    border-top: 1px solid #ccc;
+}
+
+.robotic-environment.light-mode #output-box {
+    background-color: #ffffff; 
+    color: #000000;        
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;   
+    height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    line-height: 1.6;
+    width: 100%; 
+    position: relative;
+}
+
+.robotic-environment.light-mode .coding-options {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f8f9fa; 
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #ddd; 
+    border-radius: 8px 8px 0 0;
+}
+
+/* Hint Chat Bot */
+
+/* Not displayed on page load */
+#hints-button {
+    display: none;
+    background-color: gold;
+    color: black; 
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+}
+
+#hints-button:hover {
+    background-color: darkgoldenrod; 
+}
+
+#hintbox-container {
+    display: none;
+}
+
+.hintbox-container {
+    position: fixed;
+    bottom: 340px; 
+    right: 20px;
+    width: 300px;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.hintbox {
+    height: 150px;
+    overflow-y: auto;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+}
+
+.hintbox-container h4 {
+    margin-bottom: 10px;
+}
+
+.hintbox-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.hintbox-container li {
+    margin-bottom: 5px;
+    font-style: italic;
+    color: #555;
 }
 
 /* Chat Bot */
@@ -1693,6 +1990,7 @@ body {
 
 
 /* -------------------COURSESPAGE- COURSE CATALOG------------------- */
+
 .greeting {
     width: 100%;
     text-align: center;
@@ -1874,35 +2172,94 @@ body {
     overflow-y: auto;
 }
 
-.course-video-section {
+.btn_ripple {
+    border: none;
+    outline: none;
+    width: 100px; 
+    height: 100px; 
+    border-radius: 50%;
+    background-color: black;
+    color: #fff;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-top: -80px;
-    padding-top: -10px;
-    padding-bottom: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 800px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 2px solid #fff; 
+    animation-name: ripple;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
 }
 
-.video-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: black;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px;
-    text-align: center;
+.btn_ripple i {
+    font-size: 40px; 
+    z-index: 2; 
+    pointer-events: none; 
+}
+
+@keyframes ripple {
+    0% {
+        box-shadow: 0 0 0 0 #fff4, 0 0 0 0 #fff4;
+    }
+    80% {
+        box-shadow: 0 0 0 20px #fff0, 0 0 0 40px #fff0;
+    }
+    100% {
+        box-shadow: 0 0 0 0 #fff0, 0 0 0 0 #fff0;
+    }
+}
+
+.course-video-container {
+    position: relative;
     width: 100%;
+    max-width: 800px;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .course-video {
     width: 100%;
     max-width: 800px;
     border-radius: 8px;
-    margin-bottom: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.reference-section {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins', sans-serif;
+}
+
+.reference-section h3 {
+    font-size: 1.5rem;
+    color: #2E8B57;
+    margin-bottom: 10px;
+}
+
+.reference-section p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #4A4A4A;
+}
+
+.reference-section a {
+    color: #4A90E2;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.reference-section a:hover {
+    color: #2E8B57;
+    text-decoration: underline;
 }
 
 /* Title and Description Styling */
