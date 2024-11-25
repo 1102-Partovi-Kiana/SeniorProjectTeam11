@@ -1,50 +1,80 @@
 <header>
-    <nav class="navbar navbar-ware navbar-expand-lg navbar-light bg-light fixed-top">
+    <nav class="navbar navbar-ware navbar-expand-lg {% if is_dashboard %}dashboard{% elif is_homepage %}homepage{% endif %} navbar-light bg-light fixed-top">
         <div class="container px-0">
             <a class="navbar-brand d-flex align-items-center py-0 ms-0" href="{{ url_for('RenderHomepage') }}">
                 <img src="{{ url_for('static', filename='img/logo.png') }}" alt="CORE Logo" style="width: 40px; height: 40px;">
-                <span class="navbar-logo">core</span> <!-- Apply the navbar-logo class here -->
+                <span class="navbar-logo">core</span>
             </a>
-            <!-- Bootstrap 5 updated button for toggling navbar -->
             <button class="hamburger hamburger--elastic d-block d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="hamburger-box">
                     <span class="hamburger-inner"></span>
                 </span>
             </button>
-
-            <!-- Bootstrap 5 updated navbar collapse and flex utility classes -->
             <div class="collapse navbar-collapse flex-column-reverse flex-lg-column pb-5 pb-lg-0" id="navbarContent">
                 <ul class="navbar-nav ms-auto navbar-help ms-lg-auto me-lg-0 mt-3 mt-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="#">Contact</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{ url_for('RenderEnvironmentList') }}">Environments</a>
-                    </li>
-                    <li class="nav-item">
-						<a class="nav-link text-uppercase" href="{{ url_for('RenderPickAndPlaceEnv') }}">Pick And Place Env</a>
-                    </li>
-                    <li class="nav-item">
-						<a class="nav-link text-uppercase" href="{{ url_for('RenderFetchOrganizeEnv') }}">Organize Env</a>
-					</li>
-                    <li class="nav-item">
-						<a class="nav-link text-uppercase" href="{{ url_for('RenderFetchStackEnv') }}">Stack Env</a>
-					</li>
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{ url_for('RenderLogin') }}">Log In</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{ url_for('RenderSignup') }}">Sign Up</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{ url_for('RenderCourses') }}">Courses</a>
-                    </li>
-					<li class="nav-item">
-						<a class="nav-link text-uppercase" href="{{ url_for('RenderChatbot') }}">Chatbot</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link text-uppercase" href="{{ url_for('RenderDarrenEnv') }}">Darren Env</a>
-					</li>
+                    {% if is_homepage %}
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" href="{{ url_for('RenderLogin') }}">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" href="{{ url_for('RenderSignup') }}">Sign Up</a>
+                        </li>
+                        {% elif is_student_dashboard %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Courses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('RenderStudentDashboard') }}">My Grades</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('RenderHomepage') }}">Logout</a>
+                        </li>
+                        {% elif is_instructor_dashboard%}
+                        <ul class="navbar-nav">
+                            <li class="nav-item custom-nav-item">
+                                <a class="nav-link custom-nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createClassModal">Create a New Class</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Classes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('RenderInstructorDashboard') }}">Feedback</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('RenderHomepage') }}">Logout</a>
+                            </li>
+                        </ul>
+                        <div class="modal fade custom-modal" id="createClassModal" tabindex="-1" aria-labelledby="createClassModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content custom-modal-content">
+                                    <div class="modal-header custom-modal-header">
+                                        <h5 class="modal-title" id="createClassModalLabel">Create a New Class</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body custom-modal-body">
+                                        <form method="POST" action="{{ url_for('RenderInstructorDashboard') }}">
+                                            <div class="mb-3">
+                                                <label for="className" class="form-label">Class Name</label>
+                                                <input type="text" class="form-control" id="className" name="className" placeholder="Enter class name">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="classDescription" class="form-label">Class Description</label>
+                                                <textarea class="form-control" id="classDescription" name="classDescription" rows="3" placeholder="Enter class description"></textarea>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="classDate" class="form-label">Class Start Date</label>
+                                                <input type="date" class="form-control" id="classDate" name="classDate">
+                                            </div>
+                                            <button type="submit" class="btn custom-modal-btn">Create Class</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </ul>
             </div>
         </div>

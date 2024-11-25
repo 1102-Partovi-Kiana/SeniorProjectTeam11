@@ -31,7 +31,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 
-
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/dashboard.css') }}">
 
 	{% block extra_css %}
 	{# Override this in templates to add extra stylesheets #}
@@ -53,6 +53,7 @@
 	<!-- Popper.js from CDN -->
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 
+	<script src="{{ url_for('static', filename='styles/js/sidebar-toggler.js') }}"></script>
 	{% block extra_js %}
 	{# Override this in templates to add extra javascript #}
 	{% endblock extra_js %}

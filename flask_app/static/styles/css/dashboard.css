@@ -1,0 +1,497 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* Sidebar Wrapper */
+.sidebar-wrapper {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    transition: width 0.3s ease; 
+    background-color: rgb(41, 47, 124);
+    overflow-x: hidden;
+}
+
+.sidebar-wrapper.collapsed {
+    width: 60px;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+    height: 60px;
+    background-color: rgb(55, 62, 168);
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-bottom: 2px solid rgb(52, 58, 155);
+}
+
+.profile-image {
+    width: 40px;
+    height: 40px;
+    margin: 0px 10px;
+    object-fit: cover;
+}
+.sidebar-name {
+    display: inline-block;
+    text-overflow: ellipsis;
+    font-size: 12px;
+    line-height: 2;
+    font-weight: 400;
+    font-family: "Work Sans", Helvetica, sans-serif;
+    letter-spacing: 0.32px;
+    color: rgb(221, 221, 221)
+}
+
+.collapse-btn {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    right: 0;
+    transition: right 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(55, 62, 168);
+    border: none;
+}
+
+.collapse-btn svg {
+    width: 60px;
+    height: 60px;
+    transform: rotate(180deg);
+    color: rgb(255, 255, 255);
+}
+
+.sidebar-wrapper.collapsed .collapse-btn svg {
+    transform: rotate(0deg);
+}
+
+.sidebar-wrapper.collapsed .profile-image,
+.sidebar-wrapper.collapsed .sidebar-name {
+    display: none;
+}
+
+.sidebar-wrapper.collapsed .sidebar-header {
+    justify-content: center;
+}
+
+/* Sidebar List */
+.sidebar-wrapper a {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
+
+.sidebar-wrapper a:hover {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
+
+.sidebar-wrapper a ul {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+    width: auto;
+    
+}
+
+/* List Items */
+.sidebar-wrapper a ul li {
+    display: flex;
+    align-items: center;
+    padding: 20px 14px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex-basis: auto;
+    width: 250px;
+}
+
+/* Icon Styling */
+.sidebar-wrapper a ul li svg {
+    width: 28px;
+    height: 28px;
+    transition: transform 0.3s ease;
+    color: rgb(255, 255, 255);
+}
+
+
+.sidebar-wrapper a ul li span {
+    font-family: "Work Sans", Helvetica, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0.32px;
+    padding-left: 10px;
+    overflow: hidden;
+    display: block;
+}
+
+.sidebar-wrapper.collapsed a ul li span {
+    display: none;
+}
+
+
+/* My Navbar that is being replaced with the actual navbar :(
+
+.navbar-instructor-view {
+    position: fixed;
+    top: 0;
+    margin-left: 250px; 
+    width: calc(100% - 250px);
+    background-color: rgb(248, 249, 250);
+    color: white;
+    z-index: 2;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 6px -1px;
+}
+
+.navbar-instructor-view.collapsed {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+}
+.navbar-instructor-logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.navbar-instructor-logo img {
+    margin-left: 10px;
+    width: 50px;
+    height: 50px;
+}
+
+.navbar-instructor-logo-name {
+    color: #082882;
+    font-family: 'Righteous', cursive;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-left: 6px;
+}
+
+.navbar-instructor-create-course {
+    font-family: "Work Sans", Helvetica, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0.32px;
+    padding-left: 10px;
+    color: rgb(0, 0, 0);
+    margin-left: auto;
+    margin-right: 40px;
+}
+
+*/
+
+/* Main Content */
+.dashboard-start {
+    top: 0;
+    margin-left: 250px; 
+    width: calc(100% - 250px);
+    background-color: rgb(255, 255, 255);
+    z-index: 2;
+    padding-top: 60px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.sidebar-wrapper.collapsed ~ .dashboard-start {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+}
+
+.dashboard-welcome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.dashboard-welcome h1, .dashboard-welcome h2 {
+    margin: 0; 
+}
+
+.dashboard-welcome h1 {
+    font-size: 40px;
+    color: rgb(61, 46, 146);
+}
+
+.dashboard-welcome h2 {
+    font-size: 14px;
+    color: #555;
+    margin-left: auto;
+    text-align: right;
+    margin-right: 40px;
+}
+
+.dashboard-table-container {
+    background-color: rgb(255,255,255);
+    transition: margin-left 0.3s ease, width 0.3s ease;
+    overflow: hidden;
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    height: calc(100% - 180px);
+    padding: 40px;
+    margin-top: 0px !important;
+}
+
+.dashboard-table-container.collapsed {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+}
+
+.table-container-one {
+    width: 65%;
+    height: 40%;
+    float: left;
+    margin-bottom: 40px;
+}
+
+.table-container-two {
+    width: 32%;
+    height: 50%; 
+    float: right;
+    margin-bottom: 40px
+}
+
+.table-container-three {
+    width: 65%;
+    height: calc(60% - 40px);
+    float: left;
+}
+
+.table-container-four {
+    width: 32%;
+    height: calc(50% - 40px);
+    float: right;
+}
+
+.table-container-one,
+.table-container-three{
+    border: 2px solid rgb(116, 116, 116);
+    overflow: hidden;
+}
+
+.table-container-two,
+.table-container-four {
+    border: 2px solid rgb(116, 116, 116);
+    overflow: hidden;
+}
+
+.table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: fixed;
+    border: none;
+}
+
+.table thead, .table tbody {
+    width: 100%;
+}
+
+.table-container-one table tbody,
+.table-container-three table tbody {
+    display: block;
+    height: calc(100%);
+    overflow-y: auto;
+    border: none;
+}
+
+.table-container-two table tbody,
+.table-container-four table tbody {
+    display: block;
+    height: calc(100%);
+    overflow-y: auto;
+    border: none;
+}
+
+.table tbody tr {
+    display: table;
+    width: 100%;
+    border: none;
+}
+
+
+.table tbody td:hover {
+    background-color: #d0d0d0;
+    transition: background-color 0.3s ease;
+}
+
+.table tbody td {
+    border: none;
+}
+
+.dashboard-table-container .table th{
+    background-color: #343a40; /* Custom dark background */
+    color: white; /* White text */
+    font-weight: bold;
+    border: none;
+}
+
+
+/* Navigation Bar */
+/*
+.navbar {
+    width: calc(100% - 250px);
+    background: #333;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem; 
+    margin-left: 250px; 
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    z-index: 1;
+    width: 100%;
+    max-width: 1200px; 
+    padding: 0 10px;
+}
+
+.navbar-logo {
+    color: #082882;
+    font-family: 'Righteous', cursive;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1.7rem;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+}
+
+.navbar-brand {
+    position: absolute;
+    left: 0;
+    padding-left: 10px;
+}
+
+.navbar-nav.ms-auto {
+    margin-left: auto;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    text-align: center;
+}
+
+.nav-item {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem;
+    transition: background-color 0.3s ease; 
+}
+
+.nav-links {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem; 
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+}
+
+.nav-item:hover {
+    background-color: #fff;
+}
+
+.nav-item:hover .nav-links {
+    color: #333;
+}
+
+.navbar.collapsed {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+}
+*/
+/* Footer */
+/*
+.footer {
+    width: calc(100% - 250px);
+    margin-left: 250px; 
+    background-color: #1c284c; 
+    transition: margin-left 0.3s ease, width 0.3s ease;
+    bottom: 0;
+    position: absolute; 
+}
+
+.footer .container {
+    padding: 0;
+}
+
+.footer .btn-logo {
+    font-size: 1.7rem; 
+    font-family: 'Righteous', cursive;
+    font-weight: 700;
+    color: #fff; 
+    text-decoration: none;
+}
+.footer .nav-link {
+    color: #fff; 
+}
+
+.footer .nav-link:hover {
+    text-decoration: underline; 
+}
+
+.footer.collapsed {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+}
+
+*/
+
+.modal-backdrop{
+    z-index: -1;
+}
+
+.custom-modal-body .form-control {
+    color: rgb(0,0,0);
+    border: 1px solid rgb(0,0,0);
+}
+
+.custom-modal-body .form-control:focus {
+    color: rgb(0,0,0);
+}
+
+.custom-modal-btn {
+    background-color: rgb(0, 4, 255);
+    color: white; 
+    border-radius: 25px;
+    padding: 10px 30px;
+    font-size: 1.1rem;
+    border: none;
+}
+
+.custom-modal-btn:hover {
+    background-color: rgb(0, 4, 255);
+    color: white;
+}

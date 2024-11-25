@@ -13,7 +13,7 @@ from flask_migrate import Migrate
 from flask_mail import Mail, Message
 from config import Config
 from auth_func import *
-from classes import db, User
+from classes import *
 
 
 app = Flask(__name__)
@@ -27,7 +27,7 @@ env = None  # Initialize your environment here
 # Route for the homepage
 @app.route('/')
 def RenderHomepage():
-    return render_template('homepage.html')
+    return render_template('homepage.html', is_homepage=True)
 
 @app.route('/robotic-environment')
 def RenderRoboticEnvironment():
@@ -256,7 +256,7 @@ def RenderSignup():
         password = request.form.get('password')
 
         if not check_password_requirements(password):
-            return render_template('account/signup.html')
+            return render_template('account/signup.html', is_homepage=True)
         
         new_user = User()
 
@@ -280,7 +280,7 @@ def RenderSignup():
             flash("Registration Successful")
             return render_template('account/signup.html')
 
-    return render_template('account/signup.html')
+    return render_template('account/signup.html', is_homepage=True)
 
 @app.route('/login', methods=['GET', 'POST'])
 def RenderLogin():
@@ -290,8 +290,9 @@ def RenderLogin():
 
         if(check_valid_user(login_username, login_password)):
             flash("Successfully Logged In!")
+            return redirect(url_for('RenderInstructorDashboard'))
 
-    return render_template('account/login.html')
+    return render_template('account/login.html', is_homepage=True)
 
 @app.route('/courses')
 def RenderCourses():
@@ -345,6 +346,25 @@ def RenderFetchOrganizeEnv():
     global env
     env = FetchOrganizeEnv()
     return render_template('robotic_organize_environment.html')
+
+@app.route('/dashboard/instructor_view', methods=['GET', 'POST'])
+def RenderInstructorDashboard():
+    if request.method == 'POST':
+        class_name = request.form['className']
+        class_description = request.form['classDescription']
+        class_date = request.form['classDate']
+
+        new_class = Classes()
+        new_class.class_name = class_name
+        db.session.add(new_class)
+        db.session.commit()
+
+        return redirect(url_for('RenderInstructorDashboard'))
+    return render_template('dashboard/dashboard_instructor.html', is_dashboard=True, is_instructor_dashboard=True)
+
+@app.route('/dashboard/student_view', methods=['GET'])
+def RenderStudentDashboard():
+    return render_template('dashboard/dashboard_student.html', is_dashboard=True, is_student_dashboard=True)
 
 def generate_frames():
     global env  # Access the global environment instance
