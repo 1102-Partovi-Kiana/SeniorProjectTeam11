@@ -354,11 +354,6 @@ def RenderInstructorDashboard():
         class_description = request.form['classDescription']
         class_date = request.form['classDate']
 
-        new_class = Classes()
-        new_class.class_name = class_name
-        db.session.add(new_class)
-        db.session.commit()
-
         return redirect(url_for('RenderInstructorDashboard'))
     return render_template('dashboard/dashboard_instructor.html', is_dashboard=True, is_instructor_dashboard=True)
 
