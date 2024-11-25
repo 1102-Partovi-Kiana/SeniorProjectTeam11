@@ -654,6 +654,10 @@ def ChatbotAPI():
     global user_submitted_code
     print("User submitted code in ChatbotAPI:", user_submitted_code)
 
+    data = request.json
+    page_context = data.get('page_context', 'General')
+    print(f"Page Context: {page_context}")
+
     # robot_jokes = [
     #     "Why did the robot cross the road? To recharge on the other side!",
     #     "What do you call a robot who always runs late? A bit slow in processing!",
@@ -738,50 +742,90 @@ def ChatbotAPI():
         return jsonify({'reply': "Please submit your code before asking for help!"})
     
     # Construct prompt using stored code
-    prompt = f"""
+    full_prompt = {
+        "Fetch Reach": """
+            You are a helpful chatbot for a robotics coding environment. If the user's message contains acknowledgment or expressions like "thanks," "got it," "okay," or other similar acknowledgment phrases, respond with a friendly encouragement or acknowledgment without giving any hint or solution. 
+            Otherwise, analyze the following Python code intended to make a robotic gripper move towards a ball. Identify any potential issues in the logic and provide specific hints for improvement.
 
-    You are a helpful chatbot for a robotics coding environment. If the user's message contains acknowledgment or expressions like "thanks," "got it," "okay," or other similar acknowledgment phrases, respond with a friendly encouragement or acknowledgment without giving any hint or solution. 
-    Otherwise, analyze the following Python code intended to make a robotic gripper move towards a ball. Identify any potential issues in the logic and provide specific hints for improvement.
+            Compare the user's submitted code against the answer below and generate a helpful hint based on the user's specific code. Check if the users submitted code matches the answer key solution code I am going to provide you. If it does
+            respond to the user, notifying them that nothing is wrong with their code, it is correct.  
+            Provide hints in increasing specificity:
+            - First hint: General guidance on what to focus on.
+            - Second hint: A more detailed and specific suggestion.
+            - Third hint: A very helpful and precise hint pointing directly to the issue.
 
-    Compare the user's submitted code against the answer below and generate a helpful hint based on the user's specific code. Check if the users submitted code matches the answer key solution code I am going to provide you. If it does
-    respond to the user, notifying them that nothing is wrong with their code, it is correct.  
-    Provide hints in increasing specificity:
-    - First hint: General guidance on what to focus on.
-    - Second hint: A more detailed and specific suggestion.
-    - Third hint: A very helpful and precise hint pointing directly to the issue.
+            After providing three hints, stop giving hints, so the student can truly try and figure it out on their own. 
 
-    After providing three hints, stop giving hints, so the student can truly try and figure it out on their own. 
+            User Code:
+            {user_submitted_code}
 
-    User Code:
-    {user_submitted_code}
+            Problem Context: This code is supposed to move the gripper towards the ball until it reaches a close range. Key factors include:
+            - Ensuring the distance threshold is set low enough for the gripper to stop close to the ball.
+            - Verifying the direction vector is normalized to ensure the gripper moves towards the ball consistently.
 
-    Problem Context: This code is supposed to move the gripper towards the ball until it reaches a close range. Key factors include:
-    - Ensuring the distance threshold is set low enough for the gripper to stop close to the ball.
-    - Verifying the direction vector is normalized to ensure the gripper moves towards the ball consistently.
+            The following is a general solution to the environment:
+            ```
+            ball_position = current_env.get_ball_position()
+            gripper_position = current_env.get_gripper_position()
+            direction = np.array(ball_position) - np.array(gripper_position)
+            distance_threshold = 0.01
+            step_size = 0.05
+            while np.linalg.norm(direction) > distance_threshold:
+                action = np.append(direction / np.linalg.norm(direction) * step_size, [1])
+                current_env.step(action)
+                gripper_position = current_env.get_gripper_position()
+                direction = np.array(ball_position) - np.array(gripper_position)
+            print("Final Gripper Position:", gripper_position)
+            print("Reached near the ball.")
+            ```
+            This is the format I want you to respond in:
+            "HINTS:\n"
+                "1. Hint 1.\n"
+                "2. Hint 2.\n"
+                "3. Hint 3."
 
-    The following is a general solution to the environment:
-    ```
-    ball_position = current_env.get_ball_position()
-    gripper_position = current_env.get_gripper_position()
-    direction = np.array(ball_position) - np.array(gripper_position)
-    distance_threshold = 0.01
-    step_size = 0.05
-    while np.linalg.norm(direction) > distance_threshold:
-        action = np.append(direction / np.linalg.norm(direction) * step_size, [1])
-        current_env.step(action)
-        gripper_position = current_env.get_gripper_position()
-        direction = np.array(ball_position) - np.array(gripper_position)
-    print("Final Gripper Position:", gripper_position)
-    print("Reached near the ball.")
-    ```
-    This is the format I want you to respond in:
-     "HINTS:\n"
-        "1. Hint 1.\n"
-        "2. Hint 2.\n"
-        "3. Hint 3."
+            """,
+            "Fetch Pick and Place": """
+                You are a helpful chatbot for the Fetch Pick and Place Robot coding task. Your role is to assist the user in programming the robot to pick up an object and place it at a target location.
+                - Focus on explaining phases of the task: approach, grasp, lift, transport, and place.
+                - Provide hints about defining and using action arrays for precise control of the gripper and object movement.
+                - Highlight the importance of accurate horizontal and vertical alignment during the task.
 
-    """
+                Compare the user's submitted code against the answer below and generate a helpful hint based on the user's specific code. Check if the users submitted code matches the answer key solution code I am going to provide you. If it does
+                respond to the user, notifying them that nothing is wrong with their code, it is correct.  
+                Provide hints in increasing specificity:
+                - First hint: General guidance on what to focus on.
+                - Second hint: A more detailed and specific suggestion.
+                - Third hint: A very helpful and precise hint pointing directly to the issue.
 
+                    This is the format I want you to respond in:
+                    "HINTS:\n"
+                        "1. Hint 1.\n"
+                        "2. Hint 2.\n"
+                        "3. Hint 3."
+                General Problem Context:
+                - The gripper must securely grip the object, lift it without colliding with obstacles, and transport it to the target position for placement.
+                - Correctly calculate direction vectors and distances for smooth and efficient operations.
+                User Code:
+                {user_submitted_code}
+            """,
+            "General": """
+                You are a helpful chatbot for robotics coding. Help users with their questions, whether they're related to specific coding tasks, debugging, or general robotics concepts.
+                If the user's question is unclear, ask for clarification politely.
+                User Code:
+                {user_submitted_code}
+                This is the format I want you to respond in:
+                    "HINTS:\n"
+                        "1. Hint 1.\n"
+                        "2. Hint 2.\n"
+                        "3. Hint 3."
+
+            """,
+    }
+
+    selected_prompt = full_prompt.get(page_context, full_prompt["General"])
+    final_prompt = selected_prompt.format(user_submitted_code=user_submitted_code)
+            
     # API call to Gemini for chatbot response
     try:
         api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent"
@@ -790,7 +834,7 @@ def ChatbotAPI():
                 {
                     "parts": [
                         {
-                            "text": prompt
+                            "text": final_prompt
                         }
                     ]
                 }

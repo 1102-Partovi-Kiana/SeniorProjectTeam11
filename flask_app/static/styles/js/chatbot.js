@@ -4,16 +4,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const hintBoxContainer = document.getElementById('hintbox-container');
     const hintBox = document.getElementById('hintbox');
 
+    const pageContexts = {
+        '/Fetch-Reach-Robot': 'Fetch Reach',
+        '/PickAndPlacePage': 'Fetch Pick and Place',
+    };
+
+    const currentPath = window.location.pathname;
+    const pageContext = pageContexts[currentPath] || 'General';
+
     let hints = [];
 
     hintsButton.addEventListener('mouseenter', async () => {
         if (!hints.length) {
-            const code = "";
+            const code = ""; 
+
             try {
                 const response = await fetch('/chatbot-api', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: code })
+                    body: JSON.stringify({ code: code, page_context: pageContext })
                 });
 
                 if (!response.ok) {
@@ -25,8 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 populateDropdownMenu(hints);
             } catch (error) {
                 console.error('Error fetching hints:', error);
-                hints = []; 
-                populateDropdownMenu([]); 
+                hints = [];
+                populateDropdownMenu([]);
             }
         }
     });
@@ -53,14 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
         dropdownMenu.style.display = 'block'; 
     }
 
-    hintsButton.addEventListener('mouseenter', () => {
-        dropdownMenu.style.display = 'block';
-    });
-
-    hintsButton.addEventListener('mouseleave', () => {
-        dropdownMenu.style.display = 'none';
-    });
-
     dropdownMenu.addEventListener('click', (event) => {
         if (event.target.classList.contains('dropdown-item')) {
             const hintIndex = parseInt(event.target.dataset.hint, 10) - 1;
@@ -71,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    window.addEventListener('load', function () {
+    window.addEventListener('load', () => {
         hintsButton.style.display = 'none'; 
         hintBoxContainer.style.display = 'none'; 
     });
@@ -100,46 +101,28 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ code: code })
+            body: JSON.stringify({ code: code, page_context: pageContext }) 
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok ' + response.statusText);
-                }
-                return response.json();
-            })
-            .then(data => {
-                const hints = data.hints || [];
-                updateHintBox(hints);
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const hints = data.hints || [];
+            updateHintBox(hints);
 
-                if (hints.length > 0) {
-                    hintsButton.style.display = 'inline-block';
-                } else {
-                    hintsButton.style.display = 'none'; 
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                updateHintBox([]); 
+            if (hints.length > 0) {
+                hintsButton.style.display = 'inline-block';
+            } else {
                 hintsButton.style.display = 'none'; 
-            });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            updateHintBox([]); 
+            hintsButton.style.display = 'none'; 
+        });
     }
 });
-
-const hintsButton = document.getElementById('hints-button');
-const hintsDropdown = document.getElementById('hints-dropdown');
-const hintDropdownContainer = document.querySelector('.hint-dropdown-container');
-
-hintsButton.addEventListener('mouseenter', () => {
-    hintsDropdown.style.display = 'block';
-});
-
-hintsDropdown.addEventListener('mouseenter', () => {
-    hintsDropdown.style.display = 'block';
-});
-
-hintDropdownContainer.addEventListener('mouseleave', () => {
-    hintsDropdown.style.display = 'none';
-});
-
-
