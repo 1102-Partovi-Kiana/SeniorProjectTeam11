@@ -2,6 +2,7 @@ from flask import flash
 import bcrypt
 import string
 from classes import User
+import re
 
 # Check if the new user's attributes have default values
 def check_default_values(new_user):
@@ -50,9 +51,22 @@ def check_password_requirements(password):
     return has_length and has_upper and has_digit and has_special_char
 
 # Checks if a username and password combination is valid
-def check_valid_user(login_username, login_password):
+def get_user(login_username):
     user = User.query.filter_by(username=login_username).first()
-    if user is None:
-        print("Invalid Username")
-        return False
+    if user is not None:
+        return True, user
+    flash("Invalid Username")
+    return False, None
+
+def check_login_info(user, login_password):
     return bcrypt.checkpw(login_password.encode('utf-8'), user.password)
+
+def get_user_role(user):
+    return user.role_id
+
+def retrieve_email(user):
+    return user.email
+
+def is_valid_email(email):
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov)$'
+    return bool(re.match(pattern, email))

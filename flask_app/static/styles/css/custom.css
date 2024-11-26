@@ -635,7 +635,7 @@ body {
 }
 
 .navbar-brand {
-    position: absolute;
+    position: flex;
     left: 0;
     padding-left: 10px;
 }
@@ -718,6 +718,12 @@ body {
     font-size: 1rem; 
     margin-left: 250px; 
     transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.navbar.dashboard .navbar-brand {
+    position: absolute;
+    left: 0;
+    padding-left: 10px;
 }
 
 .navbar.dashboard .container{

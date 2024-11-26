@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, Response, flash, redirect, url_for
+from flask import Flask, render_template, request, jsonify, Response, flash, redirect, url_for, session
 import mujoco_py
 import numpy as np
 import cv2  # Import OpenCV
@@ -13,6 +13,7 @@ from flask_migrate import Migrate
 from flask_mail import Mail, Message
 from config import Config
 from auth_func import *
+from email_func import *
 from classes import *
 
 
@@ -20,6 +21,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
+mail.init_app(app)
 
 
 env = None  # Initialize your environment here
@@ -254,10 +256,16 @@ def RenderSignup():
         last_name = request.form.get('last_name')
         email = request.form.get('email')
         password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        account_type = request.form.get('account_type')
 
-        if not check_password_requirements(password):
+        if (not check_password_requirements(password)):
             return render_template('account/signup.html', is_homepage=True)
         
+        if (not is_valid_email(email)):
+            flash("Invalid Email Address")
+            return render_template('account/signup.html', is_homepage=True)
+
         new_user = User()
 
         new_user.first_name = first_name
@@ -265,8 +273,10 @@ def RenderSignup():
         new_user.email = email
         new_user.username = username
         new_user.password = hash_password(password)
-        new_user.secret_key = "DefaultSecretKey"
-        new_user.user_type = "DefaultUserType"
+        if (account_type == 'instructor'):
+            new_user.role_id = 1
+        elif (account_type == 'student'):
+            new_user.role_id = 2
 
         if (check_default_values(new_user) == False):
             if User.query.filter_by(username=username).first():
@@ -275,10 +285,16 @@ def RenderSignup():
             if User.query.filter_by(email=email).first():
                 flash("Email is already taken.")
                 return render_template('account/signup.html')
+            if password != confirm_password:
+                flash("Password does not match.")
+                return render_template('account/signup.html')
             db.session.add(new_user)
-            db.session.commit()
+            db.session.commit() 
             flash("Registration Successful")
-            return render_template('account/signup.html')
+            if (new_user.role_id == 1):
+                return redirect(url_for('RenderInstructorDashboard'))
+            elif(new_user.role_id == 2):
+                return redirect(url_for('RenderStudentDashboard'))
 
     return render_template('account/signup.html', is_homepage=True)
 
@@ -288,11 +304,73 @@ def RenderLogin():
         login_username = request.form.get('login_username')
         login_password = request.form.get('login_password')
 
-        if(check_valid_user(login_username, login_password)):
-            flash("Successfully Logged In!")
-            return redirect(url_for('RenderInstructorDashboard'))
-
+        success, user = get_user(login_username)
+        if (success):
+            if(check_login_info(user, login_password)):
+                flash('Login Successful')
+                session['user_id'] = user.user_id
+                role = get_user_role(user)
+                if (role == 1):
+                    return redirect(url_for('RenderInstructorDashboard'))
+                elif (role == 2):
+                    return redirect(url_for('RenderStudentDashboard'))
+            else:
+                flash('Invalid Password')
+    session.pop('_flashes', None)
     return render_template('account/login.html', is_homepage=True)
+
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def RenderForgotPassword():
+    if request.method == 'POST':
+        username = request.form.get('login_username')
+        success, user = get_user(username)
+        if (success):
+            print(f"Received username for password reset: {username}")
+            flash("An email been sent to your account.", "success")
+            subject = "CORE - Reset Password"
+            email = "officialwarerecovery@gmail.com"
+            password_reset_link = "http://127.0.0.1:5000/reset-password"
+            #Instead of manually reading the file, we are taking advantage of Flask's Jinja2 templating
+            body = render_template("account/forgot_password.txt", username = username, password_reset_link = password_reset_link)
+            send_email(subject, email, body)
+        return redirect(url_for('RenderForgotPassword'))
+    return render_template('account/forgot_password.html')
+
+@app.route('/reset-password', methods=['GET', 'POST'])
+def RenderResetPassword():
+    if request.method == 'POST':
+        new_password = request.form.get('password')
+        confirm_password = request.form.get('confirmPassword')
+        if new_password == confirm_password:
+            flash("Password has been reset successfully.", "success")
+        else:
+            flash("Passwords do not match.", "error")
+        return redirect(url_for('reset_password'))
+    return render_template('account/reset_password.html')
+
+@app.route('/dashboard/instructor_view', methods=['GET', 'POST'])
+def RenderInstructorDashboard():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+    if request.method == 'POST':
+        class_course_code = request.form['classCourseCode']
+        class_section = request.form['classSection']
+        class_date = request.form['classDate']
+
+        new_class = Classes()
+        new_class.class_course_code = class_course_code
+        new_class.class_section_number = class_section
+        new_class.user_id = user_id
+        db.session.add(new_class)
+        db.session.commit() 
+        return redirect(url_for('RenderInstructorDashboard'))
+    return render_template('dashboard/dashboard_instructor.html', is_dashboard=True, is_instructor_dashboard=True)
+
+@app.route('/dashboard/student_view', methods=['GET'])
+def RenderStudentDashboard():
+    return render_template('dashboard/dashboard_student.html', is_dashboard=True, is_student_dashboard=True)
 
 @app.route('/courses')
 def RenderCourses():
@@ -346,20 +424,6 @@ def RenderFetchOrganizeEnv():
     global env
     env = FetchOrganizeEnv()
     return render_template('robotic_organize_environment.html')
-
-@app.route('/dashboard/instructor_view', methods=['GET', 'POST'])
-def RenderInstructorDashboard():
-    if request.method == 'POST':
-        class_name = request.form['className']
-        class_description = request.form['classDescription']
-        class_date = request.form['classDate']
-
-        return redirect(url_for('RenderInstructorDashboard'))
-    return render_template('dashboard/dashboard_instructor.html', is_dashboard=True, is_instructor_dashboard=True)
-
-@app.route('/dashboard/student_view', methods=['GET'])
-def RenderStudentDashboard():
-    return render_template('dashboard/dashboard_student.html', is_dashboard=True, is_student_dashboard=True)
 
 def generate_frames():
     global env  # Access the global environment instance

@@ -41,7 +41,13 @@
                     
                     <!-- Password -->
                     <div class="mb-4">
-                        <input type="password" class="form-control rounded-0" id="password-field" name="password" placeholder="Desired password" required>
+                        <input type="password" class="form-control rounded-0" id="password-field" name="password" placeholder="Password" required>
+                        <div class="error-feedback" id="password-error"></div> <!-- Error message -->
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="mb-4">
+                        <input type="password" class="form-control rounded-0" id="confirm-password-field" name="confirm_password" placeholder="Confirm password" required>
                         <div class="error-feedback" id="password-error"></div> <!-- Error message -->
                     </div>
 
@@ -49,25 +55,17 @@
                     <div class="account-type-section mb-5">
                         <label class="mb-3">Type of Account</label><br>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="accountType" id="account-type-instructor" value="instructor" onclick="HideClassID()" checked>
+                            <input class="form-check-input" type="radio" name="account_type" id="account-type-instructor" value="instructor" checked>
                             <label class="form-check-label" for="account-type-instructor">
                                 Instructor
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="accountType" id="account-type-student" value="student" onclick="ShowClassID()">
+                            <input class="form-check-input" type="radio" name="account_type" id="account-type-student" value="student">
                             <label class="form-check-label" for="account-type-student">
                                 Student
                             </label>
                         </div>
-                    </div>
-
-                    <!-- Class ID Field (Hidden by Default) -->
-                    <div class="form-group class-id-field mb-5 d-none" id="class-id-section">
-                        <label for="class-id-input" class="form-label">Class ID</label>
-                        <input type="text" class="form-control rounded-0" id="class-id-input" name="classID">
-                        <div class="text-prompt" id="class-id-help">Please enter the Class ID provided by your instructor.</div>
-                        <div class="error-feedback" id="class-id-error"></div> <!-- Error message -->
                     </div>
 
                     <!-- Submit Button -->
