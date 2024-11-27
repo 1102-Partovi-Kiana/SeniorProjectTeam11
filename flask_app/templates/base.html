@@ -39,6 +39,8 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css" rel="stylesheet">
 
 
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/dashboard.css') }}">
+
 	{% block extra_css %}
 	{# Override this in templates to add extra stylesheets #}
 	{% endblock %}
@@ -75,6 +77,7 @@
 
 
 
+	<script src="{{ url_for('static', filename='styles/js/sidebar-toggler.js') }}"></script>
 	{% block extra_js %}
 	{# Override this in templates to add extra javascript #}
 	{% endblock extra_js %}

@@ -1,20 +1,12 @@
 from flask_mail import Mail, Message
-from flask import current_app
-from config import Config 
 
 mail = Mail()
 
 def init_mail(app):
     mail.init_app(app)
 
-def send_email(subject, recipient, body):
-    msg = Message(
-        subject = subject
-        recipient = recipient
-        body = body
-        sender = "officialwarerecovery@gmail.com"
-    )
-
+def send_email(subject, recipients, body):
+    msg = Message(subject = subject, sender = "officialwarerecovery@gmail.com", recipients = [recipients], body = body)
     mail.send(msg)
 
 def reset_password_email():

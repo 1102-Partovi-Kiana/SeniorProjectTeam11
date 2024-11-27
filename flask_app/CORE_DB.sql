@@ -26,7 +26,8 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.classes (
     class_id integer NOT NULL,
-    class_name character varying(100),
+    class_course_code character varying(100) NOT NULL,
+    class_section_number integer NOT NULL,
     course_id integer,
     user_id integer
 );
@@ -369,7 +370,8 @@ ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.u
 -- Data for Name: classes; Type: TABLE DATA; Schema: public; Owner: testuser
 --
 
-COPY public.classes (class_id, class_name, course_id, user_id) FROM stdin;
+COPY public.classes (class_id, class_course_code, class_section_number, course_id, user_id) FROM stdin;
+3	CS252	1001	\N	20
 \.
 
 
@@ -410,6 +412,9 @@ COPY public.permissions (permission_id, permission_name, permission_desc) FROM s
 --
 
 COPY public.roles (role_id, role_name, role_desc, permission_id) FROM stdin;
+1	student	Regular user role with access to courses and basic platform features	\N
+2	instructor	Instructor role with access to course assignment and student management	\N
+3	admin	Administrator role with full platform access and management tools	\N
 \.
 
 
@@ -426,7 +431,8 @@ COPY public.scoreboard (scoreboard_id, score, user_id) FROM stdin;
 --
 
 COPY public.users (user_id, username, first_name, last_name, email, password, role_id) FROM stdin;
-5	TestAccount	TestFirst	TestLast	testaccount@gmail.com	\\x2432622431322433664377455866796e4958357a6e54644562473167654c5549635a4258315035656d33706362445531456f71466c6246524e4a344b	\N
+20	TestAccount	TestFirst	TestLast	testaccount@gmail.com	\\x243262243132246931724742702f6850725a656f566b694d7745424d7559466b536375627847683844497246733772634a474774576b515739573353	1
+21	TestAccountTwo	TestFirst	TestLast	testaccounttwo@gmail.com	\\x24326224313224617048557535484d6871472e6c2f71467a4c3444394f73736d4b2e355531344770443170614b77327a6a79414f4641516c34345457	2
 \.
 
 
@@ -434,7 +440,7 @@ COPY public.users (user_id, username, first_name, last_name, email, password, ro
 -- Name: classes_class_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
 --
 
-SELECT pg_catalog.setval('public.classes_class_id_seq', 1, false);
+SELECT pg_catalog.setval('public.classes_class_id_seq', 3, true);
 
 
 --
@@ -469,7 +475,7 @@ SELECT pg_catalog.setval('public.permissions_permission_id_seq', 1, false);
 -- Name: roles_role_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
 --
 
-SELECT pg_catalog.setval('public.roles_role_id_seq', 1, false);
+SELECT pg_catalog.setval('public.roles_role_id_seq', 3, true);
 
 
 --
@@ -483,7 +489,7 @@ SELECT pg_catalog.setval('public.scoreboard_scoreboard_id_seq', 1, false);
 -- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
 --
 
-SELECT pg_catalog.setval('public.users_user_id_seq', 5, true);
+SELECT pg_catalog.setval('public.users_user_id_seq', 21, true);
 
 
 --
@@ -551,22 +557,6 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: classes classes_course_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: testuser
---
-
-ALTER TABLE ONLY public.classes
-    ADD CONSTRAINT classes_course_id_fkey FOREIGN KEY (course_id) REFERENCES public.courses(course_id);
-
-
---
--- Name: classes classes_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: testuser
---
-
-ALTER TABLE ONLY public.classes
-    ADD CONSTRAINT classes_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
-
-
---
 -- Name: enrollment enrollment_course_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: testuser
 --
 
@@ -599,11 +589,27 @@ ALTER TABLE ONLY public.feedback
 
 
 --
+-- Name: classes fk_course; Type: FK CONSTRAINT; Schema: public; Owner: testuser
+--
+
+ALTER TABLE ONLY public.classes
+    ADD CONSTRAINT fk_course FOREIGN KEY (course_id) REFERENCES public.courses(course_id) ON DELETE SET NULL;
+
+
+--
 -- Name: users fk_role; Type: FK CONSTRAINT; Schema: public; Owner: testuser
 --
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES public.roles(role_id);
+
+
+--
+-- Name: classes fk_user; Type: FK CONSTRAINT; Schema: public; Owner: testuser
+--
+
+ALTER TABLE ONLY public.classes
+    ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE SET NULL;
 
 
 --
