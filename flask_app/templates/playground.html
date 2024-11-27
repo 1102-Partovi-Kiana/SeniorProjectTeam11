@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Robotics Courses - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="area-container"> 
+<div class="playground-grid-container">
+    <div class="playground-card">
+      <img src="VW-Cedric.jpg" alt="Robotic Arm" class="playground-card-image">
+      <h3 class="playground-card-title"><a href="{{ url_for('course1_card') }}"></a>Robotic Arm Simulator</h3>
+      <p class="playground-card-description">Program and control robotic arms with precision.</p>
+    </div>
+    <div class="playground-card">
+        <h3 class="playground-card-title"><a href="{{ url_for('RenderFetchReachRobotSimulation') }}">Fetch Reach</a></h3>
+        <img src="future.png" alt="Robotic Arm" class="playground-card-image">
+        <p class="playground-card-description">Program and control robotic arms with precision.</p>
+    </div>
+    <div class="playground-card">
+        <h3 class="playground-card-title"><a href="{{ url_for('RenderPickAndPlaceEnv') }}">Fetch Pick and Place</a></h3>
+        <p class="playground-card-description">Program and control robotic arms with precision.</p>
+    </div>
+    <div class="playground-card">
+        <h3 class="playground-card-title"><a href="{{ url_for('RenderFetchStackEnv') }}">Fetch Stack</a></h3>
+        <p class="playground-card-description">Program and control robotic arms with precision.</p>
+    </div>
+    <div class="playground-card">
+        <h3 class="playground-card-title"><a href="{{ url_for('RenderFetchOrganizeEnv') }}">Fetch Organize</a></h3>
+        <p class="playground-card-description">Program and control robotic arms with precision.</p>
+    </div>
+    <div class="playground-card">
+        <h3 class="playground-card-title"><a href="{{ url_for('RenderFetchOrganizeSensorsEnv') }}">Fetch Organize with Sensors</a></h3>
+        <p class="playground-card-description">Program and control robotic arms with precision.</p>
+    </div>
+    <div class="playground-card">
+        <h3 class="playground-card-title"><a href="{{ url_for('RenderCarEnv') }}">Car with Sensors</a></h3>
+        <p class="playground-card-description">Program and control robotic arms with precision.</p>
+    </div>
+</div>
+</div>
+{% endblock %}

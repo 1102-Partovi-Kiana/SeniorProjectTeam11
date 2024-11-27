@@ -6,6 +6,8 @@ from reach import ReachEnv  # Ensure this imports your ReachEnv class
 from pickandplace import FetchPickAndPlaceEnv
 from organize import FetchOrganizeEnv
 from stack import FetchStackEnv
+from organize_sensors import FetchOrganizeSensorsEnv
+from car import CarEnv
 import requests  # Import requests library for API communication
 import random
 import jedi
@@ -15,9 +17,13 @@ from flask_mail import Mail, Message
 from config import Config
 from auth_func import *
 from classes import db, User
+import time
+import glfw
+import threading
+import gymnasium as gym
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -388,7 +394,7 @@ def ChatbotAPI2():
                        The platforms name is CORE, which stands for Centers for Optimizing Robotics Education. 
                        I am providing you the name of the platform for your own context, don't bring it up in every response to the user, except for your first response, 
                        where you are greeting the user to the platform. 
-                       Provide an overview of features, navigation tips, what the purpose of the platforms is, and highlight key sections of the platform.
+                       Provide an overview of features, what the purpose of the platforms is, and highlight key sections of the platform.
                        When responding, adhere strictly to the following details about the platform:
                        ## Platform Features:
                         1. *Courses*: CORE offers robotics courses, such as Introduction to Robotics, Types of Robots, Fetch Robot, and more. Each course includes certificates upon completion and builds specific skills like coding, object manipulation, or self-driving car programming.
@@ -398,11 +404,6 @@ def ChatbotAPI2():
                         - Coding Terminal for output results and debugging.
                         3. *Customizable Lab Settings*: Students can toggle dark/light mode, enable or disable coding pets, and personalize syntax highlighting.
                         4. *Hints and Assistance*: Students have access to personalized hints to help them in their coding tasks. 
-                       ## Navigation Tips:
-                        1. **Homepage**: An entry point to the platform, highligts features, quick navigation links on the navbar for signing up and logging in.
-                        2. **Courses Page**: Once logged in, remeber only once logged in they can access all of the other links, access the course catalog, enroll in available courses, track progress, code in the virtual lab.
-                        3. **Login/Sign-Up**: Students and instructors can log in or create an account to access their personalized content.
-                        4. **Contact Page**: Reach out to us if needed. 
                        ## Purpose of the Platform:
                         - CORE is designed to make robotics education accessible and interactive for undergraduates. 
                         - By providing hands-on coding simulations, certifications, and personalized learning environments, CORE aims to inspire and prepare the next generation of robotics engineers.
@@ -415,6 +416,7 @@ def ChatbotAPI2():
                         questions that may come up. 
                         - If the user tells you something along the lines of "Great thank you for your help!" or "Thank you", they don't need any more help. Tell them a very kind message back, and mention how your awlays here for any future 
                         questions that may come up. 
+                        - Keep your response not too lengthy, so that the user does not get bored from reading.
                     """,
         "Sign Up": """Your name is Cora. I am providing you your name for your own context, don't bring it up in every response to the user. 
                       You are a helpful chatbot for the sign-up page of a robotics education platform for undergraduates. 
@@ -957,9 +959,21 @@ def RenderLogin():
 def RenderCourses():
     return render_template('courses.html')
 
+@app.route('/playground')
+def playground():
+    return render_template('playground.html')
+
 @app.route('/module1/introduction')
 def module_intro():
     return render_template('courses/course1-content/module_intro.html') 
+
+@app.route('/module1/start-page')
+def course1_card():
+    return render_template('courses/course1-content/course1_card.html') 
+
+@app.route('/module2/start-page-2')
+def course2_card():
+    return render_template('courses/course2-content/course2_card.html') 
 
 @app.route('/module1/introduction/overview')
 def overview():
@@ -1016,36 +1030,116 @@ def industrial_robots():
 @app.route('/Fetch-Reach-Robot')
 def RenderFetchReachRobotSimulation():
     global env
+    close_current_env()
+    time.sleep(.1)
     env = ReachEnv()
     return render_template('robotic_environment.html')
 
 @app.route('/PickAndPlacePage')
 def RenderPickAndPlaceEnv():
     global env
+    close_current_env()
+    time.sleep(.1)
     env = FetchPickAndPlaceEnv()
     return render_template('robotic_pick_and_place_environment.html')
 
 @app.route('/FetchStackPage')
 def RenderFetchStackEnv():
     global env
+    close_current_env()
+    time.sleep(.1)
     env = FetchStackEnv()
     return render_template('fetch_stack_environment.html')
 
+@app.route('/CarPage')
+def RenderCarEnv():
+    global env
+    close_current_env()
+    time.sleep(.1)
+    env = CarEnv()
+    return render_template('robotic_car_environment.html')
+
+@app.route('/FetchOrganizeSensorsPage')
+def RenderFetchOrganizeSensorsEnv():
+    global env
+    close_current_env()
+    time.sleep(.1)
+    env = FetchOrganizeSensorsEnv()
+    return render_template('robotic_organize_sensors_environment.html')
 
 @app.route('/FetchOrganizePage')
 def RenderFetchOrganizeEnv():
     global env
+    close_current_env()
+    time.sleep(.1)
     env = FetchOrganizeEnv()
     return render_template('robotic_organize_environment.html')
 
+def close_current_env():
+    global env
+    with render_lock:  # Ensure thread safety
+        if env is not None:
+            try:
+                env.close()
+                print("Closed current environment successfully.")
+            except Exception as e:
+                print(f"Error while closing the environment: {e}")
+            finally:
+                glfw.make_context_current(None)
+                env = None
+                time.sleep(.1)
+
+
+def reset_glfw():
+    # Terminate the previous GLFW context if it exists
+    if glfw.init():
+        glfw.terminate()  # Close the GLFW window and clean up
+        time.sleep(.1)
+        print("GLFW terminated.")
+    
+    # Re-initialize GLFW
+    if not glfw.init():
+        print("Error: GLFW initialization failed.")
+        return False  # Return failure if GLFW can't be initialized
+
+    # Create an offscreen context (headless rendering)
+    glfw.window_hint(glfw.VISIBLE, glfw.FALSE)  # Make the window invisible
+    window = glfw.create_window(1, 1, "Offscreen", None, None)  # Minimal size for offscreen
+
+    glfw.make_context_current(window)  # Make the context current
+    time.sleep(.1)
+    print("GLFW re-initialized with offscreen context.")
+    return True
+
+render_lock = threading.Lock()
 def generate_frames():
-    global env  # Access the global environment instance
+    global env
     while True:
-        frame = env.render(mode='rgb_array', width=1440, height=1080)
-        _, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        with render_lock:
+            if env is None:
+                print("No environment available for rendering. Skipping frame.")
+                time.sleep(0.1)
+                continue
+            try:
+                if not glfw.get_current_context():
+                    print("GLFW context is missing, reinitializing...")
+                    if not reset_glfw():
+                        print("Error reinitializing GLFW, skipping rendering.")
+                        continue
+                if isinstance(env, gym.Env) and env.spec.id == "CarRacing-v3" and getattr(env, "render_mode", None) == "rgb_array":
+                    frame = env.render()
+                else:
+                    frame = env.render(mode='rgb_array', width=1440, height=1080)
+                if frame is not None:
+                    _, buffer = cv2.imencode('.jpg', frame)
+                    frame = buffer.tobytes()
+                    yield (b'--frame\r\n'
+                           b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                else:
+                    print("Frame is None, skipping rendering.")
+            except Exception as e:
+                print(f"Error rendering: {e}")
+                time.sleep(0.1)  # Prevent busy-looping on errors
 
 @app.route('/video_feed')
 def video_feed():

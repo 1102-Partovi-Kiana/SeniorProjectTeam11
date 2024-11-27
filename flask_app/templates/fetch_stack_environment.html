@@ -7,14 +7,98 @@
 
 
 {% block body %}
-<section>
-    <div class="container-fluid">
-        <div class="row d-flex">
-            <!-- Code editor on the left -->
-            <div class="col-md-6" style="margin-top: 200px;">
-                <div class="code-editor">
-                    <h4>Python Code Editor</h4>
-                    <textarea id="code-editor" rows="20">
+<section class="robotic-environment">
+    <!-- Preload Pets -->
+    <div style="display: none;">
+        <img src="{{ url_for('static', filename='img/pets/chicken/white_run_8fps.gif') }}" alt="Run">
+        <img src="{{ url_for('static', filename='img/pets/chicken/white_swipe_8fps.gif') }}" alt="Swipe">
+        <img src="{{ url_for('static', filename='img/pets/chicken/white_walk_8fps.gif') }}" alt="Walk1">
+        <img src="{{ url_for('static', filename='img/pets/chicken/white_walk_fast_8fps.gif') }}" alt="Walk2">
+    </div>
+    <div class="container-fluid content-background">
+        <div class="row" style="min-height: 100vh; padding-top: 10px;">
+            <!-- Coding Area and Simulation Side by Side -->
+            <div class="col-md-6 d-flex flex-column">
+                <div class="code-editor h-100">
+                     <!-- Tab Buttons Above the Coding Area -->
+                     <div class="coding-options">
+                        <div class="dropdown-container">
+                            <button class="tab-button" id="coding-pets" data-tippy-content="Enable Coding Pets">
+                                <i class="fas fa-paw"></i> 
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="chicken">Chicken</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="dog">Dog</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="turtle">Turtle</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="snail">Snail</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="snake">Snake</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="rubberduck">Rubber Duck</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="rock">Rock</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="rat">Rat</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="horse">Horse</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="fox">Fox</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="crab">Crab</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="bird">Bird</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="unicorn">Unicorn</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="dinosaur">Dinosaur</a></li>
+                                <li><a href="#" id="disable-pet" class="dropdown-item" style="display: none;">Disable Pet</a></li>
+                            </ul>
+                        </div>
+                        <button class="tab-button" id="light-mode" data-tippy-content="Switch to Light Mode">
+                            <i class="fas fa-sun"></i> 
+                        </button>
+                        <div class="dropdown-container">
+                            <button class="tab-button" id="syntax-highlight" data-tippy-content="Change Syntax Highlighting Color">
+                                <i class="fas fa-palette"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="monokai">Monokai</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="dracula">Dracula</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="material">Material</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="ambiance">Ambiance</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="cobalt">Cobalt</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="twilight">Twilight</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="solarized dark">Solarized Dark</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="midnight">Midnight</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="lucario">Lucario</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="seti">Seti</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="blackboard">Blackboard</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="zenburn">Zenburn</a></li>
+                            </ul>
+                        </div>
+                        <button class="tab-button" id="autocomplete" data-tippy-content="Enable Autocomplete">
+                            <i class="fas fa-magic"></i> 
+                        </button>
+                        <!-- Hints Container
+                        <div class="dropdown-container">
+                            <button class="tab-button" id="hints-button" data-tippy-content="Your Personalized Hints">
+                                <i class="fas fa-lightbulb"></i> 
+                            </button>
+                            <div class="hintbox-container" id="hintbox-container" style="display: none;">
+                                <h4>Hints</h4>
+                                <ul id="hintbox" class="hintbox"></ul>
+                            </div>
+                        </div> -->
+                        <!-- Hint Button with Dropdown -->
+                        <div class="dropdown-container">
+                            <button class="tab-button" id="hints-button" data-tippy-content="Personalized Hints">
+                                <i class="fas fa-lightbulb"></i>
+                            </button>
+                            <ul class="dropdown-menu" id="hints-dropdown" style="display: none;">
+                                <li><button class="dropdown-item" data-hint="1">Get Hint 1</button></li>
+                                <li><button class="dropdown-item" data-hint="2">Get Hint 2</button></li>
+                                <li><button class="dropdown-item" data-hint="3">Get Hint 3</button></li>
+                            </ul>
+                        </div>
+
+                        <!-- Hint Box -->
+                        <div class="hintbox-container" id="hintbox-container" style="display: none;">
+                            <h4>Hints</h4>
+                            <ul id="hintbox" class="hintbox"></ul>
+                        </div>
+                    </div>                    
+                    <div class="card-header">Coding Area</div>
+                    <textarea id="code-editor" rows="20" style="height: 100%;">
 distance_threshold = 0.01
 close_grip_action = np.array([0, 0, 0, -1])
 open_grip_action = np.array([0, 0, 0, 1])
@@ -217,62 +301,257 @@ box_positions = ['object0', 'object1', 'object2']
 stack_threshold=0.01
 height_threshold=0.05
                     </textarea>
+                    <div class="col-md-4 d-flex justify-content-end run-button-container">
+                        <button id="run-code" class="aesthetic-green-button-dark">Run</button>
+                    </div>
+
+                    <!-- Ball and Gripper Position -->
+                    <div class="row align-items-start" style="margin-top: 5px;">
+                        <div class="col-md-8">
+                            <h5>Ball Position:</h5>
+                            <p id="ball-position">X: --, Y: --, Z: --</p>
+                            <h5>Gripper Position:</h5>
+                            <p id="gripper-position">X: --, Y: --, Z: --</p>
+                        </div>
+                    </div>
+
+                    <!-- Collision Notification -->
+                    <div id="collision-notification" class="alert alert-success" style="margin-top: 5px; display: none;">
+                        Collision detected between the gripper and the ball!
+                    </div>
                 </div>
             </div>
+            
+            <!-- <div class="chatbot-container">
+                <div id="chatbox" class="chatbox"></div>
+                <div class="chat-input-container">
+                    <input type="text" id="userInput" placeholder="Type a message">
+                    <button id="sendBtn">Send</button>
+                </div>
+            </div> -->
+            
+            <div class="col-md-6 d-flex flex-column">
+                <div class="card simulation-card h-80">
+                    <div class="card-header">Simulation</div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <img src="{{ url_for('video_feed') }}" width="100%" class="simulation-video">
+                    </div>
+                </div>
 
-
-            <!-- Video player on the right -->
-            <div class="col-md-6 d-flex justify-content-center align-items-center" style="margin-top: 200px;">
-                <div class="video-container">
-                    <img src="{{ url_for('video_feed') }}" width="90%">
+                <!-- Output Terminal - Placed Below Simulation -->
+                <div class="card output-card">
+                    <div class="card-header">Output Terminal</div>
+                    <div class="card-body" id="output-box">
+                        <!-- Output will appear here -->
+                    </div>
                 </div>
             </div>
         </div>
-       
-        <!-- Collision notification -->
-        <div id="collision-notification" class="alert alert-success" style="display: none; margin-top: 20px;">
-            Collision detected between the gripper and the object!
-        </div>
-       
-        <!-- Display positions -->
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <h5>Ball Position:</h5>
-                <p id="ball-position">X: --, Y: --, Z: --</p>
-                <h5>Gripper Position:</h5>
-                <p id="gripper-position">X: --, Y: --, Z: --</p>
-            </div>
-            <div class="col-md-6 text-right">
-                <button id="run-code" class="btn btn-success">Run</button>
-            </div>
-        </div>
-       
-        <div class="col-md-6" style="margin-top: 20px;">
-            <h4>Output</h4>
-            <div id="output-box" style="border: 1px solid #ddd; padding: 10px; height: 150px; overflow-y: auto;">
-                <!-- Output will appear here -->
-            </div>
-        </div>        
     </div>
 </section>
 
+<!-- CodeMirror and Script Initialization -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/monokai.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css" rel="stylesheet">
+<!-- Dracula Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css" rel="stylesheet">
+
+<!-- Material Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/material.min.css" rel="stylesheet">
+
+<!-- Ambiance Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/ambiance.min.css" rel="stylesheet">
+
+<!-- Cobalt Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/cobalt.min.css" rel="stylesheet">
+
+<!-- Twilight Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/twilight.min.css" rel="stylesheet">
+
+<!-- Solarized Dark Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/solarized.min.css" rel="stylesheet">
+
+<!-- Midnight Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/midnight.min.css" rel="stylesheet">
+
+<!-- Lucario Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/lucario.min.css" rel="stylesheet">
+
+<!-- Tomorrow Night Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/tomorrow-night.min.css" rel="stylesheet">
+
+<!-- Seti Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/seti.min.css" rel="stylesheet">
+
+<!-- Blackboard Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/blackboard.min.css" rel="stylesheet">
+
+<!-- Zenburn Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/zenburn.min.css" rel="stylesheet">
+
+<!-- Solarized Light Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/solarized.min.css" rel="stylesheet">
+
+<!-- Eclipse Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/eclipse.min.css" rel="stylesheet">
+
+<!-- Base16 Light Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/base16-light.min.css" rel="stylesheet">
+
+<!-- XQ Light Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/xq-light.min.css" rel="stylesheet">
+
+<!-- Idea Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/idea.min.css" rel="stylesheet">
+
+<!-- Neo Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/neo.min.css" rel="stylesheet">
+
+<!-- MDN Like Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/mdn-like.min.css" rel="stylesheet">
+
+<!-- Ambiance Mobile Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/ambiance-mobile.min.css" rel="stylesheet">
+
+<!-- Parchment Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/parchment.min.css" rel="stylesheet">
+
+<!-- Elegant Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/elegant.min.css" rel="stylesheet">
+
+<!-- 3024 Day Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/3024-day.min.css" rel="stylesheet">
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
 
 <script>
+    let currentTheme = "monokai"; 
+    let isAutocompleteEnabled = false; 
+
+    // Initialize CodeMirror
+    const codeEditor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
+        lineNumbers: true,
+        mode: "python",
+        theme: currentTheme,
+        tabSize: 4,
+        indentUnit: 4,
+        autoCloseBrackets: true,
+        viewportMargin: Infinity
+    });
+
+    const MIN_LINE_COUNT = 100;
+    function ensureMinLines() {
+        const lineCount = codeEditor.lineCount();
+        for (let i = lineCount; i < MIN_LINE_COUNT; i++) {
+            codeEditor.replaceRange("\n", CodeMirror.Pos(i));
+        }
+    }
+    ensureMinLines();
+
+    codeEditor.setSize("100%", "calc(80vh - 100px)");
+
+    // AUTOCOMPLETE
+    function inputReadHandler(editor, change) {
+        if (change.text[0] !== " ") {
+            console.log("Input detected:", change.text[0]);
+            editor.showHint({ hint: CodeMirror.hint.python });
+        }
+    }
+
+    async function enableAutocomplete() {
+        console.log("Enabling autocomplete...");
+
+        CodeMirror.registerHelper("hint", "python", async function (editor) {
+            const cursor = editor.getCursor();
+            const code = editor.getValue();
+            const line = cursor.line + 1; 
+            const column = cursor.ch;
+
+            try {
+                const response = await fetch('/get-suggestions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code, line, column }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch suggestions');
+                }
+
+                const suggestions = await response.json();
+                console.log("Combined Suggestions:", suggestions);
+
+                const token = editor.getTokenAt(cursor);
+                const word = token.string;
+                const start = token.start;
+                const end = token.end;
+
+                const filteredSuggestions = suggestions.filter(keyword =>
+                    keyword.startsWith(word)
+                );
+
+                return {
+                    list: filteredSuggestions,
+                    from: CodeMirror.Pos(cursor.line, start),
+                    to: CodeMirror.Pos(cursor.line, end),
+                };
+            } catch (error) {
+                console.error('Error fetching suggestions:', error);
+                return {
+                    list: [],
+                    from: CodeMirror.Pos(cursor.line, cursor.ch),
+                    to: CodeMirror.Pos(cursor.line, cursor.ch),
+                };
+            }
+        });
+
+        codeEditor.setOption("extraKeys", {
+            "Ctrl-Space": "autocomplete"
+        });
+
+        codeEditor.on("inputRead", inputReadHandler);
+
+        alert("Autocomplete enabled!");
+    }
+
+    function disableAutocomplete() {
+        console.log("Disabling autocomplete...");
+        
+        codeEditor.setOption("extraKeys", {});
+        codeEditor.off("inputRead", inputReadHandler);
+
+        alert("Autocomplete disabled!");
+    }
+
+    document.getElementById("autocomplete").addEventListener("click", function() {
+        if (!isAutocompleteEnabled) {
+            enableAutocomplete();
+        } else {
+            disableAutocomplete();
+        }
+        isAutocompleteEnabled = !isAutocompleteEnabled; // Toggle the flag
+    });
+
     function updatePositions() {
         fetch('/get-ball-position')
             .then(response => response.json())
             .then(data => {
-                document.getElementById('ball-position').textContent =
+                document.getElementById('ball-position').textContent = 
                     `X: ${data.x.toFixed(2)}, Y: ${data.y.toFixed(2)}, Z: ${data.z.toFixed(2)}`;
             });
         fetch('/get-gripper-position')
             .then(response => response.json())
             .then(data => {
-                document.getElementById('gripper-position').textContent =
+                document.getElementById('gripper-position').textContent = 
                     `X: ${data.x.toFixed(2)}, Y: ${data.y.toFixed(2)}, Z: ${data.z.toFixed(2)}`;
             });
     }
-
 
     function checkCollision() {
         fetch('/check-collision')
@@ -288,14 +567,12 @@ height_threshold=0.05
             .catch(error => console.error('Error checking collision:', error));
     }
 
-
-    document.getElementById('run-code').addEventListener('click', function() {
-        const code = document.getElementById('code-editor').value;
-
+    // JS to /run-code backend
+    document.getElementById('run-code').addEventListener('click', function () {
+        const code = codeEditor.getValue(); 
 
         const formData = new FormData();
         formData.append('code', code);
-
 
         fetch('/run-code', {
             method: 'POST',
@@ -304,17 +581,18 @@ height_threshold=0.05
         .then(response => response.json())
         .then(data => {
             const outputBox = document.getElementById('output-box');
+            const hintsButton = document.getElementById('hints-button');
+            const hintboxContainer = document.getElementById('hintbox-container');
             outputBox.innerHTML = '';
+
             if (data.error) {
                 outputBox.innerHTML += `<p style="color: red;">Error: ${data.error}</p>`;
+                hintsButton.style.display = 'inline-block';
+                getBotResponse(code);
             } else {
                 outputBox.innerHTML += `<p>${data.message}</p>`;
-                document.getElementById('ball-position').textContent =
-                    `X: ${data.ball_position.x.toFixed(2)}, Y: ${data.ball_position.y.toFixed(2)}, Z: ${data.ball_position.z.toFixed(2)}`;
-                document.getElementById('gripper-position').textContent =
-                    `X: ${data.gripper_position.x.toFixed(2)}, Y: ${data.gripper_position.y.toFixed(2)}, Z: ${data.gripper_position.z.toFixed(2)}`;
-               
-                checkCollision();
+                hintsButton.style.display = 'none';
+                hintboxContainer.style.display = 'none';
             }
         })
         .catch(error => {
@@ -322,8 +600,389 @@ height_threshold=0.05
         });
     });
 
-
     window.addEventListener('load', updatePositions);
+
+    // CODING PETS
+    const codingPetsButton = document.getElementById('coding-pets');
+    const editorElement = document.querySelector('.code-editor');
+
+    let isPetEnabled = false;
+    let petMoving = false;
+    let codingPetContainer;
+    let petIntervalId = null;
+    let currentPet = 'chicken';
+    let gifChangeIntervalId = null;
+
+    function createPet() {
+        const existingPet = document.getElementById('coding-pet-container');
+        if (existingPet) {
+            existingPet.remove();
+        }
+
+        const codingPetContainer = document.createElement('div');
+        codingPetContainer.id = 'coding-pet-container';
+        codingPetContainer.classList.add('pet-container');
+
+        const petImage = document.createElement('img');
+        petImage.id = 'coding-pet';
+        petImage.alt = "coding-pet";
+
+        const petGifs = {
+            chicken: [
+                "{{ url_for('static', filename='img/pets/chicken/white_walk_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/chicken/white_walk_fast_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/chicken/white_run_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/chicken/white_swipe_8fps.gif') }}"
+            ],
+            dog: [
+                "{{ url_for('static', filename='img/pets/dog/black_idle_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/dog/black_lie_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/dog/black_run_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/dog/black_swipe_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/dog/black_walk_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/dog/black_with_ball_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/dog/black_walk_fast_8fps.gif') }}",
+            ],
+            turtle: [
+                "{{ url_for('static', filename='img/pets/turtle/green_idle_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/turtle/green_lie_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/turtle/green_swipe_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/turtle/green_walk_8fps.gif') }}",
+            ],
+            snail: [
+                "{{ url_for('static', filename='img/pets/snail/brown_idle_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/snail/brown_run_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/snail/brown_swipe_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/snail/brown_walk_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/snail/brown_walk_fast_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/snail/brown_with_ball_8fps.gif') }}",
+            ],
+            rubberduck: [
+                "{{ url_for('static', filename='img/pets/duck/yellow_idle_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/duck/yellow_swipe_8fps.gif') }}",
+            ],
+            rock: [
+                "{{ url_for('static', filename='img/pets/rock/gray_idle_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/rock/gray_run_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/rock/gray_swipe_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/rock/gray_walk_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/rock/gray_walk_fast_8fps.gif') }}"
+            ],
+            rat: [
+                "{{ url_for('static', filename='img/pets/rat/brown_idle_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/rat/brown_run_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/rat/brown_walk_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/rat/brown_walk_fast_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/rat/brown_with_ball_8fps.gif') }}"
+            ],
+            unicorn: [
+                "{{ url_for('static', filename='img/pets/unicorn/magical_idle_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/unicorn/magical_run_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/unicorn/magical_stand_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/unicorn/magical_swipe_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/unicorn/magical_walk_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/unicorn/magical_walk_fast_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/unicorn/magical_with_ball_8fps.gif') }}"
+            ],
+            fox: [
+                "{{ url_for('static', filename='img/pets/fox/red_idle_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/fox/red_lie_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/fox/red_run_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/fox/red_swipe_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/fox/red_walk_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/fox/red_walk_fast_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/fox/red_with_ball_8fps.gif') }}"
+            ],
+            dinosaur: [
+                "{{ url_for('static', filename='img/pets/dinosaur/green_idle_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/dinosaur/green_run_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/dinosaur/green_swipe_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/dinosaur/green_walk_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/dinosaur/green_walk_fast_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/dinosaur/green_with_ball_8fps.gif') }}"
+            ],
+            crab: [
+                "{{ url_for('static', filename='img/pets/crab/red_idle_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/crab/red_run_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/crab/red_swipe_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/crab/red_walk_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/crab/red_walk_fast_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/crab/red_with_ball_8fps.gif') }}"
+            ],
+            snake: [
+                "{{ url_for('static', filename='img/pets/snake/green_idle_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/snake/green_swipe_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/snake/green_run_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/snake/green_walk_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/snake/green_with_ball_8fps.gif') }}"
+            ],
+            horse: [
+                "{{ url_for('static', filename='img/pets/horse/socks_brown_idle_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/horse/socks_brown_run_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/horse/socks_brown_stand_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/horse/socks_brown_swipe_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/horse/socks_brown_walk_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/horse/socks_brown_walk_fast_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/horse/socks_brown_with_ball_8fps.gif') }}"
+            ],
+            bird: [
+                "{{ url_for('static', filename='img/pets/bird/gray_idle_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/bird/gray_run_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/bird/gray_swipe_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/bird/gray_walk_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/bird/gray_walk_fast_8fps.gif') }}",
+                "{{ url_for('static', filename='img/pets/bird/gray_with_ball_8fps.gif') }}"
+            ]
+
+        };
+
+        const defaultGif = petGifs[currentPet][0];
+        petImage.src = defaultGif;
+
+        codingPetContainer.appendChild(petImage);
+
+        const editorArea = document.querySelector('.code-editor');
+        editorArea.appendChild(codingPetContainer);
+
+        const editorRect = editorArea.getBoundingClientRect();
+        const petHeight = 50;
+        const lineNumberWidth = 40;
+
+        const bottomY = editorRect.height - petHeight - 165; // Need to adjust this value for different device sizes
+        const initialLeftX = lineNumberWidth + 10 + 20; // Need to adjust this value for different device sizes
+
+        codingPetContainer.style.transform = `translate(${initialLeftX}px, ${bottomY}px)`;
+
+        const maxDistance = 600;
+        let add = 0;
+        let direction = 1;
+        let currentGifIndex = 0;
+        let isPaused = false; 
+        const pauseDuration = 2000; 
+
+        if (currentPet === 'rock') {
+            if (gifChangeIntervalId) {
+                clearInterval(gifChangeIntervalId);
+            }
+            gifChangeIntervalId = setInterval(() => {
+                const selectedGifs = petGifs.rock;
+                currentGifIndex = (currentGifIndex + 1) % selectedGifs.length;
+                petImage.src = selectedGifs[currentGifIndex];
+            }, 3000); 
+            return; 
+        }
+
+        if (petIntervalId) {
+            clearInterval(petIntervalId);
+        }
+
+        petIntervalId = setInterval(() => {
+            if (isPaused) {
+                return; 
+            }
+
+            const idleGifsToSkip = [
+                'red_idle_8fps.gif',
+                'white_idle_8fps.gif',
+                'white_swipe_8fps.gif',
+                'gray_idle_8fps.gif',
+                'gray_swipe_8fps.gif',
+                'gray_with_ball_8fps.gif',
+                'green_idle_8fps.gif',
+                'green_lie_8fps.gif',
+                'green_swipe_8fps.gif',
+                'green_with_ball_8fps.gif',
+                'black_idle_8fps.gif',
+                'black_lie_8fps.gif',
+                'black_with_ball_8fps.gif',
+                'black_swipe_8fps.gif',
+                'red_idle_8fps.gif',
+                'red_lie_8fps.gif',
+                'red_swipe_8fps.gif',
+                'red_with_ball_8fps.gif',
+                'socks_brown_idle_8fps.gif',
+                'socks_brown_stand_8fps.gif',
+                'socks_brown_swipe_8fps.gif',
+                'socks_brown_with_ball_8fps.gif',
+                'brown_idle_8fps.gif',
+                'brown_with_ball_8fps.gif',
+                'brown_swipe_8fps.gif',
+                'magical_idle_8fps.gif',
+                'magical_swipe_8fps.gif',
+                'magical_with_ball_8fps.gif',
+                'magical_stand_8fps.gif',
+                'yellow_swipe_8fps.gif'
+            ];
+
+            if (idleGifsToSkip.some(idleGif => petImage.src.includes(idleGif))) {
+                return;
+            }
+            add += 10 * direction;
+
+            const shouldPause = Math.random() < 0.1; 
+            if (shouldPause) {
+                isPaused = true;
+                setTimeout(() => {
+                    isPaused = false; 
+                }, pauseDuration);
+            }
+
+            if (add >= maxDistance) {
+                direction = -1;
+                petImage.classList.add('flipped');
+            } else if (add <= 0) {
+                direction = 1;
+                petImage.classList.remove('flipped'); 
+            }
+
+            codingPetContainer.style.transform = `translate(${initialLeftX + add}px, ${bottomY}px)`;
+        }, 1000); 
+
+        if (gifChangeIntervalId) {
+            clearInterval(gifChangeIntervalId);
+        }
+
+        gifChangeIntervalId = setInterval(() => {
+            const selectedGifs = petGifs[currentPet];
+            currentGifIndex = (currentGifIndex + 1) % selectedGifs.length;
+            petImage.src = selectedGifs[currentGifIndex];
+        }, 3000);
+    }
+
+    const disablePetOption = document.getElementById("disable-pet");
+
+    const petOptions = document.querySelectorAll(".pet-option");
+    petOptions.forEach(option => {
+        option.addEventListener("click", (event) => {
+            event.preventDefault(); 
+
+            const petType = option.getAttribute("pet-type");
+            currentPet = petType; 
+            createPet(); 
+            disablePetOption.style.display = "block";
+        });
+    });
+
+
+    disablePetOption.addEventListener("click", (event) => {
+        event.preventDefault(); 
+
+        if (petIntervalId) {
+            clearInterval(petIntervalId);
+            petIntervalId = null;
+        }
+        if (gifChangeIntervalId) {
+            clearInterval(gifChangeIntervalId);
+            gifChangeIntervalId = null;
+        }
+
+        const existingPet = document.getElementById("coding-pet-container");
+        if (existingPet) {
+            existingPet.remove();
+        }
+
+        currentPet = null;
+        
+        disablePetOption.style.display = "none";
+
+        alert("Pet has been disabled!");
+    });
+
+
+    // LIGHT MODE
+    const darkModeThemes = [
+        { name: "Monokai", value: "monokai" },
+        { name: "Dracula", value: "dracula" },
+        { name: "Material", value: "material" },
+        { name: "Ambiance", value: "ambiance" },
+        { name: "Cobalt", value: "cobalt" },
+        { name: "Twilight", value: "twilight" },
+        { name: "Solarized Dark", value: "solarized dark" },
+        { name: "Midnight", value: "midnight" },
+        { name: "Lucario", value: "lucario" },
+        { name: "Seti", value: "seti" },
+        { name: "Blackboard", value: "blackboard" },
+        { name: "Zenburn", value: "zenburn" },
+    ];
+
+    const lightModeThemes = [
+        { name: "Default", value: "default" },
+        { name: "Solarized Light", value: "solarized light" },
+        { name: "Eclipse", value: "eclipse" },
+        { name: "Base16 Light", value: "base16-light" },
+        { name: "XQ Light", value: "xq-light" },
+        { name: "Idea", value: "idea" },
+        { name: "Neo", value: "neo" },
+        { name: "Elegant", value: "elegant" },
+    ];
+
+    function updateThemeOptions(isLightMode) {
+        const themeOptions = isLightMode ? lightModeThemes : darkModeThemes;
+        const dropdownMenu = document.querySelector("#syntax-highlight + .dropdown-menu");
+        dropdownMenu.innerHTML = ""; 
+
+        themeOptions.forEach(theme => {
+            const listItem = document.createElement("li");
+            const anchor = document.createElement("a");
+            anchor.href = "#";
+            anchor.classList.add("dropdown-item", "theme-option");
+            anchor.setAttribute("data-theme", theme.value);
+            anchor.textContent = theme.name;
+
+            listItem.appendChild(anchor);
+            dropdownMenu.appendChild(listItem);
+
+            anchor.addEventListener("click", function (event) {
+                event.preventDefault();
+                currentTheme = theme.value;
+                codeEditor.setOption("theme", currentTheme);
+                alert(`Syntax Highlighting changed to ${theme.name}`);
+            });
+        });
+    }
+
+    const lightModeButton = document.getElementById("light-mode");
+    const roboticEnvironment = document.querySelector(".robotic-environment");
+
+    lightModeButton.addEventListener("click", () => {
+        roboticEnvironment.classList.toggle("light-mode");
+
+        console.log("Light mode toggled:", roboticEnvironment.classList.contains("light-mode"));
+        console.log("Current classes:", roboticEnvironment.className);
+
+        const isLightMode = roboticEnvironment.classList.contains("light-mode");
+
+        const codeMirrorInstance = document.querySelector(".CodeMirror");
+        if (codeMirrorInstance) {
+            const theme = isLightMode ? "3024-day" : "monokai";
+            codeEditor.setOption("theme", theme); 
+            console.log(`CodeMirror theme set to: ${theme}`);
+        }
+
+        if (lightModeButton._tippy) {
+            lightModeButton._tippy.setContent(isLightMode ? "Switch to Dark Mode" : "Switch to Light Mode");
+        }
+        
+        updateThemeOptions(isLightMode); 
+        alert(isLightMode ? "Light Mode Enabled!" : "Dark Mode Enabled!");
+    });
+
+    // SYNTAX HIGHLIGHTING
+    document.querySelectorAll('.theme-option').forEach(item => {
+        item.addEventListener('click', function(event) {
+            event.preventDefault(); 
+            const selectedTheme = this.getAttribute('data-theme'); 
+
+            if (selectedTheme) {
+                currentTheme = selectedTheme; 
+                codeEditor.setOption("theme", currentTheme); 
+                alert(`Syntax Highlighting changed to ${currentTheme}`);
+            }
+        });
+    });
+
+    document.getElementById("syntax-highlight").addEventListener("click", toggleSyntaxHighlighting);
+
 </script>
 
 

@@ -3,9 +3,19 @@ from gym import utils
 from gym.envs.robotics import fetch_env
 
 
-# Ensure we get the path separator correct on windows
-MODEL_XML_PATH = "/mnt/c/Users/kpartovi/Desktop/CS425/SeniorProjectTeam11/venv38/lib/python3.8/site-packages/gym/envs/robotics/assets/fetch/"
-
+MODEL_XML_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 
+    "venv38", 
+    "lib", 
+    "python3.8", 
+    "site-packages", 
+    "gym", 
+    "envs", 
+    "robotics", 
+    "assets", 
+    "fetch", 
+    "organize.xml"
+)
 
 class FetchOrganizeEnv(fetch_env.FetchEnv, utils.EzPickle):
     def __init__(self, reward_type='sparse'):
