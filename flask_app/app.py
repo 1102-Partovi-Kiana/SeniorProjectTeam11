@@ -351,6 +351,7 @@ def RenderResetPassword():
 @app.route('/dashboard/instructor_view', methods=['GET', 'POST'])
 def RenderInstructorDashboard():
     user_id = session.get('user_id')
+    print(user_id)
     if not user_id:
         flash('You must be logged in to access this page.')
         return redirect(url_for('RenderLogin'))
@@ -366,7 +367,9 @@ def RenderInstructorDashboard():
         db.session.add(new_class)
         db.session.commit() 
         return redirect(url_for('RenderInstructorDashboard'))
-    return render_template('dashboard/dashboard_instructor.html', is_dashboard=True, is_instructor_dashboard=True)
+    user_classes = get_classes(user_id)
+    print(user_classes)
+    return render_template('dashboard/dashboard_instructor.html', is_dashboard=True, is_instructor_dashboard=True, classes = user_classes)
 
 @app.route('/dashboard/student_view', methods=['GET'])
 def RenderStudentDashboard():

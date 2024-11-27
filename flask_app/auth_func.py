@@ -1,7 +1,7 @@
 from flask import flash
 import bcrypt
 import string
-from classes import User
+from classes import *
 import re
 
 # Check if the new user's attributes have default values
@@ -70,3 +70,10 @@ def retrieve_email(user):
 def is_valid_email(email):
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov)$'
     return bool(re.match(pattern, email))
+
+def get_classes(user_id):
+    classes = Classes.query.filter_by(user_id = user_id).first()
+    if (classes is None):
+        print("No classes returned")
+        return None
+    return classes
