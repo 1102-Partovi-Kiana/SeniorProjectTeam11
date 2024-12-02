@@ -146,21 +146,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td><input type="checkbox" name="courses_ids" value="1" class="courses-checkbox"></td>
-                                        <td>John Doe</td>
-                                        <td>john.doe@example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td><input type="checkbox" name="courses_ids" value="2" class="courses-checkbox"></td>
-                                        <td>Jane Smith</td>
-                                        <td>jane.smith@example.com</td>
-                                    </tr>
-                                    <tr>
-                                        <td><input type="checkbox" name="courses_ids" value="3" class="courses-checkbox"></td>
-                                        <td>Sam Brown</td>
-                                        <td>sam.brown@example.com</td>
-                                    </tr>
+                                    {% if courses %}
+                                        {% for course in courses %}
+                                            <tr>
+                                                <td><input type="checkbox" name="courses_ids" value="{{ course.course_id }}" class="courses-checkbox"></td>
+                                                <td>{{ course.course_name }}</td>
+                                                <td>{{ course.section_number}}</td> 
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="3">
+                                                <span class="class-section">No Courses Available - Create One to Start</span>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
                                 </tbody>
                             </table>
                         </div>

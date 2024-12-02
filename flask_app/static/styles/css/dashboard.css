@@ -615,8 +615,29 @@ html, body {
 
 .course-list-table {
     width: 100%;
-    border: 1px solid rgb(0,0,0);
+    border: 1px solid rgb(0, 0, 0);
     margin-bottom: 20px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border-spacing: 0;
+}
+
+.course-list thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.course-list tbody {
+    display: block;
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;/
+}
+
+.course-list tbody::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
 }
 
 .course-list th:first-child,

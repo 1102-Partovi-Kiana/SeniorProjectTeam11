@@ -1090,7 +1090,7 @@ def RenderInstructorDashboard():
 def RenderStudentDashboard():
     user = session.get('user')
     if not user:
-        flash('You must be logged in to access this page.', 'popup')
+        flash('You must be logged in to access this page.')
         return redirect(url_for('RenderLogin'))
 
     user_id = user['user_id'] 
@@ -1111,6 +1111,11 @@ def RenderStudentDashboard():
                 
             if (existing_enrollment is not None):
                 flash('You are already enrolled in this class.', 'popup')
+                return redirect(url_for('RenderStudentDashboard'))
+            
+            existing_enrollment = Enrollment.query.filter_by(user_id=user_id).first()
+            if existing_enrollment is not None:
+                flash('You are already enrolled in a class. You cannot enroll in another.', 'popup')
                 return redirect(url_for('RenderStudentDashboard'))
 
             student_enrollment = Enrollment()
@@ -1148,12 +1153,13 @@ def RenderInstructorClasses():
         return redirect(url_for('RenderStudentDashboard'))
     
     user_classes = get_classes(user_id)
+    courses = Courses.query.all()
 
     class_code = session.get('class_code')
     
     session.pop('class_code', None)
 
-    return render_template('dashboard/dashboard_classes.html', is_dashboard=True, is_instructor_dashboard=True, classes=user_classes, class_code=class_code, user=user)
+    return render_template('dashboard/dashboard_classes.html', is_dashboard=True, is_instructor_dashboard=True, classes=user_classes, class_code=class_code, user=user, courses=courses)
 
 @app.route('/dashboard/instructor-view/classes/generate-class-code', methods=['POST'])
 def GenerateClassCode():
@@ -1241,11 +1247,14 @@ def AssignStudentToCourse():
         assignments = []
 
         for student_id in selected_student_ids:
+            student = User.query.filter_by(user_id=student_id).first()
+            if not student:
+                continue
             for course_id in selected_courses_id:
+                if not course_id:
+                    continue
                 existing_assignment = StudentAssignedCourses.query.filter_by(user_id=student_id, course_id=course_id).first()
-                
                 if existing_assignment:
-                    flash(f"Student {student_id} is already assigned to course {course_id}.", 'popup')
                     continue
 
                 student_assignments =  StudentAssignedCourses()
@@ -1253,12 +1262,12 @@ def AssignStudentToCourse():
                 student_assignments.course_id = course_id
                 assignments.append(student_assignments)
 
-            if assignments:
-                db.session.add_all(assignments)
-                db.session.commit()
-                flash('Students have been successfully assigned to the selected courses.', 'popup')
-            else:
-                flash('No new assignments were made. All students were already assigned to the selected courses.', 'popup')
+        if assignments:
+            db.session.add_all(assignments)
+            db.session.commit()
+            flash('Students have been successfully assigned to the selected courses.', 'popup')
+        else:
+            flash('No new assignments were made. All students were already assigned to the selected courses.', 'popup')
 
         return redirect(url_for('RenderInstructorClasses'))
 
@@ -1275,8 +1284,28 @@ def RenderCourses():
     if not user:
         flash('You must be logged in to access this page.')
         return redirect(url_for('RenderLogin'))
+    
+    user_id = user['user_id']
+    role = user['role_id']
 
-    return render_template('courses.html', user=user)
+    if role == ROLE_STUDENT:
+        assigned_courses = StudentAssignedCourses.query.filter_by(user_id=user_id).all()
+        courses = []
+        for assignment in assigned_courses:
+            courses.append(assignment.course)
+    else:
+        courses = Courses.query.all()
+
+    query = request.args.get("q", "").lower()
+    filtered_course_catalog = [
+        course for course in courses
+        if query in course.course_name.lower() 
+        or query in course.course_desc.lower()
+        or query in course.level.lower()
+        or (query == "certificate" and course.certificate == "t")
+        or query in course.length.lower()
+    ]
+    return render_template("courses.html", courses=filtered_course_catalog, query=query, user=user)
 
 @app.route('/playground')
 def playground():

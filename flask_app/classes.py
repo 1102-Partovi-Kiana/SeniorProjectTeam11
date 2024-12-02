@@ -56,4 +56,9 @@ class Courses(db.Model):
     course_id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(100))
     course_desc = db.Column(db.String(1000))
+    section_number = db.Column(db.String(10))
+    level = db.Column(db.String(50))
+    certificate = db.Column(db.Boolean, default=False)
+    length = db.Column(db.String(20))
+    route = db.Column(db.String(100))
 
