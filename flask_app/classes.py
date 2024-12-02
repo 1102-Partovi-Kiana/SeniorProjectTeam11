@@ -19,5 +19,33 @@ class Classes(db.Model):
     class_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     class_course_code = db.Column(db.String(100), nullable=False)
     class_section_number = db.Column(db.Integer, nullable=False)
-    course_id = db.Column(db.Integer, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True) 
+
+class ClassCodes(db.Model):
+    __tablename__ = 'class_codes'
+    class_code_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    class_id = db.Column(db.Integer, db.ForeignKey('classes.class_id'), nullable=False)
+    class_code = db.Column(db.String(15), nullable=False, unique=True)
+    
+    class_ = db.relationship('Classes', backref=db.backref('class_codes', lazy=True))
+
+class Enrollment(db.Model):
+    __tablename__ = 'enrollment'
+
+    enrollment_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    class_id = db.Column(db.Integer, db.ForeignKey('classes.class_id'), nullable=False)
+
+    class_ = db.relationship('Classes', backref=db.backref('enrollments', lazy=True))
+    user = db.relationship('User', backref=db.backref('enrollments', lazy=True))
+
+class StudentAssignedCourses(db.Model):
+    __tablename__ = 'student_assigned_courses'
+
+    student_assigned_courses_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    course_id = db.Column(db.Integer, db.ForeignKey('classes.class_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('assigned_courses', lazy=True))
+    class_ = db.relationship('Classes', backref=db.backref('assigned_students', lazy=True))
+

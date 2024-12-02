@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Instructor - Classes</title>
+{% endblock %}
+
+{% block body %}
+{% include "alert/full.html" %}
+    <div class="sidebar-wrapper">
+        <div class="sidebar-header">
+            <img src="/static/img/profile_pic.png" alt="Profile Picture" class="profile-image">
+            <span class="sidebar-name">{{ user['username'] }}</span>
+            <button class="collapse-btn" onclick="toggleSidebar()">
+                <svg class="sidebar-arrow-icon"><use xlink:href="/static/img/sidebar-icons.svg#arrow-icon" fill="currentColor"></use></svg>
+            </button>
+        </div>
+        <a href="{{ url_for('RenderInstructorDashboard') }}">
+            <ul>
+                <li>
+                    <svg class="sidebar-home-icon"><use xlink:href="/static/img/sidebar-icons.svg#home-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">HOME</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderCourses') }}">
+            <ul>
+                <li>
+                    <svg class="sidebar-course-icon"><use xlink:href="/static/img/sidebar-icons.svg#course-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">COURSES</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderInstructorClasses') }}">
+            <ul>
+                <li>
+                    <svg class="sidebar-class-icon"><use xlink:href="/static/img/sidebar-icons.svg#class-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">CLASSES</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderLogout') }}">
+            <ul>
+                <li>
+                    <svg class="sidebar-logout-icon"><use xlink:href="/static/img/sidebar-icons.svg#logout-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">LOG OUT</span>
+                </li>   
+            </ul>
+        </a>
+    </div>
+    <div class="dashboard-container">
+        <div class="dashboard-classes-header">
+            <h1>Classes</h1>
+            <a href="#" class="create-class-key-modal" data-bs-toggle="modal" data-bs-target="#createClassKeyModal">
+                Create class code
+            </a>
+        </div>
+        <div class="dashboard-classes-table">
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    {% if classes %}
+                        {% for cls in classes %}
+                        <tr>
+                            <td class="class-info">
+                                <span class="class-section">Section: {{ cls.class_course_code }}.{{ cls.class_section_number }}</span>
+                                <a href="#" class="class-code-modal" data-bs-toggle="modal" data-bs-target="#assignCourseModal">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td>
+                                <span class="class-section">No Classes Available - Create One to Start</span>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal fade" id="createClassKeyModal" tabindex="-1" aria-labelledby="createClassModalKeyLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createClassModalKeyLabel">Create Class Code</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url_for('GenerateClassCode') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="class-select-create" class="form-label">Select Class</label>
+                            <select class="form-select" id="class-select-create" name="class_id" required>
+                                <option value="">Choose a class</option>
+                                {% for cls in classes %}
+                                    <option value="{{ cls.class_id }}">{{ cls.class_course_code }} - {{ cls.class_section_number }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="assignCourseModal" tabindex="-1" aria-labelledby="assignCourseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignCourseModalLabel">Assign Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url_for('AssignStudentToCourse') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="class-select-assign" class="form-label">Class</label>
+                            <select class="form-select" id="class-select-assign" name="class_id" required>
+                                <option value="">Choose a class</option>
+                                {% for cls in classes %}
+                                    <option value="{{ cls.class_id }}">{{ cls.class_course_code }} - {{ cls.class_section_number }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="hidden" id="assign-url" value="{{ url_for('GetStudentsFromClass') }}">
+                        </div>
+                        <div class="student-list">
+                            <table class="student-list-table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAllStudents" onclick="toggleSelectAll('student')"></th>
+                                        <th>Student Name</th>
+                                        <th>Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td colspan="3">Please select a class.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="course-list">
+                            <table class="course-list-table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAllCourses" onclick="toggleSelectAll('courses')"></th>
+                                        <th>Course Name</th>
+                                        <th>Section Number</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="checkbox" name="courses_ids" value="1" class="courses-checkbox"></td>
+                                        <td>John Doe</td>
+                                        <td>john.doe@example.com</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" name="courses_ids" value="2" class="courses-checkbox"></td>
+                                        <td>Jane Smith</td>
+                                        <td>jane.smith@example.com</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" name="courses_ids" value="3" class="courses-checkbox"></td>
+                                        <td>Sam Brown</td>
+                                        <td>sam.brown@example.com</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Assign Course</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if class_code %}
+    <div class="modal fade" id="classCodeModal" tabindex="-1" aria-labelledby="classCodeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="classCodeModalLabel">Class Code</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Your class code for class {{ class_id }} is: <strong>{{ class_code }}</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

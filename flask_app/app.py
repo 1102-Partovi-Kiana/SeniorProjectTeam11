@@ -31,6 +31,9 @@ db.init_app(app)
 migrate = Migrate(app, db)
 mail.init_app(app)
 
+ROLE_INSTRUCTOR = 1
+ROLE_STUDENT = 2
+
 CUSTOM_KEYWORDS = [
     "def", "class", "import", "while", "for", "if", "else", "elif", "try", "except", "finally", "with",
     "return", "print", "len", "range", "input", "open", "type", "isinstance", "id", "dir", "sorted",
@@ -912,6 +915,7 @@ def RenderEnvironment(environment_id):
 
 @app.route('/signup', methods=['GET', 'POST'])
 def RenderSignup():
+    session.pop('_flashes', None)
     if request.method == 'POST':
         username = request.form.get('username')
         first_name = request.form.get('first_name')
@@ -952,7 +956,14 @@ def RenderSignup():
                 return render_template('account/signup.html')
             db.session.add(new_user)
             db.session.commit() 
-            flash("Registration Successful")
+            flash("Registration Successful", 'popup')
+            session['user'] = {
+                'user_id': new_user.user_id,
+                'username': new_user.username,
+                'first_name': new_user.first_name,
+                'last_name': new_user.last_name,
+                'role_id': new_user.role_id,
+            }
             if (new_user.role_id == 1):
                 return redirect(url_for('RenderInstructorDashboard'))
             elif(new_user.role_id == 2):
@@ -962,23 +973,38 @@ def RenderSignup():
 
 @app.route('/login', methods=['GET', 'POST'])
 def RenderLogin():
+    if 'user' in session and 'user_id' in session['user']:
+        flash('You are already logged in.', 'popup')
+        role = session['user']['role_id']
+        if role == ROLE_INSTRUCTOR:
+            return redirect(url_for('RenderInstructorDashboard'))
+        elif role == ROLE_STUDENT:
+            return redirect(url_for('RenderStudentDashboard'))
+
     if request.method == 'POST':
         login_username = request.form.get('login_username')
         login_password = request.form.get('login_password')
 
         success, user = get_user(login_username)
-        if (success):
-            if(check_login_info(user, login_password)):
-                flash('Login Successful')
-                session['user_id'] = user.user_id
-                role = get_user_role(user)
-                if (role == 1):
+        if success:
+            if check_login_info(user, login_password):
+                flash('Login Successful', 'popup')
+                role = user.role_id
+                session['user'] = {
+                    'user_id': user.user_id,
+                    'username': user.username,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'role_id': user.role_id,
+                }
+                if role == ROLE_INSTRUCTOR:
                     return redirect(url_for('RenderInstructorDashboard'))
-                elif (role == 2):
+                elif role == ROLE_STUDENT:
                     return redirect(url_for('RenderStudentDashboard'))
             else:
-                flash('Invalid Password')
-    session.pop('_flashes', None)
+                flash('Invalid Password', 'error')
+        else:
+            flash('Invalid Username', 'error')
     return render_template('account/login.html', is_homepage=True)
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
@@ -1000,42 +1026,245 @@ def RenderForgotPassword():
 
 @app.route('/reset-password', methods=['GET', 'POST'])
 def RenderResetPassword():
-    if request.method == 'POST':
+    if (request.method == 'POST'):
         new_password = request.form.get('password')
         confirm_password = request.form.get('confirmPassword')
-        if new_password == confirm_password:
+        if (new_password == confirm_password):
             flash("Password has been reset successfully.", "success")
         else:
             flash("Passwords do not match.", "error")
         return redirect(url_for('reset_password'))
     return render_template('account/reset_password.html')
 
-@app.route('/dashboard/instructor_view', methods=['GET', 'POST'])
+@app.route('/dashboard/instructor-view', methods=['GET', 'POST'])
 def RenderInstructorDashboard():
-    user_id = session.get('user_id')
-    print(user_id)
-    if not user_id:
-        flash('You must be logged in to access this page.')
-        return redirect(url_for('RenderLogin'))
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.', 'popup')
+        return redirect(url_for('RenderHomepage'))
+
+    user_id = user['user_id'] 
+    role = user['role_id']
+    
+    if role != ROLE_INSTRUCTOR:
+        flash('You must be an instructor to access this page.', 'popup')
+        return redirect(url_for('RenderStudentDashboard'))
+    
+    user_classes = get_classes(user_id)
+
     if request.method == 'POST':
         class_course_code = request.form['classCourseCode']
         class_section = request.form['classSection']
         class_date = request.form['classDate']
 
+        if (not is_valid_course_code(class_course_code)):
+            flash("Course Code Must Follow the Format: Letters + Numbers.", "popup")
+
+        if class_section.isdigit():
+            class_section = int(class_section)
+        else:
+            flash("Section Number Must Not Contain Any Characters.", "popup")
+
+        if (not is_valid_course_code(class_course_code) and not class_section.isdigit()):
+            return redirect(url_for('RenderInstructorDashboard'))
+
+        for user_class in user_classes:
+            if class_course_code == user_class.class_course_code and class_section == user_class.class_section_number:
+                flash('A class of the same name and section has already been created', 'popup')
+                return redirect(url_for('RenderInstructorDashboard'))
+            
         new_class = Classes()
         new_class.class_course_code = class_course_code
         new_class.class_section_number = class_section
         new_class.user_id = user_id
         db.session.add(new_class)
-        db.session.commit() 
+        db.session.commit()
+        
+        flash('Class created successfully!', 'popup')
         return redirect(url_for('RenderInstructorDashboard'))
-    user_classes = get_classes(user_id)
-    print(user_classes)
-    return render_template('dashboard/dashboard_instructor.html', is_dashboard=True, is_instructor_dashboard=True, classes = user_classes)
 
-@app.route('/dashboard/student_view', methods=['GET'])
+    return render_template('dashboard/dashboard_instructor.html', is_dashboard=True, is_instructor_dashboard=True, classes=user_classes, user=user)
+
+
+@app.route('/dashboard/student-view', methods=['GET', 'POST'])
 def RenderStudentDashboard():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.', 'popup')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id'] 
+    role = user['role_id']
+    
+    if (role != ROLE_STUDENT):
+        flash('You must be an student to access this page.', 'popup')
+        return redirect(url_for('RenderInstructorDashboard'))
+    
+    if request.method == 'POST':
+        class_course_code = request.form['classCourseCode']
+
+        existing_class_course = ClassCodes.query.filter_by(class_code=class_course_code).first()
+        if (existing_class_course is not None):
+            class_id = existing_class_course.class_id
+            
+            existing_enrollment = Enrollment.query.filter_by(user_id=user_id, class_id=class_id).first()
+                
+            if (existing_enrollment is not None):
+                flash('You are already enrolled in this class.', 'popup')
+                return redirect(url_for('RenderStudentDashboard'))
+
+            student_enrollment = Enrollment()
+            student_enrollment.user_id = user_id
+            student_enrollment.class_id = class_id
+
+            db.session.add(student_enrollment)
+            db.session.commit()
+            return redirect(url_for('RenderStudentDashboard'))
+        else: 
+            flash('Invalid Course Code', 'popup')
+            return redirect(url_for('RenderStudentDashboard'))
+
     return render_template('dashboard/dashboard_student.html', is_dashboard=True, is_student_dashboard=True)
+
+@app.route('/dashboard/instructor-view/classes', methods=['GET'])
+def RenderInstructorClasses():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+    
+    if role != ROLE_INSTRUCTOR:
+        flash('You must be an instructor to access this page.')
+        return redirect(url_for('RenderStudentDashboard'))
+    
+    user_classes = get_classes(user_id)
+
+    class_code = session.get('class_code')
+    
+    session.pop('class_code', None)
+
+    return render_template('dashboard/dashboard_classes.html', is_dashboard=True, is_instructor_dashboard=True, classes=user_classes, class_code=class_code, user=user)
+
+@app.route('/dashboard/instructor-view/classes/generate-class-code', methods=['POST'])
+def GenerateClassCode():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+    
+    if role != ROLE_INSTRUCTOR:
+        flash('You must be an instructor to access this page.')
+        return redirect(url_for('RenderStudentDashboard'))
+    
+    user_classes = get_classes(user_id)
+    class_code = None
+
+    class_id = request.form.get('class_id')
+
+    existing_class_code = ClassCodes.query.filter_by(class_id=class_id).first()
+    if existing_class_code:
+        class_code = existing_class_code.class_code
+        print("Existing Code: ", class_code)
+    else:
+        class_code = generate_class_code()
+
+        new_class_code = ClassCodes()
+        new_class_code.class_id = class_id
+        new_class_code.class_code = class_code
+        db.session.add(new_class_code)
+        db.session.commit()
+        print("New Code: ", class_code)
+
+    session['class_code'] = class_code
+
+    return redirect(url_for('RenderInstructorClasses'))
+
+@app.route('/dashboard/instructor-view/classes/get-students-from-class', methods=['GET', 'POST'])
+def GetStudentsFromClass():
+    if request.method == 'GET':
+        return redirect(url_for('RenderInstructorClasses'))
+    
+    if request.method == 'POST':
+        data = request.get_json()
+        class_id = data.get('class_id')
+
+        if not class_id:
+            return jsonify({"message": "No class selected"}), 400
+
+        enrolled_students = db.session.query(Enrollment).join(Enrollment.user).filter(Enrollment.class_id == class_id).all()
+
+        students = []
+        for enrollment in enrolled_students:
+            student = enrollment.user
+            user_data = {
+                'user_id': student.user_id,
+                'first_name': student.first_name,
+                'last_name': student.last_name,
+                'email': student.email
+            }
+            students.append(user_data)
+
+        return jsonify({"students": students})
+
+@app.route('/dashboard/instructor-view/classes/assign-student-to-course', methods=['GET', 'POST'])
+def AssignStudentToCourse():
+    if request.method == 'GET':
+        return redirect(url_for('RenderInstructorClasses'))
+    
+    if request.method == 'POST':
+        selected_student_ids = request.form.getlist('student_ids')
+        if not selected_student_ids:
+            flash('You have not selected any students from a class to add to a course', 'popup')
+            return redirect(url_for('RenderInstructorClasses'))
+        
+        selected_courses_id = request.form.getlist('courses_ids')
+        if not selected_courses_id:
+            flash('You have not selected any courses to assign your students', 'popup')
+            return redirect(url_for('RenderInstructorClasses'))
+
+        #print("Selected Students:", selected_student_ids)
+        #print("Selected Courses:", selected_courses_id)
+
+        assignments = []
+
+        for student_id in selected_student_ids:
+            for course_id in selected_courses_id:
+                existing_assignment = StudentAssignedCourses.query.filter_by(user_id=student_id, course_id=course_id).first()
+                
+                if existing_assignment:
+                    flash(f"Student {student_id} is already assigned to course {course_id}.", 'popup')
+                    continue
+
+                student_assignments =  StudentAssignedCourses()
+                student_assignments.user_id = student_id
+                student_assignments.course_id = course_id
+                assignments.append(student_assignments)
+
+            if assignments:
+                db.session.add_all(assignments)
+                db.session.commit()
+                flash('Students have been successfully assigned to the selected courses.', 'popup')
+            else:
+                flash('No new assignments were made. All students were already assigned to the selected courses.', 'popup')
+
+        return redirect(url_for('RenderInstructorClasses'))
+
+
+
+
+
+@app.route('/logout', methods=['GET'])
+def RenderLogout():
+    session.clear()
+    flash('You have been logged out successfully.', 'popup')
+    print("Hello World")
+    return redirect(url_for('RenderHomepage'))
 
 @app.route('/courses')
 def RenderCourses():

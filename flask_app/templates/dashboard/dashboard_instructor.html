@@ -18,7 +18,8 @@
 {% endblock %}
 
 {% block body %}
-<body>
+
+{% include "alert/full.html" %}
 <!--
     <nav class="navbar-instructor-view">
         <div class = "navbar-instructor-logo">
@@ -33,12 +34,12 @@
     <div class="sidebar-wrapper">
         <div class="sidebar-header">
             <img src="/static/img/profile_pic.png" alt="Profile Picture" class="profile-image">
-            <span class="sidebar-name">FirstName</span>
+            <span class="sidebar-name">{{ user['username'] }}</span>
             <button class="collapse-btn" onclick="toggleSidebar()">
                 <svg class="sidebar-arrow-icon"><use xlink:href="/static/img/sidebar-icons.svg#arrow-icon" fill="currentColor"></use></svg>
             </button>
         </div>
-        <a href="{{ url_for('RenderHomepage') }}">
+        <a href="{{ url_for('RenderInstructorDashboard') }}">
             <ul>
                 <li>
                     <svg class="sidebar-home-icon"><use xlink:href="/static/img/sidebar-icons.svg#home-icon" fill="currentColor"></use></svg>
@@ -54,7 +55,15 @@
                 </li>   
             </ul>
         </a>
-        <a href="{{ url_for('RenderHomepage') }}">
+        <a href="{{ url_for('RenderInstructorClasses') }}">
+            <ul>
+                <li>
+                    <svg class="sidebar-class-icon"><use xlink:href="/static/img/sidebar-icons.svg#class-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">CLASSES</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderLogout') }}">
             <ul>
                 <li>
                     <svg class="sidebar-logout-icon"><use xlink:href="/static/img/sidebar-icons.svg#logout-icon" fill="currentColor"></use></svg>
@@ -68,7 +77,7 @@
             <h1>Home</h1>
             <h2>
                 Welcome,<br>
-                John Doe<br>
+                {{ user['first_name'] }} {{ user['last_name'] }}<br>
                 University of Nevada, Reno
             </h2>
         </section>
@@ -82,15 +91,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Section: CS101.1001</td>
-                    </tr>
-                    <tr>
-                        <td>Section: CS101.1002</td>
-                    </tr>
-                    <tr>
-                        <td>Section: CS101.1003</td>
-                    </tr>
+                    {% if classes %}
+                        {% for cls in classes %}
+                        <tr>
+                            <td class="class-info">
+                                <span class="class-section">Section: {{ cls.class_course_code }}.{{ cls.class_section_number }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td>
+                                <span class="class-section">No Classes Available - Create One to Start</span>
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>

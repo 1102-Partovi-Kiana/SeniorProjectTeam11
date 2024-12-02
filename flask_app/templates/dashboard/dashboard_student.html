@@ -18,6 +18,8 @@
 {% endblock %}
 
 {% block body %}
+
+{% include "alert/full.html" %}
 <body>
 <!--
     <nav class="navbar-instructor-view">
@@ -54,7 +56,7 @@
                 </li>   
             </ul>
         </a>
-        <a href="{{ url_for('RenderHomepage') }}">
+        <a href="{{ url_for('RenderLogout') }}">
             <ul>
                 <li>
                     <svg class="sidebar-logout-icon"><use xlink:href="/static/img/sidebar-icons.svg#logout-icon" fill="currentColor"></use></svg>
@@ -133,7 +135,7 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">Notifications</th>
+                        <th scope="col">Classes</th>
                     </tr>
                 </thead>
                 <tbody>

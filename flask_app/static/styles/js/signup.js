@@ -78,3 +78,42 @@ function clearError(...errorContainers) {
         }
     });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const passwordField = document.getElementById('password-field');
+    const requirementsList = document.getElementById('password-requirements');
+
+    passwordField.addEventListener('input', () => {
+        const password = passwordField.value;
+
+        const validations = [
+            { test: password.length >= 8, message: "Password must be at least 8 characters long." },
+            { test: /[A-Z]/.test(password), message: "Password must contain at least one uppercase letter." },
+            { test: /\d/.test(password), message: "Password must contain at least one number." },
+            { test: /[!@#$%^&*(),.?":{}|<>]/.test(password), message: "Password must contain at least one special character." },
+        ];
+
+        requirementsList.innerHTML = "";
+
+        validations.forEach(validation => {
+            const li = document.createElement('li');
+            li.textContent = validation.message;
+
+            if (validation.test) {
+                li.style.color = 'green';
+            } else {
+                li.style.color = 'red';
+            }
+
+            requirementsList.appendChild(li);
+        });
+    });
+
+    passwordField.addEventListener('blur', () => {
+        requirementsList.style.display = 'none';
+    });
+
+    passwordField.addEventListener('focus', () => {
+        requirementsList.style.display = 'block';
+    });
+});

@@ -195,14 +195,29 @@ html, body {
 */
 
 /* Main Content */
+.dashboard-container{
+    top: 0;
+    margin-left: 250px; 
+    width: calc(100% - 250px);
+    background-color: rgb(255, 255, 255);
+    z-index: 2;
+    height: calc(100% - 120px);
+    align-items: center;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.sidebar-wrapper.collapsed ~ .dashboard-container {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+}
+
 .dashboard-start {
     top: 0;
     margin-left: 250px; 
     width: calc(100% - 250px);
     background-color: rgb(255, 255, 255);
     z-index: 2;
-    padding-top: 60px;
-    height: 120px;
+    height: 60px;
     display: flex;
     align-items: center;
     transition: margin-left 0.3s ease, width 0.3s ease;
@@ -250,7 +265,7 @@ html, body {
     margin-top: 0px !important;
 }
 
-.dashboard-table-container.collapsed {
+.sidebar-wrapper.collapsed ~ .dashboard-table-container {
     margin-left: 60px;
     width: calc(100% - 60px);
 }
@@ -345,6 +360,37 @@ html, body {
     border: none;
 }
 
+
+.dashboard-classes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    padding: 30px 40px 0px;
+}
+
+.dashboard-classes-header h1 {
+    font-size: 40px;
+    color: rgb(61, 46, 146);
+    margin: 0px;
+}
+
+.dashboard-classes-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dashboard-classes-table {
+    margin: 0px 40px;
+}
+
+.dashboard-classes-table .table {
+    height: 100px;
+    border: 1px solid rgb(0,0,0);
+    border-collapse: separate;
+    border-spacing: 0;
+}
 
 /* Navigation Bar */
 /*
@@ -494,4 +540,105 @@ html, body {
 .custom-modal-btn:hover {
     background-color: rgb(0, 4, 255);
     color: white;
+}
+
+/* Alert Message for the Popup on Dashboard */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    margin: 0;
+    padding: 10px;
+    max-width: 300px;
+    border: 1px solid #000;
+    box-shadow: none;
+    background-color: rgb(255, 255, 255);
+}
+
+/* Assign Courses to Students Modal */
+.student-list-table {
+    width: 100%;
+    border: 1px solid rgb(0,0,0);
+    margin-bottom: 20px;
+}
+
+.student-list th:first-child,
+.student-list td:first-child {
+    width: 10%;
+    text-align: center;
+    padding: 10px;
+}
+
+.student-list th:nth-child(2),
+.student-list td:nth-child(2) {
+    width: 35%;
+    padding: 10px;
+}
+
+.student-list th:nth-child(3),
+.student-list td:nth-child(3) {
+    width: 55%;
+    padding: 10px;
+}
+
+.student-list tbody tr:nth-child(odd) {
+    background-color: rgb(226, 226, 226);
+}
+
+.student-list tbody tr:nth-child(even){
+    background-color: rgb(240, 240, 240);
+}
+
+.student-list th{
+    border: 1px solid rgb(0,0,0);
+    background-color: rgb(62, 31, 172);
+    color: rgb(255, 255, 255);
+}
+
+.student-list td{
+    border-right: 1px solid rgb(0,0,0);
+}
+
+.course-list-table {
+    width: 100%;
+    border: 1px solid rgb(0,0,0);
+    margin-bottom: 20px;
+}
+
+.course-list th:first-child,
+.course-list td:first-child {
+    width: 10%;
+    text-align: center;
+    padding: 10px;
+}
+
+.course-list th:nth-child(2),
+.course-list td:nth-child(2) {
+    width: 35%;
+    padding: 10px;
+}
+
+.course-list th:nth-child(3),
+.course-list td:nth-child(3) {
+    width: 55%;
+    padding: 10px;
+}
+
+.course-list tbody tr:nth-child(odd) {
+    background-color: rgb(226, 226, 226);
+}
+
+.course-list tbody tr:nth-child(even){
+    background-color: rgb(240, 240, 240);
+}
+
+.course-list th{
+    border: 1px solid rgb(0,0,0);
+    background-color: rgb(62, 31, 172);
+    color: rgb(255, 255, 255);
+}
+
+.course-list td{
+    border-right: 1px solid rgb(0,0,0);
 }
