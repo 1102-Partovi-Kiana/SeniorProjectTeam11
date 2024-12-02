@@ -1119,12 +1119,19 @@ def RenderStudentDashboard():
 
             db.session.add(student_enrollment)
             db.session.commit()
+
+            flash('You have successfully enrolled in the class.', 'popup')
             return redirect(url_for('RenderStudentDashboard'))
         else: 
             flash('Invalid Course Code', 'popup')
             return redirect(url_for('RenderStudentDashboard'))
 
-    return render_template('dashboard/dashboard_student.html', is_dashboard=True, is_student_dashboard=True)
+    existing_enrollment = Enrollment.query.filter_by(user_id=user_id).first()
+    in_class = existing_enrollment is not None
+
+    assignments = db.session.query(StudentAssignedCourses).filter(StudentAssignedCourses.user_id == user_id).all()
+
+    return render_template('dashboard/dashboard_student.html', is_dashboard=True, is_student_dashboard=True, user=user, assignments=assignments, in_class=in_class)
 
 @app.route('/dashboard/instructor-view/classes', methods=['GET'])
 def RenderInstructorClasses():
@@ -1220,7 +1227,7 @@ def AssignStudentToCourse():
     if request.method == 'POST':
         selected_student_ids = request.form.getlist('student_ids')
         if not selected_student_ids:
-            flash('You have not selected any students from a class to add to a course', 'popup')
+            flash('You have not selected any students to assign a course to them', 'popup')
             return redirect(url_for('RenderInstructorClasses'))
         
         selected_courses_id = request.form.getlist('courses_ids')
@@ -1255,10 +1262,6 @@ def AssignStudentToCourse():
 
         return redirect(url_for('RenderInstructorClasses'))
 
-
-
-
-
 @app.route('/logout', methods=['GET'])
 def RenderLogout():
     session.clear()
@@ -1268,7 +1271,12 @@ def RenderLogout():
 
 @app.route('/courses')
 def RenderCourses():
-    return render_template('courses.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    return render_template('courses.html', user=user)
 
 @app.route('/playground')
 def playground():

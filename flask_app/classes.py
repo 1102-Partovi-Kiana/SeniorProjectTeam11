@@ -43,9 +43,17 @@ class StudentAssignedCourses(db.Model):
     __tablename__ = 'student_assigned_courses'
 
     student_assigned_courses_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    course_id = db.Column(db.Integer, db.ForeignKey('classes.class_id'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.course_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
 
     user = db.relationship('User', backref=db.backref('assigned_courses', lazy=True))
-    class_ = db.relationship('Classes', backref=db.backref('assigned_students', lazy=True))
+    course = db.relationship('Courses', backref=db.backref('assigned_students', lazy=True))
+
+
+class Courses(db.Model):
+    __tablename__ = 'courses'
+
+    course_id = db.Column(db.Integer, primary_key=True)
+    course_name = db.Column(db.String(100))
+    course_desc = db.Column(db.String(1000))
 

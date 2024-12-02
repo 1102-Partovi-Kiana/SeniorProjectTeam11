@@ -543,10 +543,18 @@ html, body {
 }
 
 /* Alert Message for the Popup on Dashboard */
-.toast {
+.toast-container {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 50px;
+    right: 40px;
+    z-index: 1050;
+    width: auto;
+    max-width: 300px;
+}
+
+.toast {
+    position: absolute;
+    right: 0;
     z-index: 1050;
     margin: 0;
     padding: 10px;
@@ -554,6 +562,11 @@ html, body {
     border: 1px solid #000;
     box-shadow: none;
     background-color: rgb(255, 255, 255);
+}
+
+.toast-body {
+    max-height: 80px;
+    overflow-y: auto;
 }
 
 /* Assign Courses to Students Modal */

@@ -35,7 +35,7 @@
     <div class="sidebar-wrapper">
         <div class="sidebar-header">
             <img src="/static/img/profile_pic.png" alt="Profile Picture" class="profile-image">
-            <span class="sidebar-name">FirstName</span>
+            <span class="sidebar-name">{{ user['username'] }}</span>
             <button class="collapse-btn" onclick="toggleSidebar()">
                 <svg class="sidebar-arrow-icon"><use xlink:href="/static/img/sidebar-icons.svg#arrow-icon" fill="currentColor"></use></svg>
             </button>
@@ -70,7 +70,7 @@
             <h1>Home</h1>
             <h2>
                 Welcome,<br>
-                John Doe<br>
+                {{ user['first_name'] }} {{ user['last_name'] }}<br>
                 University of Nevada, Reno
             </h2>
         </section>
@@ -84,15 +84,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Section: CS101.1001</td>
-                    </tr>
-                    <tr>
-                        <td>Section: CS101.1002</td>
-                    </tr>
-                    <tr>
-                        <td>Section: CS101.1003</td>
-                    </tr>
+                    {% if in_class %}
+                        {% if assignments %}
+                            {% for assignment in assignments %}
+                            <tr>
+                                <td>Courses: {{ assignment.course.course_name }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>Your instructor has yet to assign you any courses</td>
+                            </tr>
+                        {% endif %}
+                    {% else %}
+                        <tr>
+                            <td>You are currently not enrolled in a class</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>
