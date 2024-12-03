@@ -2,7 +2,7 @@
 
 
 {% block title %}
-<title>Fetch Pick and Place Environment</title>
+<title>Robotic Environment - Stack 3 Blocks - CORE</title>
 {% endblock %}
 
 
@@ -588,7 +588,7 @@ height_threshold=0.05
             if (data.error) {
                 outputBox.innerHTML += `<p style="color: red;">Error: ${data.error}</p>`;
                 hintsButton.style.display = 'inline-block';
-                getBotResponse(code);
+                getBotResponse(code, data.error);
             } else {
                 outputBox.innerHTML += `<p>${data.message}</p>`;
                 hintsButton.style.display = 'none';

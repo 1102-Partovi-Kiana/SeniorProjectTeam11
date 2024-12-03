@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    
     const sendBtn2 = document.getElementById('sendBtn2');
     const userInput2 = document.getElementById('userInput2');
     const chatbox2 = document.getElementById('chatbox2');
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
         '/signup': 'Sign Up',
         '/login': 'Log In',
         '/courses': 'Courses',
+        '/playground': 'Playground',
     };
 
     const currentPath = window.location.pathname;

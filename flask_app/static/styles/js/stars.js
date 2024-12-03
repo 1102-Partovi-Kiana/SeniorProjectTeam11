@@ -1,22 +1,44 @@
 document.querySelector('.page-header').addEventListener('mouseenter', () => {
+    
     const header = document.querySelector('.page-header');
 
-    for (let i = 0; i < 19; i++) { 
+    if (!header) {
+        console.error('Could not find header element');
+        return;
+    }
+
+    for (let i = 0; i < 19; i++) {
         const star = document.createElement('div');
         star.classList.add('star');
 
-        // Randomize position, size, and movement
-        star.style.top = `${Math.random() * 100}%`;
-        star.style.left = `${Math.random() * 100}%`;
-        star.style.setProperty('--random-x', Math.random()); // Random X movement
-        star.style.setProperty('--random-y', Math.random()); // Random Y movement
-        star.style.setProperty('--star-size', (0.5 + Math.random() * 1.5).toFixed(2)); // Random size between 0.5 and 2
+        // Randomize stars positioning
+        const randomTop = Math.random() * 100;
+        const randomLeft = Math.random() * 100;
+
+        // Randomize stars sizing
+        const minSize = 0.5;
+        const maxSize = 2;
+        const randomSize = (minSize + Math.random() * (maxSize - minSize)).toFixed(2);
+
+        // Randomize stars movement
+        const randomX = Math.random();
+        const randomY = Math.random();
+
+        star.style.top = `${randomTop}%`;
+        star.style.left = `${randomLeft}%`;
+        star.style.setProperty('--random-x', randomX);
+        star.style.setProperty('--random-y', randomY);
+        star.style.setProperty('--star-size', randomSize);
 
         header.appendChild(star);
 
-        // Remove star after animation ends
+        // After animation is done, we need to remove the stars
         setTimeout(() => {
-            star.remove();
-        }, 4000); // Matches animation duration
+            try {
+                star.remove();
+            } catch (err) {
+                console.error('Error with removing stars:', err);
+            }
+        }, 4000); // 4 seconds
     }
 });

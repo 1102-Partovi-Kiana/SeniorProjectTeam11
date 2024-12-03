@@ -116,7 +116,6 @@
     color: white;
     height: calc(100vh - 100px) + 200px;
     height: 100vh; 
-
     display: flex;
     flex-direction: column;
     justify-content: center; /* Centers vertically */
@@ -195,11 +194,88 @@
     margin-top: 0 !important; 
 }
 
+@media (max-width: 768px) {
+    .hero-section {
+        height: auto;
+        padding: 20px; 
+        text-align: center; 
+    }
+
+    .hero-section h1 {
+        font-size: 2.5rem; 
+    }
+
+    .hero-section p {
+        font-size: 1rem; 
+        margin-bottom: 20px;
+    }
+
+    .cta {
+        margin-top: 40px;
+        margin-bottom: 80px;
+    }
+
+    .cta-title {
+        font-size: 32px; 
+        line-height: 40px;
+    }
+
+    .cta-paragraph {
+        font-size: 16px; 
+    }
+
+    .robotics-features-section {
+        padding: 40px 10px; 
+    }
+
+    .robotics-features-section .col-md-3 {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .custom-margin-section {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .user-type-card {
+        margin-bottom: 20px;
+    }
+
+    .homepage-card {
+        max-width: 100%; 
+        margin: 10px auto; 
+    }
+}
+
+@media (max-width: 1024px) {
+    .hero-section h1 {
+        font-size: 3.5rem;
+    }
+
+    .hero-section p {
+        font-size: 1.2rem;
+    }
+
+    .robotics-features-section {
+        padding: 60px 20px;
+    }
+
+    .robotics-features-section .col-md-3 {
+        flex: 1 1 40%; 
+        max-width: 40%;
+    }
+}
+
+
 /* Open Source */
 
 .open-source-section .container {
     padding-top: 100px; 
     padding-bottom: 100px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     /* Or margin for spacing outside the container */
     /* margin-top: 100px; */
     /* margin-bottom: 40px; */
@@ -226,16 +302,19 @@
     background-color: #007bff;
     background-image: linear-gradient(45deg, #007bff, #007bff);
     transition: transform 1.5s ease, opacity 0.5s ease 1.5s;
-    animation: swirlGradient 5s ease forwards;
     transform: translate(-50%, -50%);
     transform: translateX(100px);
     position: relative;
     left: 180px;
 }
 
+#animatedSquare.animate {
+    animation: swirlGradient 5s ease forwards; 
+}
+
 @keyframes swirlGradient {
     0% {
-        background-image: linear-gradient(45deg, #007bff, #007bff); 
+        background-image: linear-gradient(45deg, #007bff, #ff9800); 
         transform: rotate(0deg) scale(1); /* Initial state */
     }
     25% {
@@ -264,8 +343,6 @@
     opacity: 1;
 }
 
-
-/* Renamed .card to .homepage-card to avoid conflicts */
 .homepage-card {
     padding: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -431,6 +508,43 @@
     line-height: 1.6;
 }
 
+@media (max-width: 1024px) {
+    .animation-container {
+        grid-template-columns: 1fr; 
+        gap: 15px;
+    }
+
+    #animatedSquare {
+        width: 120px;
+        height: 120px;
+    }
+
+    .homepage-card {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .open-source-section .container {
+        padding: 40px 10px; 
+    }
+
+    .animation-container {
+        grid-template-columns: 1fr;
+        gap: 10px; 
+    }
+
+    #animatedSquare {
+        width: 100px;
+        height: 100px;
+    }
+
+    .homepage-card {
+        padding: 15px;
+        max-width: 100%; 
+    }
+}
+
 /* Built for Students and Instructors Section */
 
 .built-for-section {
@@ -513,19 +627,6 @@
     font-weight: bold;
 }
 
-/* Responsive Spacing */
-@media (max-width: 768px) {
-    .section-title {
-        font-size: 2.5rem;
-    }
-    .section-subtitle {
-        font-size: 1rem;
-    }
-    .card-title {
-        font-size: 1.4rem;
-    }
-}
-
 .built-for-section {
     position: relative;
     overflow: hidden; 
@@ -559,10 +660,73 @@
     font-weight: 400; /* Make text a bit bolder */
 }
 
+
 /* Cute Area */
 
 .bi-check-circle {
     color: #39FF14;
+}
+
+@media (max-width: 1024px) {
+    .built-for-section {
+        padding: 80px 15px;
+    }
+
+    .section-title {
+        font-size: 2.5rem; 
+    }
+
+    .section-subtitle {
+        font-size: 1.1rem; 
+        max-width: 90%; 
+    }
+
+    .user-type-card {
+        margin-bottom: 15px;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+    }
+
+    .card-description {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .built-for-section {
+        padding: 60px 10px;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    .user-type-card {
+        text-align: center; 
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .features-list li {
+        font-size: 0.9rem; 
+        padding-left: 20px;
+    }
+
+    .features-list li::before {
+        left: 10px; 
+    }
 }
 
 /* Back to Top Button  */
@@ -576,7 +740,7 @@
     justify-content: center;
     border-radius: 50%;
     cursor: pointer;
-    position: fixed; /* Keeps the button fixed on the screen */
+    position: fixed;
     bottom: 30px; /* Distance from the bottom */
     left: 30px; /* Distance from the left */
     border: none;
@@ -597,7 +761,7 @@
     bottom: -35px; /* Increased to move the text further below */
     opacity: 0;
     transition: opacity 0.7s ease;
-    white-space: nowrap; /* Prevents wrapping of the text */
+    white-space: nowrap; 
 }
 
 .Btn:hover .text {
@@ -620,12 +784,12 @@
 }
 
 .Btn.show {
-    display: flex; /* Make the button visible */
+    display: flex; /* Make the button visible in view */
 }
 
 .Btn.hide {
     opacity: 0;
-    transform: translateY(100px); /* Move it out of view */
+    transform: translateY(100px); /* Move it out of view when no longer need it */
 }
 
 
@@ -2006,6 +2170,7 @@ nav {
     background-color: #27293d;
     padding: 15px;
     border-bottom: 1px solid #444;
+    color: white;
 }
 
 .chat-header h1 {
@@ -2022,6 +2187,15 @@ nav {
     font-size: 16px;
     margin: 0 0 10px;
     font-weight: bold;
+    color: white;
+}
+
+.general-text {
+    color: white;
+}
+
+.general-text-signup {
+    color: white !important;
 }
 
 .features-list {
@@ -2227,6 +2401,23 @@ nav {
     color: white; 
 }
 
+.close-chatbot-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #fff;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-chatbot-btn:hover {
+    color: #ff4d4d;
+}
+
+
 /* -------------------COURSESPAGE- COURSE CATALOG------------------- */
 
 .greeting {
@@ -2351,6 +2542,113 @@ nav {
     content: "⏰"; /* Clock Icon placeholder */
     font-size: 1em;
 }
+
+.certificate, .duration {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.certificate::before {
+    content: "🏆"; /* Certificate Icon placeholder */
+    font-size: 1em;
+}
+
+.padding {
+    padding-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .greeting h1 {
+        font-size: 1.5em; 
+    }
+
+    .module-card {
+        width: 100%; 
+    }
+
+    .modules-overview {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .greeting h1 {
+        font-size: 1.3em;
+    }
+
+    .module-card h2 a {
+        font-size: 1em;
+    }
+
+    .module-card p {
+        font-size: 0.85em;
+    }
+
+    .card-footer {
+        font-size: 0.75em;
+        padding: 8px 15px;
+    }
+}
+
+.search-bar {
+    text-align: center;
+    background-color: #e8f5fe;
+    padding: 20px;
+}
+
+.search-container {
+    position: relative;
+    display: inline-block;
+    width: 50%;
+}
+
+#search-input {
+    width: 100%;
+    padding: 10px 40px 10px 40px; /* Add space for buttons */
+    border: 1px solid #ddd;
+    border-radius: 22px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+#mic-button,
+#search-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: #1d4ed8;
+    cursor: pointer;
+}
+
+#mic-button {
+    left: 10px; 
+}
+
+#search-button {
+    right: 10px;
+    background-color: lightgray;
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 18px;
+}
+
+#search-button:hover {
+    background-color: #0032cc;
+}
+
+#mic-button:focus,
+#search-button:focus {
+    outline: none;
+}
+
+
+/* End of Course Catalog Page */
 
 /* Sidebar Styling */
 .course-sidebar {
@@ -3075,93 +3373,152 @@ code {
 
 
 /* Playground */
-
-.area-container {
-    background-image: url('/static/img/blue.jpg');
-    height: 100vh;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+  
+.carousel-container {
+    overflow-x: auto; 
+    white-space: nowrap;
+    padding: 100px 20px; 
+    background-color: #f8f9fa; 
+    height: 100vh; 
+    scroll-snap-type: x mandatory; 
+    position: relative; 
 }
 
-.playground-grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-    max-width: 1200px;
-    margin: auto;
-  }
-  
-  .playground-card {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.carousel {
+    display: flex; 
+    gap: 20px; 
+    padding: 0 10px;
+}
+
+.playground-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .playground-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 8px 12px var(--card-hover-color);
-  }
-  
-  .playground-card-image {
+    width: 400px; 
+    flex: none; 
+    scroll-snap-align: center; 
+    height: 450px; 
+    padding-top: 20px;
+}
+
+.playground-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(29, 78, 216, 0.15);
+}
+
+.carousel-container::-webkit-scrollbar {
+    display: none; 
+}
+
+.playground-card-video {
     width: 100%;
-    height: 200px;
+    height: 250px !important; 
     object-fit: cover;
-    border-bottom: 2px solid var(--primary-color);
-  }
-  
-  .playground-card-title {
-    margin: 15px 0 5px;
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    transition: color 0.3s ease;
-    text-transform: capitalize;
-  }
-  
-  .playground-card-title:hover {
-    color: #0022aa;
-  }
-  
-  .playground-card-description {
-    padding: 0 15px 15px;
-    font-size: 1rem;
-    color: var(--text-secondary-color);
-  }
-  
-  .playground-footer {
-    text-align: center;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.playground-card-body {
+    flex: 1;
     padding: 20px;
-    background: var(--primary-color);
-    color: white;
-    margin-top: 20px;
-    font-size: 0.9rem;
-    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .playground-footer p {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.playground-card-title {
+    margin: 10px 0;
+    font-size: 1.5rem;
+    color: #1d4ed8;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.playground-card-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.playground-card-title:hover a {
+    color: #0032cc;
+}
+
+.playground-card-description {
+    font-size: 1rem;
+    color: #6b7280;
     margin: 0;
-  }
-  
-  /* Media Queries */
-  @media (max-width: 768px) {
+    text-align: center;
+}
+
+.playground-card-info {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.playground-card-info span {
+    background-color: #f9fafb;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 0.85rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.3s;
+}
+
+.carousel-arrow:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.left-arrow {
+    left: 10px;
+}
+
+.right-arrow {
+    right: 10px;
+}
+
+
+@media (max-width: 768px) {
     .playground-header h1 {
-      font-size: 2rem;
+        font-size: 2rem;
     }
-  
+
     .playground-header p {
-      font-size: 1rem;
+        font-size: 1rem;
     }
-  
+
     .playground-grid-container {
-      padding: 10px;
-      gap: 10px;
+        padding: 10px;
+        gap: 10px;
     }
-  
+
     .playground-card {
-      margin: 0;
+        margin: 0;
     }
-  }
+}
+
+
+

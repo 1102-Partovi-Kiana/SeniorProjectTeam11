@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Robotic Environment</title>
+<title>Robotic Environment - Fetch Reach - CORE</title>
 {% endblock %}
 
 {% block body %}
@@ -380,37 +380,135 @@ print("Reached near the ball.")
     }
 
     // JS to /run-code backend
+    // document.getElementById('run-code').addEventListener('click', function () {
+    //     const code = codeEditor.getValue(); 
+
+    //     const formData = new FormData();
+    //     formData.append('code', code);
+
+    //     fetch('/run-code', {
+    //         method: 'POST',
+    //         body: formData,
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         const outputBox = document.getElementById('output-box');
+    //         const hintsButton = document.getElementById('hints-button');
+    //         const hintboxContainer = document.getElementById('hintbox-container');
+    //         outputBox.innerHTML = '';
+
+    //         if (data.error || data.static_issues && data.static_issues.length > 0) {
+    //             outputBox.innerHTML += `<p style="color: red;">Error: ${data.error}</p>`;
+    //             hintsButton.style.display = 'inline-block';
+    //             console.log('Error is the following:', data.error);
+    //             //getBotResponse(code, data.error);
+    //         } else {
+    //             outputBox.innerHTML += `<p>${data.message}</p>`;
+    //             hintsButton.style.display = 'none';
+    //             hintboxContainer.style.display = 'none';
+    //         }
+    //     })
+    //     .catch(error => {
+    //         console.error('Error running code:', error);
+    //     });
+    // });
+
     document.getElementById('run-code').addEventListener('click', function () {
-        const code = codeEditor.getValue(); 
+    const code = codeEditor.getValue(); 
 
-        const formData = new FormData();
-        formData.append('code', code);
+    const formData = new FormData();
+    formData.append('code', code);
 
-        fetch('/run-code', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            const outputBox = document.getElementById('output-box');
-            const hintsButton = document.getElementById('hints-button');
-            const hintboxContainer = document.getElementById('hintbox-container');
-            outputBox.innerHTML = '';
+    fetch('/run-code', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        const outputBox = document.getElementById('output-box');
+        const hintsButton = document.getElementById('hints-button');
+        const hintboxContainer = document.getElementById('hintbox-container');
+        outputBox.innerHTML = '';
 
+        console.log('Error is the following:', data.error);
+        console.log('Static Issues:', data.static_issues);
+
+        if (data.error || (data.static_issues && data.static_issues.length > 0)) {
             if (data.error) {
                 outputBox.innerHTML += `<p style="color: red;">Error: ${data.error}</p>`;
                 hintsButton.style.display = 'inline-block';
-                getBotResponse(code);
-            } else {
-                outputBox.innerHTML += `<p>${data.message}</p>`;
-                hintsButton.style.display = 'none';
-                hintboxContainer.style.display = 'none';
+                console.log('Error is the following:', data.error);
+                console.log('Static Issues:', data.static_issues);
             }
-        })
-        .catch(error => {
-            console.error('Error running code:', error);
-        });
+
+            if (data.static_issues && data.static_issues.length > 0) {
+                outputBox.innerHTML += `<p style="color: orange;">Static Issues:</p><ul>`;
+                hintsButton.style.display = 'inline-block';
+                data.static_issues.forEach(issue => {
+                    outputBox.innerHTML += `<li>${issue}</li>`;
+                });
+                outputBox.innerHTML += `</ul>`;
+                console.log('Static Issues:', data.static_issues);
+            }
+
+            hintsButton.style.display = 'inline-block'; // Show hints button
+        } else {
+            outputBox.innerHTML += `<p>${data.message}</p>`;
+            hintsButton.style.display = 'none'; // Hide hints button
+            hintboxContainer.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        console.error('Error running code:', error);
     });
+});
+
+
+    // document.getElementById('run-code').addEventListener('click', function () {
+    //     const code = codeEditor.getValue(); 
+
+    //     const formData = new FormData();
+    //     formData.append('code', code);
+
+    //     fetch('/run-code', {
+    //         method: 'POST',
+    //         body: formData,
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         const outputBox = document.getElementById('output-box');
+    //         const hintsButton = document.getElementById('hints-button');
+    //         const hintboxContainer = document.getElementById('hintbox-container');
+    //         outputBox.innerHTML = '';
+
+    //         // Check for error or static issues
+    //         if (data.error || (data.static_issues && data.static_issues.length > 0)) {
+    //             if (data.error) {
+    //                 outputBox.innerHTML += `<p style="color: red;">Error: ${data.error}</p>`;
+    //                 console.log('Error is the following:', data.error);
+    //             }
+                
+    //             if (data.static_issues && data.static_issues.length > 0) {
+    //                 outputBox.innerHTML += `<p style="color: orange;">Static Issues:</p><ul>`;
+    //                 data.static_issues.forEach(issue => {
+    //                     outputBox.innerHTML += `<li>${issue}</li>`;
+    //                 });
+    //                 outputBox.innerHTML += `</ul>`;
+    //                 console.log('Static Issues:', data.static_issues);
+    //             }
+                
+    //             hintsButton.style.display = 'inline-block'; // Show hints button
+    //         } else {
+    //             outputBox.innerHTML += `<p>${data.message}</p>`;
+    //             hintsButton.style.display = 'none'; // Hide hints button
+    //             hintboxContainer.style.display = 'none';
+    //         }
+    //     })
+    //     .catch(error => {
+    //         console.error('Error running code:', error);
+    //     });
+    // });
+
 
     window.addEventListener('load', updatePositions);
 

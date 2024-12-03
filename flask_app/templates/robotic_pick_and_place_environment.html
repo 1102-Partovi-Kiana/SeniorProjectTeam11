@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Robotic Environment</title>
+<title>Robotic Environment - Pick and Place - CORE</title>
 {% endblock %}
 
 {% block body %}
@@ -434,7 +434,7 @@ for _ in range(num_steps):
             if (data.error) {
                 outputBox.innerHTML += `<p style="color: red;">Error: ${data.error}</p>`;
                 hintsButton.style.display = 'inline-block';
-                getBotResponse(code);
+                getBotResponse(code, data.error);
             } else {
                 outputBox.innerHTML += `<p>${data.message}</p>`;
                 hintsButton.style.display = 'none';

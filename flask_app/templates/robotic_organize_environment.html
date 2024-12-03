@@ -2,7 +2,7 @@
 
 
 {% block title %}
-<title>Fetch Pick and Place Environment</title>
+<title>Robotic Environment - Organize - CORE</title>
 {% endblock %}
 
 
@@ -495,7 +495,7 @@ handle_object(env, 'object3', target_color, container_position)
             if (data.error) {
                 outputBox.innerHTML += `<p style="color: red;">Error: ${data.error}</p>`;
                 hintsButton.style.display = 'inline-block';
-                getBotResponse(code);
+                getBotResponse(code, data.error);
             } else {
                 outputBox.innerHTML += `<p>${data.message}</p>`;
                 hintsButton.style.display = 'none';

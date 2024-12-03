@@ -1,27 +1,40 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const square = document.getElementById('animatedSquare');
-    const cards = document.querySelectorAll('.homepage-card');
+    
+    console.log("DOM is ready.");
 
-    const observer = new IntersectionObserver((entries) => {
+    const square = document.getElementById('animatedSquare'); 
+    const cards = document.querySelectorAll('.homepage-card'); 
+    const section = document.querySelector('.open-source-section');
+
+    console.log("Variables are ready:", {
+        square,
+        cards,
+        section
+    });
+
+    const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                console.log("Square is in view, starting animation.");
-                square.classList.add('expand');
+
+            if (entry.isIntersecting) { 
+                console.log(".open-source-section is in view, beginning the animations.");
+
+                square.classList.add('animate');
 
                 setTimeout(() => {
-                    console.log("Manually triggering card reveal.");
                     cards.forEach((card, index) => {
                         setTimeout(() => {
-                            console.log(`Revealing card ${index + 1}`);
                             card.classList.add('reveal-cards'); 
-                        }, index * 200);
+                        }, index * 200); 
                     });
                 }, 1500); 
 
-                observer.unobserve(square); 
+                observer.unobserve(section);
+
+            } else {
+                console.log(".open-source-section is not in view yet.");
             }
         });
-    }, { threshold: 0.5 });
+    }, { threshold: 0.5 }); 
 
-    observer.observe(square);
+    observer.observe(section);
 });

@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    
     const backToTopButton = document.getElementById("backToTop");
 
     function isBottomOfPage() {
@@ -20,5 +21,11 @@ document.addEventListener("DOMContentLoaded", () => {
             top: 0,
             behavior: "smooth"
         });
+    });
+
+    window.addEventListener("resize", () => {
+        if (document.body.offsetHeight <= window.innerHeight) {
+            backToTopButton.classList.add("hide");
+        }
     });
 });

@@ -21,6 +21,7 @@ import time
 import glfw
 import threading
 import gymnasium as gym
+import ast
 
 
 app = Flask(__name__, static_folder='static')
@@ -32,11 +33,26 @@ app.secret_key = 'secret-key-for-session'
 CUSTOM_KEYWORDS = [
     "def", "class", "import", "while", "for", "if", "else", "elif", "try", "except", "finally", "with",
     "return", "print", "len", "range", "input", "open", "type", "isinstance", "id", "dir", "sorted",
-    "enumerate", "zip", "map", "filter", "sum", "min", "max", "np.array", "np.linalg.norm", "np.append",
-    "env.get_ball_position", "env.get_gripper_position", "env.step"
+    "enumerate", "zip", "map", "filter", "sum", "min", "max", "abs", "np.array", "np.linalg.norm", 
+    "np.append", "np.subtract", "np.add", "np.divide", "np.multiply", "np.zeros", "np.ones", "np.dot",
+    "env.sim.data.get_site_xpos", "env.sim.model.geom_name2id", "env.sim.model.geom_rgba",
+    "env.sim", "env.step", "env.reset", "env.render", "env.action_space", "env.observation_space", 
+    "env.get_ball_position", "env.get_gripper_position", "env.get_sensor_forward_value", 
+    "env.get_sensor_right_value", "env.get_sensor_left_value", "env.get_sensor_backward_value", 
+    "SENSOR_THRESHOLD", "distance_threshold", "box_to_ball_threshold", "close_grip_action", 
+    "open_grip_action", "lift_action", "horizontal_action", "descend_action", "move_to_ball_action", 
+    "ascend_action", "return_to_previous_action", "horizontal_distance", "vertical_distance", 
+    "distance_to_ball", "distance_to_box", "distance_to_previous", "direction", "direction_normalized", 
+    "direction_to_ball", "direction_to_container", "direction_to_previous", "gripper_position", 
+    "box_position", "ball_position", "container_position", "previous_gripper_position", "color", 
+    "target_color", "geom_id", "rgba", "np.array_equal", "num_steps", "break", "handle_object", 
+    "object_name", "'object0'", "'object1'", "'object2'", "'object3'", "forward", "right", "left", 
+    "backward", "values", "greatest_direction", "greatest_value", "action", 
+    "[0.005, 0.007]", "[0.005, -0.007]", "[0.01, 0.0]", "max", "time.sleep", 
+    '"Forward"', '"Right"', '"Left"'
 ]
 
-env = None  # Initialize your environment here
+env = None 
 
 # Quiz data
 quiz = {
@@ -372,12 +388,56 @@ def get_suggestions():
     suggestions.sort()  
     return jsonify(suggestions)
 
+def check_normalization(tree):
+    """Check if the direction vector is normalized."""
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            if isinstance(node.value, ast.BinOp) and "normalize" not in ast.dump(node.value):
+                issues.append("Direction vector might not be normalized.")
+    return issues
+
+def check_distance_threshold(tree):
+    """Check if the distance_threshold is used in the while loop condition."""
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.While):
+            if not any(
+                isinstance(condition, ast.Compare) and "distance_threshold" in ast.dump(condition)
+                for condition in ast.walk(node.test)
+            ):
+                issues.append("While loop does not use distance_threshold for termination.")
+    return issues
+
+def check_gripper_closure(tree):
+    """Check if the gripper closes at the correct time."""
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            if hasattr(node.func, "id") and node.func.id == "close_gripper":
+                if not hasattr(node, "gripper_reached_object"):
+                    issues.append("Gripper might not close after reaching the object.")
+    return issues
+
+def check_object_transport(tree):
+    """Check if the object is transported to the target position."""
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            if hasattr(node.func, "id") and node.func.id == "move_gripper":
+                if not hasattr(node, "target_position"):
+                    issues.append("Gripper might not move the object to the target position.")
+    return issues
+
 @app.route('/Chatbot')
 def RenderChatbot():
     return render_template('chatbot.html')
 
 attempt_counter = 0
 user_submitted_code = ""
+last_error = None
+static_issues = []
+junk_array = []
 api_key = "AIzaSyDpL6NsK8v8alk8JPVmu9S1QF8oRNhCJDU"  
 
 @app.route('/chatbot-api-2', methods=['POST'])
@@ -395,7 +455,8 @@ def ChatbotAPI2():
                        I am providing you the name of the platform for your own context, don't bring it up in every response to the user, except for your first response, 
                        where you are greeting the user to the platform. 
                        Provide an overview of features, what the purpose of the platforms is, and highlight key sections of the platform.
-                       When responding, adhere strictly to the following details about the platform:
+                       When responding, adhere strictly to the following details about the platform. These details are for usage, don't list them all out to the user in the format I have them written for you. 
+                       Here they are:
                        ## Platform Features:
                         1. *Courses*: CORE offers robotics courses, such as Introduction to Robotics, Types of Robots, Fetch Robot, and more. Each course includes certificates upon completion and builds specific skills like coding, object manipulation, or self-driving car programming.
                         2. *Virtual Robotics Lab*: Students can code, simulate, and test robots in a user-friendly coding environment with features like:
@@ -406,7 +467,8 @@ def ChatbotAPI2():
                         4. *Hints and Assistance*: Students have access to personalized hints to help them in their coding tasks. 
                        ## Purpose of the Platform:
                         - CORE is designed to make robotics education accessible and interactive for undergraduates. 
-                        - By providing hands-on coding simulations, certifications, and personalized learning environments, CORE aims to inspire and prepare the next generation of robotics engineers.
+                        - Core aspires to make the high learning curve of robotics less intimidating for undergraduates. 
+                        - CORE aims to inspire and prepare the next generation of robotics engineers.
                         - CORE is a place where students can learn the principles of robotics without previous experience.
                         - CORE aspires to make robotics an engaging and accessible experience.
 
@@ -417,6 +479,9 @@ def ChatbotAPI2():
                         - If the user tells you something along the lines of "Great thank you for your help!" or "Thank you", they don't need any more help. Tell them a very kind message back, and mention how your awlays here for any future 
                         questions that may come up. 
                         - Keep your response not too lengthy, so that the user does not get bored from reading.
+                        A huge note for you:
+                            *BEFORE RESPONDING TO THE USER MAKE YOUR RESPONSE CLEAR AND CONCISE*
+                            *MAKE YOUR RESPONSE AROUND 4 SENTENCES*
                     """,
         "Sign Up": """Your name is Cora. I am providing you your name for your own context, don't bring it up in every response to the user. 
                       You are a helpful chatbot for the sign-up page of a robotics education platform for undergraduates. 
@@ -599,7 +664,11 @@ def ChatbotAPI2():
                    - If the user tells you something along the lines of "Great thank you for your help!" or "Thank you", they don't need any more help. Tell them a very kind message back, and mention how your awlays here for any future 
                     questions that may come up. 
                    """,
-        "General": "Your name is Cora. I am providing you your name for your own context, don't bring it up in every response to the user. You are a general-purpose chatbot for a robotics education platform. Help users with their questions about the platform, navigating the site, or any robotics-related queries they might have."
+        "General": "Your name is Cora. I am providing you your name for your own context, don't bring it up in every response to the user. You are a general-purpose chatbot for a robotics education platform. Help users with their questions about the platform, navigating the site, or any robotics-related queries they might have.",
+        "Playground": """
+                      Your name is Cora. I am providing you your name for your own context, don't bring it up in every response to the user. Here the user is on our playground page, which links to every robotic simulation they can code. 
+                      If they want to access a specific robot, this is where the user will go to do that. 
+                      """
     }
 
     prompt = general_prompts.get(page_context, general_prompts["General"])
@@ -649,142 +718,207 @@ def ChatbotAPI2():
     except Exception as e:
         print("Error occurred:", e)
         return jsonify({'error': str(e)}), 500
-    
+
+def check_normalization(tree):
+    """Check if the direction vector is normalized."""
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            if isinstance(node.value, ast.BinOp):
+                if isinstance(node.value.op, ast.Div):
+                    if isinstance(node.value.right, ast.Call):
+                        if not (
+                            isinstance(node.value.right.func, ast.Attribute)
+                            and node.value.right.func.attr == "norm"
+                            and isinstance(node.value.right.func.value, ast.Name)
+                            and node.value.right.func.value.id == "np"
+                        ):
+                            issues.append("Direction vector might not be normalized.")
+                    else:
+                        issues.append("Direction vector might not be normalized (denominator is not a function call).")
+    return issues
+
+def check_distance_threshold(tree):
+    """Check if the distance_threshold is used in the while loop condition."""
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.While):
+            if not any(
+                isinstance(condition, ast.Compare) and "distance_threshold" in ast.dump(condition)
+                for condition in ast.walk(node.test)
+            ):
+                issues.append("While loop does not use distance_threshold for termination.")
+    return issues
+
+def check_gripper_closure(tree):
+    """Check if the gripper closes at the correct time."""
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            if hasattr(node.func, "id") and node.func.id == "close_gripper":
+                if not hasattr(node, "gripper_reached_object"):
+                    issues.append("Gripper might not close after reaching the object.")
+    return issues
+
+def check_object_transport(tree):
+    """Check if the object is transported to the target position."""
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            if hasattr(node.func, "id") and node.func.id == "move_gripper":
+                if not hasattr(node, "target_position"):
+                    issues.append("Gripper might not move the object to the target position.")
+    return issues
+
+def check_loop_termination(tree):
+    """Check if loops use meaningful termination conditions."""
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.For) or isinstance(node, ast.While):
+            condition_uses_threshold = any(
+                isinstance(child, ast.Name) and child.id == "distance_threshold"
+                for child in ast.walk(node)
+            )
+            if not condition_uses_threshold:
+                issues.append("Loop does not use distance_threshold for termination.")
+    return issues
+
+def analyze_robotics_code(code, context="Fetch Reach"):
+    """Analyze code for robotics-specific logical issues."""
+    issues = []
+    try:
+        
+        tree = ast.parse(code)
+
+        if context == "Fetch Reach":
+            issues.extend(check_normalization(tree))
+            issues.extend(check_distance_threshold(tree))
+            issues.extend(check_gripper_closure(tree))
+            issues.extend(check_object_transport(tree))
+            issues.extend(check_loop_termination(tree))
+        elif context == "Fetch Pick and Place":
+            issues.extend(check_gripper_closure(tree))
+            issues.extend(check_object_transport(tree))
+    except SyntaxError as e:
+        junk_array.append(f"Syntax error detected: {e}")
+
+    return issues
+
 @app.route('/chatbot-api', methods=['POST'])
 def ChatbotAPI():
     print("Chatbot API called")  # Check if the function is called
     global user_submitted_code
+    global last_error
+    global static_issues
+
     print("User submitted code in ChatbotAPI:", user_submitted_code)
+    print("Last error in ChatbotAPI:", last_error)
+    print("Static Issues:", static_issues)
 
     data = request.json
     page_context = data.get('page_context', 'General')
     print(f"Page Context: {page_context}")
-
-    # robot_jokes = [
-    #     "Why did the robot cross the road? To recharge on the other side!",
-    #     "What do you call a robot who always runs late? A bit slow in processing!",
-    #     "How do robots pay for things? With cache!",
-    #     "Why was the robot so bad at soccer? Because it kept kicking up errors!",
-    #     "What’s a robot’s favorite genre of music? Heavy metal!",
-    #     "Why did the robot go on a diet? It had too many bytes!",
-    # ]
-
-    # # Defining common acknowledgment phrases
-    # acknowledgment_phrases = [
-    # "ok cool", "thank you", "thanks", "sounds good", "great", "awesome", 
-    # "nice", "alright", "got it", "understood", "makes sense", "perfect", 
-    # "cool", "okay", "all set", "roger that", "good to know", "fine", 
-    # "will do", "no problem", "much appreciated", "I see", "noted", "gotcha"
-    # ]
-
-    # long_acknowledgment_phrases = [
-    # "That makes a lot of sense, thank you!", 
-    # "Got it, I appreciate the help!", 
-    # "Perfect, that's exactly what I needed to know.", 
-    # "Thanks for clarifying that!", 
-    # "Alright, that really clears things up, thanks!",
-    # "Thanks a bunch! That explanation was super helpful.", 
-    # "Awesome, thanks for pointing me in the right direction!", 
-    # "Okay, that answers my question perfectly.", 
-    # "Great, I feel much more confident about this now.", 
-    # "Excellent, that was the info I was looking for!", 
-    # "Got it, that’s really helpful, thanks!", 
-    # "Thank you, I think I’m on the right track now.", 
-    # "Cool, I think I understand it fully now!", 
-    # "Awesome, you really made it easy to understand!", 
-    # "This is exactly what I needed, thank you so much!", 
-    # "Thanks, now I can move forward with confidence!", 
-    # "Alright, that totally makes sense, appreciate it!", 
-    # "Gotcha, thanks for helping me figure this out!", 
-    # "Perfect, that explanation really helped a lot!", 
-    # "Thank you! That was really helpful and clear.", 
-    # "Got it, this is really helpful guidance, thank you.", 
-    # "Thanks for helping me wrap my head around this!", 
-    # "Nice, that clarifies everything for me. Thanks!", 
-    # "Much appreciated, this is really helpful information.", 
-    # "Alright, I think I’m all set now. Thanks a ton!"
-    # ]
-
-    # all_acknowledgment_phrases = acknowledgment_phrases + long_acknowledgment_phrases
-    
-    # # If the user sends a new message
-    # if not user_message:
-    #     random_joke = random.choice(robot_jokes)
-    #     welcome_message = (
-    #         f"Hi there! I'm your friendly coding assistant, ready to help you with your project. 😊\n\n"
-    #         f"Here's a robot joke to lighten the mood: {random_joke}\n\n"
-    #         "Feel free to submit your code or ask any questions about your coding challenges!"
-    #     )
-    #     return jsonify({'reply': welcome_message})
-
-    # # Check if the user message contains acknowledgment phrases
-    # if any(phrase in user_message.lower() for phrase in all_acknowledgment_phrases):
-    #     random_joke = random.choice(robot_jokes)
-    #     response_message = (
-    #         f"I'm glad to hear that! Here's another joke for you: {random_joke}\n\n"
-    #         "Let me know if you have more questions or need further assistance!"
-    #     )
-    #     return jsonify({'reply': response_message})
-
-    # # Respond to user-submitted code
-    # if user_submitted_code:
-    #     random_joke = random.choice(robot_jokes)
-    #     coding_message = (
-    #         f"Thank you for submitting your code! Here's a quick robot joke before we dive in:\n\n"
-    #         f"{random_joke}\n\n"
-    #         "Now, let’s take a closer look at your code. Please share your specific question or issue!"
-    #     )
-    #     return jsonify({'reply': coding_message})
-    
-    # # If the user message contains an acknowledgment, respond accordingly
-    # if any(phrase in user_message.lower() for phrase in all_acknowledgment_phrases):
-    #     return jsonify({'reply': "I'm glad to hear that! Let me know if you have more questions or need further assistance."})
+    error_message = last_error
 
     if not user_submitted_code:
         return jsonify({'reply': "Please submit your code before asking for help!"})
+    
+    if static_issues and last_error:
+        focus = "Focus on syntax errors first, then address the following static issues."
+    elif static_issues:
+        focus = "Focus on the following static issues."
+    elif last_error:
+        focus = "Focus on resolving the syntax error below."
+    else:
+        return jsonify({'reply': "No errors or static issues detected. Your code looks good!"})
+    
+    #Decide about this later
+    # if not error_message:
+    #     return jsonify({'reply': "No errors detected. Your code looks good!", 'last_error': None})
     
     # Construct prompt using stored code
     full_prompt = {
         "Fetch Reach": """
             You are a helpful chatbot for a robotics coding environment. If the user's message contains acknowledgment or expressions like "thanks," "got it," "okay," or other similar acknowledgment phrases, respond with a friendly encouragement or acknowledgment without giving any hint or solution. 
-            Otherwise, analyze the following Python code intended to make a robotic gripper move towards a ball. Identify any potential issues in the logic and provide specific hints for improvement.
+            Otherwise, analyze the user's submitted Python code and provide hints based on the issues detected. 
+            
+            {focus}
 
-            Compare the user's submitted code against the answer below and generate a helpful hint based on the user's specific code. Check if the users submitted code matches the answer key solution code I am going to provide you. If it does
-            respond to the user, notifying them that nothing is wrong with their code, it is correct.  
-            Provide hints in increasing specificity:
-            - First hint: General guidance on what to focus on.
-            - Second hint: A more detailed and specific suggestion.
-            - Third hint: A very helpful and precise hint pointing directly to the issue.
+            Syntax Error:
+            {last_error}
 
-            After providing three hints, stop giving hints, so the student can truly try and figure it out on their own. 
+            Static Issues:
+            {static_issues}
 
-            User Code:
-            {user_submitted_code}
+            If we just have a syntax error then follow this path:
+                Regarding our focus being on "Focus on resolving the syntax error." Then give hints regarding the syntax issue.
+                Here is the User Code that has the syntax error.
+                User Code:
+                {user_submitted_code}
 
-            Problem Context: This code is supposed to move the gripper towards the ball until it reaches a close range. Key factors include:
-            - Ensuring the distance threshold is set low enough for the gripper to stop close to the ball.
-            - Verifying the direction vector is normalized to ensure the gripper moves towards the ball consistently.
+                Provide hints in increasing specificity:
+                - First hint: General guidance on what to focus on.
+                - Second hint: A more detailed and specific suggestion.
+                - Third hint: A very helpful and precise hint pointing directly to the issue.
+                This is the format I want you to respond in:
+                "HINTS:\n"
+                    "1. Hint 1.\n"
+                    "2. Hint 2.\n"
+                    "3. Hint 3."
 
-            The following is a general solution to the environment:
-            ```
-            ball_position = current_env.get_ball_position()
-            gripper_position = current_env.get_gripper_position()
-            direction = np.array(ball_position) - np.array(gripper_position)
-            distance_threshold = 0.01
-            step_size = 0.05
-            while np.linalg.norm(direction) > distance_threshold:
-                action = np.append(direction / np.linalg.norm(direction) * step_size, [1])
-                current_env.step(action)
+
+            If we have only static issues then follow this path:
+                 Problem Context: This code is for the Fetch Reach Robot. This code is supposed to move the gripper towards the ball until it reaches a close range. Key factors include:
+                    - Ensuring the distance threshold is set low enough for the gripper to stop close to the ball.
+                    - Verifying the direction vector is normalized to ensure the gripper moves towards the ball consistently.
+                    - The ultimate goal of the Python code is to make a robotic gripper move towards a ball.
+                Read about the static issues I have provided you with or singular static issue. 
+                Identify any potential issues in the logic and provide specific hints for improvement.
+
+                Compare the user's submitted code against the answer below and generate a helpful hint based on the user's specific code. Check if the users submitted code matches the answer key solution code I am going to provide you. If it does
+                respond to the user, notifying them that nothing is wrong with their code, it is correct.  
+                Provide hints in increasing specificity:
+                - First hint: General guidance on what to focus on.
+                - Second hint: A more detailed and specific suggestion.
+                - Third hint: A very helpful and precise hint pointing directly to the issue.
+
+                After providing three hints, stop giving hints, so the student can truly try and figure it out on their own. 
+                Here is the User Code that has the static issues or singular static issue depending on how many are involved:
+                User Code:
+                {user_submitted_code}
+
+                The following is a general solution to the environment (Note: You are comparing the users sumbitted code to this general solution to see where they went wrong and figure out how to help them):
+                ```
+                ball_position = current_env.get_ball_position()
                 gripper_position = current_env.get_gripper_position()
                 direction = np.array(ball_position) - np.array(gripper_position)
-            print("Final Gripper Position:", gripper_position)
-            print("Reached near the ball.")
-            ```
-            This is the format I want you to respond in:
-            "HINTS:\n"
-                "1. Hint 1.\n"
-                "2. Hint 2.\n"
-                "3. Hint 3."
+                distance_threshold = 0.01
+                step_size = 0.05
+                while np.linalg.norm(direction) > distance_threshold:
+                    action = np.append(direction / np.linalg.norm(direction) * step_size, [1])
+                    current_env.step(action)
+                    gripper_position = current_env.get_gripper_position()
+                    direction = np.array(ball_position) - np.array(gripper_position)
+                print("Final Gripper Position:", gripper_position)
+                print("Reached near the ball.")
+                ```
+                This is the format I want you to respond in:
+                "HINTS:\n"
+                    "1. Hint 1.\n"
+                    "2. Hint 2.\n"
+                    "3. Hint 3."
+
+            If we have both static issues and syntax errors follow this path:
+                Deal with the syntax errors first and then the static issues:
+
+                User Code:
+                {user_submitted_code}
+
+                This is the format I want you to respond in:
+                "HINTS:\n"
+                    "1. Hint 1.\n"
+                    "2. Hint 2.\n"
+                    "3. Hint 3."
 
             """,
             "Fetch Pick and Place": """
@@ -826,8 +960,13 @@ def ChatbotAPI():
     }
 
     selected_prompt = full_prompt.get(page_context, full_prompt["General"])
-    final_prompt = selected_prompt.format(user_submitted_code=user_submitted_code)
-            
+    final_prompt = selected_prompt.format (
+        user_submitted_code=user_submitted_code,
+        focus=focus,  
+        last_error=last_error if last_error else "None",  
+        static_issues=", ".join(static_issues) if static_issues else "None"  
+    )
+                
     # API call to Gemini for chatbot response
     try:
         api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent"
@@ -854,7 +993,6 @@ def ChatbotAPI():
 
         response_json = response.json()
 
-        # Extract the response from the API
         if 'candidates' in response_json and len(response_json['candidates']) > 0:
             chatbot_response = response_json['candidates'][0]['content']['parts'][0].get('text', 'No response')
             print("Extracted Chatbot Response:", chatbot_response)  
@@ -955,9 +1093,157 @@ def RenderLogin():
 
     return render_template('account/login.html')
 
-@app.route('/courses')
+courses = [
+    {
+        "title": "Introduction to Robotics",
+        "description": "Learn the basics of robotics, from robot anatomy to robot programming.",
+        "level": "Beginner Friendly",
+        "certificate": True,
+        "length": "1 hour",
+        "route": "course1_card"
+    },
+    {
+        "title": "Types of Robots",
+        "description": "Gain an insight into how different robots serve unique purposes with their different functionality.",
+        "level": "Beginner Friendly",
+        "certificate": True,
+        "length": "1 hour",
+        "route": "course2_card"
+    },
+    {
+        "title": "Robots in CORE",
+        "description": "Discover the heart of CORE: meet our virtual robots, designed for you.",
+        "level": "Beginner Friendly",
+        "certificate": True,
+        "length": "30 minutes",
+        "route": "course1_card"
+    },
+    {
+        "title": "How to Use the Lab",
+        "description": "Get familiar with CORE's Virtual Robotics Lab and explore live simulations, an interactive, hands-on learning experience, and coding feedback.",
+        "level": "Beginner Friendly",
+        "certificate": True,
+        "length": "1 hour",
+        "route": "course1_card"
+    },
+    {
+        "title": "Basic Coding Practices",
+        "description": "Master the basics of coding, building yourself a strong foundation, involving a review of common coding practices and debugging techniques.",
+        "level": "Beginner Friendly",
+        "certificate": True,
+        "length": "1 hour",
+        "route": "course1_card"
+    },
+    {
+        "title": "Fetch Robot",
+        "description": "Acquire the skills required to program and control the Fetch Robot to complete different tasks including reaching, pushing, and sliding.",
+        "level": "Beginner Friendly",
+        "certificate": True,
+        "length": "1 hour",
+        "route": "course1_card"
+    },
+    {
+        "title": "Fetch Reach Robot",
+        "description": "Master control and precision as you learn to code the Fetch Reach Robot.",
+        "level": "Beginner Friendly",
+        "certificate": True,
+        "length": "2 hours",
+        "route": "course1_card"
+    },
+    {
+        "title": "Fetch Push Robot",
+        "description": "Explore the methodologies of robotic pushing with the Fetch Push Robot.",
+        "level": "Beginner Friendly",
+        "certificate": True,
+        "length": "1 hour",
+        "route": "course1_card"
+    },
+    {
+        "title": "Fetch Slide Robot",
+        "description": "Learn how to program the Fetch Slide Robot to move objects utilizing sliding techniques.",
+        "level": "Beginner Friendly",
+        "certificate": True,
+        "length": "1 hour",
+        "route": "course1_card"
+    },
+    {
+        "title": "Fetch Pick & Place Robot",
+        "description": "Become proficient in robotic object manipulation with the Fetch Pick and Place Robot.",
+        "level": "Intermediate",
+        "certificate": True,
+        "length": "2 hours",
+        "route": "course1_card"
+    },
+    {
+        "title": "Fetch Stack Blocks Robot",
+        "description": "Hone the precision of stacking blocks using the Fetch Robot and improve your spatial manipulation.",
+        "level": "Intermediate",
+        "certificate": True,
+        "length": "1 hour",
+        "route": "course1_card"
+    },
+    {
+        "title": "Fetch Color Sort Robot",
+        "description": "Learn to algorithmically move the Fetch Robot to sort and organize objects based on their colors.",
+        "level": "Intermediate",
+        "certificate": True,
+        "length": "2 hours",
+        "route": "course1_card"
+    },
+    {
+        "title": "Fetch Robot w/ Sensors",
+        "description": "Unlock the power of sensors by teaching the Fetch Robot to detect, classify, and organize objects.",
+        "level": "Intermediate",
+        "certificate": True,
+        "length": "2 hours",
+        "route": "course1_card"
+    },
+    {
+        "title": "Dexterous Hand Robot",
+        "description": "Enhance your knowledge of human-like dexterity with the Dexterous Hand Robot.",
+        "level": "Intermediate",
+        "certificate": True,
+        "length": "2 hours",
+        "route": "course1_card"
+    },
+    {
+        "title": "Hand Reach",
+        "description": "Learn the ability to extend robotic reach with the realistic Hand Reach Robot.",
+        "level": "Intermediate",
+        "certificate": True,
+        "length": "2 hours",
+        "route": "course1_card"
+    },
+    {
+        "title": "Hand Manipulate Block",
+        "description": "Manipulate an object with the Hand Manipulate Block with agility control.",
+        "level": "Intermediate",
+        "certificate": True,
+        "length": "2 hours",
+        "route": "course1_card"
+    },
+    {
+        "title": "Self-Driving Car w/ Deep Q-Learning",
+        "description": "Learn about Deep Q-Learning algorithms to create a self-driving car.",
+        "level": "Advanced",
+        "certificate": True,
+        "length": "2 hours",
+        "route": "course1_card"
+    }
+]
+
+@app.route('/courses', methods=["GET"])
 def RenderCourses():
-    return render_template('courses.html')
+    query = request.args.get("q", "").lower()
+    filtered_course_catalog = [
+        course for course in courses
+        if query in course["title"].lower()
+        or query in course["description"].lower()
+        or query in course["level"].lower()
+        or (query == "certificate")  
+        or query in course["length"].lower()
+    ]
+    return render_template("courses.html", courses=filtered_course_catalog, query=query)
 
 @app.route('/playground')
 def playground():
@@ -1148,30 +1434,53 @@ def video_feed():
 @app.route('/run-code', methods=['POST'])
 def run_code():
     global user_submitted_code
+    global last_error
+    global static_issues
+    global junk_array
+
     code = request.form['code']
-    user_submitted_code = code 
-    
+    user_submitted_code = code
+    last_error = None
+
+    page_context = request.form.get('context', 'Fetch Reach')
+    static_issues = analyze_robotics_code(code, context=page_context)
+    print("Static Issues Found:", static_issues)  
+
     if env is None:
-        return jsonify({'error': 'No environment selected'}), 400
-    
+        print("Error: No environment chosen yet") 
+        return jsonify({
+            'error': 'No environment chosen yet',
+            'static_issues': static_issues 
+        }), 400
+
     try:
+        print("I am here")
         local_context = {}
         exec(code, globals(), local_context)
 
         ball_position = local_context.get('ball_position', env.get_ball_position())
         gripper_position = local_context.get('gripper_position', env.get_gripper_position())
-        #box_position = local_context.get('box_position', current_env.get_box_position())
 
-        return jsonify({
+        return_data = {
             'message': 'Code executed successfully.',
             'ball_position': {'x': ball_position[0], 'y': ball_position[1], 'z': ball_position[2]},
             'gripper_position': {'x': gripper_position[0], 'y': gripper_position[1], 'z': gripper_position[2]},
-            #'box_position': {'x': box_position[0], 'y': box_position[1], 'z': box_position[2]},
             'error': None,
-        })
+            'static_issues': static_issues,  
+        }
+
+        print("Successful Response Data:", return_data)
+
+        return jsonify(return_data)
+
     except Exception as e:
+        last_error = str(e)
+        print("Error Message from Run Code:", last_error)  
+        print("Static Issues from Run Code:", static_issues) 
+
         return jsonify({
-            'error': str(e),
+            'error': last_error,
+            'static_issues': static_issues, 
         })
 
 @app.route('/get-ball-position', methods=['GET'])

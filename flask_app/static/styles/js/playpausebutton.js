@@ -1,4 +1,5 @@
 document.getElementById("playButton").addEventListener("click", function () {
+
     const video = document.getElementById("videoPlayer");
     const playButton = this;
 
@@ -9,14 +10,18 @@ document.getElementById("playButton").addEventListener("click", function () {
         video.pause();
         playButton.style.display = "block";
     }
+
 });
 
 document.getElementById("videoPlayer").addEventListener("ended", function () {
+
     const playButton = document.getElementById("playButton");
     playButton.style.display = "block"; 
+
 });
 
 document.addEventListener("keydown", function (event) {
+    
     const video = document.getElementById("videoPlayer");
     const playButton = document.getElementById("playButton");
 
