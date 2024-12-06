@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Robot Programming - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+        <!-- Sidebar for module navigation -->
+        <div class="course-sidebar">
+            <div class="course-sidebar-header">
+                <i class="fas fa-list"></i>
+                <span>Contents</span>
+            </div>
+            <ul class="course-list">
+                <li class="course-item"> 
+                    <a href="#objectives" class="course-link">Objectives</a>
+                </li>
+                <li class="course-item">
+                    <a href="#overview" class="course-link">Fetch Reach</a>
+                </li>
+                <li class="course-item active">
+                    <a href="#overview" class="course-link">Fetch Pick-and-Place</a>
+                </li>
+                <li class="course-item">
+                    <a href="#overview" class="course-link">Fetch Organize with Sensor</a>
+                </li>
+            </ul>
+        </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Fetch Pick-and-Place</h1>
+            <p class="page-description"></p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Let's Dive In</span>
+        </div>
+
+        <!-- Section 1: Low-Level Programming  -->
+        <div class="module-section" id="lowlevel">
+            <h3>Objectives</h3>
+            <p>Students should be able to programmatically interact with a virtual robot to pick and place an object near a target position.</p>
+            <!-- Examples - Low-Level Programming -->
+        </div> <!-- End of module-section -->
+
+         <!-- Section 2: High-Level Programming-->
+         <div class="module-section" id="highlevel">
+            <h3>About the Robot</h3>
+            <p>The Fetch-Pick-And-Place robot is a simple robotic arm that provides an intuitive entry point into robotics programming. This robot is designed to demonstrate fundamental concepts of control and automation. The Fetch-Pick-And-Place robot is equipped with several joints and actuators, allowing it to perform basic movements. The goal of this robot is to move the box to the destination.</p>
+        </div> <!-- End of module-section -->
+
+        <!-- Section 3: Programming Interfaces -->
+        <div class="module-section" id="programming-interface">
+            <h3>What is Given</h3>
+            <!-- Examples - Programming Interfaces -->
+            <div class="subsection">
+                <ul>
+                    <li><strong>global env&nbsp;</strong>This represents the robot's environment, which contains the robot's current state and methods for interacting with it. The environment has various “getters” and “setters”</li>
+                    <li><strong>env = FetchPickAndPlaceEnv()&nbsp;</strong>The environment object that is initialized and is part of the task setup.</li>
+                    <li><strong>distance_threshold&nbsp;</strong>  The distance value that will be used to determine when the gripper is "close enough" to the object.</li>
+                    <li><strong>step_size&nbsp;</strong>This represents the robot's environment, which contains the robot's current state and methods for interacting with it. The environment has various “getters” and “setters”</li>
+                    <li><strong>close_grip_action and open_grip_action&nbsp;</strong>Arrays representing actions to close or open the gripper, respectively.</li>
+                    <li><strong>lift_action&nbsp;</strong>Array representing small upward movement to lift the gripper while holding an object.</li>
+                </ul>
+            </div>
+        </div> <!-- End of module-section -->
+
+        <div class="module-section" id="programming-interface">
+            <h3>What Needs to be Retrieved</h3>
+            <!-- Examples - Programming Interfaces -->
+            <div class="subsection">
+                <ul>
+                    <li><strong>ball_position&nbsp;</strong>This value represents the current position of the ball in the environment. The student will retrieve this by calling a method or function from the global variable “env”.</li>
+                    <li><strong>gripper_position()&nbsp;</strong>This value represents the current position of the robot's gripper. It’s essential for calculating the direction and updating the gripper’s position after each movement. It will be retrieved by calling a method or function from the global variable “env”.</li>
+                    <li><strong>box_position&nbsp;</strong>This value represents the current position of the box. It’s essential for calculating the direction after each movement. It will be retrieved by calling a method or function from the global variable “env”.</li>
+                    <li><strong>direction&nbsp;</strong>The direction from the gripper to the ball and the direction from the gripper to the box, calculated by subtracting the gripper's position from the ball's position or box’s position. This will be used to calculate how the gripper should move to reach the ball.</li>
+                </ul>
+            </div>
+        </div> <!-- End of module-section -->
+
+        <div class="module-section" id="programming-interface">
+            <h3>What Needs to be Coded (Explained)</h3>
+            <!-- Examples - Programming Interfaces -->
+            <div class="subsection">
+                <ul>
+                    <li><strong>Open the Gripper&nbsp;</strong>Start by ensuring the gripper is in the open position, allowing it to grab the box. This involves sending an action command to the robot to spread the gripper fingers apart.</li>
+                    <li><strong>Move the Gripper Horizontally Towards the Box&nbsp;</strong>The gripper should move in the horizontal plane (X and Y directions) until it aligns with the box. This requires calculating the horizontal distance between the gripper and the box and making small, incremental steps in that direction until the gripper is close enough.</li>
+                    <li><strong>Lower the Gripper to Grasp the Box&nbsp;</strong>Once horizontally aligned, the gripper needs to move downward (in the Z direction) until it is at the correct height to grasp the box. This ensures that the gripper can securely hold the object.</li>
+                    <li><strong>Close the Gripper Around the Box&nbsp;</strong>After reaching the box, send a command to close the gripper. This action should securely hold the box in place.</li>
+                    <li><strong>Pause to Stabilize the Grasp&nbsp;</strong>Allow the robot to hold the box for a brief moment to ensure it is stable and the grasp is firm. This avoids any unintended movements while lifting or moving the box.</li>
+                    <li><strong>Lift the Box&nbsp;</strong>The gripper should then move slightly upward to lift the box off the surface. This action ensures that the box is ready to be transported without dragging.</li>
+                    <li><strong>Move the Gripper and Box Towards the Ball&nbsp;</strong>Calculate the direction from the box’s current position to the target ball position. Then, move the gripper (and the box it is holding) in small steps towards the ball. The movement should continue until the box is close enough to the ball, as defined by a specified distance threshold.</li>
+                </ul>
+            </div>
+        </div> <!-- End of module-section -->
+
+        <!-- Next Button -->
+        <div class="next-button text-right mt-4">
+            <a href="{{ url_for('implications') }}" class="secondary-button">Next: Social and Ethical Implications </a>
+        </div>
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}
+

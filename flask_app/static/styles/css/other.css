@@ -25,6 +25,7 @@
     background-color: #f0f8fd;
 }
 
+/* The following CSS is from code academy */
 .gamut-1lly2r1-VariableProvider-AppWrapper-AppWrapper {
     --color-background-current: #fdf5f0;;
     color: var(--color-text);

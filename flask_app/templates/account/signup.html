@@ -39,9 +39,15 @@
                         <div class="error-feedback" id="email-error"></div> <!-- Error message -->
                     </div>
                     
-                    <!-- Password -->
+                    <!-- Password w/ JS Requirements-->
                     <div class="mb-4">
-                        <input type="password" class="form-control rounded-0" id="password-field" name="password" placeholder="Desired password" required>
+                        <input type="password" class="form-control rounded-0" id="password-field" name="password" placeholder="Password" required>
+                        <ul class="error-feedback" id="password-requirements" style="list-style: none; padding: 0;"></ul>
+                    </div>
+      
+                    <!-- Confirm Password -->
+                    <div class="mb-4">
+                        <input type="password" class="form-control rounded-0" id="confirm-password-field" name="confirm_password" placeholder="Confirm password" required>
                         <div class="error-feedback" id="password-error"></div> <!-- Error message -->
                     </div>
 
@@ -49,25 +55,17 @@
                     <div class="account-type-section mb-5">
                         <label class="mb-3">Type of Account</label><br>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="accountType" id="account-type-instructor" value="instructor" onclick="HideClassID()" checked>
+                            <input class="form-check-input" type="radio" name="account_type" id="account-type-instructor" value="instructor" checked>
                             <label class="form-check-label" for="account-type-instructor">
-                                Instructor
+                                Instructor  
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="accountType" id="account-type-student" value="student" onclick="ShowClassID()">
+                            <input class="form-check-input" type="radio" name="account_type" id="account-type-student" value="student">
                             <label class="form-check-label" for="account-type-student">
                                 Student
                             </label>
                         </div>
-                    </div>
-
-                    <!-- Class ID Field (Hidden by Default) -->
-                    <div class="form-group class-id-field mb-5 d-none" id="class-id-section">
-                        <label for="class-id-input" class="form-label">Class ID</label>
-                        <input type="text" class="form-control rounded-0" id="class-id-input" name="classID">
-                        <div class="text-prompt" id="class-id-help">Please enter the Class ID provided by your instructor.</div>
-                        <div class="error-feedback" id="class-id-error"></div> <!-- Error message -->
                     </div>
 
                     <!-- Submit Button -->
@@ -90,22 +88,19 @@
        <div class="chatbot-container" class="chatbot2-container navy-gradient-glow" id="chatbot2-container" style="display: none;">
         <div class="navy-gradient-glow">
         <header class="chat-header">
-            <h1 class="general-text-signup">✨ Cora, Your AI Learning Assistant</h1>
-            <button class="close-chatbot-btn" id="closeChatbot">✖</button>
+            <h1>✨ Cora, Your AI Learning Assistant</h1>
         </header>
-        <div class="chatbox2 navy-gradient-glow" id="chatbox2" class="chatbox chat-body"> 
+        <div class="chatbox2 navy-gradient-glow" id="chatbox2" class="chatbox chat-body">
             <p class="info-title">Support where you need it</p>
-            <div class="general-text">
-                <p>Your personal AI Learning Assistant, Cora, can access:</p>
-                <ul style="list-style-type: none; padding: 0; margin: 0;">
-                    <li>&#10003; Your exact lesson</li>
-                    <li>&#10003; The instructions</li>
-                    <li>&#10003; What page your on</li>
-                </ul>
-                <p class="info-text">
-                    Not just any chatbot. Take advantage of help in the right moments with your unique learning experience.
-                </p>
-            </div>
+            <p>Your personal AI Learning Assistant, Cora, can access:</p>
+            <ul style="list-style-type: none; padding: 0; margin: 0;">
+                <li>&#10003; Your exact lesson</li>
+                <li>&#10003; The instructions</li>
+                <li>&#10003; What page your on</li>
+            </ul>
+            <p class="info-text">
+                Not just any chatbot. Take advantage of help in the right moments with your unique learning experience.
+            </p>
         </div>
         <div class="chat-input-container chat-footer">
             <input type="text" id="userInput2" class="chat-input" placeholder="Send a message">

@@ -1,8 +1,9 @@
+# Darren's Code
 import os
 from gym import utils
 from gym.envs.robotics import fetch_env
 
-# Ensure we get the path separator correct on windows
+# This path is specific for 'venv38' virtual environment
 MODEL_XML_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 
     "venv38", 
@@ -17,7 +18,6 @@ MODEL_XML_PATH = os.path.join(
     "stack.xml"
 )
 
-
 class FetchStackEnv(fetch_env.FetchEnv, utils.EzPickle):
     def __init__(self, reward_type='sparse'):
         initial_qpos = {
@@ -29,7 +29,6 @@ class FetchStackEnv(fetch_env.FetchEnv, utils.EzPickle):
             'object2:joint': [1.35, 1, 0.4, 1., 0., 0., 0.],  # Position of third block
         }
        
-        # Initialize FetchEnv with the model XML, including the objects and robot setup
         fetch_env.FetchEnv.__init__(
             self, MODEL_XML_PATH, has_object=True, block_gripper=False, n_substeps=20,
             gripper_extra_height=0.2, target_in_the_air=True, target_offset=0.0,
@@ -55,31 +54,19 @@ class FetchStackEnv(fetch_env.FetchEnv, utils.EzPickle):
         object_position = self.sim.data.get_site_xpos(box_name)
         return object_position
 
-
+    # Not in use, but will be for the future checking
     def check_stacking_success(env, box_positions, stack_threshold=0.01, height_threshold=0.05):
-        """
-        Check if boxes are stacked successfully.
-       
-        Parameters:
-        - env: Simulation environment.
-        - box_positions: List of site names for the boxes (e.g., ['object0', 'object1', 'object2']).
-        - stack_threshold: Maximum allowable horizontal misalignment (x, y).
-        - height_threshold: Minimum height difference to consider boxes stacked.
-       
-        Returns:
-        - bool: True if all boxes are successfully stacked, False otherwise.
-        """
         for i in range(len(box_positions) - 1):
             box1_position = env.sim.data.get_site_xpos(box_positions[i])
             box2_position = env.sim.data.get_site_xpos(box_positions[i + 1])
            
-            # Check horizontal alignment (x, y)
+            # Check horizontal alignment
             horizontal_distance = np.linalg.norm(box1_position[:2] - box2_position[:2])
             if horizontal_distance > stack_threshold:
                 print(f"Boxes {box_positions[i]} and {box_positions[i + 1]} are misaligned: {horizontal_distance:.4f}")
                 return False
            
-            # Check vertical stacking (z)
+            # Check vertical alignment
             height_difference = box2_position[2] - box1_position[2]
             if abs(height_difference - height_threshold) > stack_threshold:
                 print(f"Boxes {box_positions[i]} and {box_positions[i + 1]} have incorrect height difference: {height_difference:.4f}")
@@ -87,3 +74,5 @@ class FetchStackEnv(fetch_env.FetchEnv, utils.EzPickle):
        
         print("All boxes are successfully stacked!")
         return True
+
+# End of Darren's Code

@@ -17,7 +17,7 @@
                 <a href="#objectives" class="course-link">Objectives</a>
             </li>
             <li class="course-item">
-                <a href="#overview" class="course-link">Definition and Overview of Robotics</a>
+                <a href="{{ url_for ('overview') }}" class="course-link">Definition and Overview of Robotics</a>
                 <ul class="sub-list">
                     <li><a href="#what-is-robot">What is a robot?</a></li>
                     <li><a href="#intro-field-robotics">Robotics as a Field of Study</a></li>
@@ -25,7 +25,7 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#history" class="course-link">History of Robotics</a>
+                <a href="{{ url_for ('history') }}" class="course-link">History of Robotics</a>
                 <ul class="sub-list">
                     <li><a href="#industrial">Industrial Robots</a></li>
                     <li><a href="#humanoid">Humanoid Robots</a></li>
@@ -34,7 +34,7 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#types" class="course-link">Types of Robots</a>
+                <a href="{{ url_for ('typesofrobots') }}" class="course-link">Types of Robots</a>
                 <ul class="sub-list">
                     <li><a href="#industrial">Industrial robots</a></li>
                     <li><a href="#humanoid">Humanoid robots</a></li>
@@ -43,7 +43,7 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#applications" class="course-link">Importance and Applications of Robotics</a>
+                <a href="{{ url_for ('importanceandapp') }}" class="course-link">Importance and Applications of Robotics</a>
                 <ul class="sub-list">
                     <li><a href="#manufacturing">Manufacturing</a></li>
                     <li><a href="#healthcare">Healthcare</a></li>
@@ -53,10 +53,10 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#course1-quiz1" class="course-link">Quiz 1</a>
+                <a href="{{ url_for ('course1quiz1') }}" class="course-link">Quiz 1</a>
             </li>
             <li class="course-item">
-                <a href="#anatomy" class="course-link">Robot Anatomy</a>
+                <a href="{{ url_for ('robotanatomy') }}" class="course-link">Robot Anatomy</a>
                 <ul class="sub-list">
                     <li><a href="#actuators">Actuators</a></li>
                     <li><a href="#sensors">Sensors</a></li>
@@ -65,7 +65,7 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#challenges" class="course-link">Challenges In Robotics</a>
+                <a href="{{ url_for ('challenges') }}" class="course-link">Challenges In Robotics</a>
                 <ul class="sub-list">
                     <li><a href="#navandmapping">Navigation and Mapping</a></li>
                     <li><a href="#humanrobot">Human-Robot Interaction</a></li>
@@ -74,7 +74,7 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#robot-programming" class="course-link">Robot Programming</a>
+                <a href="{{ url_for ('robotprogramming') }}" class="course-link">Robot Programming</a>
                 <ul class="sub-list">
                     <li><a href="#lowlevel">Low-Level Programming</a></li>
                     <li><a href="#highlevel">High-Level Programming</a></li>
@@ -82,7 +82,7 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#implications" class="course-link">Social and Ethical Implications</a>
+                <a href="{{ url_for ('implications') }}" class="course-link">Social and Ethical Implications</a>
                 <ul class="sub-list">
                     <li><a href="#privacy">Privacy</a></li>
                     <li><a href="#job-displacement">Job Displacement</a></li>
@@ -90,7 +90,7 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#future-trends" class="course-link">Future Trends</a>
+                <a href="{{ url_for ('futuretrends') }}" class="course-link">Future Trends</a>
                 <ul class="sub-list">
                     <li><a href="#AI">Artificial Intelligence (AI) in Robotics</a></li>
                     <li><a href="#soft-robotics">Soft Robotics</a></li>
@@ -107,9 +107,9 @@
         <div class="container objectives-section">
             <h1 class="module-h1-title">Introduction to Robotics</h1>
             <h2 class="module1-section-title">What You Will Learn</h2>
-            <div class="next-button text-center mt-4">
+            <!--<div class="next-button text-center mt-4">
                 <a href="{{ url_for('overview') }}" class="secondary-button"> Start: Definition and Overview</a>
-            </div>
+            </div>-->
             <p class="module1-section-subtitle">Here are the key skills and knowledge you'll gain from this module</p>
             <div class="row">
                 <div class="col-md-4">
@@ -118,7 +118,7 @@
                             <img src="/static/img/book.png" alt="Definition and Overview">
                         </div>
                         <h4>Definition and Overview</h4>
-                        <p>Understand what robotics is and its fundamental concepts.</p>
+                        <p>Understand the fundamental concepts of robotics.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -127,7 +127,7 @@
                             <img src="/static/img/clock.png" alt="History of Robotics">
                         </div>
                         <h4>History of Robotics</h4>
-                        <p>Learn how robotics has evolved over time and its key milestones.</p>
+                        <p>Learn how robotics has evolved over the years.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -136,7 +136,7 @@
                             <img src="/static/img/humanoid.png" alt="Types of Robots">
                         </div>
                         <h4>Types of Robots</h4>
-                        <p>Explore different categories of robots and their purposes.</p>
+                        <p>Learn of the different forms of robts and their purposes.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -145,7 +145,7 @@
                             <img src="/static/img/earth.png" alt="Applications of Robots">
                         </div>
                         <h4>Importance and Applications</h4>
-                        <p>Discover how robots are transforming industries and daily life.</p>
+                        <p>See how robots are becoming a part of every day life.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -154,7 +154,7 @@
                             <img src="/static/img/robotarm.png" alt="Robot Anatomy">
                         </div>
                         <h4>Robot Anatomy</h4>
-                        <p>Understand the components and structure of modern robots.</p>
+                        <p>Understand the components involved with a robot.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -163,7 +163,7 @@
                             <img src="/static/img/puzzle.png" alt="Challenges in Robotics">
                         </div>
                         <h4>Challenges in Robotics</h4>
-                        <p>Identify the technical, social, and ethical challenges robots face.</p>
+                        <p>Learn about the hurdles robots face.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -190,14 +190,14 @@
                             <img src="/static/img/future.png" alt="Future Trends">
                         </div>
                         <h4>Future Trends</h4>
-                        <p>Explore emerging technologies and the future of robotics.</p>
+                        <p>Look ahead to the future of robotics.</p>
                     </div>
                 </div>
             </div> <!-- End of row -->
         </div> <!-- End of objectives-section -->
-        <!-- <div class="next-button text-right mt-4">
+        <div class="next-button text-right mt-4">
             <a href="{{ url_for('overview') }}" class="secondary-button"> Next: Definition and Overview</a>
-        </div> -->
+        </div>
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->
 {% endblock %}

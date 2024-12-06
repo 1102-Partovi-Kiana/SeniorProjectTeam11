@@ -1,22 +1,23 @@
 from flask import Flask, render_template, request, jsonify, Response, flash, redirect, url_for, session
 import mujoco_py
 import numpy as np
-import cv2  # Import OpenCV
-from reach import ReachEnv  # Ensure this imports your ReachEnv class
+import cv2 
+from reach import ReachEnv 
 from pickandplace import FetchPickAndPlaceEnv
 from organize import FetchOrganizeEnv
 from stack import FetchStackEnv
 from organize_sensors import FetchOrganizeSensorsEnv
 from car import CarEnv
-import requests  # Import requests library for API communication
+import requests
 import random
 import jedi
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail, Message
 from config import Config
+from email_func import *
+from classes import *
 from auth_func import *
-from classes import db, User
 import time
 import glfw
 import threading
@@ -28,7 +29,10 @@ app = Flask(__name__, static_folder='static')
 app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
-app.secret_key = 'secret-key-for-session'
+mail.init_app(app)
+
+ROLE_INSTRUCTOR = 1
+ROLE_STUDENT = 2
 
 CUSTOM_KEYWORDS = [
     "def", "class", "import", "while", "for", "if", "else", "elif", "try", "except", "finally", "with",
@@ -369,7 +373,7 @@ quiz = {
 # Route for the homepage
 @app.route('/')
 def RenderHomepage():
-    return render_template('homepage.html')
+    return render_template('homepage.html', is_homepage=True)
 
 @app.route('/get-suggestions', methods=['POST'])
 def get_suggestions():
@@ -1012,31 +1016,30 @@ def ChatbotAPI():
 
     return jsonify({'reply': chatbot_response, 'hints': hints[:3]})
 
-
+# Darren's Code
 @app.route('/environments')
 def RenderEnvironmentList():
     environments = [
-        # Example list of environment data
+        # Example list of environment data, going to fill out later
         {
             'id': 1,
             'name': 'FetchPickAndPlace-v1',
             'brief_description': 'Move the box to the floating goal position.',
             'preview_filename': 'fetchpickandplace.mp4'
         },
-        # Add more environments as needed
     ]
     return render_template('environments-landing.html', environments=environments)
 
 @app.route('/environment/<int:environment_id>')
 def RenderEnvironment(environment_id):
     environments = [
+        # Example list of environment data, going to fill out later
         {
             'id': 1,
             'name': 'FetchPickAndPlace-v1',
             'brief_description': 'Move the box to the floating goal position.',
             'preview_filename': 'fetchpickandplace.mp4'
         },
-        # Add more environments as needed
     ]
     
     environment = next((env for env in environments if env['id'] == environment_id), None)
@@ -1045,19 +1048,27 @@ def RenderEnvironment(environment_id):
         return "Environment not found", 404
 
     return render_template('environment_detail.html', environment=environment)
+# End of Darren's Code
 
 @app.route('/signup', methods=['GET', 'POST'])
 def RenderSignup():
+    session.pop('_flashes', None)
     if request.method == 'POST':
         username = request.form.get('username')
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
         email = request.form.get('email')
         password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        account_type = request.form.get('account_type')
 
-        if not check_password_requirements(password):
-            return render_template('account/signup.html')
+        if (not check_password_requirements(password)):
+            return render_template('account/signup.html', is_homepage=True)
         
+        if (not is_valid_email(email)):
+            flash("Invalid Email Address")
+            return render_template('account/signup.html', is_homepage=True)
+
         new_user = User()
 
         new_user.first_name = first_name
@@ -1065,8 +1076,10 @@ def RenderSignup():
         new_user.email = email
         new_user.username = username
         new_user.password = hash_password(password)
-        new_user.secret_key = "DefaultSecretKey"
-        new_user.user_type = "DefaultUserType"
+        if (account_type == 'instructor'):
+            new_user.role_id = 1
+        elif (account_type == 'student'):
+            new_user.role_id = 2
 
         if (check_default_values(new_user) == False):
             if User.query.filter_by(username=username).first():
@@ -1075,175 +1088,361 @@ def RenderSignup():
             if User.query.filter_by(email=email).first():
                 flash("Email is already taken.")
                 return render_template('account/signup.html')
+            if password != confirm_password:
+                flash("Password does not match.")
+                return render_template('account/signup.html')
             db.session.add(new_user)
-            db.session.commit()
-            flash("Registration Successful")
-            return render_template('account/signup.html')
+            db.session.commit() 
+            flash("Registration Successful", 'popup')
+            session['user'] = {
+                'user_id': new_user.user_id,
+                'username': new_user.username,
+                'first_name': new_user.first_name,
+                'last_name': new_user.last_name,
+                'role_id': new_user.role_id,
+            }
+            if (new_user.role_id == 1):
+                return redirect(url_for('RenderInstructorDashboard'))
+            elif(new_user.role_id == 2):
+                return redirect(url_for('RenderStudentDashboard'))
 
-    return render_template('account/signup.html')
+    return render_template('account/signup.html', is_homepage=True)
 
 @app.route('/login', methods=['GET', 'POST'])
 def RenderLogin():
+    if 'user' in session and 'user_id' in session['user']:
+        flash('You are already logged in.', 'popup')
+        role = session['user']['role_id']
+        if role == ROLE_INSTRUCTOR:
+            return redirect(url_for('RenderInstructorDashboard'))
+        elif role == ROLE_STUDENT:
+            return redirect(url_for('RenderStudentDashboard'))
+
     if request.method == 'POST':
         login_username = request.form.get('login_username')
         login_password = request.form.get('login_password')
 
-        if(check_valid_user(login_username, login_password)):
-            flash("Successfully Logged In!")
+        success, user = get_user(login_username)
+        if success:
+            if check_login_info(user, login_password):
+                flash('Login Successful', 'popup')
+                role = user.role_id
+                session['user'] = {
+                    'user_id': user.user_id,
+                    'username': user.username,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'role_id': user.role_id,
+                }
+                if role == ROLE_INSTRUCTOR:
+                    return redirect(url_for('RenderInstructorDashboard'))
+                elif role == ROLE_STUDENT:
+                    return redirect(url_for('RenderStudentDashboard'))
+            else:
+                flash('Invalid Password', 'error')
+        else:
+            flash('Invalid Username', 'error')
+    return render_template('account/login.html', is_homepage=True)
 
-    return render_template('account/login.html')
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def RenderForgotPassword():
+    if request.method == 'POST':
+        username = request.form.get('login_username')
+        success, user = get_user(username)
+        if (success):
+            print(f"Received username for password reset: {username}")
+            flash("An email been sent to your account.", "success")
+            subject = "CORE - Reset Password"
+            email = "officialwarerecovery@gmail.com"
+            password_reset_link = "http://127.0.0.1:5000/reset-password"
+            #Instead of manually reading the file, we are taking advantage of Flask's Jinja2 templating
+            body = render_template("account/forgot_password.txt", username = username, password_reset_link = password_reset_link)
+            send_email(subject, email, body)
+        return redirect(url_for('RenderForgotPassword'))
+    return render_template('account/forgot_password.html')
 
-courses = [
-    {
-        "title": "Introduction to Robotics",
-        "description": "Learn the basics of robotics, from robot anatomy to robot programming.",
-        "level": "Beginner Friendly",
-        "certificate": True,
-        "length": "1 hour",
-        "route": "course1_card"
-    },
-    {
-        "title": "Types of Robots",
-        "description": "Gain an insight into how different robots serve unique purposes with their different functionality.",
-        "level": "Beginner Friendly",
-        "certificate": True,
-        "length": "1 hour",
-        "route": "course2_card"
-    },
-    {
-        "title": "Robots in CORE",
-        "description": "Discover the heart of CORE: meet our virtual robots, designed for you.",
-        "level": "Beginner Friendly",
-        "certificate": True,
-        "length": "30 minutes",
-        "route": "course1_card"
-    },
-    {
-        "title": "How to Use the Lab",
-        "description": "Get familiar with CORE's Virtual Robotics Lab and explore live simulations, an interactive, hands-on learning experience, and coding feedback.",
-        "level": "Beginner Friendly",
-        "certificate": True,
-        "length": "1 hour",
-        "route": "course1_card"
-    },
-    {
-        "title": "Basic Coding Practices",
-        "description": "Master the basics of coding, building yourself a strong foundation, involving a review of common coding practices and debugging techniques.",
-        "level": "Beginner Friendly",
-        "certificate": True,
-        "length": "1 hour",
-        "route": "course1_card"
-    },
-    {
-        "title": "Fetch Robot",
-        "description": "Acquire the skills required to program and control the Fetch Robot to complete different tasks including reaching, pushing, and sliding.",
-        "level": "Beginner Friendly",
-        "certificate": True,
-        "length": "1 hour",
-        "route": "course1_card"
-    },
-    {
-        "title": "Fetch Reach Robot",
-        "description": "Master control and precision as you learn to code the Fetch Reach Robot.",
-        "level": "Beginner Friendly",
-        "certificate": True,
-        "length": "2 hours",
-        "route": "course1_card"
-    },
-    {
-        "title": "Fetch Push Robot",
-        "description": "Explore the methodologies of robotic pushing with the Fetch Push Robot.",
-        "level": "Beginner Friendly",
-        "certificate": True,
-        "length": "1 hour",
-        "route": "course1_card"
-    },
-    {
-        "title": "Fetch Slide Robot",
-        "description": "Learn how to program the Fetch Slide Robot to move objects utilizing sliding techniques.",
-        "level": "Beginner Friendly",
-        "certificate": True,
-        "length": "1 hour",
-        "route": "course1_card"
-    },
-    {
-        "title": "Fetch Pick & Place Robot",
-        "description": "Become proficient in robotic object manipulation with the Fetch Pick and Place Robot.",
-        "level": "Intermediate",
-        "certificate": True,
-        "length": "2 hours",
-        "route": "course1_card"
-    },
-    {
-        "title": "Fetch Stack Blocks Robot",
-        "description": "Hone the precision of stacking blocks using the Fetch Robot and improve your spatial manipulation.",
-        "level": "Intermediate",
-        "certificate": True,
-        "length": "1 hour",
-        "route": "course1_card"
-    },
-    {
-        "title": "Fetch Color Sort Robot",
-        "description": "Learn to algorithmically move the Fetch Robot to sort and organize objects based on their colors.",
-        "level": "Intermediate",
-        "certificate": True,
-        "length": "2 hours",
-        "route": "course1_card"
-    },
-    {
-        "title": "Fetch Robot w/ Sensors",
-        "description": "Unlock the power of sensors by teaching the Fetch Robot to detect, classify, and organize objects.",
-        "level": "Intermediate",
-        "certificate": True,
-        "length": "2 hours",
-        "route": "course1_card"
-    },
-    {
-        "title": "Dexterous Hand Robot",
-        "description": "Enhance your knowledge of human-like dexterity with the Dexterous Hand Robot.",
-        "level": "Intermediate",
-        "certificate": True,
-        "length": "2 hours",
-        "route": "course1_card"
-    },
-    {
-        "title": "Hand Reach",
-        "description": "Learn the ability to extend robotic reach with the realistic Hand Reach Robot.",
-        "level": "Intermediate",
-        "certificate": True,
-        "length": "2 hours",
-        "route": "course1_card"
-    },
-    {
-        "title": "Hand Manipulate Block",
-        "description": "Manipulate an object with the Hand Manipulate Block with agility control.",
-        "level": "Intermediate",
-        "certificate": True,
-        "length": "2 hours",
-        "route": "course1_card"
-    },
-    {
-        "title": "Self-Driving Car w/ Deep Q-Learning",
-        "description": "Learn about Deep Q-Learning algorithms to create a self-driving car.",
-        "level": "Advanced",
-        "certificate": True,
-        "length": "2 hours",
-        "route": "course1_card"
-    }
-]
+@app.route('/reset-password', methods=['GET', 'POST'])
+def RenderResetPassword():
+    if (request.method == 'POST'):
+        new_password = request.form.get('password')
+        confirm_password = request.form.get('confirmPassword')
+        if (new_password == confirm_password):
+            flash("Password has been reset successfully.", "success")
+        else:
+            flash("Passwords do not match.", "error")
+        return redirect(url_for('reset_password'))
+    return render_template('account/reset_password.html')
 
-@app.route('/courses', methods=["GET"])
+@app.route('/dashboard/instructor-view', methods=['GET', 'POST'])
+def RenderInstructorDashboard():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.', 'popup')
+        return redirect(url_for('RenderHomepage'))
+
+    user_id = user['user_id'] 
+    role = user['role_id']
+    
+    if role != ROLE_INSTRUCTOR:
+        flash('You must be an instructor to access this page.', 'popup')
+        return redirect(url_for('RenderStudentDashboard'))
+    
+    user_classes = get_classes(user_id)
+
+    if request.method == 'POST':
+        class_course_code = request.form['classCourseCode']
+        class_section = request.form['classSection']
+        class_date = request.form['classDate']
+
+        if (not is_valid_course_code(class_course_code)):
+            flash("Course Code Must Follow the Format: Letters + Numbers.", "popup")
+
+        if class_section.isdigit():
+            class_section = int(class_section)
+        else:
+            flash("Section Number Must Not Contain Any Characters.", "popup")
+
+        if (not is_valid_course_code(class_course_code) and not class_section.isdigit()):
+            return redirect(url_for('RenderInstructorDashboard'))
+
+        for user_class in user_classes:
+            if class_course_code == user_class.class_course_code and class_section == user_class.class_section_number:
+                flash('A class of the same name and section has already been created', 'popup')
+                return redirect(url_for('RenderInstructorDashboard'))
+            
+        new_class = Classes()
+        new_class.class_course_code = class_course_code
+        new_class.class_section_number = class_section
+        new_class.user_id = user_id
+        db.session.add(new_class)
+        db.session.commit()
+        
+        flash('Class created successfully!', 'popup')
+        return redirect(url_for('RenderInstructorDashboard'))
+
+    return render_template('dashboard/dashboard_instructor.html', is_dashboard=True, is_instructor_dashboard=True, classes=user_classes, user=user)
+
+
+@app.route('/dashboard/student-view', methods=['GET', 'POST'])
+def RenderStudentDashboard():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id'] 
+    role = user['role_id']
+    
+    if (role != ROLE_STUDENT):
+        flash('You must be an student to access this page.', 'popup')
+        return redirect(url_for('RenderInstructorDashboard'))
+    
+    if request.method == 'POST':
+        class_course_code = request.form['classCourseCode']
+
+        existing_class_course = ClassCodes.query.filter_by(class_code=class_course_code).first()
+        if (existing_class_course is not None):
+            class_id = existing_class_course.class_id
+            
+            existing_enrollment = Enrollment.query.filter_by(user_id=user_id, class_id=class_id).first()
+                
+            if (existing_enrollment is not None):
+                flash('You are already enrolled in this class.', 'popup')
+                return redirect(url_for('RenderStudentDashboard'))
+            
+            existing_enrollment = Enrollment.query.filter_by(user_id=user_id).first()
+            if existing_enrollment is not None:
+                flash('You are already enrolled in a class. You cannot enroll in another.', 'popup')
+                return redirect(url_for('RenderStudentDashboard'))
+
+            student_enrollment = Enrollment()
+            student_enrollment.user_id = user_id
+            student_enrollment.class_id = class_id
+
+            db.session.add(student_enrollment)
+            db.session.commit()
+
+            flash('You have successfully enrolled in the class.', 'popup')
+            return redirect(url_for('RenderStudentDashboard'))
+        else: 
+            flash('Invalid Course Code', 'popup')
+            return redirect(url_for('RenderStudentDashboard'))
+
+    existing_enrollment = Enrollment.query.filter_by(user_id=user_id).first()
+    in_class = existing_enrollment is not None
+
+    assignments = db.session.query(StudentAssignedCourses).filter(StudentAssignedCourses.user_id == user_id).all()
+
+    return render_template('dashboard/dashboard_student.html', is_dashboard=True, is_student_dashboard=True, user=user, assignments=assignments, in_class=in_class)
+
+@app.route('/dashboard/instructor-view/classes', methods=['GET'])
+def RenderInstructorClasses():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+    
+    if role != ROLE_INSTRUCTOR:
+        flash('You must be an instructor to access this page.')
+        return redirect(url_for('RenderStudentDashboard'))
+    
+    user_classes = get_classes(user_id)
+    courses = Courses.query.order_by(Courses.course_id).all()
+
+    class_code = session.get('class_code')
+    
+    session.pop('class_code', None)
+
+    return render_template('dashboard/dashboard_classes.html', is_dashboard=True, is_instructor_dashboard=True, classes=user_classes, class_code=class_code, user=user, courses=courses)
+
+@app.route('/dashboard/instructor-view/classes/generate-class-code', methods=['POST'])
+def GenerateClassCode():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+    
+    if role != ROLE_INSTRUCTOR:
+        flash('You must be an instructor to access this page.')
+        return redirect(url_for('RenderStudentDashboard'))
+    
+    user_classes = get_classes(user_id)
+    class_code = None
+
+    class_id = request.form.get('class_id')
+
+    existing_class_code = ClassCodes.query.filter_by(class_id=class_id).first()
+    if existing_class_code:
+        class_code = existing_class_code.class_code
+        print("Existing Code: ", class_code)
+    else:
+        class_code = generate_class_code()
+
+        new_class_code = ClassCodes()
+        new_class_code.class_id = class_id
+        new_class_code.class_code = class_code
+        db.session.add(new_class_code)
+        db.session.commit()
+        print("New Code: ", class_code)
+
+    session['class_code'] = class_code
+
+    return redirect(url_for('RenderInstructorClasses'))
+
+@app.route('/dashboard/instructor-view/classes/get-students-from-class', methods=['GET', 'POST'])
+def GetStudentsFromClass():
+    if request.method == 'GET':
+        return redirect(url_for('RenderInstructorClasses'))
+    
+    if request.method == 'POST':
+        data = request.get_json()
+        class_id = data.get('class_id')
+
+        if not class_id:
+            return jsonify({"message": "No class selected"}), 400
+
+        enrolled_students = db.session.query(Enrollment).join(Enrollment.user).filter(Enrollment.class_id == class_id).all()
+
+        students = []
+        for enrollment in enrolled_students:
+            student = enrollment.user
+            user_data = {
+                'user_id': student.user_id,
+                'first_name': student.first_name,
+                'last_name': student.last_name,
+                'email': student.email
+            }
+            students.append(user_data)
+
+        return jsonify({"students": students})
+
+@app.route('/dashboard/instructor-view/classes/assign-student-to-course', methods=['GET', 'POST'])
+def AssignStudentToCourse():
+    if request.method == 'GET':
+        return redirect(url_for('RenderInstructorClasses'))
+    
+    if request.method == 'POST':
+        selected_student_ids = request.form.getlist('student_ids')
+        if not selected_student_ids:
+            flash('You have not selected any students to assign a course to them', 'popup')
+            return redirect(url_for('RenderInstructorClasses'))
+        
+        selected_courses_id = request.form.getlist('courses_ids')
+        if not selected_courses_id:
+            flash('You have not selected any courses to assign your students', 'popup')
+            return redirect(url_for('RenderInstructorClasses'))
+
+        #print("Selected Students:", selected_student_ids)
+        #print("Selected Courses:", selected_courses_id)
+
+        assignments = []
+
+        for student_id in selected_student_ids:
+            student = User.query.filter_by(user_id=student_id).first()
+            if not student:
+                continue
+            for course_id in selected_courses_id:
+                if not course_id:
+                    continue
+                existing_assignment = StudentAssignedCourses.query.filter_by(user_id=student_id, course_id=course_id).first()
+                if existing_assignment:
+                    continue
+
+                student_assignments =  StudentAssignedCourses()
+                student_assignments.user_id = student_id
+                student_assignments.course_id = course_id
+                assignments.append(student_assignments)
+
+        if assignments:
+            db.session.add_all(assignments)
+            db.session.commit()
+            flash('Students have been successfully assigned to the selected courses.', 'popup')
+        else:
+            flash('No new assignments were made. All students were already assigned to the selected courses.', 'popup')
+
+        return redirect(url_for('RenderInstructorClasses'))
+
+@app.route('/logout', methods=['GET'])
+def RenderLogout():
+    session.clear()
+    flash('You have been logged out successfully.', 'popup')
+    print("Hello World")
+    return redirect(url_for('RenderHomepage'))
+
+@app.route('/courses')
 def RenderCourses():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+    
+    user_id = user['user_id']
+    role = user['role_id']
+
+    if role == ROLE_STUDENT:
+        assigned_courses = StudentAssignedCourses.query.filter_by(user_id=user_id).all()
+        courses = []
+        for assignment in assigned_courses:
+            courses.append(assignment.course)
+    else:
+        courses = Courses.query.all()
+
     query = request.args.get("q", "").lower()
     filtered_course_catalog = [
         course for course in courses
-        if query in course["title"].lower()
-        or query in course["description"].lower()
-        or query in course["level"].lower()
-        or (query == "certificate")  
-        or query in course["length"].lower()
+        if query in course.course_name.lower() 
+        or query in course.course_desc.lower()
+        or query in course.level.lower()
+        or (query == "certificate" and course.certificate == "t")
+        or query in course.length.lower()
     ]
-    return render_template("courses.html", courses=filtered_course_catalog, query=query)
+    return render_template("courses.html", courses=filtered_course_catalog, query=query, user=user)
 
 @app.route('/playground')
 def playground():
@@ -1260,6 +1459,10 @@ def course1_card():
 @app.route('/module2/start-page-2')
 def course2_card():
     return render_template('courses/course2-content/course2_card.html') 
+
+@app.route('/module3/start-page-3')
+def course3_card():
+    return render_template('courses/course3-content/course3_card.html') 
 
 @app.route('/module1/introduction/overview')
 def overview():
@@ -1313,6 +1516,23 @@ def intro_of_mobile_robots():
 def industrial_robots():
     return render_template('courses/course2-content/industrial_robots.html')
 
+@app.route('/module3/introduction')
+def module_three():
+    return render_template('courses/course3-content/module_three.html') 
+
+@app.route('/module3/fetch-reach')
+def module_three_fetch_reach():
+    return render_template('courses/course3-content/module_three_fetch_reach.html') 
+
+@app.route('/module3/fetch-pick-and-place')
+def module_three_fetch_pick():
+    return render_template('courses/course3-content/module_three_fetch_pick.html') 
+
+@app.route('/module3/fetch-sensor')
+def module_three_fetch_sensor():
+    return render_template('courses/course3-content/module_three_fetch_sensor.html') 
+
+# Darren's Code
 @app.route('/Fetch-Reach-Robot')
 def RenderFetchReachRobotSimulation():
     global env
@@ -1363,7 +1583,7 @@ def RenderFetchOrganizeEnv():
 
 def close_current_env():
     global env
-    with render_lock:  # Ensure thread safety
+    with render_lock:
         if env is not None:
             try:
                 env.close()
@@ -1379,20 +1599,20 @@ def close_current_env():
 def reset_glfw():
     # Terminate the previous GLFW context if it exists
     if glfw.init():
-        glfw.terminate()  # Close the GLFW window and clean up
+        glfw.terminate()
         time.sleep(.1)
         print("GLFW terminated.")
     
     # Re-initialize GLFW
     if not glfw.init():
         print("Error: GLFW initialization failed.")
-        return False  # Return failure if GLFW can't be initialized
+        return False 
 
-    # Create an offscreen context (headless rendering)
+    # Offscren Rendering
     glfw.window_hint(glfw.VISIBLE, glfw.FALSE)  # Make the window invisible
-    window = glfw.create_window(1, 1, "Offscreen", None, None)  # Minimal size for offscreen
+    window = glfw.create_window(1, 1, "Offscreen", None, None)
 
-    glfw.make_context_current(window)  # Make the context current
+    glfw.make_context_current(window)
     time.sleep(.1)
     print("GLFW re-initialized with offscreen context.")
     return True
@@ -1425,7 +1645,7 @@ def generate_frames():
                     print("Frame is None, skipping rendering.")
             except Exception as e:
                 print(f"Error rendering: {e}")
-                time.sleep(0.1)  # Prevent busy-looping on errors
+                time.sleep(0.1)
 
 @app.route('/video_feed')
 def video_feed():
@@ -1509,17 +1729,17 @@ def check_collision():
 
     collision_detected = bool(distance < threshold_distance)
     return jsonify({'collision': collision_detected})
+#End of Darren's Code
 
 @app.route('/next-question', methods=['POST'])
 def next_question():
     data = request.json
 
-    # Extract state from the request
     questions_served = data.get('questions_served', 0)
     score = data.get('score', 0)
     difficulty = data.get('difficulty', 'easy')
     used_questions = data.get('used_questions', [])
-    last_correct = data.get('last_correct', True)  # Indicates if the last answer was correct
+    last_correct = data.get('last_correct', True)  # Last answer is correct, move forward
 
     if questions_served >= 10:
         return jsonify({
@@ -1528,7 +1748,7 @@ def next_question():
             "score": score
         })
 
-    # Adjust difficulty based on the correctness of the last answer
+    # Dificulty Adaptation
     if questions_served > 0:
         if last_correct and difficulty == "easy":
             difficulty = "medium"
@@ -1539,7 +1759,6 @@ def next_question():
         elif not last_correct and difficulty == "hard":
             difficulty = "medium"
 
-    # Update score if the last answer was correct
     if last_correct:
         score += 1
 
@@ -1577,7 +1796,6 @@ def next_question():
 
 @app.route('/quiz1', methods=['GET'])
 def render_quiz_page():
-    # Render the quiz page with initial state handled on the client side
     return render_template('quiz1.html')
 
 if __name__ == '__main__':

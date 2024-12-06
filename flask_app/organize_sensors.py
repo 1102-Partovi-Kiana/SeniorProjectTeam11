@@ -1,9 +1,10 @@
+# Darren's Code
 import os
 from gym import utils
 from gym.envs.robotics import fetch_env
 import numpy as np
 
-# Ensure we get the path separator correct on Windows
+# This path is specific for 'venv38' virtual environment
 MODEL_XML_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 
     "venv38", 
@@ -61,5 +62,4 @@ class FetchOrganizeSensorsEnv(fetch_env.FetchEnv, utils.EzPickle):
         sensor_id = self.sim.model.sensor_name2id('sensor_backward')
         return self.sim.data.sensordata[sensor_id]
 
-
-
+# End of Darren's Code

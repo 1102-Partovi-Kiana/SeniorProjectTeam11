@@ -8,7 +8,7 @@
 
 <!-- Greet the user -->
 <div class="greeting">
-    <h1>Hello, {{ username }}! Welcome to your course catalog</h1>
+    <h1>Hello, {{ user['first_name'] }} {{ user['last_name'] }}! Welcome to your course catalog</h1>
 </div>
 
 <div class="search-bar">
@@ -31,8 +31,8 @@
             <div class="card-header">
                 <span class="course-type">{{ course.level }} Level</span>
             </div>
-            <h2><a href="{{ url_for(course.route) }}">{{ course.title }}</a></h2>
-            <p>{{ course.description }}</p>
+            <h2><a href="{{ url_for(course.route) }}">{{ course.course_name }}</a></h2>
+            <p>{{ course.course_desc }}</p>
             <div class="card-footer">
                 {% if course.certificate %}
                 <span class="certificate">With <strong>Certificate</strong></span>

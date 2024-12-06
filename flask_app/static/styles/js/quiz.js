@@ -1,17 +1,14 @@
 $(document).ready(function () {
     
-    // Initialize the quiz state
     let state = {
         questions_served: 0,
         score: 0,
         difficulty: 'easy',
         used_questions: [],
-        last_correct: true  // Initial assumption; can be set to null if preferred
+        last_correct: true  
     };
 
-    // Function to start the quiz
     function startQuiz() {
-        // Reset the state
         state = {
             questions_served: 0,
             score: 0,
@@ -19,12 +16,10 @@ $(document).ready(function () {
             used_questions: [],
             last_correct: true
         };
-        // Fetch the first question
-        fetchNextQuestion();
+        fetchNextQuestion(); // Get the next question
     }
 
-    // Function to fetch the next question from the server
-    function fetchNextQuestion() {
+    function fetchNextQuestion() { // use the POST call
         $.ajax({
             url: "/next-question",
             method: "POST",
@@ -36,16 +31,15 @@ $(document).ready(function () {
                     return;
                 }
 
-                // Update the state based on server response
+                // Quiz adaptation features where quiz content is updated
                 state.questions_served = response.questions_served;
                 state.score = response.score;
                 state.difficulty = response.difficulty;
                 state.used_questions = response.used_questions;
-                state.last_correct = true;  // Reset for the next question
+                state.last_correct = true;  
 
                 const question = response.question;
 
-                // Render the question
                 renderQuestion(question);
             },
             error: function (error) {
@@ -55,7 +49,6 @@ $(document).ready(function () {
         });
     }
 
-    // Function to render a question on the page
     function renderQuestion(questionData) {
         const question = questionData.question;
         const options = questionData.options;
@@ -76,7 +69,6 @@ $(document).ready(function () {
             </div>
         `);
 
-        // Submit Button Handler
         $("#submit-btn").click(function () {
             const selected = $("input[name='question']:checked").val();
             if (selected !== undefined) {
@@ -93,7 +85,6 @@ $(document).ready(function () {
         });
     }
 
-    // Function to display the quiz results
     function displayResult(score, message) {
         $("#quiz-container").html(`
             <div class="result text-center">
@@ -104,13 +95,11 @@ $(document).ready(function () {
             </div>
         `);
 
-        // Restart Quiz Button Handler
         $("#restart-btn").click(function () {
             startQuiz();
         });
     }
 
-    // Function to render the initial start screen
     function renderStartScreen() {
         $("#quiz-container").html(`
             <h2 class="text-center">Press Start to begin the quiz.</h2>
@@ -119,13 +108,11 @@ $(document).ready(function () {
             </div>
         `);
 
-        // Start Button Handler
         $("#start-button").click(function () {
             $(this).hide();
             fetchNextQuestion();
         });
     }
-
-    // Initialize the quiz by rendering the start screen
+    
     renderStartScreen();
 });

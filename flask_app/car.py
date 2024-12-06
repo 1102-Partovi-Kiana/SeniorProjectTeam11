@@ -1,8 +1,9 @@
+# Darren's Code
 import os
 import numpy as np
 import mujoco_py
 
-# Ensure we get the path separator correct on Windows
+# This path is specific for 'venv38' virtual environment
 MODEL_XML_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 
     "venv38", 
@@ -48,20 +49,11 @@ class CarEnv():
         return self.sim.data.sensordata[sensor_id]
 
     def step(self, action):
-        """
-        Apply the action to the environment, step through simulation.
-        
-        Args:
-            action (list or np.array): Action to apply (e.g., forward speed, turn speed).
-        """
-        # Apply action to the actuators (assuming action is a list of [forward, turn])
         forward, turn = action
 
-        # Apply control input to motors (you may need to adjust this based on your action space)
         self.sim.data.ctrl[0] = forward  # forward motor
         self.sim.data.ctrl[1] = turn     # turning motor
-        
-        # Step the simulation forward
+
         self.sim.step()
 
     def render(self, mode='human', width=DEFAULT_SIZE, height=DEFAULT_SIZE):
@@ -96,8 +88,7 @@ class CarEnv():
 
     def close(self):
         if self.viewer is not None:
-            # self.viewer.finish()
             self.viewer = None
             self._viewers = {}
 
-
+# End of Darren's Code with inspiration from Fetch Environments

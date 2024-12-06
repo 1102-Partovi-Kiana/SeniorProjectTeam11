@@ -96,7 +96,8 @@
                             <h4>Hints</h4>
                             <ul id="hintbox" class="hintbox"></ul>
                         </div>
-                    </div>                    
+                    </div>     
+                    <!-- Darren Code -->               
                     <div class="card-header">Coding Area</div>
                     <textarea id="code-editor" rows="20" style="height: 100%;">
 distance_threshold = 0.01
@@ -113,17 +114,13 @@ while True:
     box1_position = env.sim.data.get_site_xpos('object1')
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')
 
-
     horizontal_distance = np.linalg.norm(box1_position[:2] - gripper_position[:2])
-
 
     if horizontal_distance <= distance_threshold:
         break
 
-
     direction = box1_position - gripper_position
     direction_normalized = direction / (np.linalg.norm(direction[:2]) + 1e-8)
-
 
     horizontal_action = np.array([
         direction_normalized[0] * 0.1,
@@ -133,43 +130,33 @@ while True:
     ])
     env.step(horizontal_action)
 
-
 while True:
     box1_position = env.sim.data.get_site_xpos('object1')
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')
 
-
     vertical_distance = box1_position[2] - gripper_position[2]
-
 
     if abs(vertical_distance) <= distance_threshold:
         break
 
-
     descend_action = np.array([0, 0, vertical_distance * 0.1, 0])
     env.step(descend_action)
 
-
 env.step(close_grip_action)
-
 
 for _ in range(10):
     env.step(np.array([0, 0, 0, 0]))
 
-
 for _ in range (40):
     box1_position = env.sim.data.get_site_xpos('object1')
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')
-
 
     env.step(close_grip_action)
     ascend_action = np.array([0, 0, .13, 0])
     env.step(ascend_action)
     env.step(close_grip_action)
 
-
     box_to_box_threshold = 0.01
-
 
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')[:2]  # Only x and y
     box0_position = env.sim.data.get_site_xpos('object0')[:2]        # Only x and y
@@ -180,7 +167,6 @@ while distance_to_box0 > box_to_box_threshold:
     direction_to_box0 = box0_position - gripper_position
     direction_normalized = direction_to_box0 / (np.linalg.norm(direction_to_box0) + 1e-8)
 
-
     move_to_box_action = np.array([
         direction_normalized[0] * 0.3,
         direction_normalized[1] * 0.3,
@@ -188,41 +174,31 @@ while distance_to_box0 > box_to_box_threshold:
         0
     ])
 
-
     env.step(move_to_box_action)
 
-
     env.step(close_grip_action)
-
 
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')[:2]
     box0_position = env.sim.data.get_site_xpos('object0')[:2]
     distance_to_box0 = np.linalg.norm(box0_position - gripper_position)
 
-
 env.step(open_grip_action)
-
 
 for _ in range(10):
     env.step(np.array([0, 0, 0, 0]))
 
-
 box2_position = env.sim.data.get_site_xpos('object2')
 env.step(open_grip_action)
-
 
 while True:
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')
     horizontal_distance = np.linalg.norm(box2_position[:2] - gripper_position[:2])
 
-
     if horizontal_distance <= distance_threshold:
         break
 
-
     direction = box2_position - gripper_position
     direction_normalized = direction / (np.linalg.norm(direction[:2]) + 1e-8)
-
 
     horizontal_action = np.array([
         direction_normalized[0] * 0.1,
@@ -232,22 +208,17 @@ while True:
     ])
     env.step(horizontal_action)
 
-
 while True:
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')
     vertical_distance = box2_position[2] - gripper_position[2]
 
-
     if abs(vertical_distance) <= distance_threshold:
         break
-
 
     descend_action = np.array([0, 0, vertical_distance * 0.1, 0])
     env.step(descend_action)
 
-
 env.step(close_grip_action)
-
 
 for _ in range(10):
     env.step(np.array([0, 0, 0, 0]))
@@ -321,6 +292,7 @@ height_threshold=0.05
                     </div>
                 </div>
             </div>
+            <!-- End of Darren's Code -->
             
             <!-- <div class="chatbot-container">
                 <div id="chatbox" class="chatbox"></div>

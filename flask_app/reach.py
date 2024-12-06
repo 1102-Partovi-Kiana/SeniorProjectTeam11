@@ -2,9 +2,10 @@ import os
 from gym import utils
 from gym.envs.robotics import fetch_env
 
-# Ensure we get the path separator correct on Windows
+# Path for general devices
 MODEL_XML_PATH = os.path.join('fetch', 'reach.xml')
 
+# Darren's Code
 class ReachEnv(fetch_env.FetchEnv, utils.EzPickle):
     def __init__(self, reward_type='sparse'):
         initial_qpos = {
@@ -28,3 +29,5 @@ class ReachEnv(fetch_env.FetchEnv, utils.EzPickle):
         gripper_geom_id = self.sim.model.geom_name2id('robot0:l_gripper_finger_link')
         gripper_position = self.sim.data.geom_xpos[gripper_geom_id]
         return gripper_position 
+    
+# End of Darren's Code

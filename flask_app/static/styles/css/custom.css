@@ -795,12 +795,7 @@
 
 /* -------------------NAVBAR------------------- */
 
-nav {
-    margin: 0;
-    padding: 0;
-}
-
-
+/* General Styles */
 .navbar {
     background: #333;
     height: 60px; /* Reduced height */
@@ -821,8 +816,8 @@ nav {
     height: 60px;
     z-index: 1;
     width: 100%;
-    max-width: 1200px;
-    padding: 0 10px; /* Reduced padding */
+    max-width: 1200px; 
+    padding: 0 10px;
 }
 
 
@@ -839,15 +834,14 @@ nav {
 
 
 .navbar-brand {
-    display: flex;
-    position: absolute;
-    left: 0; /* Position at the left edge */
+    position: flex;
+    left: 0;
     padding-left: 10px;
 }
 
 
 .navbar-nav.ms-auto {
-    margin-left: auto; /* Pushes items to the right */
+    margin-left: auto;
 }
 
 
@@ -860,16 +854,15 @@ nav {
 
 
 .nav-item {
-    height: 60px; /* Reduced height */
+    height: 60px;
     display: flex;
     align-items: center;
-    padding: 0 0.5rem; /* Reduced padding for closer spacing */
+    padding: 0 0.5rem;
     transition: background-color 0.3s ease;
 }
 
-
-.nav-links {
-    color: #fff;
+.nav-link {
+    color: #535353;
     text-decoration: none;
     font-size: 1rem;
     width: 100%;
@@ -880,20 +873,75 @@ nav {
     transition: color 0.3s ease;
 }
 
+.nav-link.custom-nav-link {
+    color: rgb(0, 4, 255);
+    display: block;
+    height: 16px;
+}
+
+.nav-item:hover .nav-link.custom-nav-link {
+    color: rgb(0, 4, 255);
+}
+
+.nav-item.custom-nav-item{
+    line-height: 0px;
+}
+
+.nav-item.custom-nav-item:hover{
+    background-color: inherit;
+}
 
 .nav-item:hover {
     background-color: #fff;
 }
 
-
-.nav-item:hover .nav-links {
+.nav-item:hover .nav-link {
     color: #333;
+}
+
+/* Homepage-Specific Styles */
+.navbar.homepage {
+    background: #333;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+}
+
+/* Dashboard-Specific Styles */
+.navbar.dashboard {
+    width: calc(100% - 250px);
+    background: #333;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem; 
+    margin-left: 250px; 
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.navbar.dashboard .navbar-brand {
+    position: absolute;
+    left: 0;
+    padding-left: 10px;
+}
+
+.navbar.dashboard .container{
+    margin-right: 24px;
+    max-width: none;
+}
+
+.navbar.dashboard.collapsed {
+    margin-left: 60px;
+    width: calc(100% - 60px);
 }
 
 /* -------------------FOOTER------------------- */
 
 .footer {
-    background-color: #1c284c; 
+    background-color: rgb(28, 40, 76);
 }
 
 .footer .btn-logo {
@@ -921,6 +969,47 @@ nav {
     color: #fff;
     text-decoration: none; 
     font-size: 1rem; 
+}
+
+.footer.dashboard{
+    width: calc(100% - 250px);
+    background-color: rgb(28, 40, 76); 
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem; 
+    margin-left: 250px; 
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.sidebar-wrapper.collapsed ~ .footer.dashboard {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+}
+
+.footer.dashboard .container {
+    padding: 0 !important;
+    max-width: none;
+    height: 100%;
+}
+
+.footer.dashboard .footer-nav {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+    height: 60px;
+}
+
+.footer.dashboard .footer-logo {
+    position: absolute !important;
+    left: 0;
+    padding-left: 10px;
+}
+
+.footer.dashboard .container{
+    margin-right: 24px;
+    max-width: none;
 }
 
 /* -------------------SIGNUPPAGE + LOGINPAGE------------------- */
@@ -1548,51 +1637,18 @@ nav {
     position: relative;
 }
 
-/* Took this out to fix the output terminal margining */
-/* .robotic-environment #output-box::before {
-    content: "Terminal";
-    display: block;
-    background-color: #333;
-    color: #d4d4d4;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    font-size: 13px; /* Slightly larger for better readability */
-    /* text-align: left;
-    line-height: 30px; /* Match height if necessary */
-    /* position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 30px; 
-} */ 
-
-/* Adjust output content to be below the header */
+/* We are not matching the header size, had to change a bit*/
 .robotic-environment #output-box .output-content {
-    padding-top: 35px; /* Adjust this to match the header height */
+    padding-top: 35px; 
 }
 
-/* Styling for error messages in output box */
 .robotic-environment #output-box p.error {
-    color: #ff4c4c; /* Red color for errors */
     font-weight: bold;
+    color: #ff4c4c;  /* When we have an error */
 }
 
-/* Adds padding and space for each output message */
 .robotic-environment #output-box p {
-    margin: 5px 0;
-}
-
-/* Styling for error messages in output box */
-.robotic-environment #output-box p.error {
-    color: #ff4c4c; /* Red color for errors */
-    font-weight: bold;
-}
-
-/* Adds padding and space for each output message */
-.robotic-environment #output-box p {
-    margin: 5px 0;
+    margin: 5px 0; /* Space for the message */
 }
 
 .robotic-environment .btn-success:hover {
@@ -1600,7 +1656,6 @@ nav {
     border-color: #005a9e;
 }
 
-/* Styling for the Ball and Gripper Position text */
 .robotic-environment h5 {
     font-size: 16px;
     font-weight: bold;
@@ -1731,6 +1786,10 @@ nav {
     padding: 0.5rem 1rem;
     border-bottom: 1px solid #2c2c2c;
     border-radius: 8px 8px 0 0;
+}
+
+.omgneedtofix {
+    color: white;
 }
 
 .coding-options .tab-button {

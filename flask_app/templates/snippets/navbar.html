@@ -1,43 +1,108 @@
 <header>
-    <nav class="navbar navbar-ware navbar-expand-lg navbar-light bg-light fixed-top">
+    <nav class="navbar navbar-ware navbar-expand-lg {% if is_dashboard %}dashboard{% elif is_homepage %}homepage{% endif %} navbar-light bg-light fixed-top">
         <div class="container px-0">
             <a class="navbar-brand d-flex align-items-center py-0 ms-0" href="{{ url_for('RenderHomepage') }}">
                 <img src="{{ url_for('static', filename='img/logo.png') }}" alt="CORE Logo" style="width: 40px; height: 40px;">
-                <span class="navbar-logo">core</span> <!-- Apply the navbar-logo class here -->
+                <span class="navbar-logo">core</span>
             </a>
-            
-            <!-- Bootstrap 5 updated button for toggling navbar -->
-            <button class="hamburger hamburger--elastic d-block d-lg-none ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="hamburger hamburger--elastic d-block d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="hamburger-box">
                     <span class="hamburger-inner"></span>
                 </span>
             </button>
-
-            <!-- Bootstrap 5 updated navbar collapse and flex utility classes -->
             <div class="collapse navbar-collapse flex-column-reverse flex-lg-column pb-5 pb-lg-0" id="navbarContent">
                 <ul class="navbar-nav ms-auto navbar-help ms-lg-auto me-lg-0 mt-3 mt-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="#">Contact</a>
-                    </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{ url_for('RenderEnvironmentList') }}">Environments</a>
-                    </li> -->
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{ url_for('RenderLogin') }}">Log In</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{ url_for('RenderSignup') }}">Sign Up</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{ url_for('RenderCourses') }}">Courses</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{ url_for('playground') }}">Playground</a>
-                    </li>
-					
+                    {% if is_homepage %}
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" href="{{ url_for('RenderLogin') }}">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" href="{{ url_for('RenderSignup') }}">Sign Up</a>
+                        </li>
+                        {% elif is_student_dashboard %}
+                        <li class="nav-item custom-nav-item">
+                            <a class="nav-link custom-nav-link" href="#" data-bs-toggle="modal" data-bs-target="#joinClassModal">Join a Class</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Courses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('RenderStudentDashboard') }}">My Grades</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" href="{{ url_for('playground') }}">Playground</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>
+                        </li>
+                        <div class="modal fade custom-modal" id="joinClassModal" tabindex="-1" aria-labelledby="joinClassModal" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content custom-modal-content">
+                                    <div class="modal-header custom-modal-header">
+                                        <h5 class="modal-title" id="joinClassModalLabel">Join a Class</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body custom-modal-body">
+                                        <form method="POST" action="{{ url_for('RenderStudentDashboard') }}">
+                                            <div class="mb-3">
+                                                <label for="classCourseKey" class="form-label">Course Key</label>
+                                                <input type="text" class="form-control" id="classCourseCode" name="classCourseCode" placeholder="Enter course key">
+                                            </div>
+                                            <button type="submit" class="btn custom-modal-btn">Join</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% elif is_instructor_dashboard%}
+                        <li class="nav-item custom-nav-item">
+                            <a class="nav-link custom-nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createClassModal">Create a New Class</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Classes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('RenderInstructorDashboard') }}">Feedback</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" href="{{ url_for('playground') }}">Playground</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>
+                        </li>
+                        <div class="modal fade custom-modal" id="createClassModal" tabindex="-1" aria-labelledby="createClassModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content custom-modal-content">
+                                    <div class="modal-header custom-modal-header">
+                                        <h5 class="modal-title" id="createClassModalLabel">Create a New Class</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body custom-modal-body">
+                                        <form method="POST" action="{{ url_for('RenderInstructorDashboard') }}">
+                                            <div class="mb-3">
+                                                <label for="classCourseCode" class="form-label">Course Code</label>
+                                                <input type="text" class="form-control" id="classCourseCode" name="classCourseCode" placeholder="Enter course code">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="classSection" class="form-label">Section Number</label>
+                                                <input type="text" class="form-control" id="classSection" name="classSection" rows="3" placeholder="Enter class section number">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="classDate" class="form-label">Class Start Date</label>
+                                                <input type="date" class="form-control" id="classDate" name="classDate">
+                                            </div>
+                                            <button type="submit" class="btn custom-modal-btn">Create Class</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 </header>
-
