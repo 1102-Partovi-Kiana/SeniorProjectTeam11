@@ -1,0 +1,23 @@
+<footer class="footer {% if is_dashboard %}dashboard{% else %}homepage{% endif %}">
+	<div class="container py-3">
+		<nav>
+			<ul class="footer-nav flex-column flex-md-row align-items-center gap-2">
+				<li class="footer-item">
+					<a class="btn btn-link btn-logo" id="footer-logo" href="{{ url_for('RenderHomepage') }}">
+						<img src="{{ url_for('static', filename='img/logo.png') }}" alt="CORE Logo" style="width: 40px; height: 40px;">
+						<span class="footer-logo-text">core</span>
+					</a>
+				</li>
+				<li class="footer-item ms-md-auto">
+					<a class="footer-link" href="#">Terms of Use</a>
+				</li>
+				<li class="footer-item">
+					<a class="footer-link" href="#">Privacy Policy</a>
+				</li>
+				<li class="footer-item">
+					<a class="footer-link" href="#">Site Map</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</footer>

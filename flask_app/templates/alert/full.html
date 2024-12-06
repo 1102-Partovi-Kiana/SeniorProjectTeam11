@@ -1,0 +1,30 @@
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% set toast_counter = 0 %}
+        {% for category, message in messages %}
+            <!-- Display Alert (used for general flash messages like success/error) -->
+            {% if category != 'popup' %}
+            <div class="alert alert-{{ 'success' if category == 'success' else 'danger' if category == 'error' else 'info' }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            <!-- Display Toast (used for popup messages, e.g., "popup" category) -->
+            {% if category == 'popup' %}
+            <div aria-live="polite" aria-atomic="true" class="p-3 toast-container" style="z-index: 1050;">
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto">Notification</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                </div>
+            </div>
+            {% set toast_counter = toast_counter + 1 %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endwith %}

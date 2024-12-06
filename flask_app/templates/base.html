@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	{% block title %}{% endblock %}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	{# Bootstrap stylesheet #}
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/bootstrap.css') }}">
+
+	{# Global stylesheets #}
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/hamburger.css') }}">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/custom.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/other.css') }}">
+	<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;600&display=swap">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap">
+	{# Font for our logo #}
+	<link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+	{# Other font I have applied #}
+	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+	{# Code Mirror Things #}
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/monokai.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css" rel="stylesheet">
+
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles/css/dashboard.css') }}">
+
+	{% block extra_css %}
+	{# Override this in templates to add extra stylesheets #}
+	{% endblock %}
+
+</head>
+
+<body>
+	{% include 'snippets/navbar.html' %}
+	{% block body %}{% endblock %}
+	{% include 'snippets/footer.html' %}
+	{# Global javascript #}
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="{{ url_for('static', filename='styles/js/bootstrap.bundle.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/hamburger.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/home.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/back-to-top.js') }}"></script>
+	<script src="{{ url_for('static', filename='/styles/js/scroll-highlight.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/stars.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/quiz.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/chatbot.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/chatbot2.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/closebot.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/playpausebutton.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/playground.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/slider.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/microphone.js') }}"></script>
+
+	<!-- Popper.js from CDN -->
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+	<!-- Tippy.js -->
+	<script src="https://unpkg.com/@popperjs/core@2"></script>
+	<script src="https://unpkg.com/tippy.js@6"></script>
+	<script src="{{ url_for('static', filename='styles/js/tooltip.js') }}"></script>
+	<!-- Code Mirror Things -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+
+	<script src="{{ url_for('static', filename='styles/js/sidebar-toggler.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/popup-alert.js') }}"></script>
+	<script src="{{ url_for('static', filename='styles/js/dashboard.js') }}"></script>
+
+	{% block extra_js %}
+	{# Override this in templates to add extra javascript #}
+	{% endblock extra_js %}
+
+</body>
+
+</html>

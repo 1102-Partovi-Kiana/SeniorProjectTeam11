@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Robot Anatomy - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item">
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="#overview" class="course-link">Definition and Overview of Robotics</a>
+                <ul class="sub-list">
+                    <li><a href="#what-is-robot">What is a robot?</a></li>
+                    <li><a href="#intro-field-robotics">Robotics as a Field of Study</a></li>
+                    <li><a href="#goals-applications">Goals and Applications</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#history" class="course-link">History of Robotics</a>
+                <ul class="sub-list">
+                    <li><a href="#development">The development of robotics</a></li>
+                    <li><a href="#milestones">Key milestones</a></li>
+                    <li><a href="#influential-systems">Influential robotics systems</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#types" class="course-link">Types of Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#industrial">Industrial Robots</a></li>
+                    <li><a href="#humanoid">Humanoid Robots</a></li>
+                    <li><a href="#mobile">Mobile Robots</a></li>
+                    <li><a href="#collaborative-robots">Collaborative Robots</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#applications" class="course-link">Importance and Applications of Robotics</a>
+                <ul class="sub-list">
+                    <li><a href="#manufacturing">Manufacturing</a></li>
+                    <li><a href="#healthcare">Healthcare</a></li>
+                    <li><a href="#exploration">Exploration</a></li>
+                    <li><a href="#agriculture">Agriculture</a></li>
+                    <li><a href="#entertainment">Entertainment</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#course1-quiz1" class="course-link">Quiz 1</a>
+            </li>
+            <li class="course-item active">
+                <a href="#anatomy" class="course-link">Robot Anatomy</a>
+                <ul class="sub-list">
+                    <li><a href="#actuators">Actuators</a></li>
+                    <li><a href="#sensors">Sensors</a></li>
+                    <li><a href="#controllers">Controllers</a></li>
+                    <li><a href="#effectors">End Effectors</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#challenges" class="course-link">Challenges In Robotics</a>
+                <ul class="sub-list">
+                    <li><a href="#navandmapping">Navigation and Mapping</a></li>
+                    <li><a href="#humanrobot">Human-Robot Interaction</a></li>
+                    <li><a href="#perception">Perception and Recognition</a></li>
+                    <li><a href="#ethics">Ethical Considerations</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#robot-programming" class="course-link">Robot Programming</a>
+                <ul class="sub-list">
+                    <li><a href="#lowlevel">Low-Level Programming</a></li>
+                    <li><a href="#highlevel">High-Level Programming</a></li>
+                    <li><a href="#programming-interface">Programming Interfaces</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#implications" class="course-link">Social and Ethical Implications</a>
+                <ul class="sub-list">
+                    <li><a href="#privacy">Privacy</a></li>
+                    <li><a href="#job-displacement">Job Displacement</a></li>
+                    <li><a href="#human-robot-interaction">Human-Robot Interaction</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="#future-trends" class="course-link">Future Trends</a>
+                <ul class="sub-list">
+                    <li><a href="#AI">Artificial Intelligence (AI) in Robotics</a></li>
+                    <li><a href="#soft-robotics">Soft Robotics</a></li>
+                    <li><a href="#swarm-robotics">Swarm Robotics</a></li>
+                    <li><a href="#hri">Human-Robot Interaction (HRI)</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Robot Anatomy</h1>
+            <p class="page-description">To comprehend the inner workings of a robot, it is essential to understand its anatomy. This section dives into the basic components of a robot, including actuators, sensors, controllers, and end effectors. By exploring these elements, we can gain insights into how robots interact with their environment and perform tasks effectively. There are four basic components to a robot:</p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Let's Dive In</span>
+        </div>
+
+        <!-- Section 1: Actuators  -->
+        <div class="module-section" id="actuators">
+            <h3>Actuators</h3>
+            <p>Actuators are the components responsible for converting electrical energy into mechanical motion, enabling robots to move and perform tasks. They generate force, torque, or linear motion and are categorized into various types, including electric motors, hydraulic actuators, and pneumatic actuators. Actuators provide the necessary power and motion required for the robot to manipulate objects, navigate its environment, and perform specific actions.</p>
+        </div> <!-- End of module-section -->
+
+        <!-- Section 2: Sensors -->
+        <div class="module-section" id="sensors">
+            <h3>Sensors</h3>
+            <p>Sensors are vital components that enable robots to perceive and understand their surroundings. They collect data from the environment or the robot itself and provide information such as position, orientation, distance, temperature, and more. Sensors can include cameras, proximity sensors, force sensors, temperature sensors, and many others. By gathering data from sensors, robots can make informed decisions, adapt to changes, and interact intelligently with their environment.</p>
+        </div> <!-- End of module-section -->
+
+        <!-- Section 3: Exploration -->
+        <div class="module-section" id="controllers">
+            <h3>Controllers</h3>
+            <p>Robots have become invaluable tools for exploring challenging and hazardous environments, both on Earth and in space. Mars rovers, for example, collect data and samples, providing insights into planetary geology and the potential for extraterrestrial life. Autonomous underwater and aerial robots explore underwater ecosystems and remote environments, enabling scientific research and environmental monitoring.</p>
+              <!-- Applications - Exploration -->
+              <div class="subsection">
+                <h4>Applications</h4>
+                <ul>
+                    <li>Planetary exploration</li>
+                    <li>Underwater exploration</li>
+                    <li>Remote sensing and monitoring</li>
+                    <li>Search and rescue operations</li>
+                    <li>Hazardous environment exploration</li>
+                </ul>
+            </div>
+        </div> <!-- End of module-section -->
+
+        <!-- Section 4: Agriculture -->
+        <div class="module-section" id="agriculture">
+            <h3>Agriculture</h3>
+            <p>Robotics has the potential to revolutionize agriculture by increasing efficiency, sustainability, and productivity. Agricultural robots, known as agribots, perform tasks such as planting, harvesting, monitoring crop health, and precision spraying. They can operate autonomously, optimizing resource utilization and reducing environmental impact. Robotics in agriculture enable precision farming techniques, improving crop yields and reducing labor-intensive processes.</p>
+               <!-- Applications - Agriculture -->
+               <div class="subsection">
+                <h4>Applications</h4>
+                <ul>
+                    <li>Planting and seeding</li>
+                    <li>Crop monitoring and management</li>
+                    <li>Harvesting and sorting</li>
+                    <li>Precision spraying and irrigation</li>
+                    <li>Greenhouse automation</li>
+                </ul>
+            </div>
+        </div> <!-- End of module-section -->
+
+        <!-- Section 5: Entertainment -->
+        <div class="module-section" id="entertainment">
+            <h3>Entertainment</h3>
+            <p>Robotic technologies have found their place in the entertainment industry, captivating audiences, and providing engaging experiences. Robots, such as animatronics and humanoid robots, are used in theme parks, museums, and interactive exhibits. They entertain, educate, and create immersive experiences for visitors, blurring the boundaries between technology and entertainment.</p>
+                <!-- Applications - Entertainment -->
+                <div class="subsection">
+                    <h4>Applications</h4>
+                    <ul>
+                        <li>Animatronics in theme parks</li>
+                        <li>Humanoid robots in interactive exhibits</li>
+                        <li>Robotic characters in movies and shows</li>
+                        <li>Virtual reality and augmented reality experiences</li>
+                        <li>Gaming and robotic competitions</li>
+                    </ul>
+                </div>
+        </div> <!-- End of module-section -->
+        
+        <!-- Next Button -->
+        <div class="next-button text-right mt-4">
+            <a href="{{ url_for('challenges') }}" class="secondary-button">Next: Challenges in Robotics</a>
+        </div>
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

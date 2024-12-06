@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Sign Up Page - CORE</title>
+{% endblock %}
+
+{% block extra_css %}
+{% endblock extra_css %}
+
+{% block body %}
+<section class="signup-section py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 p-4 signup-form-wrapper mb-2 mb-md-5">
+                <h1 class="mb-4">Sign Up</h1>
+                {% include "alert/full.html" %}
+                <form id="signup-form" action="/signup" method="post">
+                    <!-- Username -->
+                    <div class="mb-4">
+                        <input type="text" class="form-control rounded-0" id="username" name="username" placeholder="Username" required>
+                        <div class="error-feedback" id="first-name-error"></div> <!-- Error message -->
+                    </div>
+                    
+                    <!-- First Name -->
+                    <div class="mb-4">
+                        <input type="text" class="form-control rounded-0" id="first-name" name="first_name" placeholder="First name" required>
+                        <div class="error-feedback" id="first-name-error"></div> <!-- Error message -->
+                    </div>
+                    
+                    <!-- Last Name -->
+                    <div class="mb-4">
+                        <input type="text" class="form-control rounded-0" id="last-name" name="last_name" placeholder="Last name" required>
+                        <div class="error-feedback" id="last-name-error"></div> <!-- Error message -->
+                    </div>
+                    
+                    <!-- Email Address -->
+                    <div class="mb-4">
+                        <input type="email" class="form-control rounded-0" id="email-address" name="email" placeholder="Email address" required>
+                        <div class="error-feedback" id="email-error"></div> <!-- Error message -->
+                    </div>
+                    
+                    <!-- Password w/ JS Requirements-->
+                    <div class="mb-4">
+                        <input type="password" class="form-control rounded-0" id="password-field" name="password" placeholder="Password" required>
+                        <ul class="error-feedback" id="password-requirements" style="list-style: none; padding: 0;"></ul>
+                    </div>
+      
+                    <!-- Confirm Password -->
+                    <div class="mb-4">
+                        <input type="password" class="form-control rounded-0" id="confirm-password-field" name="confirm_password" placeholder="Confirm password" required>
+                        <div class="error-feedback" id="password-error"></div> <!-- Error message -->
+                    </div>
+
+                    <!-- Account Type Radio Buttons -->
+                    <div class="account-type-section mb-5">
+                        <label class="mb-3">Type of Account</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="account_type" id="account-type-instructor" value="instructor" checked>
+                            <label class="form-check-label" for="account-type-instructor">
+                                Instructor  
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="account_type" id="account-type-student" value="student">
+                            <label class="form-check-label" for="account-type-student">
+                                Student
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button type="submit" class="aesthetic-button">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+         <!-- Chatbot Button -->
+         <div class="chatbot-label-container">
+            <div class="chatbot-label">Hi! I'm CORA, your personal assistant. Click me!</div>
+            <div class="chatbot-button">
+                <img src="{{ url_for('static', filename='img/blinking.gif') }}" alt="Chatbot Logo" class="chatbot-logo">
+            </div>
+        </div>
+
+       <!-- Second Chatbot Interface -->
+       <div class="chatbot-container" class="chatbot2-container navy-gradient-glow" id="chatbot2-container" style="display: none;">
+        <div class="navy-gradient-glow">
+        <header class="chat-header">
+            <h1>✨ Cora, Your AI Learning Assistant</h1>
+        </header>
+        <div class="chatbox2 navy-gradient-glow" id="chatbox2" class="chatbox chat-body">
+            <p class="info-title">Support where you need it</p>
+            <p>Your personal AI Learning Assistant, Cora, can access:</p>
+            <ul style="list-style-type: none; padding: 0; margin: 0;">
+                <li>&#10003; Your exact lesson</li>
+                <li>&#10003; The instructions</li>
+                <li>&#10003; What page your on</li>
+            </ul>
+            <p class="info-text">
+                Not just any chatbot. Take advantage of help in the right moments with your unique learning experience.
+            </p>
+        </div>
+        <div class="chat-input-container chat-footer">
+            <input type="text" id="userInput2" class="chat-input" placeholder="Send a message">
+            <button id="sendBtn2" class="send-btn">&#9658;</button>
+        </div>
+        </div>
+    </div>
+        
+    </div>
+</section>
+{% endblock body %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='styles/js/signup.js') }}"></script>
+{% endblock %}

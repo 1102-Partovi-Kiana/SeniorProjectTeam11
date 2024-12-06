@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Robotics Playground - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="carousel-container">
+    <div class="carousel">
+        <div class="playground-card">
+            <video class="playground-card-video" controls>
+                <source src="/static/playground_videos/fetchreach.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="playground-card-body">
+                <h3 class="playground-card-title"><a href="{{ url_for('RenderFetchReachRobotSimulation') }}">Fetch Reach</a></h3>
+                <p class="playground-card-description">Control a robotic arm to reach an object.</p>
+                <div class="playground-card-info">
+                    <span class="level">Beginner</span>
+                </div>
+            </div>
+        </div>
+        <div class="playground-card">
+            <video class="playground-card-video" controls>
+                <source src="/static/playground_videos/fetchreach.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="playground-card-body">
+                <h3 class="playground-card-title"><a href="{{ url_for('RenderPickAndPlaceEnv') }}">Fetch Pick & Place</a></h3>
+                <p class="playground-card-description"> Pick and place and object at a certain location.</p>
+                <div class="playground-card-info">
+                    <span class="level">Intermediate</span>
+                </div>
+            </div>
+        </div>
+        <div class="playground-card">
+            <video class="playground-card-video" controls>
+                <source src="/static/playground_videos/fetchstack3blocks.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="playground-card-body">
+                <h3 class="playground-card-title"><a href="{{ url_for('RenderFetchStackEnv') }}">Fetch Stack</a></h3>
+                <p class="playground-card-description">Stack objects using robotic precision.</p>
+                <div class="playground-card-info">
+                    <span class="level">Intermediate</span>
+                </div>
+            </div>
+        </div>
+        <div class="playground-card">
+            <video class="playground-card-video" controls>
+                <source src="/static/playground_videos/organize.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="playground-card-body">
+                <h3 class="playground-card-title"><a href="{{ url_for('RenderFetchOrganizeEnv') }}">Organize</a></h3>
+                <p class="playground-card-description">Organize items into a container.</p>
+                <div class="playground-card-info">
+                    <span class="level">Intermediate</span>
+                </div>
+            </div>
+        </div>
+        <div class="playground-card">
+            <video class="playground-card-video" controls>
+                <source src="/static/playground_videos/sensors.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="playground-card-body">
+                <h3 class="playground-card-title"><a href="{{ url_for('RenderFetchOrganizeSensorsEnv') }}">Sensors</a></h3>
+                <p class="playground-card-description">Leverage sensors to organize items.</p>
+                <div class="playground-card-info">
+                    <span class="level">Intermediate</span>
+                </div>
+            </div>
+        </div>
+        <div class="playground-card">
+            <video class="playground-card-video" controls>
+                <source src="/static/playground_videos/car.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="playground-card-body">
+                <h3 class="playground-card-title"><a href="{{ url_for('RenderCarEnv') }}">Car</a></h3>
+                <p class="playground-card-description">Program a moving car from start to finish.</p>
+                <div class="playground-card-info">
+                    <span class="level">Advanced</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
