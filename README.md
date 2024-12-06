@@ -118,5 +118,36 @@ tooltip.js
 
 Got all of our vidoes, images, etc.
 
+Timothy:
+app.py (Login, Signup, Reset Password, Forgot Password, Student/Instructor Dashboard, Session Logic, etc.)
 
+Note: Paired Programmed with Darren to get the Gymnasium Robot videos to play
 
+CORE_DB.sql
+email_func.py
+auth_func.py
+class_py.py
+
+dashboard/dashboard_classes.html
+dashboard/dashboard_instructor.html
+dashboard/dashboard_student.html
+
+alert/full.html
+
+account/reset_password.html
+account/forgot_password.html
+account/forgot_password.txt
+
+snippets/footer.html
+snippets/navbar.html
+
+courses/courses3-content/.html (Collabed on it with Darren)
+
+Javascript
+sidebar-toggler.js
+signup.js
+dashboard.js
+
+CSS
+dashboard.css
+custom.css (editted navbar & footer)
