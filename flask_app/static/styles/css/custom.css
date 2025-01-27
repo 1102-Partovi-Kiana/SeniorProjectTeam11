@@ -2512,8 +2512,7 @@
     justify-content: center;
     padding: 20px;
     background-color: #e8f5fe;
-    min-height: 100vh; 
-    height: auto; /* Removes any fixed height */
+    height: auto;
     overflow: visible; 
     overflow-y: auto; 
 }
@@ -2558,7 +2557,7 @@
     font-size: 0.95em;
     line-height: 1.6;
     margin: 10px 20px;
-    min-height: 60px; 
+    height: auto;
 }
 
 .card-footer {
@@ -3579,5 +3578,66 @@ code {
     }
 }
 
+/* Course Progress Bar */
+.progress-bar-container {
+    width: 260px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 10px;
+}
 
+.progress-bar-info h2 {
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    margin-bottom: 10px;
+}
 
+.progress-bar {
+    width: 240px;
+    height: 10px;
+    border-radius: 5px;
+    background: rgb(194, 194, 194);
+    overflow: visible;
+    position: relative;
+}
+
+.progress-bar .completed-progress {
+    height: 100%;
+    border-radius: 5px;
+    background: rgb(0, 4, 255);
+    position: relative;
+}
+
+.progress-bar .completed-progress span {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(50%, -50%);
+}
+
+.completed-progress {
+    background: rgb(255, 255, 255);
+}
+
+.completed-progress span{
+    border: 1px solid;
+    border-color: rgb(0, 4, 255);
+}
+
+.course-item .checkmark-icon{
+    width: 24px;
+    height: 24px;
+    fill: rgb(18, 219, 44);
+    align-self: center;
+}

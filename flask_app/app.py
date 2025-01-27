@@ -11,7 +11,7 @@ from car import CarEnv
 import requests
 import random
 import jedi
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy 
 from flask_migrate import Migrate
 from flask_mail import Mail, Message
 from config import Config
@@ -23,7 +23,6 @@ import glfw
 import threading
 import gymnasium as gym
 import ast
-
 
 app = Flask(__name__, static_folder='static')
 app.config.from_object(Config)
@@ -1222,6 +1221,32 @@ def RenderInstructorDashboard():
 
     return render_template('dashboard/dashboard_instructor.html', is_dashboard=True, is_instructor_dashboard=True, classes=user_classes, user=user)
 
+@app.route('/dashboard/classes/class_details', methods=['GET', 'POST'])
+def RenderClassDetails():
+    class_id = request.form.get('class_id')
+    if not class_id:
+        flash('An error has occurred. Please try again later.')
+        return redirect(url_for('RenderInstructorClasses'))
+
+    # Fetch the enrolled students for the class
+    enrolled_students = db.session.query(Enrollment).join(Enrollment.user).filter(Enrollment.class_id == class_id).all()
+
+    students = []
+    for enrollment in enrolled_students:
+        student = enrollment.user
+        students.append({
+            'user_id': student.user_id,
+            'first_name': student.first_name,
+            'last_name': student.last_name,
+            'email': student.email
+        })
+
+    return render_template(
+        'dashboard/dashboard_class_details.html',
+        is_dashboard=True,
+        is_instructor_dashboard=True,
+        students=students
+    )
 
 @app.route('/dashboard/student-view', methods=['GET', 'POST'])
 def RenderStudentDashboard():
@@ -1335,6 +1360,15 @@ def GenerateClassCode():
 
     return redirect(url_for('RenderInstructorClasses'))
 
+'''
+GetStudentsFromClass Function shows the students enrolled in a class through the use of JavaScript.
+When the instructor selects a class, the class ID is taken where the DB is queried based on that ID.
+The ID is, then, used to pull the student's data where it is displayed in the table of students in
+a modal from dashboard_instructor.html.
+
+Related: dashboard_instructor.html
+Uses: dashboard.js
+'''
 @app.route('/dashboard/instructor-view/classes/get-students-from-class', methods=['GET', 'POST'])
 def GetStudentsFromClass():
     if request.method == 'GET':
@@ -1382,6 +1416,7 @@ def AssignStudentToCourse():
         #print("Selected Courses:", selected_courses_id)
 
         assignments = []
+        subsection_assignments = []
 
         for student_id in selected_student_ids:
             student = User.query.filter_by(user_id=student_id).first()
@@ -1390,18 +1425,36 @@ def AssignStudentToCourse():
             for course_id in selected_courses_id:
                 if not course_id:
                     continue
-                existing_assignment = StudentAssignedCourses.query.filter_by(user_id=student_id, course_id=course_id).first()
-                if existing_assignment:
+
+                course = Courses.query.filter_by(course_id=course_id).first()
+                if not course:
                     continue
 
-                student_assignments =  StudentAssignedCourses()
-                student_assignments.user_id = student_id
-                student_assignments.course_id = course_id
-                assignments.append(student_assignments)
+                section_number = course.section_number
+                subsections = CourseSubsections.query.filter(
+                    CourseSubsections.course_subsection_number > section_number,
+                    CourseSubsections.course_subsection_number < section_number + 1
+                ).all()
+
+                existing_assignment = StudentAssignedCourses.query.filter_by(user_id=student_id, course_id=course_id).first()
+                if not existing_assignment:
+                    student_assignment = StudentAssignedCourses(user_id=student_id, course_id=course_id)
+                    assignments.append(student_assignment)
+
+                for subsection in subsections:
+                    existing_subsection_assignment = StudentAssignedCourseSubsections.query.filter_by(user_id=student_id, course_subsection_number=subsection.course_subsection_number).first()
+                    if not existing_subsection_assignment:
+                        student_subsection_assignment = StudentAssignedCourseSubsections(user_id=student_id, course_subsection_number=subsection.course_subsection_number)
+                        subsection_assignments.append(student_subsection_assignment)
 
         if assignments:
             db.session.add_all(assignments)
-            db.session.commit()
+        if subsection_assignments:
+            db.session.add_all(subsection_assignments)
+        
+        db.session.commit()
+
+        if assignments:
             flash('Students have been successfully assigned to the selected courses.', 'popup')
         else:
             flash('No new assignments were made. All students were already assigned to the selected courses.', 'popup')
@@ -1412,7 +1465,6 @@ def AssignStudentToCourse():
 def RenderLogout():
     session.clear()
     flash('You have been logged out successfully.', 'popup')
-    print("Hello World")
     return redirect(url_for('RenderHomepage'))
 
 @app.route('/courses')
@@ -1424,14 +1476,24 @@ def RenderCourses():
     
     user_id = user['user_id']
     role = user['role_id']
+    complete_percentage = None 
 
     if role == ROLE_STUDENT:
         assigned_courses = StudentAssignedCourses.query.filter_by(user_id=user_id).all()
         courses = []
         for assignment in assigned_courses:
             courses.append(assignment.course)
+
+        assigned_subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+        completed_subsections = StudentAssignedCourseSubsections.query.filter_by(completion_status = 't', user_id=user_id).all()
+
+        num_completed_subsections = len(completed_subsections)
+        num_assigned_subsections = len(assigned_subsections)
+
+        complete_percentage = round((num_completed_subsections / num_assigned_subsections) * 100)
     else:
         courses = Courses.query.all()
+        complete_percentage = None
 
     query = request.args.get("q", "").lower()
     filtered_course_catalog = [
@@ -1442,7 +1504,9 @@ def RenderCourses():
         or (query == "certificate" and course.certificate == "t")
         or query in course.length.lower()
     ]
-    return render_template("courses.html", courses=filtered_course_catalog, query=query, user=user)
+
+    print(complete_percentage)
+    return render_template("courses.html", courses=filtered_course_catalog, query=query, user=user, complete_percentage=complete_percentage)
 
 @app.route('/playground')
 def playground():
@@ -1450,7 +1514,28 @@ def playground():
 
 @app.route('/module1/introduction')
 def module_intro():
-    return render_template('courses/course1-content/module_intro.html') 
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    module_completed = {}
+
+    if role == ROLE_STUDENT:
+        subsection = StudentAssignedCourseSubsections.query.filter_by(course_subsection_number = 1.11, user_id=user_id).first()
+        if subsection:
+            subsection.completion_status = True
+            db.session.commit()
+
+    subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+    for subsection in subsections:
+        module_completed[subsection.course_subsection_number] = subsection.completion_status
+
+    return render_template('courses/course1-content/module_intro.html', module_completed=module_completed)
 
 @app.route('/module1/start-page')
 def course1_card():
@@ -1466,43 +1551,173 @@ def course3_card():
 
 @app.route('/module1/introduction/overview')
 def overview():
-    return render_template('courses/course1-content/overview.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.12
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/overview.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/history')
 def history():
-    return render_template('courses/course1-content/history_of_robotics.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.13
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/history_of_robotics.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/types-of-robots')
 def typesofrobots():
-    return render_template('courses/course1-content/types_of_robots.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.14
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/types_of_robots.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/importance-and-applications-of-robotics')
 def importanceandapp():
-    return render_template('courses/course1-content/importance_and_app.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.15
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/importance_and_app.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/course1-quiz-1')
 def course1quiz1():
-    return render_template('courses/course1-content/course1-quiz1.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.9
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/course1-quiz1.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/robot-anatomy')
 def robotanatomy():
-    return render_template('courses/course1-content/robot_anatomy.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.16
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/robot_anatomy.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/challenges')
 def challenges():
-    return render_template('courses/course1-content/challenges_in_robotics.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.17
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/challenges_in_robotics.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/robot-programming')
 def robotprogramming():
-    return render_template('courses/course1-content/robot_programming.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.18
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/robot_programming.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/social-and-ethical-implications')
 def implications():
-    return render_template('courses/course1-content/social_and_ethical_imp.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.19
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/social_and_ethical_imp.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/future-trends')
 def futuretrends():
-    return render_template('courses/course1-content/future_trends.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.21
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/future_trends.html', module_completed=module_completed)
 
 @app.route('/module2/introduction')
 def module_two():

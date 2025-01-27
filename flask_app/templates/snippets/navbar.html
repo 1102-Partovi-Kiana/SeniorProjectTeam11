@@ -22,7 +22,10 @@
                         <li class="nav-item">
                             <a class="nav-link text-uppercase" href="{{ url_for('RenderSignup') }}">Sign Up</a>
                         </li>
-                        {% elif is_student_dashboard %}
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" href="{{ url_for('RenderClassDetails') }}">Class Details</a>
+                        </li>
+                    {% elif is_student_dashboard %}
                         <li class="nav-item custom-nav-item">
                             <a class="nav-link custom-nav-link" href="#" data-bs-toggle="modal" data-bs-target="#joinClassModal">Join a Class</a>
                         </li>
@@ -57,7 +60,7 @@
                                 </div>
                             </div>
                         </div>
-                        {% elif is_instructor_dashboard%}
+                    {% elif is_instructor_dashboard%}
                         <li class="nav-item custom-nav-item">
                             <a class="nav-link custom-nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createClassModal">Create a New Class</a>
                         </li>
