@@ -89,7 +89,10 @@
             </li>
             <li class="course-item">
                 {% if module_completed[1.9]%}
-                <a href="{{ url_for('course1quiz1') }}" class="course-link">Quiz 1</a>
+                <a href="{{ url_for('course1quiz1') }}" class="course-link">
+                    Quiz 1
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
                 {% else %}
                 <a class="course-link disabled">Quiz 1</a>
                 {% endif %}

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, Response, flash, redirect, url_for, session
+from flask import Flask, render_template, request, jsonify, Response, flash, redirect, url_for, session, send_file
 import mujoco_py
 import numpy as np
 import cv2 
@@ -23,6 +23,9 @@ import glfw
 import threading
 import gymnasium as gym
 import ast
+from PIL import Image, ImageDraw, ImageFont
+import io
+
 
 app = Flask(__name__, static_folder='static')
 app.config.from_object(Config)
@@ -32,6 +35,7 @@ mail.init_app(app)
 
 ROLE_INSTRUCTOR = 1
 ROLE_STUDENT = 2
+CERTIFICATE_TEMPLATE = "static/certificate_template.png"
 
 CUSTOM_KEYWORDS = [
     "def", "class", "import", "while", "for", "if", "else", "elif", "try", "except", "finally", "with",
@@ -1477,8 +1481,9 @@ def RenderCourses():
     user_id = user['user_id']
     role = user['role_id']
     complete_percentage = None 
+    is_student = role == ROLE_STUDENT
 
-    if role == ROLE_STUDENT:
+    if is_student:
         assigned_courses = StudentAssignedCourses.query.filter_by(user_id=user_id).all()
         courses = []
         for assignment in assigned_courses:
@@ -1490,7 +1495,10 @@ def RenderCourses():
         num_completed_subsections = len(completed_subsections)
         num_assigned_subsections = len(assigned_subsections)
 
-        complete_percentage = round((num_completed_subsections / num_assigned_subsections) * 100)
+        if num_assigned_subsections > 0:
+            complete_percentage = round((num_completed_subsections / num_assigned_subsections) * 100)
+        else:
+            complete_percentage = 0
     else:
         courses = Courses.query.all()
         complete_percentage = None
@@ -1505,8 +1513,7 @@ def RenderCourses():
         or query in course.length.lower()
     ]
 
-    print(complete_percentage)
-    return render_template("courses.html", courses=filtered_course_catalog, query=query, user=user, complete_percentage=complete_percentage)
+    return render_template("courses.html", courses=filtered_course_catalog, query=query, user=user, complete_percentage=complete_percentage, is_student=is_student)
 
 @app.route('/playground')
 def playground():
@@ -2012,6 +2019,52 @@ def next_question():
 @app.route('/quiz1', methods=['GET'])
 def render_quiz_page():
     return render_template('quiz1.html')
+
+@app.route("/certificate")
+def certificate_page():
+    return render_template("courses/course1-content/certificate.html")
+
+@app.route("/download_certificate")
+def download_certificate():
+    # Load the certificate template
+    image = Image.open(CERTIFICATE_TEMPLATE)
+    draw = ImageDraw.Draw(image)
+
+    # Define the text to overlay
+    text = "Congratulations, John Doe!"
+    text_color = (0, 0, 0)  # Black color
+
+    try:
+        # Try to load Arial font
+        font = ImageFont.truetype("arial.ttf", 40)
+    except OSError:
+        # Fallback to default font if Arial is not found
+        font = ImageFont.load_default()
+
+    # Calculate text position (centered)
+    # Use ImageFont.getbbox to get text bounding box
+    bbox = font.getbbox(text)
+    text_width = bbox[2] - bbox[0]  # Width of the text
+    text_height = bbox[3] - bbox[1]  # Height of the text
+
+    image_width, image_height = image.size
+    text_position = ((image_width - text_width) // 2, (image_height - text_height) // 2)
+
+    # Draw the text on the image
+    draw.text(text_position, text, font=font, fill=text_color)
+
+    # Convert the image to PDF
+    pdf_bytes = io.BytesIO()
+    image.save(pdf_bytes, format="PDF")
+    pdf_bytes.seek(0)
+
+    # Return the PDF as a downloadable file
+    return send_file(
+        pdf_bytes,
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name="certificate.pdf"
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)

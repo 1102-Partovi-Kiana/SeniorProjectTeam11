@@ -33,9 +33,10 @@
             </div>
             <h2><a href="{{ url_for(course.route) }}">{{ course.course_name }}</a></h2>
             <p>{{ course.course_desc }}</p>
+            {% if is_student %}
             <div class="progress-bar-container">
                 <div class="progress-bar-info">
-                    <h2> Completed Progress</h2>
+                    <h2>Completed Progress</h2>
                     <div class="progress-bar">
                         {% if complete_percentage is not none %}
                             <div class="completed-progress" style="width: {{ complete_percentage }}%;">
@@ -49,6 +50,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}  
             <div class="card-footer">
                 {% if course.certificate %}
                 <span class="certificate">With <strong>Certificate</strong></span>
