@@ -1,5 +1,13 @@
 <header>
-    <nav class="navbar navbar-ware navbar-expand-lg {% if is_dashboard %}dashboard{% elif is_homepage %}homepage{% endif %} navbar-light bg-light fixed-top">
+    <nav class="navbar navbar-ware navbar-expand-lg 
+        {% if is_dashboard %}
+        dashboard 
+        {% elif is_homepage %}
+        homepage
+        {% elif is_course_page %}
+        coursepage
+        {% endif %} 
+        navbar-light bg-light fixed-top">
         <div class="container px-0">
             <a class="navbar-brand d-flex align-items-center py-0 ms-0" href="{{ url_for('RenderHomepage') }}">
                 <img src="{{ url_for('static', filename='img/logo.png') }}" alt="CORE Logo" style="width: 40px; height: 40px;">
@@ -103,6 +111,19 @@
                                 </div>
                             </div>
                         </div>
+                    {% elif is_course_page %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Classes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('RenderInstructorDashboard') }}">Feedback</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-uppercase" href="{{ url_for('playground') }}">Playground</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>

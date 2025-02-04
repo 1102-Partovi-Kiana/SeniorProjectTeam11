@@ -1,14 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Certificate</title>
-</head>
+{% extends "base.html" %}
+
+{% block title %}
+<title>Certificate - CORE</title>
+{% endblock %}
+
+{% block body %}
+    <script>
+        function updateCertificatePreview() {
+            document.getElementById("certificatePreview").src = "/view_certificate?" + new Date().getTime();
+        }
+
+        window.onload = updateCertificatePreview;
+    </script>
 <body>
     <h1>Download Your Certificate</h1>
+
+    <!-- Certificate Preview -->
+    <img id="certificatePreview" src="" alt="Certificate Preview" style="width: 50%; border: 1px solid black; margin-bottom: 20px;">
+
+    <br>
+    <button onclick="updateCertificatePreview()">Refresh Preview</button>
     <a href="/download_certificate">
         <button>Download Certificate</button>
     </a>
 </body>
-</html>
+{% endblock %}

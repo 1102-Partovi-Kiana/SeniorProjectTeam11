@@ -1542,19 +1542,7 @@ def module_intro():
     for subsection in subsections:
         module_completed[subsection.course_subsection_number] = subsection.completion_status
 
-    return render_template('courses/course1-content/module_intro.html', module_completed=module_completed)
-
-@app.route('/module1/start-page')
-def course1_card():
-    return render_template('courses/course1-content/course1_card.html') 
-
-@app.route('/module2/start-page-2')
-def course2_card():
-    return render_template('courses/course2-content/course2_card.html') 
-
-@app.route('/module3/start-page-3')
-def course3_card():
-    return render_template('courses/course3-content/course3_card.html') 
+    return render_template('courses/course1-content/module_intro.html', module_completed=module_completed, is_course_page=True)
 
 @app.route('/module1/introduction/overview')
 def overview():
@@ -1571,7 +1559,7 @@ def overview():
         module_completed = update_and_get_module_completion(user_id, subsection_number)
     else:
         module_completed = {}
-    return render_template('courses/course1-content/overview.html', module_completed=module_completed)
+    return render_template('courses/course1-content/overview.html', module_completed=module_completed, is_course_page=True)
 
 @app.route('/module1/introduction/history')
 def history():
@@ -1588,7 +1576,7 @@ def history():
         module_completed = update_and_get_module_completion(user_id, subsection_number)
     else:
         module_completed = {}
-    return render_template('courses/course1-content/history_of_robotics.html', module_completed=module_completed)
+    return render_template('courses/course1-content/history_of_robotics.html', module_completed=module_completed, is_course_page=True)
 
 @app.route('/module1/introduction/types-of-robots')
 def typesofrobots():
@@ -1605,7 +1593,7 @@ def typesofrobots():
         module_completed = update_and_get_module_completion(user_id, subsection_number)
     else:
         module_completed = {}
-    return render_template('courses/course1-content/types_of_robots.html', module_completed=module_completed)
+    return render_template('courses/course1-content/types_of_robots.html', module_completed=module_completed, is_course_page=True)
 
 @app.route('/module1/introduction/importance-and-applications-of-robotics')
 def importanceandapp():
@@ -1622,7 +1610,7 @@ def importanceandapp():
         module_completed = update_and_get_module_completion(user_id, subsection_number)
     else:
         module_completed = {}
-    return render_template('courses/course1-content/importance_and_app.html', module_completed=module_completed)
+    return render_template('courses/course1-content/importance_and_app.html', module_completed=module_completed, is_course_page=True)
 
 @app.route('/module1/introduction/course1-quiz-1')
 def course1quiz1():
@@ -1639,7 +1627,7 @@ def course1quiz1():
         module_completed = update_and_get_module_completion(user_id, subsection_number)
     else:
         module_completed = {}
-    return render_template('courses/course1-content/course1-quiz1.html', module_completed=module_completed)
+    return render_template('courses/course1-content/course1-quiz1.html', module_completed=module_completed, is_course_page=True)
 
 @app.route('/module1/introduction/robot-anatomy')
 def robotanatomy():
@@ -1656,7 +1644,7 @@ def robotanatomy():
         module_completed = update_and_get_module_completion(user_id, subsection_number)
     else:
         module_completed = {}
-    return render_template('courses/course1-content/robot_anatomy.html', module_completed=module_completed)
+    return render_template('courses/course1-content/robot_anatomy.html', module_completed=module_completed, is_course_page=True)
 
 @app.route('/module1/introduction/challenges')
 def challenges():
@@ -1673,7 +1661,7 @@ def challenges():
         module_completed = update_and_get_module_completion(user_id, subsection_number)
     else:
         module_completed = {}
-    return render_template('courses/course1-content/challenges_in_robotics.html', module_completed=module_completed)
+    return render_template('courses/course1-content/challenges_in_robotics.html', module_completed=module_completed, is_course_page=True)
 
 @app.route('/module1/introduction/robot-programming')
 def robotprogramming():
@@ -1690,7 +1678,7 @@ def robotprogramming():
         module_completed = update_and_get_module_completion(user_id, subsection_number)
     else:
         module_completed = {}
-    return render_template('courses/course1-content/robot_programming.html', module_completed=module_completed)
+    return render_template('courses/course1-content/robot_programming.html', module_completed=module_completed, is_course_page=True)
 
 @app.route('/module1/introduction/social-and-ethical-implications')
 def implications():
@@ -1707,7 +1695,7 @@ def implications():
         module_completed = update_and_get_module_completion(user_id, subsection_number)
     else:
         module_completed = {}
-    return render_template('courses/course1-content/social_and_ethical_imp.html', module_completed=module_completed)
+    return render_template('courses/course1-content/social_and_ethical_imp.html', module_completed=module_completed, is_course_page=True)
 
 @app.route('/module1/introduction/future-trends')
 def futuretrends():
@@ -1724,7 +1712,19 @@ def futuretrends():
         module_completed = update_and_get_module_completion(user_id, subsection_number)
     else:
         module_completed = {}
-    return render_template('courses/course1-content/future_trends.html', module_completed=module_completed)
+    return render_template('courses/course1-content/future_trends.html', module_completed=module_completed, is_course_page=True)
+
+@app.route('/module1/start-page')
+def course1_card():
+    return render_template('courses/course1-content/course1_card.html') 
+
+@app.route('/module2/start-page-2')
+def course2_card():
+    return render_template('courses/course2-content/course2_card.html') 
+
+@app.route('/module3/start-page-3')
+def course3_card():
+    return render_template('courses/course3-content/course3_card.html') 
 
 @app.route('/module2/introduction')
 def module_two():
@@ -1963,11 +1963,14 @@ def next_question():
     used_questions = data.get('used_questions', [])
     last_correct = data.get('last_correct', True)  # Last answer is correct, move forward
 
+    total_questions = 10
+
     if questions_served >= 10:
         return jsonify({
             "message": "Quiz complete!",
             "done": True,
-            "score": score
+            "score": score,
+            "total_questions": total_questions
         })
 
     # Dificulty Adaptation
@@ -2001,7 +2004,12 @@ def next_question():
         ]
 
     if not available_questions:
-        return jsonify({"message": "No more questions available!", "done": True, "score": score})
+        return jsonify({
+            "message": "No more questions available!", 
+            "done": True, 
+            "score": score,
+            "total_questions": total_questions
+            })
 
     question = random.choice(available_questions)
     used_questions.append(question)
@@ -2013,7 +2021,8 @@ def next_question():
         "questions_served": questions_served,
         "score": score,
         "used_questions": used_questions,
-        "done": False
+        "done": False,
+        "total_questions": total_questions
     })
 
 @app.route('/quiz1', methods=['GET'])
@@ -2024,47 +2033,83 @@ def render_quiz_page():
 def certificate_page():
     return render_template("courses/course1-content/certificate.html")
 
-@app.route("/download_certificate")
-def download_certificate():
+def generate_certificate():
+    """Generates a certificate image with the given text and returns it as a BytesIO object."""
     # Load the certificate template
-    image = Image.open(CERTIFICATE_TEMPLATE)
+    image = Image.open("static/certificate_template.png")
     draw = ImageDraw.Draw(image)
 
-    # Define the text to overlay
-    text = "Congratulations, John Doe!"
-    text_color = (0, 0, 0)  # Black color
+    name = "John Doe"
+    date = "2/3/2025"
+    text_color = (0, 0, 0)
+    name_font_size = 100
+    date_font_size = 50
 
     try:
-        # Try to load Arial font
-        font = ImageFont.truetype("arial.ttf", 40)
+        name_font = ImageFont.truetype("static/cookie-regular.ttf", name_font_size)
     except OSError:
-        # Fallback to default font if Arial is not found
-        font = ImageFont.load_default()
-
-    # Calculate text position (centered)
-    # Use ImageFont.getbbox to get text bounding box
-    bbox = font.getbbox(text)
-    text_width = bbox[2] - bbox[0]  # Width of the text
-    text_height = bbox[3] - bbox[1]  # Height of the text
+        name_font = ImageFont.load_default()
 
     image_width, image_height = image.size
-    text_position = ((image_width - text_width) // 2, (image_height - text_height) // 2)
+
+    # Calculate text position (centered horizontally, slightly lower vertically)
+    name_bbox = name_font.getbbox(name)
+    name_text_width = name_bbox[2] - name_bbox[0]  # Width of the text
+    name_text_height = name_bbox[3] - name_bbox[1]  # Height of the text
+
+    name_x_offset = 0
+    name_y_offset = 75
+    name_x = (image_width - name_text_width) // 2 + name_x_offset
+    name_y = (image_height - name_text_height) // 2 + name_y_offset
+
+    try:
+        date_font = ImageFont.truetype("static/cookie-regular.ttf", date_font_size)
+    except OSError:
+        date_font = ImageFont.load_default()
+
+    date_bbox = date_font.getbbox(date)
+    date_text_width = date_bbox[2] - date_bbox[0]
+    date_text_height = date_bbox[3] - date_bbox[1]
+
+    date_x_offset = 155
+    date_y_offset = 140
+    date_x = 0 + date_x_offset #Increasing x = move rightwards
+    date_y = (image_height - date_text_height) - date_y_offset #Increasing y = move downwards
 
     # Draw the text on the image
-    draw.text(text_position, text, font=font, fill=text_color)
+    draw.text((name_x, name_y), name, font=name_font, fill=text_color)
+    draw.text((date_x, date_y), date, font=date_font, fill=text_color)
+
+    # Convert image to bytes
+    img_bytes = io.BytesIO()
+    image.save(img_bytes, format="PNG")
+    img_bytes.seek(0)
+
+    return img_bytes
+
+@app.route("/view_certificate")
+def view_certificate():
+    """Returns the generated certificate as an image."""
+    img_bytes = generate_certificate()
+    return Response(img_bytes.getvalue(), mimetype="image/png")
+
+@app.route("/download_certificate")
+def download_certificate():
+    """Returns the generated certificate as a downloadable PDF."""
+    img_bytes = generate_certificate()
 
     # Convert the image to PDF
     pdf_bytes = io.BytesIO()
-    image.save(pdf_bytes, format="PDF")
+    Image.open(img_bytes).save(pdf_bytes, format="PDF")
     pdf_bytes.seek(0)
 
-    # Return the PDF as a downloadable file
     return send_file(
         pdf_bytes,
         mimetype="application/pdf",
         as_attachment=True,
         download_name="certificate.pdf"
     )
+
 
 if __name__ == '__main__':
     app.run(debug=True)

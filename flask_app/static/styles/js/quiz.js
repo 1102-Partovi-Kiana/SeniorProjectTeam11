@@ -38,6 +38,9 @@ $(document).ready(function () {
                 state.used_questions = response.used_questions;
                 state.last_correct = true;  
 
+                //Displays the progress text
+                $("#progress").html(`Question ${response.questions_served} out of ${response.total_questions}`);
+
                 const question = response.question;
 
                 renderQuestion(question);
@@ -95,6 +98,8 @@ $(document).ready(function () {
             </div>
         `);
 
+        $("#progress").html("");
+
         $("#restart-btn").click(function () {
             startQuiz();
         });
@@ -107,6 +112,8 @@ $(document).ready(function () {
                 <button id="start-button" class="btn btn-primary">Start Quiz</button>
             </div>
         `);
+
+        $("#progress").html("");
 
         $("#start-button").click(function () {
             $(this).hide();

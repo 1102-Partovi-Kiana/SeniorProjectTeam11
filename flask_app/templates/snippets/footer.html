@@ -1,6 +1,13 @@
-<footer class="footer {% if is_dashboard %}dashboard{% else %}homepage{% endif %}">
+<footer class="footer 
+	{% if is_dashboard %}
+	dashboard
+	{% elif is_homepage %}
+	homepage
+	{% elif is_course_page %}
+	coursepage
+	{% endif %}">
 	<div class="container py-3">
-		<nav>
+		<nav class =>
 			<ul class="footer-nav flex-column flex-md-row align-items-center gap-2">
 				<li class="footer-item">
 					<a class="btn btn-link btn-logo" id="footer-logo" href="{{ url_for('RenderHomepage') }}">

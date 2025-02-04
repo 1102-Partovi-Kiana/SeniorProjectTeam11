@@ -938,6 +938,15 @@
     width: calc(100% - 60px);
 }
 
+.navbar.coursepage{
+    width: 100%;
+}
+
+.navbar.coursepage .container{
+    margin: 0px 48px;
+    max-width: none;
+}
+
 /* -------------------FOOTER------------------- */
 
 .footer {
@@ -1010,6 +1019,25 @@
 .footer.dashboard .container{
     margin-right: 24px;
     max-width: none;
+}
+
+.footer.coursepage {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer.coursepage .container {
+    padding: 0 !important;
+    max-width: none;
+    height: 100%;
+}
+
+.footer.coursepage .footer-nav {
+    padding: 0 32px;
+    height: 60px;
 }
 
 /* -------------------SIGNUPPAGE + LOGINPAGE------------------- */
@@ -2955,9 +2983,8 @@ code {
 /* -------------------COURSESPAGE------------------- */
 .course-container {
     display: flex;
-    height: 100vh;
     overflow: hidden;
-    padding-top: 30px;
+    max-height: calc(100% - 120px);
 }
 
 .course-sidebar {
@@ -3043,8 +3070,7 @@ code {
     /*background: linear-gradient(135deg, #f3f4f6, #e2d8f0); */
     padding: 40px 20px;
     border-radius: 10px;
-    max-width: 1200px;
-    margin: 20px auto;
+    margin: auto;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
