@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>About the Fetch Reach Robot - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_six') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_about_the_fetch_reach_robot') }}" class="course-link">About</a>
+                <ul class="sub-list">
+                    <li><a href="#about-fetch-reach">Fetch Reach Robot</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Fetch Robot</a></li>
+                    <li><a href="#gallery">Fetch Reach Robot Gallery</a></li>
+                    <li><a href="#real-world">Real-World Applicability</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-reach">Word Bank</a></li>
+                    <li><a href="#sim">Fetch Reach Robot Simulation</a></li>
+                    <li><a href="#given-fetch-reach ">What is Given</a></li>
+                    <li><a href="#retrieve-fetch-reach">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-reach">Word Bank</a></li>
+                    <li><a href="#understand-the-environment">Understand the Environment</a></li>
+                    <li><a href="#retrieve-key-positions">Retrieve Key Positions</a></li>
+                    <li><a href="#calculate-the-direction-vector">Calculate the Direction Vector</a></li>
+                    <li><a href="#retrieve-the-euclidean-norm-of-the-direction-vector">Retrieve the Euclidean Norm of the Direction Vector</a></li>
+                    <li><a href="#define-the-distance-threshold">Define the Distance Threshold</a></li>
+                    <li><a href="#define-the-step-size">Define the Step Size</a></li>
+                    <li><a href="#using-a-while-loop">Using a While Loop</a></li>
+                    <li><a href="#end-condition">End Condition</a></li>
+                    <li><a href="#test-the-outcome">Test the Outcome</a></li>
+                    <li><a href="#key-takeaways">Key Takeaways</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_six_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Robotic Environment</h1>
+            <p class="page-description">Explore the simulation environment and start coding your robot.</p>
+        </header>
+
+        <!-- Divider -->
+        <div class="divider">
+            <span class="divider-text">Let's Start</span>
+        </div>
+
+        <!-- Robotic Environment Section -->
+        <div class="module-section" id="robotic-environment">
+            <h3>Interactive Simulation</h3>
+            <p>Below is the robotic environment where you can code and simulate the Fetch-Reach Robot:</p>
+
+            <a href="{{ url_for('RenderFetchReachRobotSimulation') }}" class="primary-button">
+                Open Coding Environment
+            </a>
+
+        </div>
+
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_six_code') }}" class="secondary-button">Back: Coding Logic</a>
+        </div>
+
+        <button onclick="alert('Button Clicked!')">
+            <img src="{{ url_for('static', filename='img/clearrobot.gif') }}" alt="Chatbot Logo" class="chatbot-logo">
+        </button>
+          
+
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>About the Fetch Robot with Sensors - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item active"> 
+                <a href="{{ url_for ('module_ten') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_about') }}" class="course-link">About</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-organize-with-sensors">Word Bank</a></li>
+                    <li><a href="#given-fetch-organize-with-sensors">What is Given</a></li>
+                    <li><a href="#retrieve-fetch-organize-with-sensors">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-organize-with-sensors">Word Bank</a></li>
+                    <li><a href="#code-fetch-organize-with-sensors">What Needs to Be Coded</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">About the Fetch Robot with Sensors</h1>
+            <p class="page-description">Learn the purpose of the Fetch Robot with Sensors.</p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Let's Explore</span>
+        </div>
+
+        <!-- Section 1: Print Statements -->
+        <div class="module-section" id="print-statements">
+            <h3>Fetch Robot with Sensors</h3>
+            <p>The <strong>Fetch-Organize-With-Sensors robot</strong> is designed to use what students have learned about the robots with the integration of sensors. The Fetch-Reach robot is equipped with several joints and actuators, allowing it to perform basic movements. The goal of this robot is to reach the destination point with the tip of the robot.
+            </p>
+        </div>
+
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_ten') }}" class="secondary-button">Back: Learning Objectives</a>
+            <a href="{{ url_for('module_ten_given') }}" class="secondary-button">Next: Robot Environment</a>
+        </div>
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}
+

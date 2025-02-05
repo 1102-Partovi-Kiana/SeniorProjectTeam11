@@ -13,11 +13,25 @@
             <span>Contents</span>
         </div>
         <ul class="course-list">
-            <li class="course-item">
-                <a href="#objectives" class="course-link">Objectives</a>
+            <li class="course-item"> 
+                {% if module_completed[1.11] %}
+                <a href="{{ url_for('module_intro') }}" class="course-link">
+                    Objectives
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">Objectives</a>
+                {% endif %}
             </li>
             <li class="course-item">
-                <a href="#overview" class="course-link">Definition and Overview of Robotics</a>
+                {% if module_completed[1.12] %}
+                <a href="{{ url_for('overview') }}" class="course-link">
+                    Definition and Overview of Robotics
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">Definition and Overview of Robotics</a>
+                {% endif %}
                 <ul class="sub-list">
                     <li><a href="#what-is-robot">What is a robot?</a></li>
                     <li><a href="#intro-field-robotics">Robotics as a Field of Study</a></li>
@@ -25,15 +39,14 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#history" class="course-link">History of Robotics</a>
-                <ul class="sub-list">
-                    <li><a href="#development">The development of robotics</a></li>
-                    <li><a href="#milestones">Key milestones</a></li>
-                    <li><a href="#influential-systems">Influential robotics systems</a></li>
-                </ul>
-            </li>
-            <li class="course-item">
-                <a href="#types" class="course-link">Types of Robots</a>
+                {% if module_completed[1.13] %}
+                <a href="{{ url_for('history') }}" class="course-link">
+                    History of Robotics
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">History of Robotics</a>
+                {% endif %}
                 <ul class="sub-list">
                     <li><a href="#industrial">Industrial Robots</a></li>
                     <li><a href="#humanoid">Humanoid Robots</a></li>
@@ -42,7 +55,30 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#applications" class="course-link">Importance and Applications of Robotics</a>
+                {% if module_completed[1.14]%}
+                <a href="{{ url_for('typesofrobots') }}" class="course-link">
+                    Types of Robots
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">Types of Robots</a>
+                {% endif %}
+                <ul class="sub-list">
+                    <li><a href="#industrial">Industrial robots</a></li>
+                    <li><a href="#humanoid">Humanoid robots</a></li>
+                    <li><a href="#mobile">Mobile robots</a></li>
+                    <li><a href="#collaborative-tools">Collaborative tools</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                {% if module_completed[1.15] %}
+                <a href="{{ url_for('importanceandapp') }}" class="course-link">
+                    Importance and Applications of Robotics
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">Importance and Applications of Robotics</a>
+                {% endif %}
                 <ul class="sub-list">
                     <li><a href="#manufacturing">Manufacturing</a></li>
                     <li><a href="#healthcare">Healthcare</a></li>
@@ -52,10 +88,24 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#course1-quiz1" class="course-link">Quiz 1</a>
+                {% if module_completed[1.9]%}
+                <a href="{{ url_for('course1quiz1') }}" class="course-link">
+                    Quiz 1
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">Quiz 1</a>
+                {% endif %}
             </li>
             <li class="course-item">
-                <a href="#anatomy" class="course-link">Robot Anatomy</a>
+                {% if module_completed[1.16] %}
+                <a href="{{ url_for('robotanatomy') }}" class="course-link">
+                    Robot Anatomy
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">Robot Anatomy</a>
+                {% endif %}
                 <ul class="sub-list">
                     <li><a href="#actuators">Actuators</a></li>
                     <li><a href="#sensors">Sensors</a></li>
@@ -64,7 +114,14 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#challenges" class="course-link">Challenges In Robotics</a>
+                {% if module_completed[1.17] %}
+                <a href="{{ url_for('challenges') }}" class="course-link">
+                    Challenges in Robotics
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">Challenges in Robotics</a>
+                {% endif %}
                 <ul class="sub-list">
                     <li><a href="#navandmapping">Navigation and Mapping</a></li>
                     <li><a href="#humanrobot">Human-Robot Interaction</a></li>
@@ -73,7 +130,14 @@
                 </ul>
             </li>
             <li class="course-item active">
-                <a href="#robot-programming" class="course-link">Robot Programming</a>
+                {% if module_completed[1.18] %}
+                <a href="{{ url_for('robotprogramming') }}" class="course-link">
+                    Robot Programming
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">Robot Programming</a>
+                {% endif %}
                 <ul class="sub-list">
                     <li><a href="#lowlevel">Low-Level Programming</a></li>
                     <li><a href="#highlevel">High-Level Programming</a></li>
@@ -81,7 +145,14 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#implications" class="course-link">Social and Ethical Implications</a>
+                {% if module_completed[1.19] %}
+                <a href="{{ url_for('implications') }}" class="course-link">
+                    Social and Ethical Implications
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">Social and Ethical Implications</a>
+                {% endif %}
                 <ul class="sub-list">
                     <li><a href="#privacy">Privacy</a></li>
                     <li><a href="#job-displacement">Job Displacement</a></li>
@@ -89,7 +160,14 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#future-trends" class="course-link">Future Trends</a>
+                {% if module_completed[1.21] %}
+                <a href="{{ url_for('futuretrends') }}" class="course-link">
+                    Future Trends
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">Future Trends</a>
+                {% endif %}
                 <ul class="sub-list">
                     <li><a href="#AI">Artificial Intelligence (AI) in Robotics</a></li>
                     <li><a href="#soft-robotics">Soft Robotics</a></li>
@@ -99,6 +177,7 @@
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
+
 
     <div class="course-main-content">
         <!-- Page Header -->

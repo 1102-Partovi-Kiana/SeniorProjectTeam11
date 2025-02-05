@@ -73,29 +73,31 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>
                         </li>
-                        <div class="modal fade custom-modal" id="createClassModal" tabindex="-1" aria-labelledby="createClassModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content custom-modal-content">
-                                    <div class="modal-header custom-modal-header">
-                                        <h5 class="modal-title" id="createClassModalLabel">Create a New Class</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body custom-modal-body">
-                                        <form method="POST" action="{{ url_for('RenderInstructorDashboard') }}">
-                                            <div class="mb-3">
-                                                <label for="classCourseCode" class="form-label">Course Code</label>
-                                                <input type="text" class="form-control" id="classCourseCode" name="classCourseCode" placeholder="Enter course code">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="classSection" class="form-label">Section Number</label>
-                                                <input type="text" class="form-control" id="classSection" name="classSection" rows="3" placeholder="Enter class section number">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="classDate" class="form-label">Class Start Date</label>
-                                                <input type="date" class="form-control" id="classDate" name="classDate">
-                                            </div>
-                                            <button type="submit" class="btn custom-modal-btn">Create Class</button>
-                                        </form>
+                        <div class="custom-modal-container">
+                            <div class="modal fade custom-modal" id="createClassModal" tabindex="-1" aria-labelledby="createClassModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content custom-modal-content">
+                                        <div class="modal-header custom-modal-header">
+                                            <h5 class="modal-title" id="createClassModalLabel">Create a New Class</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body custom-modal-body">
+                                            <form method="POST" action="{{ url_for('RenderInstructorDashboard') }}">
+                                                <div class="mb-3">
+                                                    <label for="classCourseCode" class="form-label">Course Code</label>
+                                                    <input type="text" class="form-control" id="classCourseCode" name="classCourseCode" placeholder="Enter course code">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="classSection" class="form-label">Section Number</label>
+                                                    <input type="text" class="form-control" id="classSection" name="classSection" rows="3" placeholder="Enter class section number">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="classDate" class="form-label">Class Start Date</label>
+                                                    <input type="date" class="form-control" id="classDate" name="classDate">
+                                                </div>
+                                                <button type="submit" class="btn custom-modal-btn">Create Class</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

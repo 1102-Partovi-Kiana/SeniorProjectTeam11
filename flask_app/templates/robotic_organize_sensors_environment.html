@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Robotic Environment - Organize with Sensors - CORE</title>
+<title>Robotic Environment - Fetch Reach - CORE</title>
 {% endblock %}
 
 {% block body %}
@@ -20,6 +20,7 @@
                 <div class="code-editor h-100">
                      <!-- Tab Buttons Above the Coding Area -->
                      <div class="coding-options">
+                        
                         <div class="dropdown-container">
                             <button class="tab-button" id="coding-pets" data-tippy-content="Enable Coding Pets">
                                 <i class="fas fa-paw"></i> 
@@ -64,9 +65,19 @@
                                 <li><a href="#" class="dropdown-item theme-option" data-theme="zenburn">Zenburn</a></li>
                             </ul>
                         </div>
+                       
+                        <button class="tab-button" id="dark-mode-pop-up-window" data-tippy-content="Switch the Pop Up Window to Dark Mode">
+                            <i class="fas fa-adjust"></i> 
+                        </button>
+
+                        <button class="tab-button" id="review-course-content" data-tippy-content="Review Course Content">
+                            <i class="fas fa-book"></i> 
+                        </button>
+
                         <button class="tab-button" id="autocomplete" data-tippy-content="Enable Autocomplete">
                             <i class="fas fa-magic"></i> 
                         </button>
+            
                         <!-- Hints Container
                         <div class="dropdown-container">
                             <button class="tab-button" id="hints-button" data-tippy-content="Your Personalized Hints">
@@ -78,7 +89,7 @@
                             </div>
                         </div> -->
                         <!-- Hint Button with Dropdown -->
-                        <div class="dropdown-container">
+                        <div class="dropdown-container" style="display: none;">
                             <button class="tab-button" id="hints-button" data-tippy-content="Personalized Hints">
                                 <i class="fas fa-lightbulb"></i>
                             </button>
@@ -91,11 +102,19 @@
 
                         <!-- Hint Box -->
                         <div class="hintbox-container" id="hintbox-container" style="display: none;">
-                            <h4>Hints</h4>
-                            <ul id="hintbox" class="hintbox"></ul>
+                            <h4 style="display: none">Hints</h4>
+                            <ul id="hintbox" class="hintbox" style="display: none"></ul>
                         </div>
-                    </div>      
-                    <!-- Darren's Code -->              
+
+                        <div class="robot-description text-coding-options ">
+                            <p>The Fetch Robot: Guide the robot's gripper to reach the ball's position using precise movements.</p>
+                            <br>
+                        </div>
+
+                        <!-- Robot Description -->
+
+                    </div>
+                    <!-- Darren's Code -->                    
                     <div class="card-header">Coding Area</div>
                     <textarea id="code-editor" rows="20" style="height: 100%;">
 close_grip_action = np.array([0, 0, 0, -1])
@@ -179,13 +198,60 @@ for _ in range(150):
             env.step([0,0,-0.1,0])
     else:
         print("No Object")
+
                     </textarea>
-                    <div class="col-md-4 d-flex justify-content-end run-button-container">
-                        <button id="run-code" class="aesthetic-green-button-dark">Run</button>
+                    <div class="row align-items-center">
+                        <!-- Output Box -->
+                        <div class="col-md-8">
+                          <div id="secondary-output-box" class="secondary-output-card secondary-output-hidden">
+                            <!-- This box will display the same errors as the primary output box -->
+                          </div>
+                        </div>
+                      
+                        <!-- Run Button -->
+                        <div class="col-md-4 d-flex justify-content-end run-button-container">
+                          <button id="run-code" class="run-button">Run</button>
+                        </div>
+                      </div>
+                      
+                    <!-- Popup Window -->           
+                    <div id="popup-window" class="modal">
+                        <div class="modal-header">
+                            <div>Output Window</div>
+                            <div class="actions">
+                                <button id="minimize-popup">_</button>
+                                <button id="maximize-popup" style="display: none;">⤢</button>
+                                <button id="close-popup">&times;</button>
+                            </div>
+                        </div>
+                        <div class="modal-content">
+                            <!-- Tab Navigation -->
+                            <div id="popup-window-tabs" class="popup-window-tabs">
+                                <button class="popup-window-tab active" data-tab="popup-window-compilation-results">Compilation Results</button>
+                                <button class="popup-window-tab" data-tab="popup-window-additional-tab">Hints</button>
+                                <button class="popup-window-tab" data-tab="popup-window-review-course-content">Review Course Content</button>
+                            </div>
+
+                            <!-- Tab Contents -->
+                            <div id="popup-window-compilation-results" class="popup-window-tab-content active">
+                                <p id="popup-message">This is a test message!</p>
+                            </div>
+                            <div id="popup-window-additional-tab" class="popup-window-tab-content">
+                                <button id="clear-hints-history" class="clear-hints-button" style="margin-bottom: 10px;">Clear Hints History</button>
+                                <div id="hints-history-content">
+                                    <p>No specific hints available.</p>
+                                </div>
+                            </div>
+                            <div id="popup-window-review-course-content" class="popup-window-tab-content">
+                                <h3>Review Course Content</h3>
+                                <iframe id="course-content-frame" src="/embedded-course-content" width="100%" height="500px" style="border: none;"></iframe>
+                            </div>                            
+                        </div>
                     </div>
 
+
                     <!-- Ball and Gripper Position -->
-                    <div class="row align-items-start" style="margin-top: 5px;">
+                    <!-- <div class="row align-items-start" style="margin-top: 5px;">
                         <div class="col-md-8">
                             <h5>Ball Position:</h5>
                             <p id="ball-position">X: --, Y: --, Z: --</p>
@@ -194,10 +260,12 @@ for _ in range(150):
                         </div>
                     </div>
 
-                    <!-- Collision Notification -->
-                    <div id="collision-notification" class="alert alert-success" style="margin-top: 5px; display: none;">
+                    Collision Notification -->
+                    <!-- <div id="collision-notification" class="alert alert-success" style="margin-top: 5px; display: none;">
                         Collision detected between the gripper and the ball!
-                    </div>
+                    </div> -->
+
+  
                 </div>
             </div>
             <!-- End of Darren's Code -->
@@ -210,21 +278,49 @@ for _ in range(150):
                 </div>
             </div> -->
             
-            <div class="col-md-6 d-flex flex-column">
+            <!-- <div class="col-md-6 d-flex flex-column">
+                <div class="card simulation-card">
+                    <div class="card-header">Simulation</div>
+                    <div class="simulation-video-container">
+                        <img src="{{ url_for('video_feed') }}" class="simulation-video">
+                    </div>
+                </div>
+            </div> -->
+
+             <div class="col-md-6 d-flex flex-column">
                 <div class="card simulation-card h-80">
                     <div class="card-header">Simulation</div>
                     <div class="d-flex justify-content-center align-items-center">
                         <img src="{{ url_for('video_feed') }}" width="100%" class="simulation-video">
                     </div>
                 </div>
+            
+                
 
                 <!-- Output Terminal - Placed Below Simulation -->
-                <div class="card output-card">
+                <!-- <div class="card output-card">
                     <div class="card-header">Output Terminal</div>
                     <div class="card-body" id="output-box">
-                        <!-- Output will appear here -->
+                        Output will appear here -->
+                    <!-- </div>
+                </div> -->
+                <div class="card output-card robotic-environment" style="display: none;">
+                    <div class="card-header">Output Terminal</div>
+                    <div class="card-body">
+                        <!-- Tab Navigation -->
+                        <!-- <div class="output-tabs">
+                            <button class="output-tab-button active" data-tab="output-box">Compilation Results</button>
+                        </div> -->
+                
+                        <!-- Tab Content -->
+                        <div class="output-tab-content">
+                            <div id="output-box" class="output-tab-pane active">
+                                <p>This is where the current output will appear.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -447,38 +543,489 @@ for _ in range(150):
             .catch(error => console.error('Error checking collision:', error));
     }
 
-    // JS to /run-code backend
-    document.getElementById('run-code').addEventListener('click', function () {
-        const code = codeEditor.getValue(); 
+let hintsHistory = [];
 
-        const formData = new FormData();
-        formData.append('code', code);
+function clearAllErrorHighlights() {
+  codeEditor.operation(() => {
+    for (let i = 0; i < codeEditor.lineCount(); i++) {
+      codeEditor.removeLineClass(i, 'background', 'error-line');
+    }
+  });
+}
 
-        fetch('/run-code', {
+function highlightErrorLine(lineIndex) {
+  if (lineIndex >= 0 && lineIndex < codeEditor.lineCount()) {
+    codeEditor.addLineClass(lineIndex, 'background', 'error-line');
+  }
+}
+
+function highlightErrorLineStaticIssue(lineIndex) {
+  if (lineIndex >= 0 && lineIndex < codeEditor.lineCount()) {
+    codeEditor.addLineClass(lineIndex, 'background', 'static-issue-line');
+  }
+}
+
+function extractLineNumberFromError(errorMessage) {
+  const match = errorMessage.match(/line\s+(\d+)/);
+  if (match && match[1]) {
+    return parseInt(match[1], 10); // parse that substring as an integer
+  }
+  return null; 
+}
+
+// Popup Logic
+const popupWindow = document.getElementById('popup-window');
+const popupMessage = document.getElementById('popup-message');
+const minimizePopup = document.getElementById('minimize-popup');
+const maximizePopup = document.getElementById('maximize-popup');
+const closePopup = document.getElementById('close-popup');
+
+// Tab functionality for popup window
+const popupWindowTabs = document.querySelectorAll('.popup-window-tab');
+const popupWindowTabContents = document.querySelectorAll('.popup-window-tab-content');
+
+popupWindowTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        // Remove 'active' class from all tabs and contents
+        popupWindowTabs.forEach(tab => tab.classList.remove('active'));
+        popupWindowTabContents.forEach(content => content.classList.remove('active'));
+
+        // Add 'active' class to clicked tab and its content
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+    });
+});
+
+
+function showPopup(message, isError = false, activeTab = "popup-window-compilation-results") {
+    popupMessage.innerHTML = message;
+
+    // Apply styles based on success or error
+    popupWindow.style.borderTop = isError ? '4px solid red' : '4px solid green';
+
+    // Hide popup first before modifying tabs
+    popupWindow.style.display = 'none';
+
+    // Remove 'active' class from all tabs and contents
+    document.querySelectorAll('.popup-window-tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.popup-window-tab-content').forEach(content => content.classList.remove('active'));
+
+    // Set the specified tab as active
+    document.querySelector(`[data-tab="${activeTab}"]`).classList.add('active');
+    document.getElementById(activeTab).classList.add('active');
+
+    // Now show the popup after setting the correct tab
+    setTimeout(() => {
+        popupWindow.style.display = 'block';
+        popupWindow.classList.add('maximized');
+        popupWindow.classList.remove('minimized');
+        popupWindow.style.transform = 'translateY(0)';
+    }, 10);
+
+    maximizePopup.style.display = 'none';
+    minimizePopup.style.display = 'inline-block';
+}
+
+document.getElementById("review-course-content").addEventListener("click", function () {
+    const popupWindow = document.getElementById("popup-window");
+    const tooltipButton = this;
+
+    if (popupWindow.style.display === "block") {
+        popupWindow.style.transform = "translateY(100%)"; 
+        setTimeout(() => {
+            popupWindow.style.display = "none";
+        }, 600);
+    
+        if (tooltipButton._tippy) {
+            tooltipButton._tippy.setContent("Review Course Content");
+        }
+    } else {
+        // Open popup directly to "Review Course Content" tab
+        showPopup("Reviewing course content...", false, "popup-window-review-course-content");
+
+        if (tooltipButton._tippy) {
+            tooltipButton._tippy.setContent("Disable Course Content");
+        }
+    }
+});
+
+
+document.getElementById("review-course-content").addEventListener("click", () => {
+    showPopup("Reviewing course content...");
+
+    document.querySelectorAll('.popup-window-tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.popup-window-tab-content').forEach(content => content.classList.remove('active'));
+
+    document.querySelector('[data-tab="popup-window-review-course-content"]').classList.add('active');
+    document.getElementById('popup-window-review-course-content').classList.add('active');
+});
+
+
+// Close the popup
+closePopup.addEventListener('click', () => {
+    popupWindow.style.transform = 'translateY(100%)'; // Slide down
+    setTimeout(() => {
+        popupWindow.style.display = 'none';
+    }, 600); // Match the transition duration
+});
+
+// Minimize the popup (to the bottom half)
+minimizePopup.addEventListener('click', () => {
+    popupWindow.classList.add('minimized');
+    popupWindow.classList.remove('maximized');
+    minimizePopup.style.display = 'none';
+    maximizePopup.style.display = 'inline-block';
+
+    // Ensure it stays at the bottom and reduces height
+    popupWindow.style.height = '50%'; // Reduce height to half
+    popupWindow.style.bottom = '0'; // Stay anchored at the bottom
+    popupWindow.style.transform = 'translateY(0)'; // No upward movement
+});
+
+// Maximize the popup (to the full height)
+maximizePopup.addEventListener('click', () => {
+    popupWindow.classList.remove('minimized');
+    popupWindow.classList.add('maximized');
+    maximizePopup.style.display = 'none';
+    minimizePopup.style.display = 'inline-block';
+
+    // Expand height to full and remain at the bottom
+    popupWindow.style.height = '100%'; // Expand to full height
+    popupWindow.style.bottom = '0'; // Stay anchored at the bottom
+    popupWindow.style.transform = 'translateY(0)'; // No movement
+});
+
+let errorAttempts = 0;
+
+document.getElementById('run-code').addEventListener('click', async function () {
+    // Remove any previous markers (if desired on every run)
+    clearAllErrorHighlights();
+
+    const code = codeEditor.getValue();
+    const formData = new FormData();
+
+    // FIXED: Ensure the correct page context is included
+    const pageContexts = {
+        "/Fetch-Reach-Robot": "Fetch Reach",
+        "/PickAndPlacePage": "Pick and Place",
+        "/FetchStackPage": "Fetch Stack",
+        "/FetchOrganizePage": "Fetch Organize",
+        "/FetchOrganizeSensorsPage": "Fetch Sensors",
+        "/CarPage": "Car",
+    };
+
+    const currentPath = window.location.pathname;
+    const pageContext = pageContexts[currentPath] || "General";
+
+    console.log("Current Path:", currentPath);
+    console.log("Resolved Page Context:", pageContext);
+
+    // Append BOTH code and page context
+    formData.append('code', code);
+    formData.append('context', pageContext);
+
+    const outputCard = document.querySelector('.output-card');
+    const secondaryOutputCard = document.getElementById('secondary-output-box'); // Secondary output box
+    const additionalTabContent = document.getElementById('popup-window-additional-tab'); // Additional tab content
+
+    // Hide the output terminal and secondary box initially
+    outputCard.classList.remove('visible');
+    secondaryOutputCard.classList.remove('secondary-output-visible', 'success', 'error');
+    secondaryOutputCard.classList.add('secondary-output-hidden');
+
+    try {
+        const response = await fetch('/run-code', {
             method: 'POST',
             body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            const outputBox = document.getElementById('output-box');
-            const hintsButton = document.getElementById('hints-button');
-            const hintboxContainer = document.getElementById('hintbox-container');
-            outputBox.innerHTML = '';
+        });
+
+        const data = await response.json();
+        const outputBox = document.getElementById('output-box');
+        const hintboxContainer = document.getElementById('hintbox-container');
+        const hintBox = document.getElementById('hintbox');
+
+        // Clear previous outputs
+        outputBox.innerHTML = '';
+        secondaryOutputCard.innerHTML = '';
+
+        console.log('🚀 Server response:', data);
+
+        // Show the output terminal and secondary box after processing the response
+        outputCard.classList.add('visible');
+        secondaryOutputCard.classList.remove('secondary-output-hidden');
+        secondaryOutputCard.classList.add('secondary-output-visible');
+
+        if (data.error || (data.static_issues && data.static_issues.length > 0)) {
+            // An error occurred – increment our counter
+            errorAttempts++;
+
+            // Set red outline for errors
+            secondaryOutputCard.classList.add('error');
+            secondaryOutputCard.innerHTML = `<p>Your code ran into problems 😢</p>`;
+
+            let popupMessage = '';
+            let hintMessage = '';
+            let additionalTabHintMessage = '';
+
+            // Extract error details
+            let errorLine = null;
+            let errorMessage = '';
 
             if (data.error) {
-                outputBox.innerHTML += `<p style="color: red;">Error: ${data.error}</p>`;
-                hintsButton.style.display = 'inline-block';
-                getBotResponse(code, data.error);
-            } else {
-                outputBox.innerHTML += `<p>${data.message}</p>`;
-                hintsButton.style.display = 'none';
-                hintboxContainer.style.display = 'none';
+                outputBox.innerHTML += `<p class="error">Error: ${data.error}</p>`;
+                popupMessage += `Error: ${data.error}<br>`;
+
+                hintMessage = data.errorHint || 'No specific hints available for this error.';
+                console.log('Hint Message:', data.errorHint);
+                additionalTabHintMessage = hintMessage;
+                console.log('Additional Tab Hint Message:', additionalTabHintMessage);
+
+                errorLine = extractLineNumberFromError(data.error);
+                errorMessage = data.error;
+
+                if (errorLine !== null) {
+                    highlightErrorLine(errorLine - 1);
+                }
             }
-        })
-        .catch(error => {
-            console.error('Error running code:', error);
-        });
+
+            if (data.static_issues && data.static_issues.length > 0) {
+                outputBox.innerHTML += `<p style="color: orange;">Static Issues:</p><ul>`;
+                popupMessage += 'Your code has static issues:<br>';
+                data.static_issues.forEach(issue => {
+                    const issueLine = issue.line;
+                    const issueMessage = issue.message;
+
+                    outputBox.innerHTML += `<li>Line ${issueLine}: ${issueMessage}</li>`;
+                    popupMessage += `Line ${issueLine}: ${issueMessage}<br>`;
+
+                    if (issue.hint) {
+                        hintMessage += `<br>Hint for Line ${issueLine}: ${issue.hint}`;
+                        console.log('Static Issue Hint:', issue.hint);
+                    }
+
+                    if (typeof issueLine === 'number') {
+                        highlightErrorLineStaticIssue(issueLine - 1);
+                    }
+
+                    if (errorLine === null) {
+                        errorLine = issue.line;
+                        errorMessage = issue.message;
+                    }
+                });
+                outputBox.innerHTML += `</ul>`;
+            }
+
+            showPopup(popupMessage, true);
+
+            if (errorLine !== null && errorMessage) {
+                const errorTracker = JSON.parse(sessionStorage.getItem('errorTracker') || '{}');
+                const errorKey = `${errorLine}-${errorMessage}`;
+                const hintLevel = errorTracker[errorKey]?.hintLevel || 1;
+
+                const hints = await fetchHints({
+                    code: code,
+                    errorLine: errorLine,
+                    errorMessage: errorMessage,
+                    pageContext: pageContext,
+                    hintLevel: hintLevel
+                });
+
+                if (hints.length > 0) {
+                    const hintCount = parseInt(sessionStorage.getItem('hintCount') || '0', 10);
+                    const newHintCount = hintCount + 1;
+                    sessionStorage.setItem('hintCount', newHintCount.toString());
+
+                    errorTracker[errorKey] = {
+                        hintLevel: hintLevel + 1,
+                        lastUpdated: Date.now(),
+                    };
+                    sessionStorage.setItem('errorTracker', JSON.stringify(errorTracker));
+
+                    console.log(`Hint count updated: ${newHintCount}`);
+                    console.log(`Hint level for '${errorKey}' is now ${hintLevel + 1}`);
+                }
+
+                populateDropdownMenu(hints);
+                updateAdditionalTab(hints);
+            } else {
+                updateAdditionalTab([]);
+            }
+        } else {
+            // SUCCESS branch: code ran successfully
+            // Show the success message in the secondary output area.
+            secondaryOutputCard.classList.add('success');
+            secondaryOutputCard.innerHTML = `<p>Your code ran successfully 😊</p>`;
+            outputBox.innerHTML += `<p>${data.message}</p>`;
+
+            // If there were previous error attempts, then assume the user fixed the errors.
+            // In that case, we clear/hide error-specific UI elements while keeping the success message.
+            if (errorAttempts > 0) {
+                // Clear the detailed output box and hide the output card (which held error details)
+                outputBox.innerHTML = '';
+                outputCard.classList.remove('visible');
+
+                // Clear error highlights.
+                clearAllErrorHighlights();
+
+                // Hide the popup window (if it exists)
+                const popupWindow = document.getElementById('popup-window');
+                if (popupWindow) {
+                    popupWindow.style.display = 'none';
+                }
+
+                // Hide the hint container and dropdown.
+                hintboxContainer.style.display = 'none';
+                const hintsDropdown = document.getElementById('hints-dropdown');
+                if (hintsDropdown) {
+                    hintsDropdown.style.display = 'none';
+                }
+
+                // Note: We no longer hide the secondary output box so that the success message remains visible.
+                errorAttempts = 0;
+            } else {
+                // If no error attempts were recorded, simply hide the hint UI.
+                hintboxContainer.style.display = 'none';
+                const hintsDropdown = document.getElementById('hints-dropdown');
+                if (hintsDropdown) {
+                    hintsDropdown.style.display = 'none';
+                }
+            }
+
+            updateAdditionalTab([]);
+        }
+    } catch (error) {
+        console.error('Error running code:', error);
+        outputCard.classList.add('visible');
+        secondaryOutputCard.classList.remove('secondary-output-hidden');
+        secondaryOutputCard.classList.add('secondary-output-visible', 'error');
+        secondaryOutputCard.innerHTML = `<p>Code ran into problems</p>`;
+
+        showPopup('Code ran into problems 😢<br>Unable to run code. Please try again.', true);
+        const outputBox = document.getElementById('output-box');
+        outputBox.innerHTML = `<p class="error">Error: Unable to run code. Please try again.</p>`;
+        updateAdditionalTab(['Unable to run code. Please check your connection and try again.']);
+    }
+});
+
+
+// Function to populate the dropdown menu with hints
+function populateDropdownMenu(hints) {
+    const dropdownMenu = document.getElementById('hints-dropdown');
+    const hintBoxContainer = document.getElementById('hintbox-container');
+    const hintBox = document.getElementById('hintbox');
+    const randomBox = document.getElementById('random-box'); // The Customized Hints tab box
+
+    dropdownMenu.innerHTML = ''; 
+    const closeButton = document.createElement('button');
+    closeButton.className = 'dropdown-close';
+    closeButton.textContent = 'X';
+    closeButton.style.cssText = 'float: right; background: none; border: none; font-size: 18px; cursor: pointer; padding: 5px; color: red;';
+    closeButton.addEventListener('click', () => {
+        dropdownMenu.style.display = 'none';
+        hintBoxContainer.style.display = 'none'; 
     });
+
+    dropdownMenu.appendChild(closeButton);
+
+    if (hints.length > 0) {
+        hints.forEach((hint, index) => {
+            const listItem = document.createElement('li');
+            const button = document.createElement('button');
+            button.className = 'dropdown-item';
+            button.dataset.hint = index + 1;
+            button.textContent = `Get Hint ${index + 1}`;
+            listItem.appendChild(button);
+            dropdownMenu.appendChild(listItem);
+        });
+
+        // Automatically select and display the first hint
+        updateHintBox([hints[0]]);
+    } else {
+        const noHintsItem = document.createElement('li');
+        noHintsItem.textContent = 'No hints available';
+        dropdownMenu.appendChild(noHintsItem);
+    }
+
+    dropdownMenu.style.display = 'block'; // Ensure dropdown is visible
+}
+
+// Event listener for dropdown menu clicks (if still needed)
+document.getElementById('hints-dropdown').addEventListener('click', (event) => {
+    if (event.target.classList.contains('dropdown-item')) {
+        const hintIndex = parseInt(event.target.dataset.hint, 10) - 1;
+        if (currentHints && currentHints[hintIndex]) {
+            updateHintBox([currentHints[hintIndex]]);
+        }
+    }
+});
+
+// Function to update the hint box
+function updateHintBox(hintMessages) {
+    const hintBox = document.getElementById('hintbox');
+    const hintBoxContainer = document.getElementById('hintbox-container');
+
+    hintBox.innerHTML = '';
+    if (hintMessages && hintMessages.length > 0) {
+        hintMessages.forEach((hint, index) => {
+            const hintItem = document.createElement('li');
+            hintItem.textContent = `${index + 1}. ${hint}`;
+            hintBox.appendChild(hintItem);
+        });
+        hintBoxContainer.style.display = 'block';
+    } else {
+        hintBoxContainer.style.display = 'none';
+    }
+}
+
+function updateAdditionalTab(newHints) {
+    const hintsHistoryContent = document.getElementById('hints-history-content');
+
+    // If newHints is not an array, convert it into one
+    if (!Array.isArray(newHints)) {
+        newHints = [newHints];
+    }
+
+    // Append new hints to the global hintsHistory array
+    hintsHistory.push(...newHints);
+
+    // Save the updated hintsHistory to localStorage (if implementing persistence)
+    localStorage.setItem('hintsHistory', JSON.stringify(hintsHistory));
+
+    // Clear existing content
+    hintsHistoryContent.innerHTML = '';
+
+    if (hintsHistory.length > 0) {
+        // Create an unordered list to display all hints
+        const hintList = document.createElement('ul');
+
+        hintsHistory.forEach((hint, index) => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${index + 1}. ${hint}`;
+            hintList.appendChild(listItem);
+        });
+
+        hintsHistoryContent.appendChild(hintList);
+    } else {
+        // Display a default message if there are no hints
+        hintsHistoryContent.innerHTML = '<p>No specific hints available.</p>';
+    }
+}
+
+// Function to clear hints history
+function clearHintsHistory() {
+    hintsHistory = []; // Reset the global hintsHistory array
+    localStorage.removeItem('hintsHistory'); // Remove from localStorage
+    updateAdditionalTab([]); // Update the Additional Tab to show default message
+}
+
+// Add event listener to the "Clear History" button
+document.getElementById('clear-hints-history').addEventListener('click', () => {
+    if (confirm('Are you sure you want to clear the hints history?')) {
+        clearHintsHistory();
+    }
+});
+
 
     window.addEventListener('load', updatePositions);
 
@@ -863,9 +1410,37 @@ for _ in range(150):
 
     document.getElementById("syntax-highlight").addEventListener("click", toggleSyntaxHighlighting);
 
+   // Add event listener to the dark mode toggle button
+document.getElementById("dark-mode-pop-up-window").addEventListener("click", () => {
+    // Select the popup window element
+    const popupWindow = document.getElementById("popup-window");
+
+    // Toggle the "dark-mode" class on the popup window
+    popupWindow.classList.toggle("dark-mode");
+
+    // Check if the popup window is now in dark mode
+    const isDarkMode = popupWindow.classList.contains("dark-mode");
+
+    // Update the button's tooltip and icon
+    const button = document.getElementById("dark-mode-pop-up-window");
+
+    // Update tooltip using Tippy.js (if applicable)
+    if (button._tippy) {
+        button._tippy.setContent(
+            isDarkMode
+                ? "Switch the Pop-Up Window to Light Mode"
+                : "Switch the Pop-Up Window to Dark Mode"
+        );
+    }
+
+    // Update the button's icon (sun for light mode, moon for dark mode)
+    button.innerHTML = isDarkMode
+        ? '<i class="fas fa-sun"></i>' // Sun icon for light mode
+        : '<i class="fas fa-moon"></i>'; // Moon icon for dark mode
+
+    // Optional feedback for the user
+    alert(isDarkMode ? "Dark Mode Enabled for the Pop-Up Window!" : "Light Mode Enabled for the Pop-Up Window!");
+});
+
 </script>
-
 {% endblock %}
-
-
-

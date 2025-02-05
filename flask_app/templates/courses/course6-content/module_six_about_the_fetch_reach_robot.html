@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>About the Fetch Reach Robot - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_six') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_six_about_the_fetch_reach_robot') }}" class="course-link">About</a>
+                <ul class="sub-list">
+                    <li><a href="#about-fetch-reach">Fetch Reach Robot</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Fetch Robot</a></li>
+                    <li><a href="#gallery">Fetch Reach Robot Gallery</a></li>
+                    <li><a href="#real-world">Real-World Applicability</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-reach">Word Bank</a></li>
+                    <li><a href="#sim">Fetch Reach Robot Simulation</a></li>
+                    <li><a href="#given-fetch-reach ">What is Given</a></li>
+                    <li><a href="#retrieve-fetch-reach">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-reach">Word Bank</a></li>
+                    <li><a href="#understand-the-environment">Understand the Environment</a></li>
+                    <li><a href="#retrieve-key-positions">Retrieve Key Positions</a></li>
+                    <li><a href="#calculate-the-direction-vector">Calculate the Direction Vector</a></li>
+                    <li><a href="#retrieve-the-euclidean-norm-of-the-direction-vector">Retrieve the Euclidean Norm of the Direction Vector</a></li>
+                    <li><a href="#define-the-distance-threshold">Define the Distance Threshold</a></li>
+                    <li><a href="#define-the-step-size">Define the Step Size</a></li>
+                    <li><a href="#using-a-while-loop">Using a While Loop</a></li>
+                    <li><a href="#end-condition">End Condition</a></li>
+                    <li><a href="#test-the-outcome">Test the Outcome</a></li>
+                    <li><a href="#key-takeaways">Key Takeaways</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">About the Fetch Reach Robot</h1>
+            <p class="page-description">Learn the purpose of the Fetch Reach Robot.</p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Let's Explore</span>
+        </div>
+
+        <!-- Section 1: Introduction -->
+        <div class="module-section" id="about-fetch-reach">
+            <h3>Fetch Reach Robot</h3>
+            <p>The <strong>Fetch Reach robot</strong> is a simple robotic arm that provides an intuitive entry point into robotics programming. The Fetch Reach robot is equipped with several joints and actuators, allowing it to perform basic movements. The goal of this robot is to reach the destination point with the tip of the robot, called the <strong>end-effector (gripper)</strong>.</p>
+        </div>  
+
+        <!-- Section 2: Table -->
+        <div class="module-section" id="sim-v-real">
+            <h3>Simulation vs. Real Fetch Robot</h3>
+            <p>While you’ll be working with the simulated <strong>Fetch Reach robot</strong> in <strong>OpenAI Gym</strong> (an open-source toolkit for pre-built environments for training agents, including robotic tasks) using <strong>MuJoCo</strong> (a physics engine), it’s important to know that a real Fetch Reach robot exists, and the skills you learn here are transferable to the real world.</p>
+            <div class="table-responsive">
+                <table class="table-aesthetic">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Simulated Fetch Reach Robot</th>
+                            <th>Real Fetch Reach Robot</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Physics</td>
+                            <td>Simulated physics engine</td>
+                            <td>Real-world physics (friction, noise, delays)</td>
+                        </tr>
+                        <tr>
+                            <td>Sensor Data</td>
+                            <td>Simulated sensors (perfect readings)</td>
+                            <td>Real sensors (cameras, force sensors, encoders)</td>
+                        </tr>
+                        <tr>
+                            <td>Execution Speed</td>
+                            <td>Instant (fast simulation)</td>
+                            <td>Slower (real motors need time to move)</td>
+                        </tr>
+                        <tr>
+                            <td>Communication</td>
+                            <td>Uses OpenAI Gym API</td>
+                            <td>Uses ROS (Robot Operating System)</td>
+                        </tr>
+                        <tr>
+                            <td>Error Handling</td>
+                            <td>Can reset instantly</td>
+                            <td>Needs safety checks to avoid damage</td>
+                        </tr>
+                        <tr>
+                            <td>Failure Risk</td>
+                            <td>No risk</td>
+                            <td>Hardware can break</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>The simulation allows you to experiment and learn without risk, while the real robot introduces you to any real-world constraints.</p>
+        </div>        
+
+        <!-- Section 3: Simulation -->
+        <div class="module-section" id="gallery">
+            <h3>Fetch Reach Robot Gallery</h3>
+            <div class="slider-container">
+                <div class="image-slider">
+                    <img src="{{ url_for('static', filename='img/is1.png') }}" alt="Fetch Reach Robot 1" class="slider-image">
+                    <img src="{{ url_for('static', filename='img/is2.jpg') }}" alt="Fetch Reach Robot 2" class="slider-image">
+                    <img src="{{ url_for('static', filename='img/is3.avif') }}" alt="Fetch Reach Robot 3" class="slider-image">
+                    <img src="{{ url_for('static', filename='img/is4.jpg') }}" alt="Fetch Reach Robot 4" class="slider-image">
+                </div>
+                <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+                <button class="next" onclick="moveSlide(1)">&#10095;</button>
+            </div>
+            <br>
+            <p>The first image represents the <strong>simulated Fetch Reach robot</strong> in MuJoCo and OpenAI Gym, which you will be programming. This virtual environment allows you to experiment with robotics concepts in a safe and controlled setting.</p>
+            <p>The next three images showcase the <strong>real Fetch robot</strong>, which operates in physical environments using the Robot Operating System (ROS).</p>
+            <p>By working with the simulated version, you develop transferable skills that can later be applied to programming real-world robots. </p>
+        </div>
+
+         <!-- Section 4: Real-World Applicability -->
+         <div class="module-section" id="real-world">
+            <h3>Real-World Applicability</h3>
+            <p>Learning to code the simulated Fetch Reach robot provides a foundation in robotics programming that can directly apply to real-world scenarios.</p>
+            <p>So, if you've successfully coded for the MuJoCo Fetch Reach robot, you already have the skills to work with the real Fetch robot.</p>
+        </div>
+        
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_six') }}" class="secondary-button">Back: Learning Objectives</a>
+            <a href="{{ url_for('module_six_given') }}" class="secondary-button">Next: Robot Environment</a>
+        </div>
+
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

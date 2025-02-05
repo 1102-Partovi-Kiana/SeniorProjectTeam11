@@ -51,13 +51,30 @@ class StudentAssignedCourses(db.Model):
 
 
 class Courses(db.Model):
-    __tablename__ = 'courses'
+    _tablename__ = 'courses'
 
     course_id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(100))
     course_desc = db.Column(db.String(1000))
-    section_number = db.Column(db.String(10))
+    section_number = db.Column(db.Float)
     level = db.Column(db.String(50))
     certificate = db.Column(db.Boolean, default=False)
     length = db.Column(db.String(20))
     route = db.Column(db.String(100))
+
+class CourseSubsections(db.Model):
+    __tablename__ = 'course_subsections'
+
+    course_subsection_id = db.Column(db.Integer, primary_key=True)
+    course_subsection_number = db.Column(db.Float)
+    course_subsection_name = db.Column(db.String(100))
+
+class StudentAssignedCourseSubsections(db.Model):
+    __tablename__ = 'student_assigned_course_subsections'
+        
+    assigned_course_subsection_id = db.Column(db.Integer, primary_key=True)
+    completion_status = db.Column(db.Boolean, default=False) 
+    course_subsection_number = db.Column(db.Float)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('assigned_course_subsectons', lazy=True))

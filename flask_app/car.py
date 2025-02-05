@@ -6,15 +6,6 @@ import mujoco_py
 # This path is specific for 'venv38' virtual environment
 MODEL_XML_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 
-    "venv38", 
-    "lib", 
-    "python3.8", 
-    "site-packages", 
-    "gym", 
-    "envs", 
-    "robotics", 
-    "assets", 
-    "car", 
     "car.xml"
 )
 

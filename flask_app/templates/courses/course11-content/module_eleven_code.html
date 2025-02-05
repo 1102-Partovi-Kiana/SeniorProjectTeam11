@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Coding the Robot Movement - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_eleven') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_about') }}" class="course-link">About</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-car">Word Bank</a></li>
+                    <li><a href="#given-car">What is Given</a></li>
+                    <li><a href="#retrieve-car">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_eleven_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-car">Word Bank</a></li>
+                    <li><a href="#code-car">What Needs to Be Coded</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Coding the Robot Movement</h1>
+            <p class="page-description">Learn how to implement the logic required to use the Fetch Pick and Place Robot.</p>
+        </header>
+
+        <!-- Word Bank Section -->
+        <div class="word-bank" id="word-bank-car" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
+            <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin: 10px 0;">
+                    <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>➡️ Forward:</strong> Distance retrieved using the robot's forward sensor.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>⬅️ Left:</strong> Distance retrieved using the robot's left sensor.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>➡️ Right:</strong> Distance retrieved using the robot's right sensor.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>🔄 Action:</strong> List representing the robot’s movement and steering inputs.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>📊 Values:</strong> A dictionary mapping sensor directions to their respective distance values.
+                </li>
+            </ul>
+        </div>
+
+        <!-- Section: What Needs to be Coded -->
+        <div class="module-section" id="code-car">
+            <h3>What Needs to be Coded</h3>
+            <ul>
+                <li><strong>Initialize the Action:</strong> Start by setting the robot’s movement and steering input, so the robot won’t move or turn until sensor data is processed.</li>
+                <li><strong>Get Sensor Values:</strong> Use the robot’s sensor functions to get distance readings for the forward, right, and left directions. These values indicate how far away obstacles are from the robot.</li>
+                <li><strong>Compare Sensor Values to Find the Best Direction:</strong> Create a dictionary to link each direction with its sensor reading. Find the direction with the largest value, which represents the clearest path for the robot to follow.</li>
+                <li><strong>Set the Action for the Best Direction:</strong> Change the robot’s movement and steering based on the clearest direction. If the best direction is Left, set the action to [0.005, 0.007] so the robot turns left. If the best direction is Right, set the action to [0.005, -0.007] so the robot turns right. If the best direction is Forward, set the action to [0.01, 0.0] so the robot moves straight ahead.</li>
+                <li><strong>Execute the Action:</strong> Pass the chosen action to the robot to update the robot’s movement in the environment.</li>
+                <li><strong>Repeat the Process:</strong> Continue to do this. Add a short pause to control the loop speed and make the robot’s movements smoother.</li>
+            </ul>
+        </div> <!-- End of What Needs to be Coded Section -->
+
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_eleven_given') }}" class="secondary-button">Back: Environment</a>
+            <a href="{{ url_for('module_ten') }}" class="secondary-button">Next: Modulde 10</a>
+        </div>
+
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

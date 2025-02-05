@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Fetch Robot with Sensors Objectives - CORE - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item active"> 
+                <a href="{{ url_for ('module_ten') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_about') }}" class="course-link">About</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-organize-with-sensors">Word Bank</a></li>
+                    <li><a href="#given-fetch-organize-with-sensors">What is Given</a></li>
+                    <li><a href="#retrieve-fetch-organize-with-sensors">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-organize-with-sensors">Word Bank</a></li>
+                    <li><a href="#code-fetch-organize-with-sensors">What Needs to Be Coded</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+    
+    <!-- Main Content for the module -->
+    <div class="course-main-content">
+        <!-- Title and Objectives Section -->
+        <div class="container objectives-section">
+            <h1 class="module-h1-title">Fetch Organize Robot with Sensors</h1>
+            <h2 class="module1-section-title">What You Will Learn</h2>
+            <!--<div class="next-button text-center mt-4">
+                <a href="{{ url_for('overview') }}" class="secondary-button"> Start: Definition and Overview</a>
+            </div>-->
+            <p class="module1-section-subtitle">Here are the key skills and knowledge you'll gain from this module</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="objective-card">
+                        <div class="icon">
+                            <img src="/static/img/fos1.png" alt="About the Fetch Organize with Sensors Robot">
+                        </div>
+                        <h4>About</h4>
+                        <p>Learn about what the fetch organize with sensors robot is.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="objective-card">
+                        <div class="icon">
+                            <img src="/static/img/fos2.png" alt="Fetch Organize with Sensors Environment">
+                        </div>
+                        <h4>Environment</h4>
+                        <p>Learn the pieces that make up the robot's environment.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="objective-card">
+                        <div class="icon">
+                            <img src="/static/img/fos3.png" alt="Coding Logic">
+                        </div>
+                        <h4>Coding Logic</h4>
+                        <p>Grasp the logic behind coding the fetch organize with sensors robot.</p>
+                    </div>
+                </div>
+            </div> <!-- End of row -->
+        </div> <!-- End of objectives-section -->
+        <div class="next-button text-right mt-4">
+            <a href="{{ url_for('module_ten_about') }}" class="secondary-button"> Next: About the Robot</a>
+        </div>
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

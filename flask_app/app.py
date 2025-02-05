@@ -23,6 +23,10 @@ import glfw
 import threading
 import gymnasium as gym
 import ast
+from flask import send_from_directory
+import os
+import traceback
+import requests
 
 
 app = Flask(__name__, static_folder='static')
@@ -442,7 +446,7 @@ user_submitted_code = ""
 last_error = None
 static_issues = []
 junk_array = []
-api_key = "AIzaSyDpL6NsK8v8alk8JPVmu9S1QF8oRNhCJDU"  
+api_key = "AIzaSyAfoQ856qhys1OONDyPMRR7LoArpKz2JSY"  
 
 @app.route('/chatbot-api-2', methods=['POST'])
 def ChatbotAPI2():
@@ -778,55 +782,225 @@ def check_loop_termination(tree):
     """Check if loops use meaningful termination conditions."""
     issues = []
     for node in ast.walk(tree):
-        if isinstance(node, ast.For) or isinstance(node, ast.While):
+        if isinstance(node, (ast.For, ast.While)):
             condition_uses_threshold = any(
                 isinstance(child, ast.Name) and child.id == "distance_threshold"
                 for child in ast.walk(node)
             )
             if not condition_uses_threshold:
-                issues.append("Loop does not use distance_threshold for termination.")
+                issues.append({
+                    "message": "Loop does not use distance_threshold for termination.",
+                    "line": node.lineno  # AST nodes have this attribute
+                })
     return issues
 
-def analyze_robotics_code(code, context="Fetch Reach"):
+# ---------------- Static Analysis Functions for AUTONOMOUS CAR ROBOT -------------------------#
+def check_undefined_variables(tree):
+    """Detect variables that are used but not defined."""
+    defined_vars = set()
+    used_vars = set()
+    issues = []
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    defined_vars.add(target.id)
+        elif isinstance(node, ast.Name):
+            used_vars.add(node.id)
+
+    assumed_defined_vars = {"env", "time", "max"}  
+
+    undefined_vars = used_vars - defined_vars - assumed_defined_vars
+    for var in undefined_vars:
+        issues.append({
+            "message": f"Variable '{var}' is used but not defined.",
+            "line": None  
+        })
+    return issues
+
+def check_dictionary_key_safety(tree):
+    """Check if dictionary key accesses are safe."""
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name) and isinstance(node.slice, ast.Constant):
+            dict_name = node.value.id
+            key_name = node.slice.value
+            if dict_name == "values" and key_name not in {"Forward", "Right", "Left"}:
+                issues.append({
+                    "message": f"Possible unsafe dictionary lookup: '{key_name}' not guaranteed to exist.",
+                    "line": node.lineno
+                })
+    return issues
+
+def check_function_calls(tree):
+    """Check if function calls are valid and use correct arguments."""
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            if isinstance(node.func, ast.Attribute):
+                function_name = node.func.attr
+                if function_name == "step" and len(node.args) != 1:
+                    issues.append({
+                        "message": "Function 'env.step()' expects exactly one argument.",
+                        "line": node.lineno
+                    })
+            elif isinstance(node.func, ast.Name) and node.func.id == "time.sleep":
+                if len(node.args) == 1 and isinstance(node.args[0], ast.Constant) and node.args[0].value < 0.0001:
+                    issues.append({
+                        "message": "Potentially inefficient sleep duration (too short).",
+                        "line": node.lineno
+                    })
+    return issues
+
+def check_missing_env_step(tree):
+    """Detect if the required 'env.step(action)' call is missing."""
+    step_called = False
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if node.func.attr == "step" and isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
+                step_called = True  
+
+    issues = []
+    if not step_called:
+        issues.append({
+            "message": "Missing required call to 'env.step(action)'. The simulation may not function correctly.",
+            "line": None  
+        })
+
+    return issues
+
+# ---------------- Static Analysis Functions for FETCH ORGANIZE WITH SENSORS ROBOT -------------------------#
+def check_loop_termination_sensors(tree):
+    """
+    Check for while loops that use a constant True test without a break.
+    This is a heuristic to catch potential infinite loops.
+    """
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.While):
+            # Look for a "while True:" loop
+            if (isinstance(node.test, ast.NameConstant) and node.test.value is True) or \
+               (hasattr(node.test, 'value') and node.test.value is True):
+                # Check if any break is present in the loop body
+                has_break = any(isinstance(n, ast.Break) for n in ast.walk(node))
+                if not has_break:
+                    issues.append({
+                        "message": "Infinite while loop detected without a break condition.",
+                        "line": node.lineno
+                    })
+    return issues
+
+def verify_one_env_step(tree):
+    """
+    Verify that at least one call to env.step() is present.
+    """
+    issues = []
+    found = False
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            if hasattr(node.func, 'attr') and node.func.attr == "step":
+                found = True
+                break
+    if not found:
+        issues.append({
+            "message": "No call to env.step() found in the code.",
+            "line": None
+        })
+    return issues
+
+def analyze_robotics_code(code, context="Car"):
     """Analyze code for robotics-specific logical issues."""
     issues = []
+    print(f"Analyzing code in context: {context}")
     try:
-        
         tree = ast.parse(code)
-
-        if context == "Fetch Reach":
-            issues.extend(check_normalization(tree))
-            issues.extend(check_distance_threshold(tree))
-            issues.extend(check_gripper_closure(tree))
-            issues.extend(check_object_transport(tree))
-            issues.extend(check_loop_termination(tree))
-        elif context == "Fetch Pick and Place":
-            issues.extend(check_gripper_closure(tree))
-            issues.extend(check_object_transport(tree))
     except SyntaxError as e:
-        junk_array.append(f"Syntax error detected: {e}")
+        # Do not include syntax errors in static issues.
+        return issues
+
+    if context == "Fetch Reach":
+        issues.extend(check_normalization(tree))
+        issues.extend(check_distance_threshold(tree))
+        issues.extend(check_gripper_closure(tree))
+        issues.extend(check_object_transport(tree))
+        issues.extend(check_loop_termination(tree))
+    elif context == "Fetch Pick and Place":
+        issues.extend(check_gripper_closure(tree))
+        issues.extend(check_object_transport(tree))
+    elif context == "Fetch Sensors":
+        issues.extend(check_loop_termination_sensors(tree))
+        issues.extend(verify_one_env_step(tree))
+    elif context == "Car": 
+        issues.extend(check_undefined_variables(tree))
+        issues.extend(check_dictionary_key_safety(tree))
+        issues.extend(check_function_calls(tree))
+        issues.extend(check_missing_env_step(tree))
 
     return issues
+
 
 @app.route('/chatbot-api', methods=['POST'])
 def ChatbotAPI():
-    print("Chatbot API called")  # Check if the function is called
+    print("Chatbot API called")
     global user_submitted_code
     global last_error
     global static_issues
+    global last_error_line
+    global hint_level
 
-    print("User submitted code in ChatbotAPI:", user_submitted_code)
-    print("Last error in ChatbotAPI:", last_error)
-    print("Static Issues:", static_issues)
+    if 'last_error_line' not in globals():
+        last_error_line = None
+    if 'hint_level' not in globals():
+        hint_level = 1
 
-    data = request.json
-    page_context = data.get('page_context', 'General')
-    print(f"Page Context: {page_context}")
-    error_message = last_error
+    data = request.get_json()
 
-    if not user_submitted_code:
-        return jsonify({'reply': "Please submit your code before asking for help!"})
-    
+    if not data:
+        print("ERROR: No JSON data received in request!")
+        return jsonify({'error': 'No JSON data received!'}), 400
+
+    print("Received JSON data", data)  
+    page_context = data.get('page_context')
+
+    print("Extracted page_context from request", page_context)
+
+    page_contexts = {
+        "/Fetch-Reach-Robot": "Fetch Reach",
+        "/PickAndPlacePage": "Fetch Pick and Place",
+        "/FetchStackPage": "Fetch Stack",
+        "/FetchOrganizePage": "Fetch Organize",
+        "/FetchOrganizeSensorsPage": "Fetch Sensors",
+        "/CarPage": "Car", 
+    }
+
+    if not page_context or page_context == "General":
+        current_path = request.headers.get('Referer', request.path) 
+        page_context = page_contexts.get(current_path, "General")
+
+    print(f"Final Page Context Used {page_context}")
+
+    error_line = data.get('error_line')  
+    error_message = data.get('error_message')
+    print(f"Received Error Line: {error_line}, Last Error Line: {last_error_line}")
+    print(f"Current Hint Level: {hint_level}, Error Message: {error_message}")
+
+    if error_line != last_error_line:
+        hint_level = 1
+        last_error_line = error_line
+    else:
+        hint_level += 1
+
+    if static_issues:
+        static_issues_text = "\n".join(
+            f"Line {issue['line']}: {issue['message']}"
+            for issue in static_issues
+            if isinstance(issue, dict)
+        )
+    else:
+        static_issues_text = "None"
+
     if static_issues and last_error:
         focus = "Focus on syntax errors first, then address the following static issues."
     elif static_issues:
@@ -835,143 +1009,35 @@ def ChatbotAPI():
         focus = "Focus on resolving the syntax error below."
     else:
         return jsonify({'reply': "No errors or static issues detected. Your code looks good!"})
-    
-    #Decide about this later
-    # if not error_message:
-    #     return jsonify({'reply': "No errors detected. Your code looks good!", 'last_error': None})
-    
+
     # Construct prompt using stored code
-    full_prompt = {
-        "Fetch Reach": """
-            You are a helpful chatbot for a robotics coding environment. If the user's message contains acknowledgment or expressions like "thanks," "got it," "okay," or other similar acknowledgment phrases, respond with a friendly encouragement or acknowledgment without giving any hint or solution. 
-            Otherwise, analyze the user's submitted Python code and provide hints based on the issues detected. 
-            
-            {focus}
+    prompt = f"""
+    You are a helpful chatbot. Based on the current hint level ({hint_level}), provide guidance:
+    - Level 1: General guidance.
+    - Level 2: More specific guidance.
+    - Level 3: Precise, actionable advice.
+    - Level 4: In-depth explanation and direct solution.
 
-            Syntax Error:
-            {last_error}
+    {focus}
 
-            Static Issues:
-            {static_issues}
+    Syntax Error:
+    {last_error or 'None'}
 
-            If we just have a syntax error then follow this path:
-                Regarding our focus being on "Focus on resolving the syntax error." Then give hints regarding the syntax issue.
-                Here is the User Code that has the syntax error.
-                User Code:
-                {user_submitted_code}
+    Static Issues:
+    {static_issues_text}
 
-                Provide hints in increasing specificity:
-                - First hint: General guidance on what to focus on.
-                - Second hint: A more detailed and specific suggestion.
-                - Third hint: A very helpful and precise hint pointing directly to the issue.
-                This is the format I want you to respond in:
-                "HINTS:\n"
-                    "1. Hint 1.\n"
-                    "2. Hint 2.\n"
-                    "3. Hint 3."
+    User Code:
+    {user_submitted_code}
 
+    Provide a single hint matching the specificity level ({hint_level}). 
+    This is the format for your response:
+    "HINTS:\n"
+    "1. Hint text here."
+    """
 
-            If we have only static issues then follow this path:
-                 Problem Context: This code is for the Fetch Reach Robot. This code is supposed to move the gripper towards the ball until it reaches a close range. Key factors include:
-                    - Ensuring the distance threshold is set low enough for the gripper to stop close to the ball.
-                    - Verifying the direction vector is normalized to ensure the gripper moves towards the ball consistently.
-                    - The ultimate goal of the Python code is to make a robotic gripper move towards a ball.
-                Read about the static issues I have provided you with or singular static issue. 
-                Identify any potential issues in the logic and provide specific hints for improvement.
+    print("Constructed Prompt:\n", prompt)
 
-                Compare the user's submitted code against the answer below and generate a helpful hint based on the user's specific code. Check if the users submitted code matches the answer key solution code I am going to provide you. If it does
-                respond to the user, notifying them that nothing is wrong with their code, it is correct.  
-                Provide hints in increasing specificity:
-                - First hint: General guidance on what to focus on.
-                - Second hint: A more detailed and specific suggestion.
-                - Third hint: A very helpful and precise hint pointing directly to the issue.
-
-                After providing three hints, stop giving hints, so the student can truly try and figure it out on their own. 
-                Here is the User Code that has the static issues or singular static issue depending on how many are involved:
-                User Code:
-                {user_submitted_code}
-
-                The following is a general solution to the environment (Note: You are comparing the users sumbitted code to this general solution to see where they went wrong and figure out how to help them):
-                ```
-                ball_position = current_env.get_ball_position()
-                gripper_position = current_env.get_gripper_position()
-                direction = np.array(ball_position) - np.array(gripper_position)
-                distance_threshold = 0.01
-                step_size = 0.05
-                while np.linalg.norm(direction) > distance_threshold:
-                    action = np.append(direction / np.linalg.norm(direction) * step_size, [1])
-                    current_env.step(action)
-                    gripper_position = current_env.get_gripper_position()
-                    direction = np.array(ball_position) - np.array(gripper_position)
-                print("Final Gripper Position:", gripper_position)
-                print("Reached near the ball.")
-                ```
-                This is the format I want you to respond in:
-                "HINTS:\n"
-                    "1. Hint 1.\n"
-                    "2. Hint 2.\n"
-                    "3. Hint 3."
-
-            If we have both static issues and syntax errors follow this path:
-                Deal with the syntax errors first and then the static issues:
-
-                User Code:
-                {user_submitted_code}
-
-                This is the format I want you to respond in:
-                "HINTS:\n"
-                    "1. Hint 1.\n"
-                    "2. Hint 2.\n"
-                    "3. Hint 3."
-
-            """,
-            "Fetch Pick and Place": """
-                You are a helpful chatbot for the Fetch Pick and Place Robot coding task. Your role is to assist the user in programming the robot to pick up an object and place it at a target location.
-                - Focus on explaining phases of the task: approach, grasp, lift, transport, and place.
-                - Provide hints about defining and using action arrays for precise control of the gripper and object movement.
-                - Highlight the importance of accurate horizontal and vertical alignment during the task.
-
-                Compare the user's submitted code against the answer below and generate a helpful hint based on the user's specific code. Check if the users submitted code matches the answer key solution code I am going to provide you. If it does
-                respond to the user, notifying them that nothing is wrong with their code, it is correct.  
-                Provide hints in increasing specificity:
-                - First hint: General guidance on what to focus on.
-                - Second hint: A more detailed and specific suggestion.
-                - Third hint: A very helpful and precise hint pointing directly to the issue.
-
-                    This is the format I want you to respond in:
-                    "HINTS:\n"
-                        "1. Hint 1.\n"
-                        "2. Hint 2.\n"
-                        "3. Hint 3."
-                General Problem Context:
-                - The gripper must securely grip the object, lift it without colliding with obstacles, and transport it to the target position for placement.
-                - Correctly calculate direction vectors and distances for smooth and efficient operations.
-                User Code:
-                {user_submitted_code}
-            """,
-            "General": """
-                You are a helpful chatbot for robotics coding. Help users with their questions, whether they're related to specific coding tasks, debugging, or general robotics concepts.
-                If the user's question is unclear, ask for clarification politely.
-                User Code:
-                {user_submitted_code}
-                This is the format I want you to respond in:
-                    "HINTS:\n"
-                        "1. Hint 1.\n"
-                        "2. Hint 2.\n"
-                        "3. Hint 3."
-
-            """,
-    }
-
-    selected_prompt = full_prompt.get(page_context, full_prompt["General"])
-    final_prompt = selected_prompt.format (
-        user_submitted_code=user_submitted_code,
-        focus=focus,  
-        last_error=last_error if last_error else "None",  
-        static_issues=", ".join(static_issues) if static_issues else "None"  
-    )
-                
-    # API call to Gemini for chatbot response
+    # 4) Call the Gemini API (or your LLM)
     try:
         api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent"
         payload = {
@@ -979,27 +1045,30 @@ def ChatbotAPI():
                 {
                     "parts": [
                         {
-                            "text": final_prompt
+                            "text": prompt
                         }
                     ]
                 }
             ]
         }
-        
-        response = requests.post(f"{api_url}?key={api_key}", headers={
-            'Content-Type': 'application/json'
-        }, json=payload)
-        
-        print("API Response:", response.text)  
+        response = requests.post(
+            f"{api_url}?key={api_key}",
+            headers={'Content-Type': 'application/json'},
+            json=payload
+        )
+        print("API Response:", response.text)
 
         if response.status_code != 200:
             return jsonify({'error': f'Error from API: {response.text}'}), 500
 
         response_json = response.json()
-
         if 'candidates' in response_json and len(response_json['candidates']) > 0:
-            chatbot_response = response_json['candidates'][0]['content']['parts'][0].get('text', 'No response')
-            print("Extracted Chatbot Response:", chatbot_response)  
+            chatbot_response = (
+                response_json['candidates'][0]
+                .get('content', {})
+                .get('parts', [{}])[0]
+                .get('text', 'No response')
+            )
         else:
             chatbot_response = 'No contents available in the response'
 
@@ -1012,9 +1081,12 @@ def ChatbotAPI():
         hints_section = chatbot_response.split("HINTS:")[-1].strip()
         hints = [hint.strip() for hint in hints_section.split("\n") if hint.strip()]
 
-    print("Extracted Hints:", hints) 
+    print("Extracted Hints:", hints)
 
-    return jsonify({'reply': chatbot_response, 'hints': hints[:3]})
+    return jsonify({
+        'reply': chatbot_response,
+        'hints': hints[:1]
+    })
 
 # Darren's Code
 @app.route('/environments')
@@ -1382,6 +1454,7 @@ def AssignStudentToCourse():
         #print("Selected Courses:", selected_courses_id)
 
         assignments = []
+        subsection_assignments = []
 
         for student_id in selected_student_ids:
             student = User.query.filter_by(user_id=student_id).first()
@@ -1390,18 +1463,36 @@ def AssignStudentToCourse():
             for course_id in selected_courses_id:
                 if not course_id:
                     continue
-                existing_assignment = StudentAssignedCourses.query.filter_by(user_id=student_id, course_id=course_id).first()
-                if existing_assignment:
+
+                course = Courses.query.filter_by(course_id=course_id).first()
+                if not course:
                     continue
 
-                student_assignments =  StudentAssignedCourses()
-                student_assignments.user_id = student_id
-                student_assignments.course_id = course_id
-                assignments.append(student_assignments)
+                section_number = course.section_number
+                subsections = CourseSubsections.query.filter(
+                    CourseSubsections.course_subsection_number > section_number,
+                    CourseSubsections.course_subsection_number < section_number + 1
+                ).all()
+
+                existing_assignment = StudentAssignedCourses.query.filter_by(user_id=student_id, course_id=course_id).first()
+                if not existing_assignment:
+                    student_assignment = StudentAssignedCourses(user_id=student_id, course_id=course_id)
+                    assignments.append(student_assignment)
+
+                for subsection in subsections:
+                    existing_subsection_assignment = StudentAssignedCourseSubsections.query.filter_by(user_id=student_id, course_subsection_number=subsection.course_subsection_number).first()
+                    if not existing_subsection_assignment:
+                        student_subsection_assignment = StudentAssignedCourseSubsections(user_id=student_id, course_subsection_number=subsection.course_subsection_number)
+                        subsection_assignments.append(student_subsection_assignment)
 
         if assignments:
             db.session.add_all(assignments)
-            db.session.commit()
+        if subsection_assignments:
+            db.session.add_all(subsection_assignments)
+        
+        db.session.commit()
+
+        if assignments:
             flash('Students have been successfully assigned to the selected courses.', 'popup')
         else:
             flash('No new assignments were made. All students were already assigned to the selected courses.', 'popup')
@@ -1424,14 +1515,28 @@ def RenderCourses():
     
     user_id = user['user_id']
     role = user['role_id']
+    complete_percentage = None 
+    is_student = role == ROLE_STUDENT
 
-    if role == ROLE_STUDENT:
+    if is_student:
         assigned_courses = StudentAssignedCourses.query.filter_by(user_id=user_id).all()
         courses = []
         for assignment in assigned_courses:
             courses.append(assignment.course)
+
+        assigned_subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+        completed_subsections = StudentAssignedCourseSubsections.query.filter_by(completion_status = 't', user_id=user_id).all()
+
+        num_completed_subsections = len(completed_subsections)
+        num_assigned_subsections = len(assigned_subsections)
+
+        if num_assigned_subsections > 0:
+            complete_percentage = round((num_completed_subsections / num_assigned_subsections) * 100)
+        else:
+            complete_percentage = 0
     else:
         courses = Courses.query.all()
+        complete_percentage = None
 
     query = request.args.get("q", "").lower()
     filtered_course_catalog = [
@@ -1442,7 +1547,8 @@ def RenderCourses():
         or (query == "certificate" and course.certificate == "t")
         or query in course.length.lower()
     ]
-    return render_template("courses.html", courses=filtered_course_catalog, query=query, user=user)
+
+    return render_template("courses.html", courses=filtered_course_catalog, query=query, user=user, complete_percentage=complete_percentage, is_student=is_student)
 
 @app.route('/playground')
 def playground():
@@ -1450,7 +1556,28 @@ def playground():
 
 @app.route('/module1/introduction')
 def module_intro():
-    return render_template('courses/course1-content/module_intro.html') 
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    module_completed = {}
+
+    if role == ROLE_STUDENT:
+        subsection = StudentAssignedCourseSubsections.query.filter_by(course_subsection_number = 1.11, user_id=user_id).first()
+        if subsection:
+            subsection.completion_status = True
+            db.session.commit()
+
+    subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+    for subsection in subsections:
+        module_completed[subsection.course_subsection_number] = subsection.completion_status
+
+    return render_template('courses/course1-content/module_intro.html', module_completed=module_completed)
 
 @app.route('/module1/start-page')
 def course1_card():
@@ -1464,45 +1591,203 @@ def course2_card():
 def course3_card():
     return render_template('courses/course3-content/course3_card.html') 
 
+@app.route('/module4/start-page-4')
+def course4_card():
+    return render_template('courses/course4-content/module_four.html') 
+
+@app.route('/module6/start-page-6')
+def course6_card():
+    return render_template('courses/course6-content/module_six.html') 
+
+@app.route('/module7/start-page-7')
+def course7_card():
+    return render_template('courses/course7-content/module_seven.html') 
+
+@app.route('/module8/start-page-8')
+def course8_card():
+    return render_template('courses/course8-content/module_eight.html') 
+
+@app.route('/module9/start-page-9')
+def course9_card():
+    return render_template('courses/course9-content/module_nine.html') 
+
+@app.route('/module10/start-page-10')
+def course10_card():
+    return render_template('courses/course10-content/module_ten.html') 
+
+@app.route('/module11/start-page-11')
+def course11_card():
+    return render_template('courses/course11-content/module_eleven.html') 
+
 @app.route('/module1/introduction/overview')
 def overview():
-    return render_template('courses/course1-content/overview.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.12
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/overview.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/history')
 def history():
-    return render_template('courses/course1-content/history_of_robotics.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.13
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/history_of_robotics.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/types-of-robots')
 def typesofrobots():
-    return render_template('courses/course1-content/types_of_robots.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.14
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/types_of_robots.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/importance-and-applications-of-robotics')
 def importanceandapp():
-    return render_template('courses/course1-content/importance_and_app.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.15
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/importance_and_app.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/course1-quiz-1')
 def course1quiz1():
-    return render_template('courses/course1-content/course1-quiz1.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.9
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/course1-quiz1.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/robot-anatomy')
 def robotanatomy():
-    return render_template('courses/course1-content/robot_anatomy.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.16
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/robot_anatomy.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/challenges')
 def challenges():
-    return render_template('courses/course1-content/challenges_in_robotics.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.17
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/challenges_in_robotics.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/robot-programming')
 def robotprogramming():
-    return render_template('courses/course1-content/robot_programming.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.18
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/robot_programming.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/social-and-ethical-implications')
 def implications():
-    return render_template('courses/course1-content/social_and_ethical_imp.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.19
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/social_and_ethical_imp.html', module_completed=module_completed)
 
 @app.route('/module1/introduction/future-trends')
 def futuretrends():
-    return render_template('courses/course1-content/future_trends.html')
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.21
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/future_trends.html', module_completed=module_completed)
 
 @app.route('/module2/introduction')
 def module_two():
@@ -1531,6 +1816,189 @@ def module_three_fetch_pick():
 @app.route('/module3/fetch-sensor')
 def module_three_fetch_sensor():
     return render_template('courses/course3-content/module_three_fetch_sensor.html') 
+
+@app.route('/module4/introduction')
+def module_four():
+    return render_template('courses/course4-content/module_four.html') 
+
+@app.route('/module4/formatting/naming-conventions')
+def module_four_naming_conventions():
+    return render_template('courses/course4-content/module_four_naming_conventions.html') 
+
+@app.route('/module4/formatting/comments')
+def module_four_comments():
+    return render_template('courses/course4-content/module_four_comments.html') 
+
+@app.route('/module4/formatting/indentation')
+def module_four_indentation():
+    return render_template('courses/course4-content/module_four_indentation.html') 
+
+@app.route('/module4/variables/variables')
+def module_four_variables():
+    return render_template('courses/course4-content/module_four_variables.html') 
+
+@app.route('/module4/controlflow/controlflow')
+def module_four_control_flow():
+    return render_template('courses/course4-content/module_four_control_flow.html') 
+
+@app.route('/module4/controlflow/loops')
+def module_four_loops():
+    return render_template('courses/course4-content/module_four_loops.html') 
+
+@app.route('/module4/controlflow/functions')
+def module_four_functions():
+    return render_template('courses/course4-content/module_four_functions.html') 
+
+@app.route('/module4/debugging/debugging')
+def module_four_debugging():
+    return render_template('courses/course4-content/module_four_debugging.html') 
+
+DOWNLOAD_FOLDER = os.path.join(app.root_path, 'static', 'downloads')
+app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
+
+@app.route('/download/<filename>')
+def download_file(filename):
+    return send_from_directory(app.config['DOWNLOAD_FOLDER'], filename, as_attachment=True)
+
+@app.route('/module4/test/test')
+def module_four_download():
+    return render_template('courses/course4-content/module_four_download.html')
+
+@app.route('/module6/test/test')
+def module_six_download():
+    return render_template('courses/course6-content/module_six_download.html')
+
+@app.route('/module7/test/test')
+def module_seven_download():
+    return render_template('courses/course7-content/module_seven_download.html')
+
+@app.route('/module8/test/test')
+def module_eight_download():
+    return render_template('courses/course8-content/module_eight_download.html')
+
+@app.route('/module6/introduction')
+def module_six():
+    return render_template('courses/course6-content/module_six.html')
+
+@app.route('/module6/about-the-fetch-reach-robot')
+def module_six_about_the_fetch_reach_robot():
+    return render_template('courses/course6-content/module_six_about_the_fetch_reach_robot.html')
+
+@app.route('/module6/given')
+def module_six_given():
+    return render_template('courses/course6-content/module_six_given.html')
+
+@app.route('/module6/implementing-logic')
+def module_six_code():
+    return render_template('courses/course6-content/module_six_code.html')
+
+@app.route('/module6/link-to-environment')
+def module_six_link():
+    return render_template('courses/course6-content/module_six_link.html')
+
+@app.route('/module7/introduction')
+def module_seven():
+    return render_template('courses/course7-content/module_seven.html')
+
+@app.route('/module7/about-the-fetch-pick-and-place-robot')
+def module_seven_about_the_fetch_pick_and_place_robot():
+    return render_template('courses/course7-content/module_seven_about_the_fetch_pick_and_place_robot.html')
+
+@app.route('/module7/given')
+def module_seven_given():
+    return render_template('courses/course7-content/module_seven_given.html')
+
+@app.route('/module7/implementing-logic')
+def module_seven_code():
+    return render_template('courses/course7-content/module_seven_code.html')
+
+@app.route('/module7/link-to-environment')
+def module_seven_link():
+    return render_template('courses/course7-content/module_seven_link.html')
+
+@app.route('/module8/introduction')
+def module_eight():
+    return render_template('courses/course8-content/module_eight.html')
+
+@app.route('/module8/about-the-fetch-stack-robot')
+def module_eight_about():
+    return render_template('courses/course8-content/module_eight_about.html')
+
+@app.route('/module8/given')
+def module_eight_given():
+    return render_template('courses/course8-content/module_eight_given.html')
+
+@app.route('/module8/implementing-logic')
+def module_eight_code():
+    return render_template('courses/course8-content/module_eight_code.html')
+
+@app.route('/module8/link-to-environment')
+def module_eight_link():
+    return render_template('courses/course8-content/module_eight_link.html')
+
+@app.route('/module9/introduction')
+def module_nine():
+    return render_template('courses/course9-content/module_nine.html')
+
+@app.route('/module9/about-the-fetch-organize-robot')
+def module_nine_about():
+    return render_template('courses/course9-content/module_nine_about.html')
+
+@app.route('/module9/given')
+def module_nine_given():
+    return render_template('courses/course9-content/module_nine_given.html')
+
+@app.route('/module9/implementing-logic')
+def module_nine_code():
+    return render_template('courses/course9-content/module_nine_code.html')
+
+@app.route('/module9/link-to-environment')
+def module_nine_link():
+    return render_template('courses/course9-content/module_nine_link.html')
+
+@app.route('/module10/introduction')
+def module_ten():
+    return render_template('courses/course10-content/module_ten.html')
+
+@app.route('/module10/about')
+def module_ten_about():
+    return render_template('courses/course10-content/module_ten_about.html')
+
+@app.route('/module10/given')
+def module_ten_given():
+    return render_template('courses/course10-content/module_ten_given.html')
+
+@app.route('/module10/implementing-logic')
+def module_ten_code():
+    return render_template('courses/course10-content/module_ten_code.html')
+
+@app.route('/module10/link-to-environment')
+def module_ten_link():
+    return render_template('courses/course10-content/module_ten_link.html')
+
+@app.route('/module11/introduction')
+def module_eleven():
+    return render_template('courses/course11-content/module_eleven.html')
+
+@app.route('/module11/about')
+def module_eleven_about():
+    return render_template('courses/course11-content/module_eleven_about.html')
+
+@app.route('/module11/given')
+def module_eleven_given():
+    return render_template('courses/course11-content/module_eleven_given.html')
+
+@app.route('/module11/implementing-logic')
+def module_eleven_code():
+    return render_template('courses/course11-content/module_eleven_code.html')
+
+@app.route('/module11/link-to-environment')
+def module_eleven_link():
+    return render_template('courses/course11-content/module_eleven_link.html')
+
+@app.route('/embedded-course-content')
+def embedded_course_content():
+    return render_template('courses/course6-content/module_six_given.html')  # This page has NO navbar or footer
 
 # Darren's Code
 @app.route('/Fetch-Reach-Robot')
@@ -1658,25 +2126,40 @@ def run_code():
     global static_issues
     global junk_array
 
-    code = request.form['code']
+    data = request.get_json(silent=True)
+
+    if data:
+        print("Received JSON request.")
+        code = data.get('code', '')
+        page_context = data.get('context', 'Car') 
+    else:
+        print("No JSON was received. Using form data in place of the JSON.")
+        code = request.form.get('code', '')
+        page_context = request.form.get('context', 'Car') 
+
+    if not code:
+        return jsonify({'error': 'No code received!', 'static_issues': []}), 400
+
     user_submitted_code = code
     last_error = None
 
-    page_context = request.form.get('context', 'Fetch Reach')
+    print("Final Context Used for Static Analysis:", page_context)
+    
     static_issues = analyze_robotics_code(code, context=page_context)
-    print("Static Issues Found:", static_issues)  
+    print("Static Issues Found:", static_issues)
+
+    for issue in static_issues:
+        print(f"Found issue at line {issue.get('line', 'Unknown')}: {issue['message']}")
 
     if env is None:
-        print("Error: No environment chosen yet") 
-        return jsonify({
-            'error': 'No environment chosen yet',
-            'static_issues': static_issues 
-        }), 400
+        print("Error: No environment chosen yet")
+        return jsonify({'error': 'No environment chosen yet', 'static_issues': static_issues}), 400
 
     try:
-        print("I am here")
+        print("Executing user code...")
         local_context = {}
-        exec(code, globals(), local_context)
+
+        exec(code, globals(), local_context)  
 
         ball_position = local_context.get('ball_position', env.get_ball_position())
         gripper_position = local_context.get('gripper_position', env.get_gripper_position())
@@ -1686,22 +2169,17 @@ def run_code():
             'ball_position': {'x': ball_position[0], 'y': ball_position[1], 'z': ball_position[2]},
             'gripper_position': {'x': gripper_position[0], 'y': gripper_position[1], 'z': gripper_position[2]},
             'error': None,
-            'static_issues': static_issues,  
+            'static_issues': static_issues,
+            'context': page_context,  
         }
 
         print("Successful Response Data:", return_data)
-
         return jsonify(return_data)
 
     except Exception as e:
         last_error = str(e)
-        print("Error Message from Run Code:", last_error)  
-        print("Static Issues from Run Code:", static_issues) 
-
-        return jsonify({
-            'error': last_error,
-            'static_issues': static_issues, 
-        })
+        print("Error Message from Run Code:", last_error)
+        return jsonify({'error': last_error, 'static_issues': static_issues, 'context': page_context})
 
 @app.route('/get-ball-position', methods=['GET'])
 def get_ball_position():
@@ -1729,7 +2207,6 @@ def check_collision():
 
     collision_detected = bool(distance < threshold_distance)
     return jsonify({'collision': collision_detected})
-#End of Darren's Code
 
 @app.route('/next-question', methods=['POST'])
 def next_question():

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Robot Environment - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_six') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_about_the_fetch_reach_robot') }}" class="course-link">About</a>
+                <ul class="sub-list">
+                    <li><a href="#about-fetch-reach">Fetch Reach Robot</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Fetch Robot</a></li>
+                    <li><a href="#gallery">Fetch Reach Robot Gallery</a></li>
+                    <li><a href="#real-world">Real-World Applicability</a></li>
+                </ul>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_six_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-reach">Word Bank</a></li>
+                    <li><a href="#sim">Fetch Reach Robot Simulation</a></li>
+                    <li><a href="#given-fetch-reach">What is Given</a></li>
+                    <li><a href="#retrieve-fetch-reach">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-reach">Word Bank</a></li>
+                    <li><a href="#understand-the-environment">Understand the Environment</a></li>
+                    <li><a href="#retrieve-key-positions">Retrieve Key Positions</a></li>
+                    <li><a href="#calculate-the-direction-vector">Calculate the Direction Vector</a></li>
+                    <li><a href="#retrieve-the-euclidean-norm-of-the-direction-vector">Retrieve the Euclidean Norm of the Direction Vector</a></li>
+                    <li><a href="#define-the-distance-threshold">Define the Distance Threshold</a></li>
+                    <li><a href="#define-the-step-size">Define the Step Size</a></li>
+                    <li><a href="#using-a-while-loop">Using a While Loop</a></li>
+                    <li><a href="#end-condition">End Condition</a></li>
+                    <li><a href="#test-the-outcome">Test the Outcome</a></li>
+                    <li><a href="#key-takeaways">Key Takeaways</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Robot Environment</h1>
+            <p class="page-description">Understand the components of the robot's environment and how to interact with them.</p>
+        </header>
+
+        <!-- Word Bank Section -->
+        <div class="word-bank" id="word-bank-fetch-reach" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
+            <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin: 10px 0;">
+                    <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>🔧 FetchReachEnv:</strong> The specific environment object for the task setup.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>📏 Distance Threshold:</strong> Maximum allowable distance between gripper and ball.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>🔄 Step Size:</strong> Incremental movement of the gripper.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>🎯 Ball Position:</strong> Current coordinates of the ball.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>🤖 Gripper Position:</strong> Current coordinates of the robot's gripper.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>🧭 Direction:</strong> Vector from gripper to ball.
+                </li>
+            </ul>
+        </div>
+        
+        <div class="divider">
+            <span class="divider-text">Let’s Look At the Fetch Robot Labeled</span>
+        </div>
+
+        <div class="module-section" id="sim">
+            <h3>Fetch Reach Robot Simulation</h3>
+            <img src="{{ url_for('static', filename='img/fetchreachlabeled.png') }}" alt="Fetch Reach Robot" class="robot-image">
+            <br>
+            <p>Here is a simulation of the Fetch Reach robot that you will be interacting with and programming.</p>
+            <br>
+            <p><strong>The Task of the Fetch Reach Robot:</strong> Fetch Reach has to move its end-effector (gripper) to the desired goal position.</p>
+        </div>
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look At What Is Given To Us</span>
+        </div>
+
+        <!-- Section 1: What is Given -->
+        <div class="module-section" id="given-fetch-reach">
+            <h3>What is Given</h3>
+            <ul>
+                <li>
+                    <strong>global env:</strong> This represents the robot's environment, which contains the robot's current state and methods for interacting with it. The environment has various “getters” and “setters.”
+                    <br><small><strong>Note:</strong> You as the coder will not need to worry about this. This is because this is part of the task setup. It allows you to be able to use env. and the methods that go along with it.</small>
+                </li>
+                <li>
+                    <strong>env = FetchReachEnv():</strong> The environment object that is initialized and is part of the task setup.
+                    <br><small><strong>Note:</strong> You as the coder will not need to worry about this. This is because this is part of the task setup. It allows you to be able to use env. and the methods that go along with it.</small>
+                </li>
+                <li><strong>distance_threshold:</strong> The distance value that will be used to determine when the gripper is "close enough" to the ball, indicating completion of the task. In this case, we set the distance_threshold to <strong>0.01</strong> in the code. This is because it is used as a small tolerance to make sure the gripper gets very close to the ball without needing to be perfectly aligned.</li>
+                <li><strong>step_size:</strong> The size of each movement step that the gripper will make towards the ball. We set the step size to <strong>0.05</strong> in the code for controlling how far the gripper moves in each iteration of the loop. A smaller step size makes the gripper move incrementally.</li>
+            </ul>
+        </div> <!-- End of What is Given Section -->
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look At What Needs To Be Retrieved</span>
+        </div>
+
+        <!-- Section 2: What Needs to be Retrieved -->
+        <div class="module-section" id="retrieve-fetch-reach">
+            <h3>What Needs to be Retrieved</h3>
+            <ul>
+                <li><strong>ball_position:</strong> This value represents the current position of the ball in the environment. Retrieve this by calling a method or function  for getting the ball's position from the global variable “env”.</li>
+                <li><strong>gripper_position:</strong> This value represents the current position of the robot's gripper. It’s essential for calculating the direction (The direction is a vector calculated as the difference between the ball's position and the gripper's position) and updating the gripper’s position after each movement. It will be retrieved by calling a method or function for getting the gripper's position from the global variable “env.”</li>
+                <li><strong>direction:</strong> The direction from the gripper to the ball, calculated by subtracting the gripper's position from the ball's position. This will be used to calculate how the gripper should move to reach the ball.</li>
+            </ul>
+        </div> <!-- End of What Needs to be Retrieved Section -->
+
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_six_about_the_fetch_reach_robot') }}" class="secondary-button">Back: About</a>
+            <a href="{{ url_for('module_six_code') }}" class="secondary-button">Next: Coding Logic</a>
+        </div>
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

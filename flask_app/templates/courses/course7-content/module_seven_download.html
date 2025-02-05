@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Module Seven Cheat Sheet - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Cheat Sheet</h1>
+            <p class="page-description">Download a handy cheat sheet to help you remember key concepts.</p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Get Your Cheat Sheet</span>
+        </div>
+
+        <!-- Download Section -->
+        <div class="module-section" id="download">
+            <div class="download-card">
+                <div class="download-header">
+                    <i class="fas fa-robot download-icon"></i>
+                    <h3 class="download-title">Cheat Sheet</h3>
+                </div>
+                <p class="download-description">Get a quick reference guide for key concepts covered in this module. Click below to download your cheat sheet:</p>
+                <a href="{{ url_for('download_file', filename='fetch_pick_and_place_cheat_sheet.pdf') }}" download>
+                    <button class="primary-button download-button">
+                        <i class="fas fa-download"></i> Download Cheat Sheet
+                    </button>
+                </a>
+            </div>
+        </div>
+
+        <!-- Next Button -->
+
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_seven_code') }}" class="secondary-button">Back: Coding Logic</a>
+            <a href="{{ url_for('module_seven_link') }}" class="secondary-button">Next: Time to Code</a>
+        </div>
+
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}
