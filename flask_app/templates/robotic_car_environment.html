@@ -139,6 +139,29 @@ while True:
         action = [0.01, 0.0]  # Move forward
 
     env.step(action)
+
+    success = False
+    for contact in env.sim.data.contact:
+        geom1 = env.sim.model.geom_id2name(contact.geom1)
+        geom2 = env.sim.model.geom_id2name(contact.geom2)
+
+        if geom1 is not None and geom2 is not None:
+            if "chasis" in geom1 or "chasis" in geom2:
+                if "chasis" not in geom1:
+                    other_geom = geom1 
+                else:
+                    other_geom = geom2
+
+                geom_id = env.sim.model.geom_name2id(other_geom)
+                rgba = env.sim.model.geom_rgba[geom_id]
+                color = rgba[:3]
+                target_color = [1, 0, 0]  # RGB for blue
+                if np.array_equal(color, target_color):  # Exact match comparison
+                    success = True
+                    break
+    if success:
+        break
+
     time.sleep(0.00001)  # ~50 FPS
 
                     </textarea>

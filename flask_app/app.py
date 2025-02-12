@@ -2126,6 +2126,8 @@ def run_code():
     global static_issues
     global junk_array
 
+    env.reset()
+    
     data = request.get_json(silent=True)
 
     if data:
