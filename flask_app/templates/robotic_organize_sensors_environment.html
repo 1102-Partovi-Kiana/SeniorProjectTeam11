@@ -107,7 +107,7 @@
                         </div>
 
                         <div class="robot-description text-coding-options ">
-                            <p>The Fetch Robot: Guide the robot's gripper to reach the ball's position using precise movements.</p>
+                            <p>The Fetch Sensors Robot: Utilize the robot's sensors to guide the gripper in transporting all objects to the container.</p>
                             <br>
                         </div>
 
@@ -117,88 +117,157 @@
                     <!-- Darren's Code -->                    
                     <div class="card-header">Coding Area</div>
                     <textarea id="code-editor" rows="20" style="height: 100%;">
+# Fetch Sensors Robot Task: Use sensor data to detect four objects within the environment and move them to the container
+
+# Given: Actions for the robot
 close_grip_action = np.array([0, 0, 0, -1])
 open_grip_action = np.array([0, 0, 0, 1])
-container_position = np.array([1.3, 0.2, 0.54])
-box_to_ball_threshold = 0.03  # Threshold for object proximity to container
 
+# Given: Container position location 
+container_position = np.array([1.3, 0.2, 0.54])
+
+# Given: The distance threshold (stop condition) for reaching the target position (the container)
+object_to_container_threshold = 0.03  # Threshold for object proximity to container
+
+# Given: The for loop moving 50 steps before executing the main logic
 for _ in range (50):
+    # Given: Move the robot arm downward (Z-axis)
     env.step([0,0,-.1,1])
 
+# Given: Main loop for moving and detecting objects using sensors
 for _ in range(150):
+    # TODO: Move the robot arm slightly left (Y-axis)
     env.step([0,-0.1,0,0])
+    
+    # TODO: Read the front sensor value of the robot from the environment and store it in a variable
     forward = env.get_sensor_forward_value()
-    right = env.get_sensor_right_value()
-    left = env.get_sensor_left_value()
-    backward = env.get_sensor_backward_value()
 
-    SENSOR_THRESHOLD = 0.5  # Adjust this based on the scale of the environment
+    # Given: Threshold for detecting an object in front on the sensor
+    SENSOR_THRESHOLD = 0.5  
 
+    # Given: Check if an object is detected in front of the sensor
     if forward < SENSOR_THRESHOLD:
         print("Object Detected")
+        
+        # Given: Store the initial gripper position to return to after placing the object
         previous_gripper_position = np.copy(env.sim.data.get_site_xpos('robot0:grip'))
+        
+        # Given: Move forward until the object is very close
         while forward > 0.01:
+            # TODO: Read the front sensor value of the robot from the environment and store it in a variable
             forward = env.get_sensor_forward_value()
+            # Given: Move forward slowly
             env.step([0.1,0,0,0])
+            
+        # Given: The for loop preparing to open the gripper for picking up the object
         for _ in range (40):
+            # TODO: Apply the open grip action to the environment
             env.step(open_grip_action)
+            
+        # Given: The for loop for moving the gripper upwards before grasping the object
         for _ in range(40):
+            # Given: Define the ascend action for moving the arm upward (Z-axis)
             ascend_action = np.array([0, 0, 0.13, 0])
+            # TODO: Apply the ascend action to the environment
             env.step(ascend_action)
+            
+        # Given: The for loop for moving forward to align with the object
         for _ in range (40):
+            # Given: Move the robot forward at a small step size along the X-axis
             env.step([0.1,0,0,0])
+            
+        # Given: The for loop for moving the gripper down to grasp the object
         for _ in range(40):
+            # Given: Move down along the Z-axis
             descend_action = np.array([0, 0, -0.13, 0])
+            # TODO: Apply the descend action to the environment
             env.step(descend_action)
+
+        # Given: The for loop for closing the gripper to grab the object
         for _ in range(40):
+            # TODO: Apply the close grip action to the environment
             env.step(close_grip_action)
+        
+        # Given: The for loop for lifting the object after gripping it
         for _ in range(40):
+            # Given: Define the ascend action for moving the arm upward (Z-axis)
             ascend_action = np.array([0, 0, 0.13, 0])
+            # TODO: Apply the close grip action to the environment
             env.step(close_grip_action)
+            # TODO: Apply the ascend action to the environment
             env.step(ascend_action)
-            # Step 6: Move the object to the container
+        
+        # Given: The for loop for moving the object to the container location
+
         for _ in range(100):
+            # TODO: Get the gripper position from the environment and store it in a variable
             gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+            
+            # TODO: Apply the close grip action to the environment
             env.step(close_grip_action)
+            
+            # TODO: Calculate the distance from the current gripper position to the container
+            distance_to_container = np.array(container_position) - np.array(gripper_position)
+            
+            # TODO: Calculate the Euclidean distance (magnitude of the vector) between the gripper and the container
+            distance_to_container_magnitude = np.linalg.norm(distance_to_container)
 
-            distance_to_box = np.linalg.norm(container_position - gripper_position)
-            if distance_to_box <= box_to_ball_threshold:
-                break
+            # Given: Check if the object is within the specified proximity threshold to the container
+            # If the object is close enough, stop moving towards the container
+            if distance_to_container_magnitude <= object_to_container_threshold:
+                break # Exit the loop, as the object has reached the target position
+            
+            # TODO: Normalize the distance to the container
+            distance_to_container_normalized = distance_to_container / (distance_to_container_magnitude + 1e-8)
 
-            direction_to_container = container_position - gripper_position
-            direction_normalized = direction_to_container / (np.linalg.norm(direction_to_container) + 1e-8)
-
+            # Given: Define the movement action to move towards the container
             move_to_container_action = np.array([
-                direction_normalized[0] * 0.5,
-                direction_normalized[1] * 0.5,
-                0,
-                0
+                distance_to_container_normalized[0] * 0.5, # Move in X direction towards the container
+                distance_to_container_normalized[1] * 0.5, # Move in Y direction towards the container
+                0, # Keep the Z-axis movement fixed
+                0  # Keep the gripper state unchanged
             ])
+            
+            # TODO: Apply the movement action to the environment
             env.step(move_to_container_action)
 
+        # Given: The for loop to open the gripper to release the object in the container
         for _ in range (10):
+            # TODO: Apply the open grip action to the environment
             env.step(open_grip_action)
 
         for _ in range(100):
+            # TODO: Get the gripper position from the environment and store it in a variable
             gripper_position = env.sim.data.get_site_xpos('robot0:grip')
 
-            distance_to_previous = np.linalg.norm(previous_gripper_position - gripper_position)
+            # TODO: Calculate the distance vector from the current gripper position to the previous gripper position
+            distance_to_previous = np.array(previous_gripper_position) - np.array(gripper_position)
+            
+            # TODO: Get the distance (magnitude) to determine how far the robot needs to move back
+            distance_to_previous_magnitude = np.linalg.norm(distance_to_previous)
 
-            direction_to_previous = previous_gripper_position - gripper_position
-            direction_normalized = direction_to_previous / (np.linalg.norm(direction_to_previous) + 1e-8)
+            # TODO: Normalize the direction for smooth movement (add small value (1e-8) to prevent division by zero)
+            distance_to_previous_normalized = distance_to_previous / (np.linalg.norm(distance_to_previous_magnitude) + 1e-8)
 
+            # Given: Define the action to move step-by-step back to the previous position
             return_to_previous_action = np.array([
-                direction_normalized[0] * 0.5,
-                direction_normalized[1] * 0.5,
-                0,
-                0
+                distance_to_previous_normalized[0] * 0.5, # Move in X direction
+                distance_to_previous_normalized[1] * 0.5, # Move in Y direction
+                0, # No vertical movement
+                0  # No gripper action
             ])
+            
+            # TODO: Apply the return to the environment
             env.step(return_to_previous_action)
+            
+        # Given: The for loop to slightly lower the robot arm after returning
         for _ in range (50):
-            env.step([0,0,-0.1,0])
+            # Given: Lower the robot arm along the Z-axis
+            env.step([0,0,-0.1,0])  
+            
+    # Given: Otherwise no object was detected
     else:
-        print("No Object")
-
+        print("No Object")  
                     </textarea>
                     <div class="row align-items-center">
                         <!-- Output Box -->

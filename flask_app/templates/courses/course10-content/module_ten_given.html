@@ -25,6 +25,7 @@
                 <a href="{{ url_for ('module_ten_given') }}" class="course-link">Environment</a>
                 <ul class="sub-list">
                     <li><a href="#word-bank-fetch-organize-with-sensors">Word Bank</a></li>
+                    <li><a href="#sim">Fetch Sensors Simulation Labeled</a></li>
                     <li><a href="#given-fetch-organize-with-sensors">What is Given</a></li>
                     <li><a href="#retrieve-fetch-organize-with-sensors">What needs to be Retrieved</a></li>
                 </ul>
@@ -83,11 +84,21 @@
             </ul>
         </div>
 
-
         <div class="divider">
-            <span class="divider-text">Let’s Dive In</span>
+            <span class="divider-text">Let’s Look At the Fetch Sensors Robot Labeled</span>
         </div>
 
+        <div class="module-section" id="sim">
+            <h3>Fetch Sensors Simulation Labeled</h3>
+            <img src="{{ url_for('static', filename='img/FSLL.png') }}" alt="Fetch Sensors Robot" class="robot-image">
+            <br>
+            <p>Here is a simulation of the Fetch Sensors robot that you will be interacting with and programming derived from MuJoCo and OpenAI Gym.</p>
+            <p><strong>The Task of the Fetch Sensors Robot</strong>: Fetch Sensors must detect four different objects and put them into the container.</p>
+        </div>
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look At What Is Given To Us</span>
+        </div>
 
         <!-- Section 1: What is Given -->
         <div class="module-section" id="given-fetch-organize-with-sensors">
@@ -102,6 +113,9 @@
             </ul>
         </div> <!-- End of What is Given Section -->
 
+        <div class="divider">
+            <span class="divider-text">Let’s Look At What Needs To Be Retrieved</span>
+        </div>
 
         <!-- Section 2: What Needs to be Retrieved -->
         <div class="module-section" id="retrieve-fetch-organize-with-sensors">

@@ -111,8 +111,8 @@
              </p>
         </div>
 
-          <!-- Section: Define the Distance Threshold -->
-          <div class="module-section" id="define-the-distance-threshold">
+        <!-- Section: Define the Distance Threshold -->
+        <div class="module-section" id="define-the-distance-threshold">
             <h3>Define the Distance Threshold</h3>
             <p><strong>Distance Threshold:</strong> This defines when the gripper is close enough to the ball.</p>
             <small><strong>Note:</strong> The <code>distance_threshold</code> is provided in the code and specifies how close the gripper must get to the ball before stopping. It is predefined as <code>0.01</code>.</small>
@@ -137,7 +137,7 @@
         <div class="module-section" id="calculate-the-direction-vector">
             <h3>Calculate the Direction Vector</h3>
             <p>To determine where to move the gripper, calculate the <strong>direction vector</strong>. The robot’s gripper must move towards the ball. To determine this, calculate the vector from the gripper’s current position to the ball’s position.</p>
-            <p>Since both the vector position and the ball position are represented as vectors, we must subtract them using vector arithmetic. In Python, this can be done using np.array(). This way the calculations are compatible with NumPy's vectorized operations.</p>
+            <p>Since both the vector position and the ball position are represented as vectors, we must subtract them using vector arithmetic. In Python, this can be done using <strong>np.array()</strong>. This way the calculations are compatible with NumPy's vectorized operations.</p>
             <pre class="code-snippet"><code>
 # This direction vector reprsents the path the gripper needs to follow.
 direction = np.array(ball_position) - np.array(gripper_position)
@@ -153,10 +153,11 @@ direction = [3 - 0, 4 - 0, 0 - 0]  # [3, 4, 0]
 
         <!-- Section: Retrieving the Euclidean Norm of the DV -->
         <div class="module-section" id="retrieve-the-euclidean-norm-of-the-direction-vector">
-            <h3>Retrieve the Euclidean Norm of the Direction Vector</h3>
+            <h3>Retrieve the Euclidean Norm (Magnitude) of the Direction Vector</h3>
+            <p>We must normalize the direction vector.</p>
             <p>Use <code>np.linalg.norm([...])</code> to calculate the Euclidean distance (or magnitude) of the direction vector:
-                <code>distance = np.linalg.norm(direction)</code>. 
-                This distance tells us the exact value of how far the gripper is from the ball, which is essential for deciding when the gripper is "close enough" to get to the exit condition.
+                <code>direction_normalized = np.linalg.norm(direction)</code>. 
+                This distance tells us the exact scalar value of how far the gripper is from the ball, which is essential for deciding when the gripper is "close enough" to get to the exit condition.
             </li></p>
         </div>
 
@@ -171,11 +172,11 @@ direction = [3 - 0, 4 - 0, 0 - 0]  # [3, 4, 0]
 <div class="module-section" id="using-a-while-loop">
     <h3>Using a While Loop</h3>
     <p>Since we don’t know exactly how many steps it will take for the gripper to reach the ball, we use a <code>while</code> loop instead of a <code>for</code> loop. This loop should continue running as long as the gripper is still far from the ball,
-        <code>np.linalg.norm(direction) > np.array(gripper_position)</code> OR
+        <code>normalized_direction > disntace_threshold</code> OR
     </p>
     <p>In the while loop we compare two things, the direction of the gripper with regards to the ball to the distance_threshold. Once this path is crossed, we know our gripper has reached the ball, and our code is successful.</p>
-    <p>The thing we must consider now is that direction is still an numpy array [ __, __, __] and that distance_threshold is a singular value __. If you tried comparing as is, you would get an Error of: cannot compare a vector to a scalar.</p>
-    <p>You cannot compare an array directly to a single number in a meaningful way. Therefore, in the while loop we must cast direction to a singular value. This is called calculating its magnitue (or Euclidean distance) and can be done through:
+    <p>The thing we must consider now is that direction wich used to be a numpy array [ __, __, __] was normalized to its scalar using np.linalig.norm() and that distance_threshold is a singular value __. If you tried comparing previously is, you would get an Error of: cannot compare a vector to a scalar.</p>
+    <p>You cannot compare an array directly to a single number in a meaningful way. Therefore, we had to normalize the direction vector. This is called calculating its magnitue (or Euclidean distance) and can be done through:
         <code>np.linalg.norm(direction)</code>
     </p>
     <h4>What needs to happen inside the loop?</h4>
@@ -194,15 +195,11 @@ direction = [3 - 0, 4 - 0, 0 - 0]  # [3, 4, 0]
             <div class="indented-block">
                 <h5>Action Calculation:</h5>
                 <pre class="code-snippet"><code>
-        action = np.append(direction / np.linalg.norm(direction) * step_size, [1])
-
-                    OR
-        
-        action = np.append(direction / distance * step_size, [1])
+        action = np.append(direction / np.linalg.norm(direction_normalized) * step_size, [1])
                 </code></pre>
 
                 <ul>
-                    <li><code>direction / np.linalg.norm(direction)</code>: Normalizes the direction vector to unit length, so its magnitude is 1.</li>
+                    <li><code>direction / direction_normalized</code>: Normalizes the direction vector to unit length, so its magnitude is 1.</li>
                     <li><code>* step_size</code>: Scales the unit vector to the step size, ensuring the gripper moves a controlled distance.</li>
                     <li><code>np.append(..., [1])</code>: Adds an extra control signal to stabilize the robotic arm while it moves (likely for gripper activation).</li>
                 </ul>
@@ -214,6 +211,7 @@ direction = [3 - 0, 4 - 0, 0 - 0]  # [3, 4, 0]
                 <li>Now that we have an action, how do we apply it to the environment?</li>
                 <li>Remember, the environment provides a method that moves the robot when given an action.</li>
                 <li>What function should we use here?</li>
+                <code>env.step(action)</code>
             </ul>
         </li>
 
@@ -229,6 +227,14 @@ direction = [3 - 0, 4 - 0, 0 - 0]  # [3, 4, 0]
                 <li>The gripper has moved, so the direction vector may no longer be accurate.</li>
                 <li>How do we find the new direction?</li>
                 <li>Think about how we originally calculated it.</li>
+            </ul>
+        </li>
+
+        <li><strong>Normalize the Direction Vector:</strong>  
+            <ul>
+                <li>We must normalize the direction vector again.</li>
+                <li>How do we do this?</li>
+                <li>Think about how we originally calculated it using np.linalig.norm().</li>
             </ul>
         </li>
 
@@ -273,7 +279,6 @@ action = np.append(scaled_direction, [1])  # [0.03, 0.04, 0, 1]
         <h3>Test the Outcome</h3>
         <p>Once the loop finishes, the robot's gripper should be near the ball. Optionally, print the gripper’s final position and confirm that the robot has successfully moved the gripper to the ball.</p>
     </div>
-
 
         <!-- Section: Key Takeaways -->
         <div class="module-section" id="key-takeaways">

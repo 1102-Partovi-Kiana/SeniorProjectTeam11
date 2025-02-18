@@ -13,11 +13,17 @@
             <span>Contents</span>
         </div>
         <ul class="course-list">
-            <li class="course-item active"> 
+            <li class="course-item"> 
                 <a href="{{ url_for ('module_ten') }}" class="course-link">Objectives</a>
             </li>
-            <li class="course-item">
+            <li class="course-item active">
                 <a href="{{ url_for ('module_ten_about') }}" class="course-link">About</a>
+                <ul class="sub-list">
+                    <li><a href="#print-statement">Fetch Robot with Sensors</a></li>
+                    <li><a href="#video">Fetch Sensors Robot Simulation Video</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Fetch Sensors Robot</a></li>
+                    <li><a href="#video-two">Real Fetch Sensors Robot Video</a></li>
+                </ul>
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_ten_given') }}" class="course-link">Environment</a>
@@ -52,11 +58,92 @@
         </div>
 
         <!-- Section 1: Print Statements -->
-        <div class="module-section" id="print-statements">
+        <div class="module-section" id="print-statement">
             <h3>Fetch Robot with Sensors</h3>
-            <p>The <strong>Fetch-Organize-With-Sensors robot</strong> is designed to use what students have learned about the robots with the integration of sensors. The Fetch-Reach robot is equipped with several joints and actuators, allowing it to perform basic movements. The goal of this robot is to reach the destination point with the tip of the robot.
-            </p>
+            <p>The <strong>Fetch Sensors robot</strong> is designed to use what students have learned about the robots with the integration of sensors. Sensors allow the robot to detect objects, and measure distances for adaptive learning with its task.</p>
         </div>
+
+        <!-- Section 2: Video -->
+        <div class="module-section" id="video">
+            <h3>Fetch Sensors Robot Simulation Video</h3>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <video width="560" height="315" controls>
+                    <source src="{{ url_for('static', filename='videos/fetchs.mp4') }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+
+        <!-- Section 3: Simulation vs. Real Fetch Sensors Robot -->
+        <div class="module-section" id="sim-v-real">
+            <h3>Simulation vs. Real Fetch Sensors Robot</h3>
+            <p>The Fetch Sensors robot exists both in simulation (MuJoCo, OpenAI Gym) and in real life. While the simulation helps with training, the real-world version comes with added complexity.</p>
+            <div class="table-responsive">
+                <table class="table-aesthetic">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Simulated</th>
+                            <th>Real</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Physics</td>
+                            <td>Simulated in MuJoCo</td>
+                            <td>Real-world friction, noise, and delays</td>
+                        </tr>
+                        <tr>
+                            <td>Sensor Data</td>
+                            <td>Perfect, noise-free</td>
+                            <td>Uses depth cameras, LiDAR, force sensors (with noise)</td>
+                        </tr>
+                        <tr>
+                            <td>Execution Speed</td>
+                            <td>Fast, near-instant</td>
+                            <td>Slower, depends on hardware</td>
+                        </tr>
+                        <tr>
+                            <td>Communication</td>
+                            <td>OpenAI Gym API</td>
+                            <td>ROS (Robot Operating System)</td>
+                        </tr>
+                        <tr>
+                            <td>Sensor Limitations</td>
+                            <td>Perfect vision, no interference</td>
+                            <td>Lighting, occlusions, calibration issues</td>
+                        </tr>
+                        <tr>
+                            <td>Error Handling</td>
+                            <td>Instant reset</td>
+                            <td>Requires safety checks</td>
+                        </tr>
+                        <tr>
+                            <td>Failure Risk</td>
+                            <td>No risk</td>
+                            <td>Motors, sensors can break</td>
+                        </tr>
+                        <tr>
+                            <td>Learning Transfer</td>
+                            <td>Trains fast, but may not fully transfer</td>
+                            <td>Requires tuning for real-world conditions</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 4: Video -->
+        <div class="module-section" id="video-two">
+            <h3>Real Fetch Sensors Robot Video</h3>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <iframe width="560" height="315" 
+                    src="https://www.youtube.com/embed/YVAuRhMy6Bc" 
+                    frameborder="0" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div> 
 
         <!-- Next Button -->
         <div class="navigation-buttons mt-4">

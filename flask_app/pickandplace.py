@@ -3,7 +3,19 @@ from gym import utils
 from gym.envs.robotics import fetch_env
 
 # Path for general devices
-MODEL_XML_PATH = os.path.join('fetch', 'pick_and_place.xml')
+MODEL_XML_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
+    "venv38", 
+    "lib", 
+    "python3.8", 
+    "site-packages", 
+    "gym", 
+    "envs", 
+    "robotics", 
+    "assets", 
+    "fetch", 
+    "pick_and_place.xml"
+)
 
 # Darren's Code
 class FetchPickAndPlaceEnv(fetch_env.FetchEnv, utils.EzPickle):

@@ -23,6 +23,7 @@
                 <a href="{{ url_for ('module_nine_given') }}" class="course-link">Environment</a>
                 <ul class="sub-list">
                     <li><a href="#word-bank-fetch-organize">Word Bank</a></li>
+                    <li><a href="#sim">Fetch Organize Simulation Labeled</a></li>
                     <li><a href="#given-fetch-organize">What is Given</a></li>
                     <li><a href="#retrieve-fetch-organize">What needs to be Retrieved</a></li>
                 </ul>
@@ -80,7 +81,19 @@
         </div>
 
         <div class="divider">
-            <span class="divider-text">Let’s Dive In</span>
+            <span class="divider-text">Let’s Look At the Fetch Organize Robot Labeled</span>
+        </div>
+
+        <div class="module-section" id="sim">
+            <h3>Fetch Organize Simulation</h3>
+            <img src="{{ url_for('static', filename='img/FOLL.png') }}" alt="Fetch Organize Robot" class="robot-image">
+            <br>
+            <p>Here is a simulation of the Fetch Organize robot that you will be interacting with and programming derived from MuJoCo and OpenAI Gym.</p>
+            <p><strong>The Task of the Fetch Organize Robot</strong>: Fetch Organize must detect four different objects, identify the two predefined target-colored blocks, and accurately place them into the designated container.</p>
+        </div>
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look At What Is Given To Us</span>
         </div>
 
         <!-- Section 1: What is Given -->
@@ -89,12 +102,17 @@
             <ul>
                 <li><strong>global env:</strong> This represents the robot's environment, which contains the robot's current state and methods for interacting with it. The environment has various "getters" and "setters."</li>
                 <li><strong>env = FetchOrganizeEnv():</strong> The environment object that is initialized and is part of the task setup.</li>
-                <li><strong>box_to_ball_threshold:</strong> The distance value that will be used to determine when the object is "close enough" to the container.</li>
+                <li><strong>gripper_to_object_distance_threshold:</strong> The distance value that will be used to determine when the gripper is "close enough" to the object.</li>
+                <li><strong>container_to_object_distance_threshold:</strong> The distance value that will be used to determine when the object is "close enough" to the container.</li>
                 <li><strong>close_grip_action and open_grip_action:</strong> Arrays representing actions to close or open the gripper, respectively.</li>
                 <li><strong>ascend_action and descend_action:</strong> Arrays representing small upward or downward movement to lift the gripper while holding an object.</li>
                 <li><strong>target_color:</strong> The color value that will be used to identify which objects need to be moved to the container.</li>
             </ul>
         </div> <!-- End of What is Given Section -->
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look At What Needs To Be Retrieved</span>
+        </div>
 
         <!-- Section 2: What Needs to be Retrieved -->
         <div class="module-section" id="retrieve-fetch-organize">

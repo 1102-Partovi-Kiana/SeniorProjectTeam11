@@ -396,47 +396,6 @@ def get_suggestions():
     suggestions.sort()  
     return jsonify(suggestions)
 
-def check_normalization(tree):
-    """Check if the direction vector is normalized."""
-    issues = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Assign):
-            if isinstance(node.value, ast.BinOp) and "normalize" not in ast.dump(node.value):
-                issues.append("Direction vector might not be normalized.")
-    return issues
-
-def check_distance_threshold(tree):
-    """Check if the distance_threshold is used in the while loop condition."""
-    issues = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.While):
-            if not any(
-                isinstance(condition, ast.Compare) and "distance_threshold" in ast.dump(condition)
-                for condition in ast.walk(node.test)
-            ):
-                issues.append("While loop does not use distance_threshold for termination.")
-    return issues
-
-def check_gripper_closure(tree):
-    """Check if the gripper closes at the correct time."""
-    issues = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Call):
-            if hasattr(node.func, "id") and node.func.id == "close_gripper":
-                if not hasattr(node, "gripper_reached_object"):
-                    issues.append("Gripper might not close after reaching the object.")
-    return issues
-
-def check_object_transport(tree):
-    """Check if the object is transported to the target position."""
-    issues = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Call):
-            if hasattr(node.func, "id") and node.func.id == "move_gripper":
-                if not hasattr(node, "target_position"):
-                    issues.append("Gripper might not move the object to the target position.")
-    return issues
-
 @app.route('/Chatbot')
 def RenderChatbot():
     return render_template('chatbot.html')
@@ -727,99 +686,711 @@ def ChatbotAPI2():
         print("Error occurred:", e)
         return jsonify({'error': str(e)}), 500
 
-def check_normalization(tree):
-    """Check if the direction vector is normalized."""
+import ast
+
+# ---------------- Static Analysis Functions for FETCH REACH ROBOT -------------------------#
+def check_object_transport_fetch_reach(tree):
+    """Check that the object is transported properly with the call to `env.step()` in the environment."""
     issues = []
+    any_step_call_found = False
+    valid_step_call_found = False
+    all_line_numbers = [node.lineno for node in ast.walk(tree) if hasattr(node, "lineno")]
+    last_line_number = max(all_line_numbers) if all_line_numbers else "Unknown"
     for node in ast.walk(tree):
-        if isinstance(node, ast.Assign):
-            if isinstance(node.value, ast.BinOp):
-                if isinstance(node.value.op, ast.Div):
-                    if isinstance(node.value.right, ast.Call):
-                        if not (
-                            isinstance(node.value.right.func, ast.Attribute)
-                            and node.value.right.func.attr == "norm"
-                            and isinstance(node.value.right.func.value, ast.Name)
-                            and node.value.right.func.value.id == "np"
-                        ):
-                            issues.append("Direction vector might not be normalized.")
+        if isinstance(node, ast.Call):
+            if (isinstance(node.func, ast.Attribute) and
+                isinstance(node.func.value, ast.Name) and 
+                node.func.value.id == "env" and 
+                node.func.attr == "step"):
+                any_step_call_found = True
+                if node.args and len(node.args) > 0:
+                    valid_step_call_found = True
+                else:
+                    line_number = getattr(node, "lineno", last_line_number)
+                    issues.append({
+                        "message": "env.step() is called without an action argument.",
+                        "line": line_number
+                    })
+    if not any_step_call_found:
+        issues.append({
+            "message": "No call to env.step() was found.",
+            "line": last_line_number
+        })
+    elif not valid_step_call_found and not issues:
+        issues.append({
+            "message": "No call to env.step() with an action argument was found.",
+            "line": last_line_number
+        })
+    return issues
+
+def check_ball_position_retrieval_fetch_reach(tree):
+    """Check that `env.get_ball_position()` is used to get the ball position."""
+    issues = []
+    last_line_number = 1
+    ball_position_called = False
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
+                if node.func.attr == "get_ball_position":
+                    ball_position_called = True
+
+    if not ball_position_called:
+        issues.append({
+            "message": "Missing call to `env.get_ball_position()`. This function needs to be called somewhere in the code to retrieve the ball position from the environment.",
+            "line": last_line_number
+        })
+
+    return issues
+
+def check_gripper_position_retrieval_fetch_reach(tree):
+    """Check that `env.get_gripper_position()` is called to get the gripper position."""
+    issues = []
+    last_line_number = 1
+    gripper_position_called = False
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if (isinstance(node.func.value, ast.Name) and node.func.value.id == "env"
+                    and node.func.attr == "get_gripper_position"):
+                gripper_position_called = True
+
+    if not gripper_position_called:
+        issues.append({
+            "message": "Missing call to `env.get_gripper_position()`. This function needs to be called somewhere in the code to retrieve the gripper position from the environment.",
+            "line": last_line_number
+        })
+
+    return issues
+
+def variable_from_np_array(node):
+    """If node is of the form np.array(variable), return the variable name. Otherwise, return None."""
+    if (isinstance(node, ast.Call) and
+        isinstance(node.func, ast.Attribute) and
+        isinstance(node.func.value, ast.Name) and
+        node.func.value.id == "np" and
+        node.func.attr == "array" and
+        node.args and isinstance(node.args[0], ast.Name)):
+        return node.args[0].id
+    return None
+
+def check_direction_computation_fetch_reach(tree):
+    """Check the direction vector is computed correctly, with the correct operation, correct subtraction order, correct variable names, and tracks the user's direction variable name."""
+
+    issues = []
+    last_line_number = 1
+    direction_assigned = False
+    incorrect_operation = None
+    incorrect_order = False
+    undefined_variable = False
+
+    ball_var = None
+    gripper_var = None
+    user_left_var = None
+    user_right_var = None
+    direction_var = "direction"  
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            if (isinstance(node.value.func, ast.Attribute) and 
+                isinstance(node.value.func.value, ast.Name) and 
+                node.value.func.value.id == "env"):
+                if node.value.func.attr == "get_ball_position":
+                    if isinstance(node.targets[0], ast.Name):
+                        ball_var = node.targets[0].id  
+                elif node.value.func.attr == "get_gripper_position":
+                    if isinstance(node.targets[0], ast.Name):
+                        gripper_var = node.targets[0].id  
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.BinOp):
+            if isinstance(node.targets[0], ast.Name):
+                direction_assigned = True
+                direction_var = node.targets[0].id 
+
+                if not isinstance(node.value.op, ast.Sub):
+                    incorrect_operation = node.value.op
+
+                left_var = variable_from_np_array(node.value.left)
+                right_var = variable_from_np_array(node.value.right)
+
+                if left_var and right_var:
+                    user_left_var = left_var
+                    user_right_var = right_var
+
+                    if user_left_var not in [ball_var, gripper_var] or user_right_var not in [ball_var, gripper_var]:
+                        undefined_variable = True
+
+                    if user_left_var == gripper_var and user_right_var == ball_var:
+                        incorrect_order = True
+
+    if not direction_assigned:
+        issues.append({
+            "message": f"Missing computation of direction. Make sure you define `{direction_var} = np.array({ball_var}) - np.array({gripper_var})`.",
+            "line": last_line_number
+        })
+
+    if incorrect_operation:
+        issues.append({
+            "message": f"Incorrect operation used in direction computation. Expected subtraction (-), but found {type(incorrect_operation).__name__}.",
+            "line": last_line_number
+        })
+
+    if incorrect_order:
+        issues.append({
+            "message": f"Incorrect subtraction order. Expected `{direction_var} = np.array({ball_var}) - np.array({gripper_var})`, but found `{direction_var} = np.array({user_left_var}) - np.array({user_right_var})`.",
+            "line": last_line_number
+        })
+
+    if undefined_variable:
+        issues.append({
+            "message": f"Incorrect variable usage in {direction_var} computation. Both variables need to come from `env.get_ball_position()` and `env.get_gripper_position()`.",
+            "line": last_line_number
+        })
+
+    return issues
+
+def check_np_array_wrapping_fetch_reach(tree):
+    """Check if ball_position and gripper_position are wrapped in np.array() before subtraction.
+       If one of them or all of them are missing, exact messages will be told to the user.
+    """
+    issues = []
+    last_line_number = 1
+    ball_var = None
+    gripper_var = None
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            if (isinstance(node.value.func, ast.Attribute) and 
+                isinstance(node.value.func.value, ast.Name) and 
+                node.value.func.value.id == "env"):
+                if node.value.func.attr == "get_ball_position":
+                    if isinstance(node.targets[0], ast.Name):
+                        ball_var = node.targets[0].id  
+                elif node.value.func.attr == "get_gripper_position":
+                    if isinstance(node.targets[0], ast.Name):
+                        gripper_var = node.targets[0].id  
+
+    def is_np_array_call(expr):
+        return (isinstance(expr, ast.Call) and
+                isinstance(expr.func, ast.Attribute) and
+                isinstance(expr.func.value, ast.Name) and
+                expr.func.value.id == "np" and 
+                expr.func.attr == "array")
+
+    for node in ast.walk(tree):
+        if (isinstance(node, ast.Assign) and isinstance(node.value, ast.BinOp) and 
+            isinstance(node.value.op, ast.Sub)):
+            left = node.value.left
+            right = node.value.right
+
+            if not is_np_array_call(left):
+                issues.append({
+                    "message": f"`{ball_var}` must be wrapped in `np.array()` before subtraction.",
+                    "line": node.lineno
+                })
+            if not is_np_array_call(right):
+                issues.append({
+                    "message": f"`{gripper_var}` must be wrapped in `np.array()` before subtraction.",
+                    "line": node.lineno
+                })
+    return issues
+
+def check_direction_normalization_fetch_reach(tree):
+    """Check that the direction vector is normalized correctly with the correct variable involved."""
+    issues = []
+    last_line_number = 1
+    normalization_found = False
+    incorrect_variable_used = False
+    direction_var = None  
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.BinOp):
+            if isinstance(node.value.op, ast.Sub):
+                if node.targets and isinstance(node.targets[0], ast.Name):
+                    direction_var = node.targets[0].id
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            if (isinstance(node.value.func, ast.Attribute) and 
+                isinstance(node.value.func.value, ast.Attribute) and 
+                node.value.func.value.attr == "linalg"):
+                normalization_found = True 
+                if node.value.func.attr == "norm":
+                    if node.value.args and isinstance(node.value.args[0], ast.Name):
+                        if node.value.args[0].id != direction_var:
+                            incorrect_variable_used = True
                     else:
-                        issues.append("Direction vector might not be normalized (denominator is not a function call).")
+                        incorrect_variable_used = True
+                else:
+                    incorrect_variable_used = True
+
+    if not normalization_found:
+        issues.append({
+            "message": f"Missing computation of direction normalization. Expected np.linalg.norm({direction_var}).",
+            "line": last_line_number
+        })
+    elif incorrect_variable_used:
+        issues.append({
+            "message": f"Incorrect variable used inside `np.linalg.norm()`. Expected {direction_var}, but found a different variable or incorrect normalization function.",
+            "line": last_line_number
+        })
+
     return issues
 
-def check_distance_threshold(tree):
-    """Check if the distance_threshold is used in the while loop condition."""
+def check_for_loop_usage_fetch_reach(tree):
+    """Check if a for loop is used. If so, add an issue because a while loop is required."""
     issues = []
+    
     for node in ast.walk(tree):
-        if isinstance(node, ast.While):
-            if not any(
-                isinstance(condition, ast.Compare) and "distance_threshold" in ast.dump(condition)
-                for condition in ast.walk(node.test)
-            ):
-                issues.append("While loop does not use distance_threshold for termination.")
+        if isinstance(node, ast.For):
+            issues.append({
+                "message": "A for loop was used. Please use a while loop instead.",
+                "line": node.lineno
+            })
+    
     return issues
 
-def check_gripper_closure(tree):
-    """Check if the gripper closes at the correct time."""
-    issues = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Call):
-            if hasattr(node.func, "id") and node.func.id == "close_gripper":
-                if not hasattr(node, "gripper_reached_object"):
-                    issues.append("Gripper might not close after reaching the object.")
-    return issues
-
-def check_object_transport(tree):
-    """Check if the object is transported to the target position."""
-    issues = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Call):
-            if hasattr(node.func, "id") and node.func.id == "move_gripper":
-                if not hasattr(node, "target_position"):
-                    issues.append("Gripper might not move the object to the target position.")
-    return issues
-
-def check_loop_termination(tree):
+def check_loop_termination_fetch_reach(tree):
     """Check if loops use meaningful termination conditions."""
     issues = []
+    
     for node in ast.walk(tree):
         if isinstance(node, (ast.For, ast.While)):
             condition_uses_threshold = any(
-                isinstance(child, ast.Name) and child.id == "distance_threshold"
+                (isinstance(child, ast.Name) and child.id == "distance_threshold") or
+                (isinstance(child, ast.Constant) and isinstance(child.value, (int, float)) and child.value == 0.01)
                 for child in ast.walk(node)
             )
             if not condition_uses_threshold:
                 issues.append({
-                    "message": "Loop does not use distance_threshold for termination.",
+                    "message": "While Loop does not use distance_threshold or 0.01 for termination.",
                     "line": node.lineno  # AST nodes have this attribute
+                })
+    
+    return issues
+
+def check_while_loop_normalized_comparison_fetch_reach(tree):
+    """Check that the while loop condition uses a normalized variable (computed via np.linalg.norm(...)) compared to distance_threshold."""
+    issues = []
+    
+    normalized_vars = set()
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            func = node.value.func
+            if (isinstance(func, ast.Attribute) and 
+                isinstance(func.value, ast.Attribute) and 
+                isinstance(func.value.value, ast.Name) and 
+                func.value.value.id == "np" and 
+                func.value.attr == "linalg" and 
+                func.attr == "norm"):
+                if len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+                    normalized_vars.add(node.targets[0].id)
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.While):
+            cond = node.test
+            if isinstance(cond, ast.Compare):
+                if not (len(cond.ops) == 1 and len(cond.comparators) == 1):
+                    issues.append({
+                        "message": "The while loop condition must have a single comparison.",
+                        "line": node.lineno
+                    })
+                    continue
+
+                if not isinstance(cond.ops[0], ast.Gt):
+                    issues.append({
+                        "message": "The while loop condition must use the '>' operator.",
+                        "line": node.lineno
+                    })
+
+                if isinstance(cond.left, ast.Name):
+                    normalized_var_used = cond.left.id
+                    if normalized_var_used not in normalized_vars:
+                        issues.append({
+                            "message": f"The variable used in the while loop condition ('{normalized_var_used}') is not computed using np.linalg.norm(...).",
+                            "line": node.lineno
+                        })
+                else:
+                    issues.append({
+                        "message": "The left-hand side of the while loop condition should be a variable computed by np.linalg.norm(...).",
+                        "line": node.lineno
+                    })
+
+            else:
+                issues.append({
+                    "message": "The while loop condition must be a comparison (e.g., normalized_value > distance_threshold).",
+                    "line": node.lineno
                 })
     return issues
 
-# ---------------- Static Analysis Functions for AUTONOMOUS CAR ROBOT -------------------------#
-def check_undefined_variables(tree):
-    """Detect variables that are used but not defined."""
+
+# ---------------- Static Analysis Functions for FETCH PICK AND PLACE ROBOT -------------------------#
+
+
+# ---------------- Static Analysis Functions for FETCH ORGANIZE ROBOT -------------------------#
+def check_undefined_variables_fetch_organize(tree):
+    """Check for variables that are used but not defined in the code."""
+    issues = []
     defined_vars = set()
     used_vars = set()
-    issues = []
+    last_line_number = 1  
 
     for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
         if isinstance(node, ast.Assign):
             for target in node.targets:
                 if isinstance(target, ast.Name):
                     defined_vars.add(target.id)
+
+        elif isinstance(node, ast.FunctionDef):
+            defined_vars.add(node.name)
+            for arg in node.args.args:
+                defined_vars.add(arg.arg)
+
         elif isinstance(node, ast.Name):
             used_vars.add(node.id)
 
-    assumed_defined_vars = {"env", "time", "max"}  
+    assumed_defined_vars = {"env", "float", "np", "print", "range", "abs", "_"}
 
     undefined_vars = used_vars - defined_vars - assumed_defined_vars
+
     for var in undefined_vars:
         issues.append({
             "message": f"Variable '{var}' is used but not defined.",
-            "line": None  
+            "line": last_line_number  
+        })
+
+    return issues
+
+def check_site_xpos_object_name_usage_twice_fetch_organize(tree):
+    """Check that `env.sim.data.get_site_xpos(object_name)` is used exactly twice."""
+    issues = []
+    last_line_number = 1
+    xpos_call_count = 0
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if (
+                node.func.attr == "get_site_xpos"
+                and isinstance(node.func.value, ast.Attribute)
+                and node.func.value.attr == "data"
+                and len(node.args) > 0  
+            ):
+                arg = node.args[0]  
+
+                if isinstance(arg, ast.Name):
+                    xpos_call_count += 1
+
+    if xpos_call_count < 2:
+        issues.append({
+            "message": f"`env.sim.data.get_site_xpos(object_name)` is used only {xpos_call_count} times. It must be used exactly twice within the code.",
+            "line": last_line_number
+        })
+    elif xpos_call_count > 2:
+        issues.append({
+            "message": f"`env.sim.data.get_site_xpos(object_name)` is used {xpos_call_count} times. It must be used exactly twice within the code.",
+            "line": last_line_number
+        })
+
+    return issues
+
+def check_site_xpos_robot_grip_usage_three_times_fetch_organize(tree):
+    """Check that `env.sim.data.get_site_xpos('robot0:grip')` is used exactly three times."""
+    issues = []
+    last_line_number = 1
+    xpos_call_count = 0
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if (
+                node.func.attr == "get_site_xpos"
+                and isinstance(node.func.value, ast.Attribute)
+                and node.func.value.attr == "data"
+                and len(node.args) > 0
+            ):
+                arg = node.args[0]
+
+                if isinstance(arg, ast.Constant) and arg.value == "robot0:grip":
+                    xpos_call_count += 1
+
+    if xpos_call_count < 3:
+        issues.append({
+            "message": f"`env.sim.data.get_site_xpos('robot0:grip')` is used only {xpos_call_count} times. It must be used exactly twice.",
+            "line": last_line_number
+        })
+    elif xpos_call_count > 3:
+        issues.append({
+            "message": f"`env.sim.data.get_site_xpos('robot0:grip')` is used {xpos_call_count} times. It must be used exactly twice.",
+            "line": last_line_number
+        })
+
+    return issues
+
+def check_opens_gripper_first_fetch_organize(tree):
+    """Check the first env.step() call is applied to open_grip_action."""
+    issues = []
+    first_env_step_found = False
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call):
+            func = node.value.func
+            if (
+                isinstance(func, ast.Attribute) and
+                func.attr == "step" and
+                isinstance(func.value, ast.Name) and func.value.id == "env"
+            ):
+                first_env_step_found = True
+                if (
+                    len(node.value.args) > 0 and
+                    isinstance(node.value.args[0], ast.Name) and
+                    node.value.args[0].id == "open_grip_action"
+                ):
+                    return issues 
+                
+                else:
+                    issues.append({
+                        "message": "The first 'env.step()' call must use 'open_grip_action' to open the gripper.",
+                        "line": node.lineno
+                    })
+                    return issues  
+
+    if not first_env_step_found:
+        issues.append({
+            "message": "Missing 'env.step(open_grip_action)' at the beginning to open the gripper.",
+            "line": 1
+        })
+
+    return issues
+
+def check_env_step_usage_in_while_loops_fetch_organize(tree):
+    """Checks if all `while True:` loops contain at least one call to `env.step()`."""
+    issues = []
+    last_line_number = 1
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.While): 
+            contains_env_step = any(
+                isinstance(child, ast.Expr) and
+                isinstance(child.value, ast.Call) and
+                isinstance(child.value.func, ast.Attribute) and
+                child.value.func.attr == "step"
+                for child in ast.walk(node)
+            )
+            if not contains_env_step:
+                issues.append({
+                    "message": "Missing `env.step()` inside a while loop, which may cause an infinite loop.",
+                    "line": last_line_number
+                })
+
+    return issues
+
+def check_closes_gripper_after_vertical_fetch_organize(tree):
+    """Checks if the `env.step(close_grip_action)` after the vertical reach"""
+    issues = []
+    close_found = False
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            if (isinstance(node.func, ast.Attribute) and 
+                isinstance(node.func.value, ast.Name) and 
+                node.func.value.id == "env" and 
+                node.func.attr == "step"):
+                for arg in node.args:
+                    if isinstance(arg, ast.Name) and arg.id == "close_grip_action":
+                        close_found = True
+                        break
+            if close_found:
+                break
+    if not close_found:
+        issues.append({
+            "message": "Missing env.step(close_grip_action) in the code.",
+            "line": 1
         })
     return issues
 
-def check_dictionary_key_safety(tree):
+def check_horizontal_distance_subtraction_fetch_organize(tree):
+    """Check NumPy array subtraction is used for computing distances (e.g., horizontal_distance)."""
+    issues = []
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):  
+            if isinstance(node.value, ast.BinOp):  
+                if isinstance(node.value.left, ast.Call) and isinstance(node.value.right, ast.Call):
+                    if isinstance(node.value.left.func, ast.Attribute) and isinstance(node.value.right.func, ast.Attribute):
+                        if node.value.left.func.attr == "array" and node.value.right.func.attr == "array":
+                            if isinstance(node.value.op, (ast.Add, ast.Mult, ast.Div)): 
+                                issues.append({
+                                    "message": f"Distance calculation should use subtraction (-), but found {type(node.value.op).__name__}.",
+                                    "line": node.lineno
+                                })
+
+    return issues
+
+# ---------------- Static Analysis Functions for AUTONOMOUS CAR ROBOT -------------------------#
+def check_sensor_forward_value_retrieval_car(tree):
+    """Check that `env.get_sensor_forward_value()` is called inside of the infinite while loop."""
+    issues = []
+    last_line_number = 1
+    forward_sensor_called = False
+    inside_while_true_loop = False
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.While):
+            if isinstance(node.test, ast.Constant) and node.test.value is True:
+                inside_while_true_loop = True
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
+                if node.func.attr == "get_sensor_forward_value":
+                    forward_sensor_called = True
+
+    if inside_while_true_loop and not forward_sensor_called:
+        issues.append({
+            "message": "Missing call to `env.get_sensor_forward_value()`. This function needs to be called inside the infinite while loop to retrieve the forward sensor value of the car.",
+            "line": last_line_number
+        })
+
+    return issues
+
+def check_sensor_right_value_retrieval_car(tree):
+    """Check that `env.get_sensor_right_value()` is called inside of the infinite while loop."""
+    issues = []
+    last_line_number = 1
+    right_sensor_called = False
+    inside_while_true_loop = False
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.While):
+            if isinstance(node.test, ast.Constant) and node.test.value is True:
+                inside_while_true_loop = True
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
+                if node.func.attr == "get_sensor_right_value":
+                    right_sensor_called = True
+
+    if inside_while_true_loop and not right_sensor_called:
+        issues.append({
+            "message": "Missing call to `env.get_sensor_right_value()`. This function needs to be called inside the infinite while loop to retrieve the right sensor value for the car.",
+            "line": last_line_number
+        })
+
+    return issues
+
+def check_sensor_left_value_retrieval_car(tree):
+    """Check that `env.get_sensor_left_value()` is called inside of the infinite while loop."""
+    issues = []
+    last_line_number = 1
+    left_sensor_called = False
+    inside_while_true_loop = False
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.While):
+            if isinstance(node.test, ast.Constant) and node.test.value is True:
+                inside_while_true_loop = True
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
+                if node.func.attr == "get_sensor_left_value":
+                    left_sensor_called = True
+
+    if inside_while_true_loop and not left_sensor_called:
+        issues.append({
+            "message": "Missing call to `env.get_sensor_left_value()`. This function needs to be called inside the infinite while loop to retrieve the left sensor value.",
+            "line": last_line_number
+        })
+
+    return issues
+
+def check_sensor_readings_variable_usage_car(tree):
+    """Check that the correct sensor variables are used in the `sensor_readings` dictionary"""
+    issues = []
+    last_line_number = 1
+    
+    sensor_variables = {
+        "Forward": None,
+        "Right": None,
+        "Left": None
+    }
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            if isinstance(node.value.func, ast.Attribute) and isinstance(node.value.func.value, ast.Name):
+                if node.value.func.value.id == "env":
+                    if node.value.func.attr == "get_sensor_forward_value":
+                        sensor_variables["Forward"] = node.targets[0].id
+                    elif node.value.func.attr == "get_sensor_right_value":
+                        sensor_variables["Right"] = node.targets[0].id
+                    elif node.value.func.attr == "get_sensor_left_value":
+                        sensor_variables["Left"] = node.targets[0].id
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Dict):
+            if isinstance(node.targets[0], ast.Name) and node.targets[0].id == "sensor_readings":
+                keys = [k.s for k in node.value.keys if isinstance(k, ast.Str)]  
+                values = [v.id if isinstance(v, ast.Name) else None for v in node.value.values] 
+
+                for key in sensor_variables:
+                    if key in keys:
+                        index = keys.index(key)
+                        assigned_var = values[index]
+
+                        if assigned_var is None:
+                            issues.append({
+                                "message": f"The `{key}` sensor reading is missing a value in `sensor_readings`. Please assign a variable.",
+                                "line": node.lineno
+                            })
+                        elif assigned_var != sensor_variables[key]:
+                            issues.append({
+                                "message": f"The `{key}` sensor reading should use the variable `{sensor_variables[key]}`, but `{assigned_var}` was used instead.",
+                                "line": node.lineno
+                            })
+                    else:
+                        issues.append({
+                            "message": f"The `{key}` sensor reading is missing from `sensor_readings`. Check to include all sensor readings.",
+                            "line": node.lineno
+                        })
+
+    return issues
+
+def check_dictionary_key_safety_car(tree):
     """Check if dictionary key accesses are safe."""
     issues = []
     for node in ast.walk(tree):
@@ -833,45 +1404,54 @@ def check_dictionary_key_safety(tree):
                 })
     return issues
 
-def check_function_calls(tree):
-    """Check if function calls are valid and use correct arguments."""
+def check_max_direction_usage_car(tree):
+    """Check that a variable is assigned using `max(sensor_readings, key=sensor_readings.get)` correctly."""
     issues = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Call):
-            if isinstance(node.func, ast.Attribute):
-                function_name = node.func.attr
-                if function_name == "step" and len(node.args) != 1:
-                    issues.append({
-                        "message": "Function 'env.step()' expects exactly one argument.",
-                        "line": node.lineno
-                    })
-            elif isinstance(node.func, ast.Name) and node.func.id == "time.sleep":
-                if len(node.args) == 1 and isinstance(node.args[0], ast.Constant) and node.args[0].value < 0.0001:
-                    issues.append({
-                        "message": "Potentially inefficient sleep duration (too short).",
-                        "line": node.lineno
-                    })
-    return issues
-
-def check_missing_env_step(tree):
-    """Detect if the required 'env.step(action)' call is missing."""
-    step_called = False
+    last_line_number = 1
+    found_max_usage = False
 
     for node in ast.walk(tree):
-        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
-            if node.func.attr == "step" and isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
-                step_called = True  
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
 
-    issues = []
-    if not step_called:
+        if isinstance(node, ast.Assign):
+            if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name) and node.value.func.id == "max":
+                if len(node.value.args) > 0 and isinstance(node.value.args[0], ast.Name) and node.value.args[0].id == "sensor_readings":
+                    for keyword in node.value.keywords:
+                        if keyword.arg == "key" and isinstance(keyword.value, ast.Attribute):
+                            if (
+                                isinstance(keyword.value.value, ast.Name)
+                                and keyword.value.value.id == "sensor_readings"
+                                and keyword.value.attr == "get"
+                            ):
+                                found_max_usage = True
+                                break
+
+    if not found_max_usage:
         issues.append({
-            "message": "Missing required call to 'env.step(action)'. The simulation may not function correctly.",
-            "line": None  
+            "message": "A variable must be assigned using `max(sensor_readings, key=sensor_readings.get)`. Check `max()` is applied correctly.",
+            "line": last_line_number
         })
 
     return issues
 
-# ---------------- Static Analysis Functions for FETCH ORGANIZE WITH SENSORS ROBOT -------------------------#
+# ---------------- Static Analysis Functions for FETCH SENSORS ROBOT -------------------------#
+def check_one_env_step_sensors(tree):
+    """Check that at least one call to env.step() is present."""
+    issues = []
+    found = False
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            if hasattr(node.func, 'attr') and node.func.attr == "step":
+                found = True
+                break
+    if not found:
+        issues.append({
+            "message": "No call to env.step() found in the code.",
+            "line": None
+        })
+    return issues
+
 def check_loop_termination_sensors(tree):
     """
     Check for while loops that use a constant True test without a break.
@@ -892,22 +1472,235 @@ def check_loop_termination_sensors(tree):
                     })
     return issues
 
-def verify_one_env_step(tree):
-    """
-    Verify that at least one call to env.step() is present.
-    """
+def check_forward_sensor_value_assignment_sensors(tree):
+    """Check that the forward sensor value is assigned from the correct `env.get_sensor_forward_value()` function."""
     issues = []
-    found = False
+    expected_sensor_functions = { "get_sensor_forward_value" }
+
+    found_sensors = set()
+
     for node in ast.walk(tree):
-        if isinstance(node, ast.Call):
-            if hasattr(node.func, 'attr') and node.func.attr == "step":
-                found = True
-                break
-    if not found:
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            if (isinstance(node.value.func, ast.Attribute) and 
+                isinstance(node.value.func.value, ast.Name) and 
+                node.value.func.value.id == "env"):
+
+                func_name = node.value.func.attr
+                if func_name in expected_sensor_functions:
+                    found_sensors.add(func_name)
+
+    missing_sensors = expected_sensor_functions - found_sensors
+    for missing in missing_sensors:
         issues.append({
-            "message": "No call to env.step() found in the code.",
-            "line": None
+            "message": f"Missing or incorrect call to `env.{missing}()`. Check the required sensor value is retrieved.",
+            "line": 1  
         })
+
+    return issues
+
+def check_while_loop_sensor_condition_sensors(tree):
+    """Check whether a `while` loop correctly uses and updates a sensor variable assigned from `env.get_sensor_forward_value()`."""
+    issues = []
+    sensor_variable = None
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            if (isinstance(node.value.func, ast.Attribute) and 
+                isinstance(node.value.func.value, ast.Name) and 
+                node.value.func.value.id == "env" and 
+                node.value.func.attr == "get_sensor_forward_value"):
+                sensor_variable = node.targets[0].id 
+
+    if not sensor_variable:
+        issues.append({
+            "message": "No variable found assigned from `env.get_sensor_forward_value()`. Check a sensor value is stored.",
+            "line": 1  
+        })
+        return issues  
+
+    while_found = False
+    variable_used_in_condition = False
+    variable_updated_inside_loop = False
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.While):
+            while_found = True
+           
+            if isinstance(node.test, ast.Compare) and isinstance(node.test.left, ast.Name):
+                if node.test.left.id == sensor_variable:
+                    variable_used_in_condition = True
+
+            for child in ast.walk(node):
+                if isinstance(child, ast.Assign) and isinstance(child.value, ast.Call):
+                    if (isinstance(child.value.func, ast.Attribute) and 
+                        isinstance(child.value.func.value, ast.Name) and 
+                        child.value.func.value.id == "env" and 
+                        child.value.func.attr == "get_sensor_forward_value"):
+                        if isinstance(child.targets[0], ast.Name) and child.targets[0].id == sensor_variable:
+                            variable_updated_inside_loop = True
+
+    if not while_found:
+        issues.append({
+            "message": "No `while` loop found using a sensor variable. Check the loop correctly waits for an object detection.",
+            "line": 1
+        })
+    elif not variable_used_in_condition:
+        issues.append({
+            "message": f"While loop condition does not correctly use `{sensor_variable}` assigned from `env.get_sensor_forward_value()`. Check the condition is based on this sensor value.",
+            "line": 1
+        })
+    elif not variable_updated_inside_loop:
+        issues.append({
+            "message": f"Inside the while loop, `{sensor_variable}` is not updated from `env.get_sensor_forward_value()`. Check it is re-assigned inside the loop.",
+            "line": 1
+        })
+
+    return issues
+
+def check_ascend_action_in_correct_for_loop_sensors(tree):
+    """Check that the ascend action value is correctly applied to the environment."""
+    issues = []
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.For):  
+           
+            if (isinstance(node.iter, ast.Call) and
+                isinstance(node.iter.func, ast.Name) and
+                node.iter.func.id == "range" and
+                len(node.iter.args) == 1 and
+                isinstance(node.iter.args[0], ast.Constant) and
+                node.iter.args[0].value == 40):
+                ascend_action_found = False
+                for child in ast.walk(node):
+                    if isinstance(child, ast.Expr) and isinstance(child.value, ast.Call):
+                        func = child.value.func
+                        if (isinstance(func, ast.Attribute) and
+                            isinstance(func.value, ast.Name) and func.value.id == "env" and
+                            func.attr == "step" and
+                            len(child.value.args) > 0 and
+                            isinstance(child.value.args[0], ast.Name) and
+                            child.value.args[0].id == "ascend_action"):
+                            ascend_action_found = True  
+
+              
+                contains_ascend_comment = any(
+                    isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Str) and 
+                    "Apply the ascend action to the environment" in stmt.value.s
+                    for stmt in node.body
+                )
+
+                if contains_ascend_comment and not ascend_action_found:
+                    issues.append({
+                        "message": "Missing `env.step(ascend_action)` inside the `for _ in range(40):` loop.",
+                        "line": node.lineno
+                    })
+
+    return issues
+
+def check_if_else_with_greatest_direction_car(tree):
+    """Check that the variable assigned with `max(sensor_readings, key=sensor_readings.get)` is the same variable used in the if-else conditions."""
+    issues = []
+    last_line_number = 1
+    max_variable = None  
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.Assign):
+            if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name) and node.value.func.id == "max":
+                if len(node.value.args) > 0 and isinstance(node.value.args[0], ast.Name) and node.value.args[0].id == "sensor_readings":
+                    for keyword in node.value.keywords:
+                        if keyword.arg == "key" and isinstance(keyword.value, ast.Attribute):
+                            if (
+                                isinstance(keyword.value.value, ast.Name)
+                                and keyword.value.value.id == "sensor_readings"
+                                and keyword.value.attr == "get"
+                            ):
+                                max_variable = node.targets[0].id 
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.If):
+            if isinstance(node.test, ast.Compare):
+                if isinstance(node.test.left, ast.Name):
+                    condition_variable = node.test.left.id  
+
+                    if max_variable is None:
+                        issues.append({
+                            "message": "A variable must be assigned using `max(sensor_readings, key=sensor_readings.get)` before the if-else statement.",
+                            "line": node.lineno
+                        })
+                    elif condition_variable != max_variable:
+                        issues.append({
+                            "message": f"The if-else statement should use `{max_variable}`, but `{condition_variable}` was used instead.",
+                            "line": node.lineno
+                        })
+
+    return issues
+
+def check_env_step_usage_car(tree):
+    """Check that `env.step(action)` is called inside the while loop and that `action` is used as the argument."""
+    issues = []
+    last_line_number = 1
+    step_called_correctly = False
+    step_called_incorrectly = False
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if (
+            isinstance(node, ast.Call) and 
+            isinstance(node.func, ast.Attribute) and 
+            isinstance(node.func.value, ast.Name)  
+        ):
+            if node.func.value.id == "env" and node.func.attr == "step":
+                if len(node.args) > 0 and isinstance(node.args[0], ast.Name):
+                    if node.args[0].id == "action":
+                        step_called_correctly = True  
+                    else:
+                        step_called_incorrectly = True 
+
+    if not step_called_correctly:
+        issues.append({
+            "message": "Missing required call to `env.step(action)` is missing. The simulation may not function correctly. Check that it is called inside the infinite loop to execute movement.",
+            "line": last_line_number
+        })
+
+    if step_called_incorrectly:
+        issues.append({
+            "message": "Incorrect argument passed to `env.step()`. Check that only `action` is used as the argument.",
+            "line": last_line_number
+        })
+
+    return issues
+
+def check_undefined_variables_car(tree):
+    issues = []
+    defined_vars = set()
+    used_vars = set()
+    last_line_number = 1  
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):  
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    defined_vars.add(target.id)
+        elif isinstance(node, ast.Name):
+            used_vars.add(node.id)
+
+    assumed_defined_vars = {"env", "time", "max", "np", "contact"}
+    undefined_vars = used_vars - defined_vars - assumed_defined_vars
+
+    for var in undefined_vars:
+        issues.append({
+            "message": f"Variable '{var}' is used but not defined.",
+            "line": last_line_number  
+        })
+
     return issues
 
 def analyze_robotics_code(code, context="Car"):
@@ -921,23 +1714,43 @@ def analyze_robotics_code(code, context="Car"):
         return issues
 
     if context == "Fetch Reach":
-        issues.extend(check_normalization(tree))
-        issues.extend(check_distance_threshold(tree))
-        issues.extend(check_gripper_closure(tree))
-        issues.extend(check_object_transport(tree))
-        issues.extend(check_loop_termination(tree))
+        issues.extend(check_object_transport_fetch_reach(tree))
+        issues.extend(check_ball_position_retrieval_fetch_reach(tree))
+        issues.extend(check_gripper_position_retrieval_fetch_reach(tree))
+        issues.extend(check_direction_computation_fetch_reach(tree))
+        issues.extend(check_np_array_wrapping_fetch_reach(tree))
+        issues.extend(check_direction_normalization_fetch_reach(tree))
+        issues.extend(check_for_loop_usage_fetch_reach(tree))
+        issues.extend(check_loop_termination_fetch_reach(tree))
+        issues.extend(check_while_loop_normalized_comparison_fetch_reach(tree))
     elif context == "Fetch Pick and Place":
-        issues.extend(check_gripper_closure(tree))
-        issues.extend(check_object_transport(tree))
+        issues.extend((tree))
+      
+    elif context == "Fetch Organize":
+        issues.extend(check_undefined_variables_fetch_organize(tree))
+        issues.extend(check_site_xpos_object_name_usage_twice_fetch_organize(tree))
+        issues.extend(check_site_xpos_robot_grip_usage_three_times_fetch_organize(tree))
+        issues.extend(check_opens_gripper_first_fetch_organize(tree))
+        issues.extend(check_env_step_usage_in_while_loops_fetch_organize(tree))
+        issues.extend(check_closes_gripper_after_vertical_fetch_organize(tree))
+        issues.extend(check_horizontal_distance_subtraction_fetch_organize(tree))
     elif context == "Fetch Sensors":
+        issues.extend(check_one_env_step_sensors(tree))
         issues.extend(check_loop_termination_sensors(tree))
-        issues.extend(verify_one_env_step(tree))
+        issues.extend(check_forward_sensor_value_assignment_sensors(tree))
+        issues.extend(check_while_loop_sensor_condition_sensors(tree))
+        issues.extend(check_ascend_action_in_correct_for_loop_sensors(tree))
     elif context == "Car": 
-        issues.extend(check_undefined_variables(tree))
-        issues.extend(check_dictionary_key_safety(tree))
-        issues.extend(check_function_calls(tree))
-        issues.extend(check_missing_env_step(tree))
-
+        issues.extend(check_sensor_forward_value_retrieval_car(tree))
+        issues.extend(check_sensor_right_value_retrieval_car(tree))
+        issues.extend(check_sensor_left_value_retrieval_car(tree))
+        issues.extend(check_sensor_readings_variable_usage_car(tree))
+        issues.extend(check_dictionary_key_safety_car(tree))
+        issues.extend(check_max_direction_usage_car(tree))
+        issues.extend(check_if_else_with_greatest_direction_car(tree))
+        issues.extend(check_env_step_usage_car(tree))
+        issues.extend(check_undefined_variables_car(tree))
+      
     return issues
 
 
@@ -1876,6 +2689,10 @@ def module_seven_download():
 def module_eight_download():
     return render_template('courses/course8-content/module_eight_download.html')
 
+@app.route('/module11/test/test')
+def module_eleven_download():
+    return render_template('courses/course11-content/module_eleven_download.html')
+
 @app.route('/module6/introduction')
 def module_six():
     return render_template('courses/course6-content/module_six.html')
@@ -1999,6 +2816,14 @@ def module_eleven_link():
 @app.route('/embedded-course-content')
 def embedded_course_content():
     return render_template('courses/course6-content/module_six_given.html')  # This page has NO navbar or footer
+
+@app.route('/embedded-course-content-organize')
+def embedded_course_content_organize():
+     return render_template('courses/course9-content/module_nine_given.html')  
+
+@app.route('/embedded-course-content-car')
+def embedded_course_content_car():
+    return render_template('courses/course11-content/module_eleven_given.html')
 
 # Darren's Code
 @app.route('/Fetch-Reach-Robot')
@@ -2125,6 +2950,9 @@ def run_code():
     global last_error
     global static_issues
     global junk_array
+    global env
+
+    env.reset()
 
     data = request.get_json(silent=True)
 
@@ -2145,11 +2973,33 @@ def run_code():
 
     print("Final Context Used for Static Analysis:", page_context)
     
+    if env is None:
+        print("ERROR: No environment initialized before execution!")
+        if page_context == "Pick and Place":
+            print("Initializing Pick and Place environment inside run-code...")
+            env = FetchPickAndPlaceEnv()  
+
+    if env is None: 
+            return jsonify({'error': 'No environment chosen yet', 'static_issues': static_issues}), 400
+    
     static_issues = analyze_robotics_code(code, context=page_context)
+    if page_context == "Pick and Place":
+        print("DEBUG")
+        print("STATIC ISSUES:", static_issues)
     print("Static Issues Found:", static_issues)
 
     for issue in static_issues:
         print(f"Found issue at line {issue.get('line', 'Unknown')}: {issue['message']}")
+
+    if static_issues:
+        return_data = {
+            'message': 'Code contains issues and was not executed.',
+            'error': None,
+            'static_issues': static_issues,
+            'context': page_context,  
+        }
+        print("Returning early due to static issues:", return_data)
+        return jsonify(return_data)  
 
     if env is None:
         print("Error: No environment chosen yet")
@@ -2161,13 +3011,8 @@ def run_code():
 
         exec(code, globals(), local_context)  
 
-        ball_position = local_context.get('ball_position', env.get_ball_position())
-        gripper_position = local_context.get('gripper_position', env.get_gripper_position())
-
         return_data = {
             'message': 'Code executed successfully.',
-            'ball_position': {'x': ball_position[0], 'y': ball_position[1], 'z': ball_position[2]},
-            'gripper_position': {'x': gripper_position[0], 'y': gripper_position[1], 'z': gripper_position[2]},
             'error': None,
             'static_issues': static_issues,
             'context': page_context,  
@@ -2181,32 +3026,96 @@ def run_code():
         print("Error Message from Run Code:", last_error)
         return jsonify({'error': last_error, 'static_issues': static_issues, 'context': page_context})
 
-@app.route('/get-ball-position', methods=['GET'])
-def get_ball_position():
-    position = env.get_ball_position() 
-    return jsonify({'x': position[0], 'y': position[1], 'z': position[2]})
+# @app.route('/run-code', methods=['POST'])
+# def run_code():
+#     global user_submitted_code
+#     global last_error
+#     global static_issues
+#     global junk_array
 
-@app.route('/get-gripper-position', methods=['GET'])
-def get_gripper_position():
-    position = env.get_gripper_position()  
-    return jsonify({'x': position[0], 'y': position[1], 'z': position[2]})
+#     env.reset()
 
-@app.route('/get-box-position', methods=['GET'])
-def get_box_position():
-    position = env.get_box_position() 
-    return jsonify({'x': position[0], 'y': position[1], 'z': position[2]})
+#     data = request.get_json(silent=True)
 
-@app.route('/check-collision', methods=['GET'])
-def check_collision():
-    ball_position = env.get_ball_position()
-    gripper_position = env.get_gripper_position()
-    # box_position = current_env.get_box_position()
+#     if data:
+#         print("Received JSON request.")
+#         code = data.get('code', '')
+#         page_context = data.get('context', 'Car') 
+#     else:
+#         print("No JSON was received. Using form data in place of the JSON.")
+#         code = request.form.get('code', '')
+#         page_context = request.form.get('context', 'Car') 
+
+#     if not code:
+#         return jsonify({'error': 'No code received!', 'static_issues': []}), 400
+
+#     user_submitted_code = code
+#     last_error = None
+
+#     print("Final Context Used for Static Analysis:", page_context)
     
-    threshold_distance = 0.01 
-    distance = np.linalg.norm(np.array(ball_position) - np.array(gripper_position))
+#     static_issues = analyze_robotics_code(code, context=page_context)
+#     print("Static Issues Found:", static_issues)
 
-    collision_detected = bool(distance < threshold_distance)
-    return jsonify({'collision': collision_detected})
+#     for issue in static_issues:
+#         print(f"Found issue at line {issue.get('line', 'Unknown')}: {issue['message']}")
+
+#     if env is None:
+#         print("Error: No environment chosen yet")
+#         return jsonify({'error': 'No environment chosen yet', 'static_issues': static_issues}), 400
+
+#     try:
+#         print("Executing user code...")
+#         local_context = {}
+
+#         exec(code, globals(), local_context)  
+
+#         # ball_position = local_context.get('ball_position', env.get_ball_position())
+#         # gripper_position = local_context.get('gripper_position', env.get_gripper_position())
+
+#         return_data = {
+#             'message': 'Code executed successfully.',
+#             # 'ball_position': {'x': ball_position[0], 'y': ball_position[1], 'z': ball_position[2]},
+#             # 'gripper_position': {'x': gripper_position[0], 'y': gripper_position[1], 'z': gripper_position[2]},
+#             'error': None,
+#             'static_issues': static_issues,
+#             'context': page_context,  
+#         }
+
+#         print("Successful Response Data:", return_data)
+#         return jsonify(return_data)
+
+#     except Exception as e:
+#         last_error = str(e)
+#         print("Error Message from Run Code:", last_error)
+#         return jsonify({'error': last_error, 'static_issues': static_issues, 'context': page_context})
+
+# @app.route('/get-ball-position', methods=['GET'])
+# def get_ball_position():
+#     position = env.get_ball_position() 
+#     return jsonify({'x': position[0], 'y': position[1], 'z': position[2]})
+
+# @app.route('/get-gripper-position', methods=['GET'])
+# def get_gripper_position():
+#     position = env.get_gripper_position()  
+#     return jsonify({'x': position[0], 'y': position[1], 'z': position[2]})
+
+# @app.route('/get-box-position', methods=['GET'])
+# def get_box_position():
+#     position = env.get_box_position() 
+#     return jsonify({'x': position[0], 'y': position[1], 'z': position[2]})
+
+# @app.route('/check-collision', methods=['GET'])
+# def check_collision():
+#     ball_position = env.get_ball_position()
+#     gripper_position = env.get_gripper_position()
+#     # box_position = current_env.get_box_position()
+    
+    # threshold_distance = 0.01 
+    # distance = np.linalg.norm(np.array(ball_position) - np.array(gripper_position))
+
+    # collision_detected = bool(distance < threshold_distance)
+    # return jsonify({'collision': collision_detected})
 
 @app.route('/next-question', methods=['POST'])
 def next_question():

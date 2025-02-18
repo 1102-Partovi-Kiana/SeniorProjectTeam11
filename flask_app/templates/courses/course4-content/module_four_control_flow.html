@@ -172,9 +172,11 @@ for album, rating in album_ratings.items():
         </div>
 
         <!-- Next Button -->
-        <div class="next-button text-right mt-4">
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_four_variables') }}" class="secondary-button">Back: Variables</a> 
             <a href="{{ url_for('module_four_loops') }}" class="secondary-button">Next: Loops</a>
         </div>
+
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->
 {% endblock %}

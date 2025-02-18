@@ -18,6 +18,12 @@
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_eleven_about') }}" class="course-link">About</a>
+                <ul class="sub-list">
+                    <li><a href="#about-car">Autonomous Car Robot</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Car</a></li>
+                    <li><a href="#gallery">Autonomous Car Gallery</a></li>
+                    <li><a href="#real-world">Real-World Applicability</a></li>
+                </ul>
             </li>
             <li class="course-item active">
                 <a href="{{ url_for ('module_eleven_given') }}" class="course-link">Environment</a>
@@ -31,8 +37,19 @@
                 <a href="{{ url_for ('module_eleven_code') }}" class="course-link">Coding Logic</a>
                 <ul class="sub-list">
                     <li><a href="#word-bank-car">Word Bank</a></li>
-                    <li><a href="#code-car">What Needs to Be Coded</a></li>
+                    <li><a href="#understand-the-environment">Understand the Environment</a></li>
+                    <li><a href="#initialize-the-action">Initialize the Action</a></li>
+                    <li><a href="#retrieve-sensor-values">Retrieve Sensor Values</a></li>
+                    <li><a href="#determine-movement">Determine Movement</a></li>
+                    <li><a href="#prepare-actions">Prepare Actions</a></li>
+                    <li><a href="#apply-actions">Apply Actions</a></li>
+                    <li><a href="#small-delay">Add a Delay</a></li>
+                    <li><a href="#while-loop">Embedding a While Loop</a></li>
+                    <li><a href="#key-takeaways">Key Takeaways</a></li>
                 </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_download') }}" class="course-link">Cheat Sheet</a>
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_eleven_link') }}" class="course-link">Time to Code</a>
@@ -56,12 +73,6 @@
                     <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
                 </li>
                 <li style="margin: 10px 0;">
-                    <strong>🔧 FetchOrganizeSensorsEnv:</strong> The specific environment object for the task setup.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>📏 Distance Threshold:</strong> Maximum allowable distance between gripper and object.
-                </li>
-                <li style="margin: 10px 0;">
                     <strong>➡️ Forward:</strong> Distance retrieved using the robot's forward sensor.
                 </li>
                 <li style="margin: 10px 0;">
@@ -71,19 +82,29 @@
                     <strong>➡️ Right:</strong> Distance retrieved using the robot's right sensor.
                 </li>
                 <li style="margin: 10px 0;">
-                    <strong>⬇️ Backward:</strong> Distance retrieved using the robot's backward sensor.
-                </li>
-                <li style="margin: 10px 0;">
                     <strong>🔄 Action:</strong> List representing the robot’s movement and steering inputs.
                 </li>
                 <li style="margin: 10px 0;">
-                    <strong>📊 Values:</strong> A dictionary mapping sensor directions to their respective distance values.
+                    <strong>📊 Sensor Readings:</strong> A dictionary mapping sensor directions to their respective distance values.
                 </li>
             </ul>
         </div>
 
         <div class="divider">
-            <span class="divider-text">Let’s Dive In</span>
+            <span class="divider-text">Let’s Look at the Autonomous Car Labeled</span>
+        </div>
+
+        <div class="module-section" id="sim">
+            <h3>Autonomous Car Simulation</h3>
+            <img src="{{ url_for('static', filename='img/labeledcar.png') }}" alt="Autonomous Car" class="robot-image">
+            <br>
+            <p>Here is a simulation of the Autonomous Car that you will be interacting with and programming.</p>
+            <p><strong>The Task of the Autonomous Car:</strong> The car has to keep driving without hitting anything. It has sensors that help it figure out where there’s the most space to move. If there’s more space in front, it goes forward. If there’s more space to the left, it turns left. If there’s more space to the right, it turns right. The car keeps doing this continuously to navigate safely.</p>
+        </p>
+        </div>
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look at What is Given to us</span>
         </div>
 
         <!-- Section 1: What is Given -->
@@ -91,11 +112,14 @@
             <h3>What is Given</h3>
             <ul>
                 <li><strong>global env:</strong> This represents the robot's environment, which contains the robot's current state and methods for interacting with it. The environment has various "getters" and "setters."</li>
-                <li><strong>forward, right, left, backward:</strong> These values are retrieved using the robot's sensor functions and represent the distances to obstacles in the corresponding directions.</li>
                 <li><strong>action:</strong> A list representing the robot’s movement and steering inputs.</li>
-                <li><strong>values:</strong> A dictionary that maps sensor directions to their distance values.</li>
+                <li><strong>sensor readings:</strong> A dictionary that maps sensor directions to their distance values.</li>
             </ul>
         </div> <!-- End of What is Given Section -->
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look at What needs to be Retrieved</span>
+        </div>
 
         <!-- Section 2: What Needs to be Retrieved -->
         <div class="module-section" id="retrieve-car">
@@ -105,7 +129,6 @@
                 <li><strong>right:</strong> The sensor value representing the distance to the robot's right.</li>
                 <li><strong>left:</strong> The sensor value representing the distance to the robot's left.</li>
                 <li><strong>greatest_direction:</strong> The direction with the highest sensor value, indicating the most open space.</li>
-                <li><strong>greatest_value:</strong> The corresponding sensor value of the greatest_direction.</li>
             </ul>
         </div> <!-- End of What Needs to be Retrieved Section -->
 

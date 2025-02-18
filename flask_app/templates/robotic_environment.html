@@ -107,7 +107,7 @@
                         </div>
 
                         <div class="robot-description text-coding-options ">
-                            <p>The Fetch Robot: Guide the robot's gripper to reach the ball's position using precise movements.</p>
+                            <p>The Fetch Reach Robot: Guide the robot's gripper to reach the ball's position using precise movements.</p>
                             <br>
                         </div>
                     </div>
@@ -122,24 +122,40 @@ distance_threshold = 0.01
 # Given: Define a step size for each movement iteration.
 step_size = 0.05
 
-# Step 1: Use the environment's method to get the ball's position and store it in a variable.
+# TODO: Use the environment's method to get the ball's position and store it in a variable.
 
-# Step 2: Use the environment's method to get the gripper's position and store it in a variable.
 
-# Step 3: Calculate the direction vector from the gripper to the ball.
+# TODO: Use the environment's method to get the gripper's position and store it in a variable.
 
-# Step 4: Write a loop to move the gripper toward the ball, keep moving the gripper until the distance is less than the threshold.
+
+# TODO: Calculate the direction vector from the gripper to the ball
+# *Remember*: Subtract the gripper position from the ball position 
+
+
+# TODO: Normalize the direction vector to get its magnitude, a scalar value to later compare to another scalar value, the distance_threshold
+
+
+# TODO: Fill in the while loop to move the gripper toward the ball, keep moving the gripper until the distance is less than the threshold.
+# *Remeber*: Utilize the normalized direction vector you just caclulated to compare to the distance_threshold
+while ____________________ > distance_threshold:
 
     # Given: Calculate the action to move the gripper in the direction of the ball.
-    action = np.append(direction / np.linalg.norm(direction) * step_size, [1])
+    action = np.append(direction / direction_normalized * step_size, [1])
 
-    # Step 5: Apply the action to the environment.
+    # TODO: Apply the action to the environment.
 
-    # Step 6: Update the gripper's direction. Remember you have done this before. Get the grippers position from the environment. 
-    gripper_position = env.get_gripper_position()
 
-    # Step 7: Update the gripper's direction. Remember you have calculated the direction before. This is the new distance from the gripper to the ball (hence the gripper's position).
-    direction = np.array(ball_position) - np.array(gripper_position)
+    # TODO: Update the gripper's direction. 
+    # *Remember*: You have done this before. Get the grippers position from the environment. 
+
+
+    # TODO: Update the gripper's direction.
+    # *Remember*: You have calculated the direction before. This is the new distance from the gripper to the ball (hence the gripper's position).
+
+
+    #TODO: Normalize the direction vector
+    # *Remember*: You have done this before.
+
                     </textarea>
                     <div class="row align-items-center">
                         <!-- Output Box -->

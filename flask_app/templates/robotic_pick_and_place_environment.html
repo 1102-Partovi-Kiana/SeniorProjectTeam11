@@ -107,147 +107,151 @@
                         </div>
 
                         <div class="robot-description text-coding-options ">
-                            <p>Fill in: ....</p>
+                            <p>The Fetch Pick and Place Robot: Move the robot's gripper to the object, open its gripper around the object, close it to grasp the object, & transport it near the target ball. </p>
                             <br>
                         </div>
                     </div>
                     <!-- Darren's Code -->                    
                     <div class="card-header">Coding Area</div>
                     <textarea id="code-editor" rows="20" style="height: 100%;">
-# Define thresholds
-distance_threshold = 0.01  # Define how close the gripper needs to be to an object
-box_to_ball_threshold = 0.03  # Define the distance threshold for placing the box near the ball
+# Fetch Pick and Place Robot Task: Guide the robot's gripper to the (object's) block's position, open the gripper through the open action
+# around the gripper, close the gripper to grasp the object, and finally transport it to its destination, being the ball
 
+# Given: A distance threshold to determine when the gripper is close enough to the object.
+distance_threshold = 0.01
 
-# Define actions
-close_grip_action = np.array([0, 0, 0, -1])  # Action to close the gripper
-open_grip_action = np.array([0, 0, 0, 1])   # Action to open the gripper
-lift_action = np.array([0, 0, 0.1, 0])      # Action to lift the gripper
+# Given: Define the actions for the robot
+# Action to close the gripper
+close_grip_action = np.array([0, 0, 0, -1]) 
+# Action to open the gripper
+open_grip_action = np.array([0, 0, 0, 1])
+# Action to lift the gripper
+lift_action = np.array([0, 0, 0.1, 0])
 
-
-# Get the position of the target ball
+# TODO: Get the position of the target ball
 ball_position = env.sim.data.get_site_xpos('target0')
 
-
-# Open the gripper before starting
+# TODO: Apply the open gripper action to the environment
 env.step(open_grip_action)
 
-
-# Step 1: Move the gripper horizontally to the box 
+# Given: Move the gripper horizontally (XY-plane) towards the object
 while True:
-    # Get the positions of the box and the gripper
-    box_position = env.sim.data.get_site_xpos('object0')
+    # TODO: Get the position of the object (the block)
+    object_position = env.sim.data.get_site_xpos('object0')
+
+    #TODO: Get the position of the gripper
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')
 
+    # TODO: Calculate the direction vector (horizontal distance) from the gripper to the object
+    # *Remember*: Subtract the gripper position from the ball position
+    # *Remeber*: We are only concerned with the XY-plane here, 
+    #            only extract the x and y coordinates of the gripper and the object
+    #            using [:2]
+    horizontal_distance = np.array(object_position[:2]) - np.array(gripper_position[:2])
 
-    # TODO: Compute the horizontal distance between the gripper and the box
-    horizontal_distance = ____
-
-
-    # TODO: Break the loop if the gripper is close enough to the box
-    if ____:
+    # TODO: Normalize the horizontal distance to get its magnitude, a scalar value to later compare to another scalar value, the distance_threshold 
+    horizontal_distance_magnitude = np.linalg.norm(horizontal_distance)
+        
+    # TODO: Check if the gripper is already within distance_threshold of the object, we exit the loop (stop moving)
+    if horizontal_distance_magnitude <= distance_threshold:
         break
 
+    # TODO: Normalize the horizontal distance to compute the unit direction vector for movement.
+    horizontal_distance_normalized =  horizontal_distance / (horizontal_distance_magnitude + 1e-8)
 
-    # TODO: Compute the movement direction towards the box
-    direction = ____
-
-
-    # TODO: Normalize the direction vector (handle division by zero)
-    direction_normalized = ____
-
-
-    # TODO: Define the horizontal movement action (move towards the box)
+    # FILL IN: Define the horizontal action of the robot using the previously computed unit direction vector 
     horizontal_action = np.array([
-        ____,  # Move in x-direction
-        ____,  # Move in y-direction
-        0,  # No vertical movement
-        0   # No gripper change
+        horizontal_distance_normalized[0] * 0.1, # Movement in x-direction
+        horizontal_distance_normalized[1] * 0.1, # Move in y-direction
+        0, # No movement in the z-direction
+        0 # No gripper action 
     ])
 
-
-    # Execute the movement
+    # TODO: Apply the horizontal action to the environment
     env.step(horizontal_action)
 
-
-# Step 2: Move the gripper down to the box 
+# Given: Move the gripper downward (Z-axis) until it reaches the object
 while True:
-    # Get updated positions of the box and the gripper
-    box_position = env.sim.data.get_site_xpos('object0')
+    # TODO: Get the position of the object (the block)
+    object_position = env.sim.data.get_site_xpos('object0')
+
+    # TODO: Get the position of the gripper 
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')
 
+    # TODO: Calculate the vertical distance between the gripper and the object
+    # *Remember*: We are only concerned with the Z-axis here, 
+    #            only extract the z coordinate of the gripper and the object
+    #            using [2]
+    vertical_distance = object_position[2] - gripper_position[2]
 
-    # TODO: Compute the vertical distance (z-axis)
-    vertical_distance = ____
-
-
-    # TODO: Break the loop if the gripper is close enough to the box
-    if ____:
+    # TODO: Check if the gripper is already within distance_threshold of the block, we exit the loop (stop moving)
+    # Note: Take the absolute value of the vertical_distance
+    # - If vertical_distance is positive, the object is above the gripper.
+    # - If vertical_distance is negative, the object is below the gripper.
+    # Since we only care about how close the gripper is, regardless of direction,
+    # we use abs(vertical_distance) so movement stops when within the distance_threshold.
+    if abs(vertical_distance) <= distance_threshold:
         break
 
-
-    # TODO: Define action to move down toward the box
-    descend_action = np.array([0, 0, ____, 0])
-
-
-    # Execute the movement
-    env.step(descend_action)
-
-
-# Step 3: Close the gripper to grab the box 
-env.step(close_grip_action)
-
-
-# Step 4: Stabilize the grasp (hold for a few steps) 
-for _ in range(10):
-    env.step(np.array([0, 0, 0, 0]))  # No movement, just stabilizing the object
-
-
-# Step 5: Move the box towards the ball 
-num_steps = 100  # Maximum number of movement steps
-
-
-for _ in range(num_steps):
-    # Get updated positions of the gripper and the box
-    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
-    box_position = env.sim.data.get_site_xpos('object0')
-
-
-    # Keep the gripper closed while moving
-    env.step(close_grip_action)
-
-
-    # TODO: Compute the distance between the box and the ball
-    distance_to_ball = ____
-    distance_to_box = ____
-
-
-    # TODO: Break the loop if the box is close enough to the ball
-    if ____:
-        break
-
-
-    # TODO: Compute movement direction towards the ball
-    direction_to_ball = ____
-
-
-    # TODO: Normalize the direction vector (handle division by zero)
-    direction_normalized = ____
-
-
-    # TODO: Define movement action towards the ball
-    move_to_ball_action = np.array([
-        ____,  # Move in x-direction
-        ____,  # Move in y-direction
-        ____,  # Move in z-direction
-        0   # Keep the gripper closed
+    # Given: The descend action for the robot
+    descend_action = np.array([
+        0, # No movement in the x-direction
+        0, # No movement in the y-direction
+        vertical_distance * 0.1, # Move downward in the z-direction
+        0 # No gripper action (remains as is)   
     ])
 
+    # TODO: Apply the vertical descending action to the evnironment
+    env.step(descend_action)
 
-    # Step through the environment with the gripper closed and moving
-    env.step(close_grip_action)  # Keep grip closed
-    env.step(move_to_ball_action)  # Move towards the ball
+# TODO: At this point the open gripper is around the object, apply the close gripper action to grasp the object
+env.step(close_grip_action)
 
+# Given: Stabilizing the robot by waiting for 10 steps without movement
+for _ in range(10):
+    env.step(np.array([0, 0, 0, 0]))
+
+# Given: The distance threshold (stop condition) for reaching the target position (the ball)
+object_to_ball_threshold = 0.03
+
+# Given: Define the number of steps the loop will run at most
+num_steps = 100 
+
+# Given: Start moving the object towards the ball
+for _ in range(num_steps):
+    # TODO: Get the position of the gripper
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+
+    # TODO: Get the position of the object
+    object_position = env.sim.data.get_site_xpos('object0')
+
+    # TODO: Keep the gripper closed, apply the close gripper action to the environment
+    env.step(close_grip_action)
+
+    # TODO: Calculate the full 3D distance between the object and the ball
+    distance_from_object_to_ball = np.array(ball_position) - np.array(object_position)
+
+    # TODO: Normalize the distance from the object to the ball in order to get its magnitude, a scalar value to later compare to another scalar value, the box_to_ball_threshold 
+    distance_from_object_to_ball_magnitude = np.linalg.norm(distance_from_object_to_ball)
+
+    # TODO: Check if the block has already reached the ball, we exit the loop (stop moving)
+    if distance_from_object_to_ball_magnitude <= object_to_ball_threshold:  
+        break
+
+    # TODO: Normalize the distance to the ball to compute the unit direction vector for movement.
+    distance_from_object_to_ball_normalized = distance_from_object_to_ball / (distance_from_object_to_ball_magnitude + 1e-8)
+
+    # Given: The action to move the object to the ball
+    move_to_ball_action = np.array([
+        distance_from_object_to_ball_normalized[0] * 0.3, # Move in x-direction
+        distance_from_object_to_ball_normalized[1] * 0.3, # Move in y-direction
+        distance_from_object_to_ball_normalized[2] * 0.3, # Move in z-direction
+        0 # Keep gripper closed
+    ])
+
+    # Given: Step through the environment with the gripper closing and moving
+    env.step(close_grip_action)
+    env.step(move_to_ball_action)
                     </textarea>
                     <div class="row align-items-center">
                         <!-- Output Box -->

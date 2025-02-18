@@ -8,7 +8,7 @@ function moveSlide(step) {
 
     index += step;
 
-    if (index >= totalImages) index = 0;
+    if (index >= totalNumberOfImages) index = 0;
     if (index < 0) index = totalNumberOfImages - 1;
 
     const offset = -index * 100; 

@@ -31,7 +31,17 @@
                 <a href="{{ url_for ('module_nine_code') }}" class="course-link">Coding Logic</a>
                 <ul class="sub-list">
                     <li><a href="#word-bank-fetch-organize">Word Bank</a></li>
-                    <li><a href="#code-fetch-organizee">What Needs to Be Coded</a></li>
+                    <li><a href="#understand-the-environment">Understand the Environment</a></li>
+                    <li><a href="#define-constants-and-action-parameters">Define Constants And Action Parameters</a></li>
+                    <li><a href="#code-fetch-organize">What Needs to Be Coded</a></li>
+                    <li><a href="#find-distance">Find Distance</a></li>
+                    <li><a href="#approach-target">Approach Target</a></li>
+                    <li><a href="#adjust-gripper">Adjust Gripper</a></li>
+                    <li><a href="#gather-color">Gather Color</a></li>
+                    <li><a href="#lifting-the-object">Lifting the Object</a></li>
+                    <li><a href="#place-the-object-in-container">Place the Object in the Container</a></li>
+                    <li><a href="#test-the-outcome">Test the Outcome</a></li>
+                    <li><a href="#key-takeaways">Key Takeaways</a></li>
                 </ul>
             </li>
             <li class="course-item">
@@ -76,8 +86,43 @@
             </ul>
         </div>
 
+        <!-- Section: Understanding the Environment -->
+        <div class="module-section" id="understand-the-environment">
+            <h3>Understand the Environment</h3>
+            <p>You are provided with a robot environment (<code>env</code>), which holds the current state of the robot and provides functions to interact with it. The robotic environment comes <strong>pre-initialized</strong>. This means you can automatically use the built-in methods that come with the environment. For the Fetch Sensors Robot
+                environment, these methods include:
+                <ul class="custom-list">
+                    <li><code>sim.data.get_site_xpos('robot0:grip')</code> → Returns the gripper’s position.</li>
+                    <li><code>sim.data.get_site_xpos('object#')</code> → Returns the object' position.</li>
+                    <li><code>step(x = increment)</code> → Moves the gripper based on the provided action (increment).</li>
+                </ul>
+            </p>
+            <p>To access these methods, use <code><strong>env.</strong></code> followed by your desired method. For example, if you would like to get the gripper's position in the robotic environment, the correct thing to do would be:
+                <code>env.sim.data.get_site_xpos('robot0:grip')</code>
+            </p>
+            <p>If you wuold like to get the position of object 1, use the following command:
+                <code>env.sim.data.get_site_xpos('object1')</code>
+            </p>
+            <p>If you wuold like to move through the environment with a specific action, use the following command:
+                <code>env.step(action)</code>
+            </p>
+        </div>
+        
+        <!-- Section: Define Constants And Action Parameters -->
+        <div class="module-section" id="define-constants-and-action-parameters">
+            <h3>Define Constants And Action Parameters</h3>
+            <p>The coding environment will include such constants and parameters:
+                <ul class="custom-list">
+                    <li><code> gripper_to_object_distance_threshold = 0.01</code> → A defined threshold for the user.</li>
+                    <li><code>container_to_object_distance_threshold = 0.03 </code> → A defined threshold for the user.</li>
+                    <li><code>close_grip_action = np.array([0, 0, 0, -1])</code> → This value closes the gripper.</li>
+                    <li><code>open_grip_action = np.array([0, 0, 0, 1])</code> → This value opens the gripper.</li>
+                </ul>
+            </p>
+        </div>
+
         <!-- Section: What Needs to be Coded -->
-        <div class="module-section" id="code-fetch-organizee">
+        <div class="module-section" id="code-fetch-organize">
             <h3>What Needs to be Coded</h3>
             <ul>
                 <li><strong>Open the Gripper:</strong> Start by ensuring the gripper is in the open position, allowing it to grab the box. This involves sending an action command to the robot to spread the gripper fingers apart.</li>
@@ -92,6 +137,113 @@
                 <li><strong>Return the Gripper to the Starting Position:</strong> After releasing the object, move the gripper back to its initial position to prepare for the next object.</li>
             </ul>
         </div> <!-- End of What Needs to be Coded Section -->
+
+        <!-- Section: Find Distance -->
+        <div class="module-section" id="find-distance">
+            <h3>Calculate the distance from gripper to targeted object.</h3>
+            <p>Acknowledge the object's position and the gripper's position.</p>
+            <p><code>horizontal_distance = np.array(object_position[:2]) - np.array(gripper_position[:2])</code> → This shows how to find the distance values disregarding the z coordinates.</p>
+            <p>After finding the distance value, we need to find the magnitude of it. This can be done by applying np.linalg.norm() to the distance value.
+                <code>horizontal_distance_magnitude = np.linalg.norm(horizontal_distance)</code>
+            </p>
+            <p>After finding the magnitude of the distance values, it needs to be normalized with the robtoic environment. This will be given during the coding practice.</p>
+            <p><code>horizontal_distance_normalized = horizontal_distance / (horizontal_distance_magnitude + 1e-8)</code> → This shows the direction values.</p>
+        </div>
+
+        <!-- Section: Approach Target -->
+        <div class="module-section" id="approach-target">
+            <h3>Using the normalized direction values, start moving the gripper to the target.</h3>
+            <p>Disregard z coordinates and gripper action to focus on aligning the gripper with the target.</p>
+            <p><code>horizontal_distance_normalized[0] * 0.1</code> → This shows how to move it in the x direction, continue this for y direction as well. </p>
+            <p>As each step is simulated, the gripper will be vertically aligned with the target.</p>
+        </div>
+
+        <!-- Section: Adjust Gripper -->
+        <div class="module-section" id="adjust-gripper">
+            <h3>Adjust gripper position to properly lower itself in the Z direction to grab the target</h3>
+            <p>Ensure the gripper position is at appropriate height to lower to the target position.</p>
+            <p><code>if abs(vertical_distance) <=  gripper_to_block_distance_threshold</code> → This ensures the gripper is at appropriate height. </p>
+            <p>Once at appropriate height, the gripper should close onto the target and grasp the block.</p>>
+        </div>
+
+        <!-- Section: Gather Color -->
+        <div class="module-section" id="gather-color">
+            <h3>Checking Object Color</h3>
+            <p>Before interacting with an object, the simulation verifies if the gripper is in contact with it and checks its color.</p>
+            <ul class="custom-list">
+                <li><code>geom_id = env.sim.model.geom_name2id(object_name)</code> → Retrieves the unique ID of the object.</li>
+                <li><code>rgba = env.sim.model.geom_rgba[geom_id]</code> → Extracts the RGBA (Red, Green, Blue, Alpha) color values of the object.</li>
+                <li><code>color = rgba[:3]</code> → Isolates the RGB color values, ignoring transparency.</li>
+            </ul>
+            <p>This step ensures the robot interacts only with objects that match a specific target color.</p>
+        </div>
+
+        <!-- Section: Lifting The Object  -->
+        <div class="module-section" id="lifting-the-object">
+            <h3>Lifting the gripper with the block</h3>
+            <p>To ensure the block is still with the gripper and doesn't get out of reach, the z coordinate condition should be within range.</p>
+        </div>
+
+        <!-- Section: Place The ObjectcIn Container -->
+        <div class="module-section" id="place-the-object-in-container">
+            <h3>The approach should be same as before except the final position will be the container.</h3> 
+            <ol class="custom-list">
+                <li><strong>Recalculate the Direction:</strong>  
+                    <ul>
+                        <li>The gripper has moved, so the direction vector may no longer be accurate.</li>
+                        <li>How do we find the new direction?</li>
+                        <li>Think about how we originally calculated it.</li>
+                    </ul>
+                </li>
+                <li><strong>Take a Step in the Environment:</strong>  
+                    <ul>
+                        <li>Now that we have an action, how do we apply it to the environment?</li>
+                        <li>Remember, the environment provides a method that moves the robot when given an action.</li>
+                        <li>What function should we use here?</li>
+                    </ul>
+                </li>
+
+                <li><strong>Update the Gripper's Position:</strong>  
+                    <ul>
+                        <li>After taking a step, we need to retrieve the new gripper position.</li>
+                        <li>What method should we call to get this updated information?</li>
+                    </ul>
+                </li>
+
+                <li><strong>Ensure the Gripper is Grasping The Block:</strong>  
+                    <ul>
+                        <li>After taking a step, we need to close the gripper.</li>
+                        <li>What method should we call?</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Drop The Block Into The Container:</strong>  
+                    <ul>
+                        <li>What function was used to let go of the block from the gripper?</li>
+                        <li>Is the block in the container?</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Section: Test the Outcome -->
+        <div class="module-section" id="test-the-outcome">
+            <h3>Test the Outcome</h3>
+            <p>Once the code finishes, all the blocks should in the container.</p>
+        </div>
+
+
+        <!-- Section: Key Takeaways -->
+        <div class="module-section" id="key-takeaways">
+            <h3>Key Takeaways</h3>
+            <ul class="custom-list">
+                <li>📍 Use the visualization to visualize where the gripper and blocks are.</li>
+                <li>📐 Calculate the direction and normalize to move the gripper to the target.</li>
+                <li>🤖 Ensure the robot interacts with correct color.</li>
+                <li>🔄 Use a `while` loop to keep moving the gripper until it's close to its target.</li>
+                <li>🏆 Repeat the process for each block until they all in the container. Success!</li>
+            </ul>
+        </div>
 
         <!-- Next Button -->
         <div class="navigation-buttons mt-4">

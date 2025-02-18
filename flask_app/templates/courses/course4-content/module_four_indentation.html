@@ -37,7 +37,7 @@
             <li class="course-item active">
                 <a href="{{ url_for ('module_four_indentation') }}" class="course-link">Indentation</a>
                 <ul class="sub-list">
-                    <li><a href="#why-indenting-matters">Indent Properly</a></li>
+                    <li><a href="#why-indenting-matters">Why Indentation Matters</a></li>
                 </ul>
             </li>
             <li class="course-item">
@@ -123,9 +123,11 @@ return "No Match"
         </div>
 
         <!-- Next Button -->
-        <div class="next-button text-right mt-4">
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_four_comments') }}" class="secondary-button">Back: Commenting</a> 
             <a href="{{ url_for('module_four_variables') }}" class="secondary-button">Next: Variables</a>
         </div>
+        
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->
 {% endblock %}

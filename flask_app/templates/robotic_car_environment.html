@@ -114,33 +114,75 @@
                     <!-- Darren's Code -->                    
                     <div class="card-header">Coding Area</div>
                     <textarea id="code-editor" rows="20" style="height: 100%;">
+# Autonomous Car Robot Task: Implement an autonomous movement algorithm for a robot car.
+# The car continuously moves using sensor data and makes real-time decisions on direction.
+
+# Given: The infinite while loop to move the car in an autonomous manner
 while True:
-    action = [0.00, 0.000]
+    # Given: The action vector [linear velocity, angular veloctiy]
+    # - Linear velocity controls the car's forward/backward movement.
+    # - Angular velocity controls the turning angle (left/right).
+    action = [0.00, 0.000] # Default: No movement initially
 
-    # Get sensor values
-    forward = env.get_sensor_forward_value()
-    right = env.get_sensor_right_value()
-    left = env.get_sensor_left_value()
-    backward = env.get_sensor_backward_value()
+    # TODO: Retrive the forward sensors value and store it in a variable
+    
+    
+    # TODO: Retrive the right sensors value and store it in a variable
+   
+    
+    # TODO: Retrive the left sensors value and store it in a variable
+    
 
-    # Determine the greatest value and its direction
-    values = {
-        "Forward": forward,
-        "Right": right,
-        "Left": left
+    # TODO: Fill in the dictionary withe the variables you just created to store the sensor values
+    sensor_readings = {
+        "Forward": ,
+        "Right": ,
+        "Left": 
     }
-    greatest_direction = max(values, key=values.get)
-    greatest_value = values[greatest_direction]
-    if greatest_direction == "Left":
-        action = [0.005, 0.007]  # Turn left
-    elif greatest_direction == "Right":
+    
+    # TODO: Determine which direction has the highest sensor value
+    # - Use `max()` to find the key (direction) in `sensor_readings` with the greatest value.
+    # - The `key=sensor_readings.get` argument ensures that the maximum is selected based on the sensor reading values.
+    # - Store the result in a variable named greatest_direction to decide the car's movement direction.
+    
+    
+    # TODO: Fill in the if else statement below with the greatest direction variable you just stored the greatest direction in on each fill in the blank line
+    if __________________ == "Forward":
+        action = [0.01, 0.0]   # Move forward
+    elif __________________ == "Right":
         action = [0.005, -0.007]  # Turn right
-    elif greatest_direction == "Forward":
-        action = [0.01, 0.0]  # Move forward
+    elif __________________ == "Left":
+        action = [0.005, 0.007]  # Turn Left
 
-    env.step(action)
-    time.sleep(0.00001)  # ~50 FPS
+    # TODO: Apply the action we have defined in the if else statement to the environment
 
+
+    # **IGNORE: This is here to prevent infinite loops**
+    success = False
+    for contact in env.sim.data.contact:
+        geom1 = env.sim.model.geom_id2name(contact.geom1)
+        geom2 = env.sim.model.geom_id2name(contact.geom2)
+
+        if geom1 is not None and geom2 is not None:
+            if "chasis" in geom1 or "chasis" in geom2:
+                if "chasis" not in geom1:
+                    other_geom = geom1 
+                else:
+                    other_geom = geom2
+
+                geom_id = env.sim.model.geom_name2id(other_geom)
+                rgba = env.sim.model.geom_rgba[geom_id]
+                color = rgba[:3]
+                target_color = [0, 0, 1]  # RGB for blue
+                if np.array_equal(color, target_color):  # Exact match comparison
+                    success = True
+                    break
+    if success:
+        break
+    # **STOP IGNORING: Continue coding as normal**
+
+    # Given: For the loop to run like a real-world autonomous car
+    time.sleep(0.00001) 
                     </textarea>
                     <div class="row align-items-center">
                         <!-- Output Box -->
@@ -185,25 +227,11 @@ while True:
                             </div>
                             <div id="popup-window-review-course-content" class="popup-window-tab-content">
                                 <h3>Review Course Content</h3>
-                                <iframe id="course-content-frame" src="/embedded-course-content" width="100%" height="500px" style="border: none;"></iframe>
+                                <iframe id="course-content-frame" src="/embedded-course-content-car" width="100%" height="500px" style="border: none;"></iframe>
                             </div>                            
                         </div>
                     </div>
 
-                    <!-- Ball and Gripper Position -->
-                    <!-- <div class="row align-items-start" style="margin-top: 5px;">
-                        <div class="col-md-8">
-                            <h5>Ball Position:</h5>
-                            <p id="ball-position">X: --, Y: --, Z: --</p>
-                            <h5>Gripper Position:</h5>
-                            <p id="gripper-position">X: --, Y: --, Z: --</p>
-                        </div>
-                    </div>
-
-                    Collision Notification -->
-                    <!-- <div id="collision-notification" class="alert alert-success" style="margin-top: 5px; display: none;">
-                        Collision detected between the gripper and the ball!
-                    </div> -->
                 </div>
             </div>
             
@@ -449,35 +477,6 @@ while True:
         }
         isAutocompleteEnabled = !isAutocompleteEnabled; // Toggle the flag
     });
-
-    function updatePositions() {
-        fetch('/get-ball-position')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('ball-position').textContent = 
-                    `X: ${data.x.toFixed(2)}, Y: ${data.y.toFixed(2)}, Z: ${data.z.toFixed(2)}`;
-            });
-        fetch('/get-gripper-position')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('gripper-position').textContent = 
-                    `X: ${data.x.toFixed(2)}, Y: ${data.y.toFixed(2)}, Z: ${data.z.toFixed(2)}`;
-            });
-    }
-
-    function checkCollision() {
-        fetch('/check-collision')
-            .then(response => response.json())
-            .then(data => {
-                const notification = document.getElementById('collision-notification');
-                if (data.collision) {
-                    notification.style.display = 'block';
-                } else {
-                    notification.style.display = 'none';
-                }
-            })
-            .catch(error => console.error('Error checking collision:', error));
-    }
 
     let hintsHistory = [];
 

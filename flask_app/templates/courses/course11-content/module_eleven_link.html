@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>About the Fetch Reach Robot - CORE</title>
+<title>Code the Autonomous - CORE</title>
 {% endblock %}
 
 {% block body %}
 <div class="course-container">
-   <!-- Sidebar for module navigation -->
-   <div class="course-sidebar">
+     <!-- Sidebar for module navigation -->
+     <div class="course-sidebar">
         <div class="course-sidebar-header">
             <i class="fas fa-list"></i>
             <span>Contents</span>
@@ -18,6 +18,12 @@
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_eleven_about') }}" class="course-link">About</a>
+                <ul class="sub-list">
+                    <li><a href="#about-car">Autonomous Car Robot</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Car</a></li>
+                    <li><a href="#gallery">Autonomous Car Gallery</a></li>
+                    <li><a href="#real-world">Real-World Applicability</a></li>
+                </ul>
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_eleven_given') }}" class="course-link">Environment</a>
@@ -31,8 +37,19 @@
                 <a href="{{ url_for ('module_eleven_code') }}" class="course-link">Coding Logic</a>
                 <ul class="sub-list">
                     <li><a href="#word-bank-car">Word Bank</a></li>
-                    <li><a href="#code-car">What Needs to Be Coded</a></li>
+                    <li><a href="#understand-the-environment">Understand the Environment</a></li>
+                    <li><a href="#initialize-the-action">Initialize the Action</a></li>
+                    <li><a href="#retrieve-sensor-values">Retrieve Sensor Values</a></li>
+                    <li><a href="#determine-movement">Determine Movement</a></li>
+                    <li><a href="#prepare-actions">Prepare Actions</a></li>
+                    <li><a href="#apply-actions">Apply Actions</a></li>
+                    <li><a href="#small-delay">Add a Delay</a></li>
+                    <li><a href="#while-loop">Embedding a While Loop</a></li>
+                    <li><a href="#key-takeaways">Key Takeaways</a></li>
                 </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_download') }}" class="course-link">Cheat Sheet</a>
             </li>
             <li class="course-item active">
                 <a href="{{ url_for ('module_eleven_link') }}" class="course-link">Time to Code</a>
@@ -55,33 +72,23 @@
         <!-- Robotic Environment Section -->
         <div class="module-section" id="robotic-environment">
             <h3>Interactive Simulation</h3>
-            <p>Below is the robotic environment where you can code and simulate the Fetch-Reach Robot:</p>
+            <p>Below is the robotic environment where you can code and simulate the Autonomous Car:</p>
 
-            <!-- Embed Robotic Environment -->
-          
-            <div class="module-section" id="robotic-environment">
-                <h3>Interactive Simulation</h3>
-                <p>Click the button below to navigate to the coding environment for the Fetch-Reach Robot:</p>
-            
-            <!--Button Link to Coding Environment --> 
-            <button class="cta">
-                <span>Hover me</span>
-                <svg width="20" height="20" viewBox="0 0 24 24">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              </button>
-              
-               <a href="{{ url_for('RenderFetchReachRobotSimulation') }}" class="primary-button">
-                    Open Coding Environment
-                </a>
-            </div> 
+            <a href="{{ url_for('RenderCarEnv') }}" class="primary-button">
+                Open Coding Environment
+            </a>
 
         </div>
 
         <!-- Next Button -->
         <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_six_code') }}" class="secondary-button">Back: Coding Logic</a>
+            <a href="{{ url_for('module_eleven_download') }}" class="secondary-button">Back: Cheat Sheet</a>
         </div>
+
+        <button onclick="alert('Button Clicked!')">
+            <img src="{{ url_for('static', filename='img/clearrobot.gif') }}" alt="Chatbot Logo" class="chatbot-logo">
+        </button>
+          
 
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->

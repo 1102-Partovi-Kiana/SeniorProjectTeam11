@@ -18,11 +18,19 @@
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_seven_about_the_fetch_pick_and_place_robot') }}" class="course-link">About</a>
+                <ul class="sub-list">
+                    <li><a href="#about-fetch-pick-and-place">Fetch Pick and Place Robot</a></li>
+                    <li><a href="#video">Fetch Pick and Place Robot Simulation Vide</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Fetch Picka and Place Robot</a></li>
+                    <li><a href="#videotwo">Real Fetch Pick and Place Robot Video</a></li>
+                    <li><a href="#real-world">Real-World Applicability</a></li>
+                </ul>
             </li>
             <li class="course-item active">
                 <a href="{{ url_for ('module_seven_given') }}" class="course-link">Environment</a>
                 <ul class="sub-list">
                     <li><a href="#word-bank-fetch-pick-and-place">Word Bank</a></li>
+                    <li><a href="#sim">Fetch Pick and Place Simulation Labeled</a></li>
                     <li><a href="#given-fetch-pick-and-place">What is Given</a></li>
                     <li><a href="#retrieve-fetch-pick-and-place">What needs to be Retrieved</a></li>
                 </ul>
@@ -31,8 +39,19 @@
                 <a href="{{ url_for ('module_seven_code') }}" class="course-link">Coding Logic</a>
                 <ul class="sub-list">
                     <li><a href="#word-bank-fetch-pick-and-place">Word Bank</a></li>
-                    <li><a href="#code-fetch-pick-and-place">What Needs to Be Coded</a></li>
+                    <li><a href="#define-constants-and-actions">Defining Constants & Actions</a></li>
+                    <li><a href="#get-target-position">Getting the Target Position</a></li>
+                    <li><a href="#open-the-gripper">Open the Gripper</a></li>
+                    <li><a href="#move-gripper">Move the Gripper Horizontally Towards the Box</a></li>
+                    <li><a href="#lower-gripper">Lower the Gripper to Grasp the Box</a></li>
+                    <li><a href="#close-gripper">Close the Gripper Around the Box</a></li>
+                    <li><a href="#pause-gripper">Pause to Stabilize the Grasp</a></li>
+                    <li><a href="#move-gripper-part-two">Move the Gripper and Box Towards the Ball</a></li>
+                    <li><a href="#key-takeaways">Key Takeaways</a></li>
                 </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_seven_download') }}" class="course-link">Cheat Sheet</a>
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_seven_link') }}" class="course-link">Time to Code</a>
@@ -59,7 +78,7 @@
                     <strong>🔧 FetchPickAndPlaceEnv:</strong> The specific environment object for the task setup.
                 </li>
                 <li style="margin: 10px 0;">
-                    <strong>📏 Distance Threshold:</strong> Maximum allowable distance between gripper and object.
+                    <strong>📏 Distance Threshold:</strong> Maximum allowable distance between pieces in the environment.
                 </li>
                 <li style="margin: 10px 0;">
                     <strong>🔄 Step Size:</strong> Incremental movement of the gripper.
@@ -80,13 +99,12 @@
             <span class="divider-text">Let’s Look At Fetch Pick & Place Labeled</span>
         </div>
 
-        <div class="module-section" id="">
+        <div class="module-section" id="sim">
             <h3>Fetch Pick and Place Robot Simulation</h3>
             <img src="{{ url_for('static', filename='img/FPP.png') }}" alt="Fetch Pick and Place Robot" class="robot-image">
             <br>
             <p>Here is a simulation of the Fetch Pick and Place robot that you will be interacting with and programming derived from MuJoCo and OpenAI Gym.</p>
-            <br>
-            <p>The Task of the Fetch Pick and Place Robot: Fetch Pick and Place has to pick up a box from a table using its end-effector(gripper) and move it to a desired goal above the table.</p>
+            <p><strong>The Task of the Fetch Pick and Place Robot</strong>: Fetch Pick and Place has to pick up a box from a table using its end-effector(gripper) and move it to a desired goal above the table.</p>
         </div>
 
         <div class="divider">
@@ -123,7 +141,7 @@
             <ul>
                 <li><strong>ball_position:</strong> This value represents the current position of the ball in the environment. The student will retrieve this by calling a method or function from the global variable “env.”</li>
                 <li><strong>gripper_position:</strong> This value represents the current position of the robot's gripper. It’s essential for calculating the direction and updating the gripper’s position after each movement. It will be retrieved by calling a method or function from the global variable “env.”</li>
-                <li><strong>box_position:</strong> This value represents the current position of the box. It’s essential for calculating the direction after each movement. It will be retrieved by calling a method or function from the global variable “env.”</li>
+                <li><strong>object_position:</strong> This value represents the current position of the box. It’s essential for calculating the direction after each movement. It will be retrieved by calling a method or function from the global variable “env.”</li>
                 <li><strong>direction:</strong> The direction from the gripper to the ball and the direction from the gripper to the box, calculated by subtracting the gripper's position from the ball's position or box’s position. This will be used to calculate how the gripper should move to reach the ball or box.</li>
             </ul>
         </div> <!-- End of What Needs to be Retrieved Section -->
