@@ -25,6 +25,10 @@ import gymnasium as gym
 import ast
 from PIL import Image, ImageDraw, ImageFont
 import io
+from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
+import base64
+from sqlalchemy import func
 
 
 app = Flask(__name__, static_folder='static')
@@ -1219,6 +1223,7 @@ def RenderInstructorDashboard():
         new_class = Classes()
         new_class.class_course_code = class_course_code
         new_class.class_section_number = class_section
+        new_class.expired_at = class_date
         new_class.user_id = user_id
         db.session.add(new_class)
         db.session.commit()
@@ -1230,7 +1235,118 @@ def RenderInstructorDashboard():
 
 @app.route('/dashboard/admin-view/home', methods=['GET', 'POST'])
 def RenderAdminDashboard():
-    return render_template('dashboard/admin/dashboard_admin.html', is_dashboard=True, is_admin_dashboard=True, user="random")
+    '''
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.', 'popup')
+        return redirect(url_for('RenderHomepage'))
+
+    user_id = user['user_id'] 
+    role = user['role_id']
+    
+    if role != ROLE_ADMIN:
+        flash('You have insufficient permissions to access this page.', 'popup')
+        return redirect(url_for('RenderHomepage'))
+    '''
+
+    # Calculate the date 7 days ago from today
+    one_week_ago = datetime.utcnow() - timedelta(days=7)
+
+    # Query the number of users who joined each day for the past week
+    users_per_day = (
+        db.session.query(
+            func.date(User.created_at).label('date'),
+            func.count(User.user_id).label('count')
+        )
+        .filter(User.created_at >= one_week_ago)
+        .group_by(func.date(User.created_at))
+        .order_by(func.date(User.created_at))
+        .all()
+    )
+
+    # Query the number of classes created each day for the past week
+    classes_per_day = (
+        db.session.query(
+            func.date(Classes.created_at).label('date'),
+            func.count(Classes.class_id).label('count')
+        )
+        .filter(Classes.created_at >= one_week_ago)
+        .group_by(func.date(Classes.created_at))
+        .order_by(func.date(Classes.created_at))
+        .all()
+    )
+
+    # Generate a list of dates for the past 7 days
+    date_range = [(datetime.utcnow() - timedelta(days=i)).date() for i in range(6, -1, -1)]
+
+    # Convert query results into dictionaries for easy lookup
+    users_per_day_dict = {row.date: row.count for row in users_per_day}
+    classes_per_day_dict = {row.date: row.count for row in classes_per_day}
+
+    # Merge with the date range, defaulting to 0 for missing dates
+    complete_data = []
+    for date in date_range:
+        user_count = users_per_day_dict.get(date, 0)  # Default to 0 if the date is not in the query results
+        class_count = classes_per_day_dict.get(date, 0)  # Default to 0 if the date is not in the query results
+        complete_data.append((date.strftime('%Y-%m-%d'), user_count, class_count))
+
+    # Separate dates, user counts, and class counts
+    dates = [item[0] for item in complete_data]
+    user_counts = [item[1] for item in complete_data]
+    class_counts = [item[2] for item in complete_data]
+
+    # Generate the graph using Matplotlib
+    plt.figure(figsize=(10, 5))
+
+    # Plot users data
+    plt.plot(dates, user_counts, marker='o', linestyle='-', color='b', label='Users Joined')
+
+    # Plot classes data
+    plt.plot(dates, class_counts, marker='s', linestyle='--', color='r', label='Classes Created')
+
+    # Add title, labels, and legend
+    plt.title('Users and Classes Created Per Day (Last 7 Days)')
+    plt.xlabel('Date')
+    plt.ylabel('Count')
+    plt.grid(True)
+    plt.legend()  # Show legend to differentiate between users and classes
+
+    # Save the plot to a BytesIO object
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    plt.close()
+
+    # Encode the image to base64 for embedding in HTML
+    graph_image = base64.b64encode(buf.read()).decode('utf-8')
+
+    # Other stats
+    since_date = datetime(2025, 2, 24)
+    total_users = User.query.count()
+    users_since = User.query.filter(User.created_at >= since_date).count()
+
+    total_classes = Classes.query.count()
+    classes_since = Classes.query.filter(Classes.created_at >= since_date).count()
+
+    users_stats = {
+        'total_users': total_users,
+        'users_since': users_since,
+        'since_date': since_date,
+        'graph_image': graph_image
+    }
+
+    classes_stats = {
+        'total_classes': total_classes,
+        'classes_since': classes_since,
+        'since_date': since_date
+    }
+
+    return render_template('dashboard/admin/dashboard_admin.html', 
+                           is_dashboard=True, 
+                           is_admin_dashboard=True, 
+                           users_stats=users_stats, 
+                           classes_stats=classes_stats,
+                           user="random")
 
 @app.route('/dashboard/admin-view/user-list', methods=['GET', 'POST'])
 def RenderAdminUserList():

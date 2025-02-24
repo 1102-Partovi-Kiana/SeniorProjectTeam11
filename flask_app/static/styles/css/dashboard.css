@@ -1007,6 +1007,12 @@ html, body {
     background-color: #f8f9fa;
     border-radius: 20px;
     box-shadow: 6px 6px 10px rgba(0,0,0,0.2);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
 .dashboard-card.three {
@@ -1015,6 +1021,12 @@ html, body {
     background-color: #f8f9fa;
     border-radius: 20px;
     box-shadow: 6px 6px 10px rgba(0,0,0,0.2);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
 .dashboard-card.four {
@@ -1023,6 +1035,12 @@ html, body {
     background-color: #f8f9fa;
     border-radius: 20px;
     box-shadow: 6px 6px 10px rgba(0,0,0,0.2);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
 .dashboard-card.five {
@@ -1031,6 +1049,10 @@ html, body {
     background-color: #f8f9fa;
     border-radius: 20px;
     box-shadow: 6px 6px 10px rgba(0,0,0,0.2);
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 .dashboard-card-content {
@@ -1038,6 +1060,15 @@ html, body {
     align-items: center;
     justify-content: space-between;
     width: 100%;
+}
+
+.dashboard-card-content.five {
+    justify-content: center;
+}
+
+.dashboard-card-content.five img {
+    max-width: 100%; /* Ensure the image doesn't exceed its container's width */
+    height: auto; /* Maintain aspect ratio */
 }
 
 .dashboard-card-text {
@@ -1055,7 +1086,7 @@ html, body {
 .dashboard-user-count {
     font-size: 40px;
     font-weight: bold;
-    color: #007bff;
+    color: #45247A;
     margin: 0;
 }
 
@@ -1071,16 +1102,15 @@ html, body {
 
 /* Circular Progress Bar */
 .dashboard-progress-container {
-    width: 120px;
-    height: 120px;
-    position: relative; /* Positioning relative for centering text */
+    width: 140px;
+    height: 140px;
+    position: relative;
 }
 
 .dashboard-progress-circle {
-    width: 120px;
-    height: 120px;
-    transform: rotate(-180deg);
-
+    width: 140px;
+    height: 140px;
+    transform: rotate(-90deg);
 }
 
 .progress-bg {
@@ -1091,37 +1121,23 @@ html, body {
 
 .progress {
     fill: none;
-    stroke: #007bff;
+    stroke: #45247A;
     stroke-width: 5;
-    stroke-dasharray: 188.4; /* Full circle length */
-    stroke-dashoffset: 50; /* Adjust to show progress */
-    transition: stroke-dashoffset 0.5s ease;
-}
-
-.close-btn {
-    position: absolute; /* Absolute positioning relative to the card */
-    top: 10px; /* Distance from the top of the card */
-    right: 10px; /* Distance from the right of the card */
-    background: transparent;
-    border: none;
-    font-size: 20px;
-    color: #333;
-    cursor: pointer;
-    padding: 5px;
+    stroke-dasharray: 376.99; 
 }
 
 .progress-text {
     position: absolute;
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Offset by half its own width and height to center */
-    text-align: center; /* Center text */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    text-align: center;
 }
 
 .number {
-    font-size: 24px;
+    font-size: 32px;
     font-weight: bold;
-    color: #333;
+    color: #45247A;
     margin: 0;
 }
 
@@ -1129,4 +1145,130 @@ html, body {
     font-size: 10px;
     color: #777;
     margin: 0;
+}
+
+.dashboard-card-text h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+h3 svg {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+/* Admin Edit User Modal*/
+/* Modal Container */
+.modal.admin_dashboard {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 7000; /* Ensure it's above other content */
+}
+
+/* Modal Content */
+.modal-content.admin_dashboard {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the modal */
+    background-color: white;
+    padding: 24px;
+    width: 50%;
+    height: 70%;
+    overflow-y: auto;
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    font-family: 'Arial', sans-serif; /* Modern font */
+}
+
+/* Close button */
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px; /* Align it to the top-right corner */
+    color: #666;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: #000;
+}
+
+/* Modal Header */
+.modal-content.admin_dashboard h2 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.modal-content.admin_dashboard p {
+    margin: 8px 0 16px;
+    color: #666;
+}
+
+/* Forms */
+.modal-content.admin_dashboard form {
+    margin-bottom: 20px;
+}
+
+.modal-content.admin_dashboard label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.modal-content.admin_dashboard input[type="text"],
+.modal-content.admin_dashboard input[type="password"],
+.modal-content.admin_dashboard select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.modal-content.admin_dashboard input[type="text"]:focus,
+.modal-content.admin_dashboard input[type="password"]:focus,
+.modal-content.admin_dashboard select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Buttons */
+.modal-content.admin_dashboard button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.modal-content.admin_dashboard button:hover {
+    background-color: #0056b3;
+}
+
+/* Remove Button */
+#remove-button {
+    background-color: #dc3545;
+}
+
+#remove-button:hover {
+    background-color: #c82333;
 }

@@ -2,9 +2,12 @@ import psycopg2
 from auth_func import * 
 
 def main():
-    table_name = "course_subsections"
+    table_name = "classes"
     data = [
-        (1.9, "C1 Quiz One")
+        ("CS222", 1001, 39, "2025-02-23", "2026-02-24"),
+        ("CS222", 1002, 39, "2025-02-23", "2026-02-24"),
+        ("CS135", 1001, 40, "2025-02-21", "2026-02-24"),
+        ("CS302", 1001, 40, "2025-02-20", "2026-02-24")
     ]
 
     connection = psycopg2.connect(
@@ -14,14 +17,15 @@ def main():
         host="localhost"
     )
 
-    insert_admin_user(connection)
-    #insert_data_into_table(connection, table_name, data)
+    #insert_admin_user(connection)
+    insert_data_into_table(connection, table_name, data)
 
     connection.close()
 
 def insert_data_into_table(connection, table_name, data):
     insert_query = f"""
-    INSERT INTO {table_name} (course_subsection_number, course_subsection_name) VALUES (%s, %s)
+    INSERT INTO {table_name} (class_course_code, class_section_number, user_id, created_at, expired_at)
+    VALUES (%s, %s, %s, %s, %s)
     """
     cursor = connection.cursor()
     cursor.executemany(insert_query, data)

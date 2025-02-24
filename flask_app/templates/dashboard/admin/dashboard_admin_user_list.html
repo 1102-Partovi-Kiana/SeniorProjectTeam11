@@ -100,54 +100,54 @@
                                 </tr>
                                 
                                 <!-- Modal for Each User -->
-                                <div id="edit-modal-{{ user.user_id }}" class="modal">
-                                    <div class="modal-content">
+                                <div id="edit-modal-{{ user.user_id }}" class="modal admin_dashboard">
+                                    <div class="modal-content admin_dashboard">
                                         <span class="close-modal">&times;</span>
-                                        <h2>Edit User</h2>
+                                        <h2>User Management</h2>
                                         <p>Editing: {{ user.first_name }} {{ user.last_name }}</p>
+                                
+                                        <!-- Remove User Form -->
                                         <form method="POST" action="{{ url_for('remove_user') }}">
                                             <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                                            <button type="submit" name="action" value="remove" id="remove-button">Remove</button>
+                                            <button type="submit" name="action" value="remove" id="remove-button">Remove User</button>
                                         </form>
+                                
+                                        <!-- Change Role Form -->
                                         <form method="POST" action="{{ url_for('change_user_role') }}">
                                             <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                                            
                                             <label for="role">Change Role:</label>
                                             <select name="role_id" id="role">
                                                 <option value="1" {% if user.role_id == 1 %} selected {% endif %}>Instructor</option>
                                                 <option value="2" {% if user.role_id == 2 %} selected {% endif %}>Student</option>
                                             </select>
-                                            
                                             <button type="submit" name="action" value="change_role">Change Role</button>
                                         </form>
+                                
+                                        <!-- Change Name Form -->
                                         <form method="POST" action="{{ url_for('change_user_name') }}">
                                             <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                                            
                                             <label for="first_name">First Name:</label>
                                             <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" required>
-                                            
                                             <label for="last_name">Last Name:</label>
                                             <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" required>
-                                            
                                             <button type="submit" name="action" value="change_name">Change Name</button>
                                         </form>
+                                
+                                        <!-- Change Password Form -->
                                         <form method="POST" action="{{ url_for('change_user_password') }}">
                                             <input type="hidden" name="user_id" value="{{ user.user_id }}">
-
-                                            <label for="new_password"> New Password:</label>
+                                            <label for="new_password">New Password:</label>
                                             <input type="password" name="new_password" id="new_password" placeholder="New password" required>
-
-                                            <label for="confirm_password"> Confirm Password:</label>
+                                            <label for="confirm_password">Confirm Password:</label>
                                             <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password" required>
-
                                             <button type="submit" name="action" value="change_password">Change Password</button>
                                         </form>
+                                
+                                        <!-- Change Email Form -->
                                         <form method="POST" action="{{ url_for('change_user_email') }}">
                                             <input type="hidden" name="user_id" value="{{ user.user_id }}">
-
                                             <label for="email">Email:</label>
                                             <input type="text" name="email" id="email" value="{{ user.email }}" required>
-
                                             <button type="submit" name="action" value="change_email">Change Email</button>
                                         </form>
                                     </div>
