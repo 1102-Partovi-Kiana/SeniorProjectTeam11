@@ -1,4 +1,5 @@
 import psycopg2
+from auth_func import * 
 
 def main():
     table_name = "course_subsections"
@@ -13,7 +14,8 @@ def main():
         host="localhost"
     )
 
-    insert_data_into_table(connection, table_name, data)
+    insert_admin_user(connection)
+    #insert_data_into_table(connection, table_name, data)
 
     connection.close()
 
@@ -26,6 +28,29 @@ def insert_data_into_table(connection, table_name, data):
     connection.commit()
     print(f"Inserted {len(data)} rows into {table_name}.")
     cursor.close()
+
+def insert_admin_user(connection):
+    cursor = connection.cursor()
+
+    username = "admin"
+    first_name = "Admin"
+    last_name = "One"
+    email = "admin@example.com"
+    password = "testPassword!1"
+    role_id = 3 
+
+    password = hash_password(password)
+
+    insert_query = """
+        INSERT INTO users (username, first_name, last_name, email, password, role_id)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """
+    
+    cursor.execute(insert_query, (username, first_name, last_name, email, password, role_id))
+    
+    connection.commit()
+    cursor.close()
+    
 
 if __name__ == "__main__":
     main()

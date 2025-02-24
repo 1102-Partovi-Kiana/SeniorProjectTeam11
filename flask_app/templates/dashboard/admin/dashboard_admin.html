@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Admin - CORE</title>
+{% endblock %}
+
+{% block body %}
+
+{% include "alert/full.html" %}
+<body>
+<!-- Sidebar-->
+    <div class="sidebar-wrapper">
+        <div class="sidebar-header">
+            <img src="/static/img/profile_pic.png" alt="Profile Picture" class="profile-image">
+            <span class="sidebar-name">{{ user['username'] }}</span>
+            <button class="collapse-btn" onclick="toggleSidebar()">
+                <svg class="sidebar-arrow-icon"><use xlink:href="/static/img/sidebar-icons.svg#arrow-icon" fill="currentColor"></use></svg>
+            </button>
+        </div>
+        <a href="{{ url_for('RenderAdminDashboard') }}">
+            <ul>
+                <li>
+                    <svg class="sidebar-home-icon"><use xlink:href="/static/img/sidebar-icons.svg#home-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">HOME</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderAdminUserList') }}">
+            <ul>
+                <li>
+                    <svg class="sidebar-student-icon"><use xlink:href="/static/img/sidebar-icons.svg#student-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">USERS</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderAdminClassesList') }}">
+            <ul>
+                <li>
+                    <svg class="sidebar-class-icon"><use xlink:href="/static/img/sidebar-icons.svg#class-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">CLASSES</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderLogout') }}">
+            <ul>
+                <li>
+                    <svg class="sidebar-logout-icon"><use xlink:href="/static/img/sidebar-icons.svg#logout-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">LOG OUT</span>
+                </li>   
+            </ul>
+        </a>
+    </div>
+<!-- Sidebar-->
+
+        <div class="dashboard-container">
+            <div class="dashboard-row one">
+                <div class="section-one"> 
+                    <div class="dashboard-card one">
+                        <div class="dashboard-card-content">
+                            <!-- Close Button -->
+                            <button class="close-btn" aria-label="Close">X</button>
+                            
+                            <div class="dashboard-card-text">
+                                <h3>Total Users</h3>
+                                <p class="dashboard-user-count">1,250</p>
+                                <a href="#" class="dashboard-redirect-link">View More</a>
+                            </div>
+                            
+                            <div class="dashboard-progress-container">
+                                <svg class="dashboard-progress-circle" width="80" height="80">
+                                    <circle class="progress-bg" cx="60" cy="60" r="50"></circle>
+                                    <circle class="progress" cx="60" cy="60" r="50"></circle>
+                                </svg>
+                                <!-- Number and text inside the circle -->
+                                <div class="progress-text">
+                                    <p class="number">+45</p>
+                                    <p class="date">Since 2/17</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>     
+                </div>                 
+                <div class="section-two"> 
+                    <div class="dashboard-card two"></div>
+                </div>
+                <div class="section-three"> 
+                    <div class="dashboard-card three"></div>
+                </div>
+            </div>
+            <div class="dashboard-row two">
+                <div class="section-four"> 
+                    <div class="dashboard-card four"></div>
+                </div>
+                <div class="section-five"> 
+                    <div class="dashboard-card five"></div>
+                </div>
+            </div>
+        </div>
+</body>
+{% endblock %}

@@ -141,32 +141,34 @@
                             </table>
                         </div>
                         <div class="course-list">
-                            <table class="course-list-table">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" id="selectAllCourses" onclick="toggleSelectAll('courses')"></th>
-                                        <th>Course Name</th>
-                                        <th>Section Number</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% if courses %}
-                                        {% for course in courses %}
-                                            <tr>
-                                                <td><input type="checkbox" name="courses_ids" value="{{ course.course_id }}" class="courses-checkbox"></td>
-                                                <td>{{ course.course_name }}</td>
-                                                <td>{{ course.section_number}}</td> 
-                                            </tr>
-                                        {% endfor %}
-                                    {% else %}
+                            <div class="course-list-table-container">
+                                <table class="course-list-table">
+                                    <thead>
                                         <tr>
-                                            <td colspan="3">
-                                                <span class="class-section">No Courses Available - Create One to Start</span>
-                                            </td>
+                                            <th><input type="checkbox" id="selectAllCourses" onclick="toggleSelectAll('courses')"></th>
+                                            <th>Course Name</th>
+                                            <th>Section Number</th>
                                         </tr>
-                                    {% endif %}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {% if courses %}
+                                            {% for course in courses %}
+                                                <tr>
+                                                    <td><input type="checkbox" name="courses_ids" value="{{ course.course_id }}" class="courses-checkbox"></td>
+                                                    <td>{{ course.course_name }}</td>
+                                                    <td>{{ course.section_number }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="3">
+                                                    <span class="class-section">No Courses Available</span>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Assign Course</button>
                     </form>

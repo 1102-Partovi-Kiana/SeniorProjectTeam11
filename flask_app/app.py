@@ -35,6 +35,7 @@ mail.init_app(app)
 
 ROLE_INSTRUCTOR = 1
 ROLE_STUDENT = 2
+ROLE_ADMIN = 3
 CERTIFICATE_TEMPLATE = "static/certificate_template.png"
 
 CUSTOM_KEYWORDS = [
@@ -1141,6 +1142,8 @@ def RenderLogin():
                     return redirect(url_for('RenderInstructorDashboard'))
                 elif role == ROLE_STUDENT:
                     return redirect(url_for('RenderStudentDashboard'))
+                elif role == ROLE_ADMIN:
+                    return redirect(url_for('RenderAdminDashboard'))
             else:
                 flash('Invalid Password', 'error')
         else:
@@ -1224,6 +1227,321 @@ def RenderInstructorDashboard():
         return redirect(url_for('RenderInstructorDashboard'))
 
     return render_template('dashboard/dashboard_instructor.html', is_dashboard=True, is_instructor_dashboard=True, classes=user_classes, user=user)
+
+@app.route('/dashboard/admin-view/home', methods=['GET', 'POST'])
+def RenderAdminDashboard():
+    return render_template('dashboard/admin/dashboard_admin.html', is_dashboard=True, is_admin_dashboard=True, user="random")
+
+@app.route('/dashboard/admin-view/user-list', methods=['GET', 'POST'])
+def RenderAdminUserList():
+    '''
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.', 'popup')
+        return redirect(url_for('RenderHomepage'))
+
+    user_id = user['user_id'] 
+    role = user['role_id']
+    
+    if role != ROLE_ADMIN:
+        flash('You have insufficient permissions to access this page.', 'popup')
+        return redirect(url_for('RenderHomepage'))
+    '''
+
+    registered_users = db.session.query(User).join(Roles).order_by(Roles.role_name).all()
+    return render_template('dashboard/admin/dashboard_admin_user_list.html', 
+                           is_dashboard=True, 
+                           is_admin_dashboard=True, 
+                           registered_users=registered_users, 
+                           selected_user=None, user="random")
+
+@app.route('/dashboard/admin/remove-user', methods=['POST'])
+def remove_user():
+    user_id = request.form.get('user_id')
+
+    if not user_id:
+        flash("Invalid request.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    user = User.query.get(user_id)
+
+    if not user:
+        flash("User not found.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    try:
+        db.session.delete(user)
+        db.session.commit()
+        flash("User removed successfully.", 'popup')
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error: {str(e)}", 'popup')
+
+    return redirect(url_for('RenderAdminUserList'))
+
+@app.route('/dashboard/admin/change-role', methods=['POST'])
+def change_user_role():
+    user_id = request.form.get('user_id')
+    new_role_id = request.form.get('role_id')
+
+    if not user_id or not new_role_id:
+        flash("Invalid request.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    role = Roles.query.get(new_role_id)
+    if not role:
+        flash("Invalid role.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    # Update the user's role
+    try:
+        user.role_id = new_role_id
+        db.session.commit()
+        flash("User role updated successfully.", 'popup')
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error: {str(e)}", 'popup')
+
+    return redirect(url_for('RenderAdminUserList'))
+
+@app.route('/dashboard/admin/change-name', methods=['POST'])
+def change_user_name():
+    user_id = request.form.get('user_id')
+    new_first_name = request.form.get('first_name')
+    new_last_name = request.form.get('last_name')
+
+    if not user_id or not new_first_name or not new_last_name:
+        flash("Invalid request.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    # Retrieve the user and check if they exist
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    try:
+        user.first_name = new_first_name
+        user.last_name = new_last_name
+        db.session.commit()
+        flash("User name updated successfully.", 'popup')
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error: {str(e)}", 'popup')
+
+    return redirect(url_for('RenderAdminUserList'))
+
+@app.route('/dashboard/admin/change-password', methods=['POST'])
+def change_user_password():
+    user_id = request.form.get('user_id')
+    new_password = request.form.get('new_password')
+    confirm_password = request.form.get('confirm_password')
+
+    if not user_id or not new_password or not confirm_password:
+        flash("Invalid request.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+    
+    if (not check_password_requirements(password)):
+        flash("Invalid password.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    try:
+        if new_password != confirm_password:
+            flash("Password does not match.", 'popup')
+            return redirect(url_for('RenderAdminUserList'))
+        else:
+            password = hash_password(new_password)
+        user.password = password
+        db.session.commit()
+        flash("Password updated successfully.", 'popup')
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error: {str(e)}", 'popup')
+
+    return redirect(url_for('RenderAdminUserList'))
+
+@app.route('/dashboard/admin/change-email', methods=['POST'])
+def change_user_email():
+    user_id = request.form.get('user_id')
+    new_email = request.form.get('email')
+
+    if not user_id or not new_email:
+        flash("Invalid request.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+    
+    if (not is_valid_email(new_email)):
+        flash("Invalid Email Address", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    try:
+        user.email = new_email
+        db.session.commit()
+        flash("User email updated successfully.", 'popup')
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error: {str(e)}", 'popup')
+    
+    return redirect(url_for('RenderAdminUserList'))
+
+    
+@app.route('/dashboard/admin-view/classes', methods=['GET', 'POST'])
+def RenderAdminClassesList():
+    '''
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.', 'popup')
+        return redirect(url_for('RenderHomepage'))
+
+    user_id = user['user_id'] 
+    role = user['role_id']
+    
+    if role != ROLE_ADMIN:
+        flash('You have insufficient permissions to access this page.', 'popup')
+        return redirect(url_for('RenderHomepage'))
+    '''
+
+    registered_classes = db.session.query(Classes).all()
+
+    class_data = []
+    instructors = db.session.query(User).filter_by(role_id=ROLE_INSTRUCTOR).all()  # Fetch all instructors
+
+    for classes in registered_classes:
+        course_info = f"{classes.class_course_code} - Section {classes.class_section_number}"
+
+        student_count = db.session.query(Enrollment).filter_by(class_id=classes.class_id).count()
+
+        instructor = db.session.query(User).filter_by(user_id=classes.user_id).first()
+        instructor_name = f"{instructor.first_name} {instructor.last_name}" if instructor else "No Instructor"
+
+        class_data.append({
+            'class_id': classes.class_id,
+            'course_info': course_info,
+            'student_count': student_count,
+            'instructor_id': classes.user_id,
+            'instructor_name': instructor_name
+        })
+
+    return render_template(
+        'dashboard/admin/dashboard_admin_classes_list.html',
+        is_dashboard=True,
+        is_admin_dashboard=True,
+        class_data=class_data,
+        instructors=instructors,
+        user="Random"
+    )
+
+
+@app.route('/dashboard/classes/remove_class', methods=['POST'])
+def remove_class():
+    class_id = request.form.get('class_id')
+
+    if not class_id:
+        flash("Invalid request: Missing class ID.", 'popup')
+        return redirect(url_for('RenderAdminClassesList'))
+
+    class_to_remove = Classes.query.get(class_id)
+
+    if not class_to_remove:
+        flash("Class not found.", 'popup')
+        return redirect(url_for('RenderAdminClassesList'))
+
+    try:
+        # Delete all related class_codes entries
+        ClassCodes.query.filter_by(class_id=class_id).delete()
+
+        # Now delete the class
+        db.session.delete(class_to_remove)
+        db.session.commit()
+        flash("Class removed successfully.", 'popup')
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error: {str(e)}", 'popup')
+
+    return redirect(url_for('RenderAdminClassesList'))
+
+@app.route('/dashboard/classes/change_class_name', methods=['POST'])
+def change_class_name():
+    class_id = request.form.get('class_id')  # Use class_id to find the class
+    class_course_code = request.form.get('class_course_code')  # Get the new class course code
+    class_section_number = request.form.get('class_section_number')  # Get the new class section number
+
+    # Check if class_id is provided
+    if not class_id:
+        flash("Invalid request: Missing class ID.", 'popup')
+        return redirect(url_for('RenderAdminClassesList'))
+
+    # Find the class by class_id
+    class_to_update = Classes.query.get(class_id)
+
+    if not class_to_update:
+        flash("Class not found.", 'popup')
+        return redirect(url_for('RenderAdminClassesList'))
+
+    try:
+        # Update the course code and section number
+        if class_course_code:
+            class_to_update.class_course_code = class_course_code
+        
+        if class_section_number:
+            class_to_update.class_section_number = class_section_number
+        
+        # Update the class_name by combining the new course code and section number
+        class_to_update.class_name = f"{class_to_update.class_course_code} - {class_to_update.class_section_number}"
+
+        db.session.commit()
+        flash("Class updated successfully.", 'popup')
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error: {str(e)}", 'popup')
+
+    return redirect(url_for('RenderAdminClassesList'))
+
+
+
+@app.route('/dashboard/classes/change-class-instructor', methods=['POST'])
+def change_class_instructor():
+    class_id = request.form.get('class_id')
+    new_instructor_id = request.form.get('instructor_id')
+
+    if not class_id or not new_instructor_id:
+        flash("Invalid request.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    cls = Classes.query.get(class_id)
+    instructor = User.query.get(new_instructor_id)
+
+    if not cls:
+        flash("Class not found.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    if not instructor:
+        flash("Instructor not found.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    try:
+        cls.user_id = new_instructor_id
+        db.session.commit()
+        flash("Class instructor updated successfully.", 'popup')
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error: {str(e)}", 'popup')
+
+    return redirect(url_for('RenderAdminUserList'))
 
 @app.route('/dashboard/classes/class_details', methods=['GET', 'POST'])
 def RenderClassDetails():

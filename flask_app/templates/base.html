@@ -33,7 +33,6 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
 	{# Code Mirror Things #}
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/monokai.min.css" rel="stylesheet">
@@ -83,6 +82,7 @@
 	<script src="{{ url_for('static', filename='styles/js/popup-alert.js') }}"></script>
 	<script src="{{ url_for('static', filename='styles/js/dashboard.js') }}"></script>
 
+	<script src="{{ url_for('static', filename='styles/js/admin.js') }}"></script>
 	{% block extra_js %}
 	{# Override this in templates to add extra javascript #}
 	{% endblock extra_js %}

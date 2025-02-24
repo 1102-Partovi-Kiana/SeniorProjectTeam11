@@ -68,7 +68,7 @@
                                 </div>
                             </div>
                         </div>
-                    {% elif is_instructor_dashboard%}
+                    {% elif is_instructor_dashboard %}
                         <li class="nav-item custom-nav-item">
                             <a class="nav-link custom-nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createClassModal">Create a New Class</a>
                         </li>
@@ -124,6 +124,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>
                         </li>
+                    {% elif is_admin_dashboard%}
                     {% endif %}
                 </ul>
             </div>

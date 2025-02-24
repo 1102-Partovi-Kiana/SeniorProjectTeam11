@@ -199,7 +199,7 @@ html, body {
     top: 0;
     margin-left: 250px; 
     width: calc(100% - 250px);
-    background-color: rgb(255, 255, 255);
+    background-color: #DDE4E9;
     z-index: 2;
     height: calc(100% - 120px);
     align-items: center;
@@ -735,13 +735,103 @@ html, body {
     height: 24px;
 }
 
-.course-list-table {
+.user-list-container {
+    height: calc(100% - 78px);
+    overflow: hidden;
+}
+
+.user-list {
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-list-table {
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    display: block;
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.user-list-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: rgb(62, 31, 172);
+    display: table;
+    width: 100%;
+}
+
+.user-list-table tr {
+    display: table; /* Ensure rows behave like a table */
+    width: 100%; /* Ensure rows span the full width */
+    table-layout: fixed; /* Ensure consistent column widths */
+}
+
+.user-list-table th {
+    border-right: 1px solid rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    padding: 10px;
+}
+
+.user-list td{
+    border-right: 1px solid rgb(0,0,0);
+}
+
+.user-list tbody tr:nth-child(odd) {
+    background-color: rgb(226, 226, 226);
+}
+
+.user-list tbody tr:nth-child(even){
+    background-color: rgb(240, 240, 240);
+}
+
+.user-list th:first-child,
+.user-list td:first-child {
+    width: 40%;
+    padding: 10px;
+}
+
+.user-list th:nth-child(2),
+.user-list td:nth-child(2) {
+    width: 40%;
+    padding: 10px;
+}
+
+.user-list th:nth-child(3),
+.user-list td:nth-child(3) {
+    width: 15%;
+    padding: 10px;
+    text-align: center;
+}
+
+.user-list th:nth-child(4),
+.user-list td:nth-child(4) {
+    width: 5%;
+    padding: 10px;
+    text-align: center;
+}
+
+.user-list .edit-icon{
+    width: 24px;
+    height: 24px;
+}
+
+.course-list {
     width: 100%;
     border: 1px solid rgb(0, 0, 0);
     margin-bottom: 20px;
     border-collapse: collapse;
     table-layout: fixed;
-    border-spacing: 0;
+}
+
+.course-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
 }
 
 .course-list thead {
@@ -751,52 +841,52 @@ html, body {
 }
 
 .course-list tbody {
-    display: block;
-    height: 300px;
-    overflow-y: auto;
-    overflow-x: hidden;/
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
 
-.course-list tbody::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
+.course-list th,
+.course-list td {
+    padding: 10px;
+    text-align: left;
+    border-right: 1px solid rgb(0, 0, 0);
 }
 
 .course-list th:first-child,
 .course-list td:first-child {
     width: 10%;
     text-align: center;
-    padding: 10px;
 }
 
 .course-list th:nth-child(2),
 .course-list td:nth-child(2) {
     width: 35%;
-    padding: 10px;
 }
 
 .course-list th:nth-child(3),
 .course-list td:nth-child(3) {
     width: 55%;
-    padding: 10px;
+}
+
+.course-list th {
+    background-color: rgb(62, 31, 172);
+    color: rgb(255, 255, 255);
 }
 
 .course-list tbody tr:nth-child(odd) {
     background-color: rgb(226, 226, 226);
 }
 
-.course-list tbody tr:nth-child(even){
+.course-list tbody tr:nth-child(even) {
     background-color: rgb(240, 240, 240);
 }
 
-.course-list th{
-    border: 1px solid rgb(0,0,0);
-    background-color: rgb(62, 31, 172);
-    color: rgb(255, 255, 255);
-}
-
-.course-list td{
-    border-right: 1px solid rgb(0,0,0);
+/* Scrollable Wrapper */
+.course-list-table-container {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #assignments-section {
@@ -804,14 +894,14 @@ html, body {
     overflow: auto;
 }
 
-.table-container {
+.assignments-table-container {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     max-width: 100%;
 }
 
-.table-row {
+.assignments-table-row {
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -822,7 +912,12 @@ html, body {
     width: 30%;
     table-layout: fixed;
     text-align: center;
+    border-radius: 10px;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
 }
+
 
 .assignment-table th, .assignment-table td {
     padding: 10px;
@@ -836,5 +931,202 @@ html, body {
 
 .assignment-table td{
     text-align: left;
-    font-family: 'Montserrat', sans-serif;
+    color: rgba(0,0,0,0.5)
+}
+
+.assignment-table td strong {
+    color: #B38E28;
+}
+
+.edit-button{
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer; 
+}
+
+.dashboard-row.one{
+    display: flex;
+    width:100%;
+    height: 40%
+}
+
+.dashboard-row.two{
+    display: flex;
+    width:100%;
+    height: 60%
+}
+
+.dashboard-container .section-one {
+    width: 33.33%;
+    height: 100%;
+    padding: 40px;
+}
+
+.dashboard-container .section-two{
+    width: 33%;
+    height: 100%;
+    padding: 40px;
+}
+
+.dashboard-container .section-three{
+    width: 33%;
+    height: 100%;
+    padding: 40px;
+}
+
+.dashboard-container .section-four{
+    width: 50%;
+    height: 100%;
+    padding: 40px;
+}
+
+.dashboard-container .section-five{
+    width: 50%;
+    height: 100%;
+    padding: 40px;
+}
+
+.dashboard-card.one {
+    width: 100%;
+    height: 100%;
+    background-color: #f8f9fa;
+    border-radius: 20px;
+    box-shadow: 6px 6px 10px rgba(0,0,0,0.2);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.dashboard-card.two {
+    width: 100%;
+    height: 100%;
+    background-color: #f8f9fa;
+    border-radius: 20px;
+    box-shadow: 6px 6px 10px rgba(0,0,0,0.2);
+}
+
+.dashboard-card.three {
+    width: 100%;
+    height: 100%;
+    background-color: #f8f9fa;
+    border-radius: 20px;
+    box-shadow: 6px 6px 10px rgba(0,0,0,0.2);
+}
+
+.dashboard-card.four {
+    width: 100%;
+    height: 100%;
+    background-color: #f8f9fa;
+    border-radius: 20px;
+    box-shadow: 6px 6px 10px rgba(0,0,0,0.2);
+}
+
+.dashboard-card.five {
+    width: 100%;
+    height: 100%;
+    background-color: #f8f9fa;
+    border-radius: 20px;
+    box-shadow: 6px 6px 10px rgba(0,0,0,0.2);
+}
+
+.dashboard-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.dashboard-card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.dashboard-card-text h3 {
+    font-size: 24px;
+    color: #333;
+    margin: 0;
+}
+
+.dashboard-user-count {
+    font-size: 40px;
+    font-weight: bold;
+    color: #007bff;
+    margin: 0;
+}
+
+.dashboard-redirect-link {
+    font-size: 18px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.dashboard-redirect-link:hover {
+    text-decoration: underline;
+}
+
+/* Circular Progress Bar */
+.dashboard-progress-container {
+    width: 120px;
+    height: 120px;
+    position: relative; /* Positioning relative for centering text */
+}
+
+.dashboard-progress-circle {
+    width: 120px;
+    height: 120px;
+    transform: rotate(-180deg);
+
+}
+
+.progress-bg {
+    fill: none;
+    stroke: #e0e0e0;
+    stroke-width: 5;
+}
+
+.progress {
+    fill: none;
+    stroke: #007bff;
+    stroke-width: 5;
+    stroke-dasharray: 188.4; /* Full circle length */
+    stroke-dashoffset: 50; /* Adjust to show progress */
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.close-btn {
+    position: absolute; /* Absolute positioning relative to the card */
+    top: 10px; /* Distance from the top of the card */
+    right: 10px; /* Distance from the right of the card */
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Offset by half its own width and height to center */
+    text-align: center; /* Center text */
+}
+
+.number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.date {
+    font-size: 10px;
+    color: #777;
+    margin: 0;
 }

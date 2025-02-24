@@ -101,3 +101,65 @@ buttons.forEach(button => {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const editButtons = document.querySelectorAll(".edit-button");
+    
+    editButtons.forEach(button => {
+        button.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent form submission
+            const userId = button.closest('form').querySelector('input[name="selected_user_id"]').value;
+            const modal = document.getElementById(`edit-modal-${userId}`);
+            modal.style.display = "block";
+        });
+    });
+
+    const closeModals = document.querySelectorAll(".close-modal");
+    closeModals.forEach(closeButton => {
+        closeButton.addEventListener("click", function () {
+            const modal = closeButton.closest('.modal');
+            modal.style.display = "none";
+        });
+    });
+
+    window.addEventListener("click", function (event) {
+        const modals = document.querySelectorAll(".modal");
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const editButtons = document.querySelectorAll(".edit-button");
+
+    editButtons.forEach(button => {
+        button.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default action
+            const classId = button.closest('form').querySelector('input[name="selected_class_id"]').value;
+            const modal = document.getElementById(`edit-modal-${classId}`);
+            if (modal) {
+                modal.style.display = "block";
+            }
+        });
+    });
+
+    const closeModals = document.querySelectorAll(".close-modal");
+    closeModals.forEach(closeButton => {
+        closeButton.addEventListener("click", function () {
+            const modal = closeButton.closest('.modal');
+            modal.style.display = "none";
+        });
+    });
+
+    window.addEventListener("click", function (event) {
+        const modals = document.querySelectorAll(".modal");
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    });
+});
+

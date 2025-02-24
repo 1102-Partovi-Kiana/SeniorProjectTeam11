@@ -37,7 +37,7 @@ mkdir -p ~/.mujoco
 cd ~/.mujoco
 wget https://mujoco.org/download/mujoco210-linux-x86_64.tar.gz
 tar -xvf mujoco210-linux-x86_64.tar.gz
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/tang/.mujoco/mujoco210/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/user/.mujoco/mujoco210/bin
 
 8.) Run the example code "code.py":
 python3.8 code.py
@@ -63,4 +63,18 @@ To create a new user
 CREATE USER my_user WITH PASSWORD 'password' <additional options>;
 
 To login to new user
-psql-U <username> -d <database>
+psql -U <username> -d <database>
+
+If given "error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  Peer authentication failed for user "testuser"":
+Go back out of the PSQL shell into your Linux Terminal
+sudo nano /etc/postgresql/*/main/pg_hba.conf
+
+Change anything that says "peer" to scram-sha-256
+Ex. local   all   testuser   peer -> local   all   testuser   scram-sha-256
+
+To restart the Postgres Service
+sudo systemctl restart postgresql
+
+Import the data into the database
+psql -U <User w/ Correct Permissions> -d <database_name> -f NEW_CORE_DB.sql
+

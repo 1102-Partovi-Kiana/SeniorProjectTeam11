@@ -10,7 +10,7 @@ class User(db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False) 
     password = db.Column(db.LargeBinary, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    role_id = db.Column(db.Integer, nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.role_id'), nullable=False)
 
     classes = db.relationship('Classes', backref='user', lazy=True)
 
@@ -78,3 +78,13 @@ class StudentAssignedCourseSubsections(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
 
     user = db.relationship('User', backref=db.backref('assigned_course_subsectons', lazy=True))
+
+class Roles(db.Model):
+    __tablename__ = "roles"
+
+    role_id = db.Column(db.Integer, primary_key=True)
+    role_name = db.Column(db.String(100), nullable=False)
+    role_desc = db.Column(db.String(1000))
+    permission_id = db.Column(db.Integer)
+
+    users = db.relationship('User', backref='role', lazy=True)
