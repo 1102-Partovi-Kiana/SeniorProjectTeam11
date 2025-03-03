@@ -2911,7 +2911,7 @@ def reset_glfw():
     return True
 
 render_lock = threading.Lock()
-def generate_frames():
+def generate_frames(test_mode=False):
     global env
     while True:
         with render_lock:
@@ -2939,6 +2939,9 @@ def generate_frames():
             except Exception as e:
                 print(f"Error rendering: {e}")
                 time.sleep(0.1)
+
+        if test_mode:
+            break
 
 @app.route('/video_feed')
 def video_feed():
@@ -2975,7 +2978,7 @@ def run_code():
     
     if env is None:
         print("ERROR: No environment initialized before execution!")
-        if page_context == "Pick and Place":
+        if page_context == "Fetch Pick and Place":
             print("Initializing Pick and Place environment inside run-code...")
             env = FetchPickAndPlaceEnv()  
 
@@ -2983,7 +2986,7 @@ def run_code():
             return jsonify({'error': 'No environment chosen yet', 'static_issues': static_issues}), 400
     
     static_issues = analyze_robotics_code(code, context=page_context)
-    if page_context == "Pick and Place":
+    if page_context == "Fetch Pick and Place":
         print("DEBUG")
         print("STATIC ISSUES:", static_issues)
     print("Static Issues Found:", static_issues)
