@@ -248,9 +248,11 @@
         </div> <!-- End of module-section -->
 
         <!-- Next Button -->
-        <div class="next-button text-right mt-4">
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_intro') }}" class="secondary-button">Back: Objectives</a> 
             <a href="{{ url_for('history') }}" class="secondary-button">Next: History of Robotics</a>
         </div>
+
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->
 {% endblock %}

@@ -83,26 +83,28 @@
             </table>
         </div>
     </div>
-    <div class="modal fade" id="createClassKeyModal" tabindex="-1" aria-labelledby="createClassModalKeyLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createClassModalKeyLabel">Create Class Code</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ url_for('GenerateClassCode') }}" method="POST">
-                        <div class="mb-3">
-                            <label for="class-select-create" class="form-label">Select Class</label>
-                            <select class="form-select" id="class-select-create" name="class_id" required>
-                                <option value="">Choose a class</option>
-                                {% for cls in classes %}
-                                    <option value="{{ cls.class_id }}">{{ cls.class_course_code }} - {{ cls.class_section_number }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Create</button>
-                    </form>
+    <div class="custom-modal-container">
+        <div class="modal fade" id="createClassKeyModal" tabindex="-1" aria-labelledby="createClassModalKeyLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createClassModalKeyLabel">Create Class Code</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url_for('GenerateClassCode') }}" method="POST">
+                            <div class="mb-3">
+                                <label for="class-select-create" class="form-label">Select Class</label>
+                                <select class="form-select" id="class-select-create" name="class_id" required>
+                                    <option value="">Choose a class</option>
+                                    {% for cls in classes %}
+                                        <option value="{{ cls.class_id }}">{{ cls.class_course_code }} - {{ cls.class_section_number }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -177,18 +179,21 @@
         </div>
     </div>
     {% if class_code %}
-    <div class="modal fade" id="classCodeModal" tabindex="-1" aria-labelledby="classCodeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="classCodeModalLabel">Class Code</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Your class code for class {{ class_id }} is: <strong>{{ class_code }}</strong></p>
+    <div class="custom-modal-container">
+        <div class="modal fade" id="classCodeModal" tabindex="-1" aria-labelledby="classCodeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="classCodeModalLabel">Class Code</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Your class code for class {{ class_id }} is: <strong>{{ class_code }}</strong></p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     {% endif %}
 {% endblock %}
+

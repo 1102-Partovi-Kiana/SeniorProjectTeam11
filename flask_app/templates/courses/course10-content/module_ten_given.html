@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+<title>Robot Environment - CORE</title>
+{% endblock %}
+
+
+{% block body %}
+<div class="course-container">
+     <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_ten') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_about') }}" class="course-link">About</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_ten_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-organize-with-sensors">Word Bank</a></li>
+                    <li><a href="#sim">Fetch Sensors Simulation Labeled</a></li>
+                    <li><a href="#given-fetch-organize-with-sensors">What is Given</a></li>
+                    <li><a href="#retrieve-fetch-organize-with-sensors">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-organize-with-sensors">Word Bank</a></li>
+                    <li><a href="#code-fetch-organize-with-sensors">What Needs to Be Coded</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Robot Environment</h1>
+            <p class="page-description">Understand the components of the robot's environment and how to interact with them.</p>
+        </header>
+
+
+        <!-- Word Bank Section -->
+        <div class="word-bank" id="word-bank-fetch-organize-with-sensors" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
+            <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin: 10px 0;">
+                    <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>🔧 FetchOrganizeSensorsEnv:</strong> The specific environment object for the task setup.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>📏 Distance Threshold:</strong> Maximum allowable distance between gripper and object.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>📐 Sensor Threshold:</strong> Maximum allowable distance between sensor and object.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>🔐 Close Grip Action:</strong> Array representing the action to close the gripper.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>🔓 Open Grip Action:</strong> Array representing the action to open the gripper.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>⬆️ Ascend Action:</strong> Array representing small upward movement to lift the gripper while holding an object.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>⬇️ Descend Action:</strong> Array representing small downward movement to lower the gripper.
+                </li>
+            </ul>
+        </div>
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look At the Fetch Sensors Robot Labeled</span>
+        </div>
+
+        <div class="module-section" id="sim">
+            <h3>Fetch Sensors Simulation Labeled</h3>
+            <img src="{{ url_for('static', filename='img/FSLL.png') }}" alt="Fetch Sensors Robot" class="robot-image">
+            <br>
+            <p>Here is a simulation of the Fetch Sensors robot that you will be interacting with and programming derived from MuJoCo and OpenAI Gym.</p>
+            <p><strong>The Task of the Fetch Sensors Robot</strong>: Fetch Sensors must detect four different objects and put them into the container.</p>
+        </div>
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look At What Is Given To Us</span>
+        </div>
+
+        <!-- Section 1: What is Given -->
+        <div class="module-section" id="given-fetch-organize-with-sensors">
+            <h3>What is Given</h3>
+            <ul>
+                <li><strong>global env:</strong> This represents the robot's environment, which contains the robot's current state and methods for interacting with it.</li>
+                <li><strong>env = FetchOrganizeSensorsEnv():</strong> The environment object that is initialized and is part of the task setup.</li>
+                <li><strong>distance_threshold:</strong> The distance value that will be used to determine when the gripper is "close enough" to the object.</li>
+                <li><strong>sensor_threshold:</strong> The distance value that will be used to determine when the sensor is "close enough" to the object.</li>
+                <li><strong>close_grip_action and open_grip_action:</strong> Arrays representing actions to close or open the gripper, respectively.</li>
+                <li><strong>ascend_action and descend_action:</strong> Array representing small upward or downward movement to lift the gripper while holding an object.</li>
+            </ul>
+        </div> <!-- End of What is Given Section -->
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look At What Needs To Be Retrieved</span>
+        </div>
+
+        <!-- Section 2: What Needs to be Retrieved -->
+        <div class="module-section" id="retrieve-fetch-organize-with-sensors">
+            <h3>What Needs to be Retrieved</h3>
+            <ul>
+                <li><strong>gripper_position:</strong> This value represents the current position of the robot's gripper. It’s essential for calculating the direction and updating the gripper’s position after each movement. It will be retrieved by calling a method or function from the global variable “env.”</li>
+                <li><strong>direction_to_container:</strong> The direction from the gripper to the object and the direction from the gripper to the box, calculated by subtracting the gripper's position from the object's position or box’s position. This will be used to calculate how the gripper should move to reach the object.</li>
+                <li><strong>direction_normalized:</strong> Adjusting the difference between each step when calculating the distance to the container.</li>
+                <li><strong>forward:</strong> The forward sensor value.</li>
+            </ul>
+        </div> <!-- End of What Needs to be Retrieved Section -->
+
+
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_ten_about') }}" class="secondary-button">Back: About</a>
+            <a href="{{ url_for('module_ten_code') }}" class="secondary-button">Next: Coding Logic</a>
+        </div>
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.4 (Ubuntu 16.4-0ubuntu0.24.04.2)
--- Dumped by pg_dump version 16.4 (Ubuntu 16.4-0ubuntu0.24.04.2)
+-- Dumped from database version 16.6 (Ubuntu 16.6-0ubuntu0.24.04.1)
+-- Dumped by pg_dump version 16.6 (Ubuntu 16.6-0ubuntu0.24.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -15,6 +15,22 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: testuser
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+ALTER SCHEMA public OWNER TO testuser;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: testuser
+--
+
+COMMENT ON SCHEMA public IS '';
+
 
 SET default_tablespace = '';
 
@@ -63,7 +79,9 @@ CREATE TABLE public.classes (
     class_id integer NOT NULL,
     class_course_code character varying(100) NOT NULL,
     class_section_number integer NOT NULL,
-    user_id integer
+    user_id integer,
+    created_at date DEFAULT CURRENT_DATE NOT NULL,
+    expired_at date
 );
 
 
@@ -92,6 +110,41 @@ ALTER SEQUENCE public.classes_class_id_seq OWNED BY public.classes.class_id;
 
 
 --
+-- Name: course_subsections; Type: TABLE; Schema: public; Owner: testuser
+--
+
+CREATE TABLE public.course_subsections (
+    course_subsection_id integer NOT NULL,
+    course_subsection_number double precision,
+    course_subsection_name character varying(100)
+);
+
+
+ALTER TABLE public.course_subsections OWNER TO testuser;
+
+--
+-- Name: course_subsections_course_subsection_id_seq; Type: SEQUENCE; Schema: public; Owner: testuser
+--
+
+CREATE SEQUENCE public.course_subsections_course_subsection_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.course_subsections_course_subsection_id_seq OWNER TO testuser;
+
+--
+-- Name: course_subsections_course_subsection_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: testuser
+--
+
+ALTER SEQUENCE public.course_subsections_course_subsection_id_seq OWNED BY public.course_subsections.course_subsection_id;
+
+
+--
 -- Name: courses; Type: TABLE; Schema: public; Owner: testuser
 --
 
@@ -99,7 +152,7 @@ CREATE TABLE public.courses (
     course_id integer NOT NULL,
     course_name character varying(100),
     course_desc character varying(1000),
-    section_number character varying(10),
+    section_number double precision,
     level character varying(50),
     certificate boolean,
     length character varying(50),
@@ -311,6 +364,42 @@ ALTER SEQUENCE public.scoreboard_scoreboard_id_seq OWNED BY public.scoreboard.sc
 
 
 --
+-- Name: student_assigned_course_subsections; Type: TABLE; Schema: public; Owner: testuser
+--
+
+CREATE TABLE public.student_assigned_course_subsections (
+    assigned_course_subsection_id integer NOT NULL,
+    completion_status boolean,
+    course_subsection_number double precision,
+    user_id integer
+);
+
+
+ALTER TABLE public.student_assigned_course_subsections OWNER TO testuser;
+
+--
+-- Name: student_assigned_course_subse_assigned_course_subsection_id_seq; Type: SEQUENCE; Schema: public; Owner: testuser
+--
+
+CREATE SEQUENCE public.student_assigned_course_subse_assigned_course_subsection_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.student_assigned_course_subse_assigned_course_subsection_id_seq OWNER TO testuser;
+
+--
+-- Name: student_assigned_course_subse_assigned_course_subsection_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: testuser
+--
+
+ALTER SEQUENCE public.student_assigned_course_subse_assigned_course_subsection_id_seq OWNED BY public.student_assigned_course_subsections.assigned_course_subsection_id;
+
+
+--
 -- Name: student_assigned_courses; Type: TABLE; Schema: public; Owner: testuser
 --
 
@@ -356,7 +445,8 @@ CREATE TABLE public.users (
     last_name character varying(100),
     email character varying(100),
     password bytea,
-    role_id integer
+    role_id integer,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 
@@ -396,6 +486,13 @@ ALTER TABLE ONLY public.class_codes ALTER COLUMN class_code_id SET DEFAULT nextv
 --
 
 ALTER TABLE ONLY public.classes ALTER COLUMN class_id SET DEFAULT nextval('public.classes_class_id_seq'::regclass);
+
+
+--
+-- Name: course_subsections course_subsection_id; Type: DEFAULT; Schema: public; Owner: testuser
+--
+
+ALTER TABLE ONLY public.course_subsections ALTER COLUMN course_subsection_id SET DEFAULT nextval('public.course_subsections_course_subsection_id_seq'::regclass);
 
 
 --
@@ -441,6 +538,13 @@ ALTER TABLE ONLY public.scoreboard ALTER COLUMN scoreboard_id SET DEFAULT nextva
 
 
 --
+-- Name: student_assigned_course_subsections assigned_course_subsection_id; Type: DEFAULT; Schema: public; Owner: testuser
+--
+
+ALTER TABLE ONLY public.student_assigned_course_subsections ALTER COLUMN assigned_course_subsection_id SET DEFAULT nextval('public.student_assigned_course_subse_assigned_course_subsection_id_seq'::regclass);
+
+
+--
 -- Name: student_assigned_courses student_assigned_courses_id; Type: DEFAULT; Schema: public; Owner: testuser
 --
 
@@ -466,7 +570,32 @@ COPY public.class_codes (class_code_id, class_id, class_code) FROM stdin;
 -- Data for Name: classes; Type: TABLE DATA; Schema: public; Owner: testuser
 --
 
-COPY public.classes (class_id, class_course_code, class_section_number, user_id) FROM stdin;
+COPY public.classes (class_id, class_course_code, class_section_number, user_id, created_at, expired_at) FROM stdin;
+34	CPE201	1001	40	2025-02-24	\N
+35	CS101	1001	39	2025-02-24	2026-02-24
+36	CS222	1001	39	2025-02-23	2026-02-24
+37	CS222	1002	39	2025-02-23	2026-02-24
+38	CS135	1001	40	2025-02-21	2026-02-24
+39	CS302	1001	40	2025-02-20	2026-02-24
+\.
+
+
+--
+-- Data for Name: course_subsections; Type: TABLE DATA; Schema: public; Owner: testuser
+--
+
+COPY public.course_subsections (course_subsection_id, course_subsection_number, course_subsection_name) FROM stdin;
+11	1.11	Objectives
+12	1.12	Definition and Overview
+13	1.13	History of Robotics
+14	1.14	Types of Robots
+15	1.15	Importance and Applications
+16	1.16	Robot Anatomy
+17	1.17	Challenges in Robotics
+18	1.18	Robot Programming
+19	1.19	Social and Ethical Implications
+20	1.21	Future Trends
+21	1.9	C1 Quiz One
 \.
 
 
@@ -475,23 +604,18 @@ COPY public.classes (class_id, class_course_code, class_section_number, user_id)
 --
 
 COPY public.courses (course_id, course_name, course_desc, section_number, level, certificate, length, route) FROM stdin;
-21	Introduction to Robotics	Learn the basics of robotics, from robot anatomy to robot programming.	1.0	Beginner Friendly	t	1 hour	course1_card
-22	Types of Robots	Gain an insight into how different robots serve unique purposes with their different functionality.	2.0	Beginner Friendly	t	1 hour	course2_card
-23	Robots in CORE	Discover the heart of CORE: meet our virtual robots, designed for you.	3.0	Beginner Friendly	t	30 minutes	course1_card
-24	How to Use the Lab	Get familiar with CORE's Virtual Robotics Lab and explore live simulations, an interactive, hands-on learning experience, and coding feedback.	4.0	Beginner Friendly	t	1 hour	course1_card
-25	Basic Coding Practices	Master the basics of coding, building yourself a strong foundation, involving a review of common coding practices and debugging techniques.	5.0	Beginner Friendly	t	1 hour	course1_card
-26	Fetch Robot	Acquire the skills required to program and control the Fetch Robot to complete different tasks including reaching, pushing, and sliding.	6.0	Beginner Friendly	t	1 hour	course1_card
-27	Fetch Reach Robot	Master control and precision as you learn to code the Fetch Reach Robot.	7.0	Beginner Friendly	t	2 hours	course1_card
-28	Fetch Push Robot	Explore the methodologies of robotic pushing with the Fetch Push Robot.	8.0	Beginner Friendly	t	1 hour	course1_card
-29	Fetch Slide Robot	Learn how to program the Fetch Slide Robot to move objects utilizing sliding techniques.	9.0	Beginner Friendly	t	1 hour	course1_card
-30	Fetch Pick & Place Robot	Become proficient in robotic object manipulation with the Fetch Pick and Place Robot.	10.0	Intermediate	t	2 hours	course1_card
-31	Fetch Stack Blocks Robot	Hone the precision of stacking blocks using the Fetch Robot and improve your spatial manipulation.	11.0	Intermediate	t	1 hour	course1_card
-32	Fetch Color Sort Robot	Learn to algorithmically move the Fetch Robot to sort and organize objects based on their colors.	12.0	Intermediate	t	2 hours	course1_card
-33	Fetch Robot w/ Sensors	Unlock the power of sensors by teaching the Fetch Robot to detect, classify, and organize objects.	13.0	Intermediate	t	2 hours	course1_card
-34	Dexterous Hand Robot	Enhance your knowledge of human-like dexterity with the Dexterous Hand Robot.	14.0	Intermediate	t	2 hours	course1_card
-35	Hand Reach	Learn the ability to extend robotic reach with the realistic Hand Reach Robot.	15.0	Intermediate	t	2 hours	course1_card
-36	Hand Manipulate Block	Manipulate an object with the Hand Manipulate Block with agility control.	16.0	Intermediate	t	2 hours	course1_card
-37	Self-Driving Car w/ Deep Q-Learning	Learn about Deep Q-Learning algorithms to create a self-driving car.	17.0	Advanced	t	2 hours	course1_card
+21	Introduction to Robotics	Learn the basics of robotics, from robot anatomy to robot programming.	1	Beginner Friendly	t	1 hour	course1_card
+22	Types of Robots	Gain an insight into how different robots serve unique purposes with their different functionality.	2	Beginner Friendly	t	1 hour	course2_card
+24	How to Use the Lab	Get familiar with CORE's Virtual Robotics Lab and explore live simulations, an interactive, hands-on learning experience, and coding feedback.	4	Beginner Friendly	t	1 hour	course1_card
+26	Fetch Robot	Acquire the skills required to program and control the Fetch Robot to complete different tasks including reaching, pushing, and sliding.	6	Beginner Friendly	t	1 hour	course1_card
+23	Robots in CORE	Discover the heart of CORE: meet our virtual robots, designed for you.	3	Beginner Friendly	t	30 minutes	course3_card
+25	Basic Coding Practices	Master the basics of coding, building yourself a strong foundation, involving a review of common coding practices and debugging techniques.	5	Beginner Friendly	t	1 hour	course4_card
+27	Fetch Reach Robot	Master control and precision as you learn to code the Fetch Reach Robot.	7	Beginner Friendly	t	2 hours	course6_card
+30	Fetch Pick & Place Robot	Become proficient in robotic object manipulation with the Fetch Pick and Place Robot.	10	Intermediate	t	2 hours	course7_card
+31	Fetch Stack Blocks Robot	Hone the precision of stacking blocks using the Fetch Robot and improve your spatial manipulation.	11	Intermediate	t	1 hour	course8_card
+32	Fetch Color Sort Robot	Learn to algorithmically move the Fetch Robot to sort and organize objects based on their colors.	12	Intermediate	t	2 hours	course9_card
+33	Fetch Robot w/ Sensors	Unlock the power of sensors by teaching the Fetch Robot to detect, classify, and organize objects.	13	Intermediate	t	2 hours	course10_card
+37	Autonomous Car w/ Sensors	Learn about Deep Q-Learning algorithms to create a self-driving car.	17	Advanced	t	2 hours	course11_card
 \.
 
 
@@ -524,9 +648,9 @@ COPY public.permissions (permission_id, permission_name, permission_desc) FROM s
 --
 
 COPY public.roles (role_id, role_name, role_desc, permission_id) FROM stdin;
-1	student	Regular user role with access to courses and basic platform features	\N
-2	instructor	Instructor role with access to course assignment and student management	\N
-3	admin	Administrator role with full platform access and management tools	\N
+3	Admin	Administrator role with full platform access and management tools	\N
+2	Student	Regular user role with access to courses and basic platform features	\N
+1	Instructor	Instructor role with access to course assignment and student management	\N
 \.
 
 
@@ -535,6 +659,14 @@ COPY public.roles (role_id, role_name, role_desc, permission_id) FROM stdin;
 --
 
 COPY public.scoreboard (scoreboard_id, score, user_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: student_assigned_course_subsections; Type: TABLE DATA; Schema: public; Owner: testuser
+--
+
+COPY public.student_assigned_course_subsections (assigned_course_subsection_id, completion_status, course_subsection_number, user_id) FROM stdin;
 \.
 
 
@@ -550,7 +682,13 @@ COPY public.student_assigned_courses (student_assigned_courses_id, course_id, us
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: testuser
 --
 
-COPY public.users (user_id, username, first_name, last_name, email, password, role_id) FROM stdin;
+COPY public.users (user_id, username, first_name, last_name, email, password, role_id, created_at) FROM stdin;
+38	StudentTwo	Student	Two	studenttwo@gmail.com	\\x243262243132244e39745877716257452f35512f67756e2f645158582e67565447563948796a5961584b42624a7645355837555a77467456465a3836	2	2025-02-24 01:52:12.475114
+40	InstructorTwo	Instructor	Two	instructortwo@gmail.com	\\x243262243132244c6b6f3263422e4e304f7233694f694c307377654f6538715731776a4654516c5967454568734a6d4c696e4e753237675176536969	1	2025-02-24 01:52:12.475114
+37	StudentOne	Student	Three	studentone@gmail.com	\\x243262243132245969356b7a2e56314655634a6b4b486752366f54564f6a736464584f4b2f525156624c4c7144766d624c6f77382f5a467835397132	2	2025-02-24 01:52:12.475114
+39	InstructorOne	Instructor	One	instructorone@gmail.com	\\x24326224313224485551657561356236613278764562344d684562344f766b6369743131695750757563477669485a3779533073564e504c6d394169	1	2025-02-24 01:52:12.475114
+42	admin	Admin	One	admin@gmail.com	\\x24326224313224506c71566574446747544459366565756134727265654e426f76314636656470474e75706d653446717a2e4c4a333770674f5a684b	3	2025-02-24 01:52:12.475114
+70	NewStudentOne	Jasmine	Almedo	jalmedo@gmail.com	\\x243262243132243247317741747a4a69724e472f564575724635613975446e564b70386f756474587933756234394e527569684b5a55474e4c722f75	2	2025-02-24 10:54:13.982985
 \.
 
 
@@ -558,28 +696,35 @@ COPY public.users (user_id, username, first_name, last_name, email, password, ro
 -- Name: class_codes_class_code_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
 --
 
-SELECT pg_catalog.setval('public.class_codes_class_code_id_seq', 6, true);
+SELECT pg_catalog.setval('public.class_codes_class_code_id_seq', 12, false);
 
 
 --
 -- Name: classes_class_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
 --
 
-SELECT pg_catalog.setval('public.classes_class_id_seq', 26, true);
+SELECT pg_catalog.setval('public.classes_class_id_seq', 33, true);
+
+
+--
+-- Name: course_subsections_course_subsection_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
+--
+
+SELECT pg_catalog.setval('public.course_subsections_course_subsection_id_seq', 22, false);
 
 
 --
 -- Name: courses_course_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
 --
 
-SELECT pg_catalog.setval('public.courses_course_id_seq', 37, true);
+SELECT pg_catalog.setval('public.courses_course_id_seq', 1, false);
 
 
 --
 -- Name: enrollment_enrollment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
 --
 
-SELECT pg_catalog.setval('public.enrollment_enrollment_id_seq', 6, true);
+SELECT pg_catalog.setval('public.enrollment_enrollment_id_seq', 12, false);
 
 
 --
@@ -593,35 +738,42 @@ SELECT pg_catalog.setval('public.feedback_feedback_id_seq', 1, false);
 -- Name: permissions_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
 --
 
-SELECT pg_catalog.setval('public.permissions_permission_id_seq', 1, false);
+SELECT pg_catalog.setval('public.permissions_permission_id_seq', 2, false);
 
 
 --
 -- Name: roles_role_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
 --
 
-SELECT pg_catalog.setval('public.roles_role_id_seq', 3, true);
+SELECT pg_catalog.setval('public.roles_role_id_seq', 4, false);
 
 
 --
 -- Name: scoreboard_scoreboard_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
 --
 
-SELECT pg_catalog.setval('public.scoreboard_scoreboard_id_seq', 1, false);
+SELECT pg_catalog.setval('public.scoreboard_scoreboard_id_seq', 2, false);
+
+
+--
+-- Name: student_assigned_course_subse_assigned_course_subsection_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
+--
+
+SELECT pg_catalog.setval('public.student_assigned_course_subse_assigned_course_subsection_id_seq', 126, true);
 
 
 --
 -- Name: student_assigned_courses_student_assigned_courses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
 --
 
-SELECT pg_catalog.setval('public.student_assigned_courses_student_assigned_courses_id_seq', 19, true);
+SELECT pg_catalog.setval('public.student_assigned_courses_student_assigned_courses_id_seq', 1, false);
 
 
 --
 -- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: testuser
 --
 
-SELECT pg_catalog.setval('public.users_user_id_seq', 30, true);
+SELECT pg_catalog.setval('public.users_user_id_seq', 48, true);
 
 
 --
@@ -646,6 +798,14 @@ ALTER TABLE ONLY public.class_codes
 
 ALTER TABLE ONLY public.classes
     ADD CONSTRAINT classes_pkey PRIMARY KEY (class_id);
+
+
+--
+-- Name: course_subsections course_subsections_pkey; Type: CONSTRAINT; Schema: public; Owner: testuser
+--
+
+ALTER TABLE ONLY public.course_subsections
+    ADD CONSTRAINT course_subsections_pkey PRIMARY KEY (course_subsection_id);
 
 
 --
@@ -694,6 +854,14 @@ ALTER TABLE ONLY public.roles
 
 ALTER TABLE ONLY public.scoreboard
     ADD CONSTRAINT scoreboard_pkey PRIMARY KEY (scoreboard_id);
+
+
+--
+-- Name: student_assigned_course_subsections student_assigned_course_subsections_pkey; Type: CONSTRAINT; Schema: public; Owner: testuser
+--
+
+ALTER TABLE ONLY public.student_assigned_course_subsections
+    ADD CONSTRAINT student_assigned_course_subsections_pkey PRIMARY KEY (assigned_course_subsection_id);
 
 
 --
@@ -749,7 +917,15 @@ ALTER TABLE ONLY public.feedback
 --
 
 ALTER TABLE ONLY public.enrollment
-    ADD CONSTRAINT fk_class FOREIGN KEY (class_id) REFERENCES public.classes(class_id);
+    ADD CONSTRAINT fk_class FOREIGN KEY (class_id) REFERENCES public.classes(class_id) ON DELETE CASCADE;
+
+
+--
+-- Name: class_codes fk_class_id; Type: FK CONSTRAINT; Schema: public; Owner: testuser
+--
+
+ALTER TABLE ONLY public.class_codes
+    ADD CONSTRAINT fk_class_id FOREIGN KEY (class_id) REFERENCES public.classes(class_id) ON DELETE CASCADE;
 
 
 --
@@ -773,6 +949,14 @@ ALTER TABLE ONLY public.classes
 --
 
 ALTER TABLE ONLY public.classes
+    ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: student_assigned_course_subsections fk_user_id; Type: FK CONSTRAINT; Schema: public; Owner: testuser
+--
+
+ALTER TABLE ONLY public.student_assigned_course_subsections
     ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
 
 
@@ -806,6 +990,13 @@ ALTER TABLE ONLY public.student_assigned_courses
 
 ALTER TABLE ONLY public.student_assigned_courses
     ADD CONSTRAINT student_assigned_courses_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id) ON DELETE CASCADE;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: testuser
+--
+
+REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 
 
 --

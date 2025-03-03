@@ -76,5 +76,5 @@ To restart the Postgres Service
 sudo systemctl restart postgresql
 
 Import the data into the database
-psql -U <User w/ Correct Permissions> -d <database_name> -f NEW_CORE_DB.sql
+psql -U <User w/ Correct Permissions> -d <database_name> -f CORE_DB.sql
 

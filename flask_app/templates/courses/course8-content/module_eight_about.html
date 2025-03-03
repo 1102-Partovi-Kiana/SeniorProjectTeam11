@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>About the Fetch Stack Robot - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_eight') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_eight_about') }}" class="course-link">About</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eight_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-stack">Word Bank</a></li>
+                    <li><a href="#given-fetch-stack">What is Given</a></li>
+                    <li><a href="#retrieve-fetch-stack">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eight_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-stack">Word Bank</a></li>
+                    <li><a href="#code-fetch-stack">What Needs to Be Coded</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eight_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">About the Fetch Stack Robot</h1>
+            <p class="page-description">Learn the purpose of the Fetch Stack Robot.</p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Let's Explore</span>
+        </div>
+
+        <!-- Section 1: Print Statements -->
+        <div class="module-section" id="print-statements">
+            <h3>Fetch Stack Robot</h3>
+            <p>The <strong>Fetch Stack robot</strong> is designed to use what students have learned about the capabilities of the Fetch robots with the integration of stacking. The goal of this robot is to pick up and stack objects on top of one another.</p>
+        </div>
+
+        <!-- Section 2: Video -->
+        <div class="module-section" id="fetch-stack-video">
+            <h3>Fetch Stack 3 Blocks Robot Simulation Video</h3>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <iframe width="560" height="315" 
+                    src="https://www.youtube.com/embed/YOUR_VIDEO_LINK_HERE" 
+                    frameborder="0" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>   
+
+        <!-- Section 3: Simulation vs Real Robot -->
+        <div class="module-section" id="sim-v-real">
+            <h3>Simulation vs. Real Fetch Stack Robot</h3>
+            <p>While you will be working with the simulated <strong>Fetch Stack Robot</strong> in <strong>OpenAI Gym</strong> using <strong>MuJoCo</strong>, it's important to understand how it compares to the real version. The concepts learned in simulation apply directly to real-world robotics.</p>
+            <div class="table-responsive">
+                <table class="table-aesthetic">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Simulated Fetch Stack Robot</th>
+                            <th>Real Fetch Stack Robot</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Physics</td>
+                            <td>Simulated physics engine</td>
+                            <td>Real-world physics (gravity, friction, balance challenges)</td>
+                        </tr>
+                        <tr>
+                            <td>Object Stacking</td>
+                            <td>Objects behave ideally when stacked</td>
+                            <td>Objects may tip, slide, or require precise alignment</td>
+                        </tr>
+                        <tr>
+                            <td>Sensor Data</td>
+                            <td>Simulated sensors (perfect readings)</td>
+                            <td>Real sensors (depth cameras, force sensors, encoders)</td>
+                        </tr>
+                        <tr>
+                            <td>Execution Speed</td>
+                            <td>Instant (fast simulation)</td>
+                            <td>Slower (real motors need time to adjust positioning)</td>
+                        </tr>
+                        <tr>
+                            <td>Communication</td>
+                            <td>Uses OpenAI Gym API</td>
+                            <td>Uses ROS (Robot Operating System)</td>
+                        </tr>
+                        <tr>
+                            <td>Error Handling</td>
+                            <td>Can reset instantly</td>
+                            <td>Requires stability checks and careful error handling</td>
+                        </tr>
+                        <tr>
+                            <td>Failure Risk</td>
+                            <td>No risk</td>
+                            <td>Objects may fall, hardware may be damaged</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>The simulation allows experimentation without consequences, while the real robot presents additional challenges such as precise control and environmental unpredictability.</p>
+        </div>  
+
+        <!-- Section 4: Real Robot Video -->
+        <div class="module-section" id="real-fetch-stack-video">
+            <h3>Real Fetch Stack Blocks Robot Video</h3>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <iframe width="560" height="315" 
+                    src="https://www.youtube.com/embed/A-VR21PfJnA?start=171" 
+                    frameborder="0" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <!-- Section 5: Real-World Applicability -->
+        <div class="module-section" id="real-world">
+            <h3>Real-World Applicability</h3>
+            <p>The Fetch Stack Robot introduces an essential robotics task — stacking objects in a stable and precise manner. This skill is crucial in many real-world applications, including warehouse automation, construction robotics, etc. By coding for the Fetch Stack simulation, you gain the foundational knowledge needed to work with real-world robotics systems where object placement and structured stacking are required and fundamental for you.</p>
+        </div>
+
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_eight') }}" class="secondary-button">Back: Learning Objectives</a>
+            <a href="{{ url_for('module_eight_given') }}" class="secondary-button">Next: Robot Environment</a>
+        </div>
+
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

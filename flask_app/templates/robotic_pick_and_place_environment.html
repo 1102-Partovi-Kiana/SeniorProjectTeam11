@@ -1,180 +1,339 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Robotic Environment - Pick and Place - CORE</title>
+<title>Robotic Environment - Fetch Pick and Place - CORE</title>
 {% endblock %}
 
 {% block body %}
 <section class="robotic-environment">
+    <!-- Preload Pets -->
+    <div style="display: none;">
+        <img src="{{ url_for('static', filename='img/pets/chicken/white_run_8fps.gif') }}" alt="Run">
+        <img src="{{ url_for('static', filename='img/pets/chicken/white_swipe_8fps.gif') }}" alt="Swipe">
+        <img src="{{ url_for('static', filename='img/pets/chicken/white_walk_8fps.gif') }}" alt="Walk1">
+        <img src="{{ url_for('static', filename='img/pets/chicken/white_walk_fast_8fps.gif') }}" alt="Walk2">
+    </div>
     <div class="container-fluid content-background">
-        <div class="row" style="min-height: 100vh; padding-top: 10px;"> <!-- Adjusted padding-top to bring content up -->
+        <div class="row" style="min-height: 100vh; padding-top: 10px;">
             <!-- Coding Area and Simulation Side by Side -->
             <div class="col-md-6 d-flex flex-column">
                 <div class="code-editor h-100">
-                    <!-- Tab Buttons Above the Coding Area -->
-                    <div class="coding-options">
-                       <div class="dropdown-container">
-                           <button class="tab-button" id="coding-pets" data-tippy-content="Enable Coding Pets">
-                               <i class="fas fa-paw"></i> 
-                           </button>
-                           <ul class="dropdown-menu">
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="chicken">Chicken</a></li>
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="dog">Dog</a></li>
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="turtle">Turtle</a></li>
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="snail">Snail</a></li>
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="snake">Snake</a></li>
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="rubberduck">Rubber Duck</a></li>
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="rock">Rock</a></li>
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="rat">Rat</a></li>
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="horse">Horse</a></li>
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="fox">Fox</a></li>
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="crab">Crab</a></li>
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="bird">Bird</a></li>
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="unicorn">Unicorn</a></li>
-                               <li><a href="#" class="dropdown-item pet-option" pet-type="dinosaur">Dinosaur</a></li>
-                               <li><a href="#" id="disable-pet" class="dropdown-item" style="display: none;">Disable Pet</a></li>
-                           </ul>
-                       </div>
-                       <button class="tab-button" id="light-mode" data-tippy-content="Switch to Light Mode">
-                           <i class="fas fa-sun"></i> 
-                       </button>
-                       <div class="dropdown-container">
-                           <button class="tab-button" id="syntax-highlight" data-tippy-content="Change Syntax Highlighting Color">
-                               <i class="fas fa-palette"></i>
-                           </button>
-                           <ul class="dropdown-menu">
-                               <li><a href="#" class="dropdown-item theme-option" data-theme="monokai">Monokai</a></li>
-                               <li><a href="#" class="dropdown-item theme-option" data-theme="dracula">Dracula</a></li>
-                               <li><a href="#" class="dropdown-item theme-option" data-theme="material">Material</a></li>
-                               <li><a href="#" class="dropdown-item theme-option" data-theme="ambiance">Ambiance</a></li>
-                               <li><a href="#" class="dropdown-item theme-option" data-theme="cobalt">Cobalt</a></li>
-                               <li><a href="#" class="dropdown-item theme-option" data-theme="twilight">Twilight</a></li>
-                               <li><a href="#" class="dropdown-item theme-option" data-theme="solarized dark">Solarized Dark</a></li>
-                               <li><a href="#" class="dropdown-item theme-option" data-theme="midnight">Midnight</a></li>
-                               <li><a href="#" class="dropdown-item theme-option" data-theme="lucario">Lucario</a></li>
-                               <li><a href="#" class="dropdown-item theme-option" data-theme="seti">Seti</a></li>
-                               <li><a href="#" class="dropdown-item theme-option" data-theme="blackboard">Blackboard</a></li>
-                               <li><a href="#" class="dropdown-item theme-option" data-theme="zenburn">Zenburn</a></li>
-                           </ul>
-                       </div>
-                       <button class="tab-button" id="autocomplete" data-tippy-content="Enable Autocomplete">
-                           <i class="fas fa-magic"></i> 
-                       </button>
-                       <div class="dropdown-container">
-                           <button class="tab-button" id="hints-button" data-tippy-content="Personalized Hints">
-                               <i class="fas fa-lightbulb"></i>
-                           </button>
-                           <ul class="dropdown-menu" id="hints-dropdown" style="display: none;">
-                               <li><button class="dropdown-item" data-hint="1">Get Hint 1</button></li>
-                               <li><button class="dropdown-item" data-hint="2">Get Hint 2</button></li>
-                               <li><button class="dropdown-item" data-hint="3">Get Hint 3</button></li>
-                           </ul>
-                       </div>
+                     <!-- Tab Buttons Above the Coding Area -->
+                     <div class="coding-options">
+                        
+                        <div class="dropdown-container">
+                            <button class="tab-button" id="coding-pets" data-tippy-content="Enable Coding Pets">
+                                <i class="fas fa-paw"></i> 
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="chicken">Chicken</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="dog">Dog</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="turtle">Turtle</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="snail">Snail</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="snake">Snake</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="rubberduck">Rubber Duck</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="rock">Rock</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="rat">Rat</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="horse">Horse</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="fox">Fox</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="crab">Crab</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="bird">Bird</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="unicorn">Unicorn</a></li>
+                                <li><a href="#" class="dropdown-item pet-option" pet-type="dinosaur">Dinosaur</a></li>
+                                <li><a href="#" id="disable-pet" class="dropdown-item" style="display: none;">Disable Pet</a></li>
+                            </ul>
+                        </div>
+                        <button class="tab-button" id="light-mode" data-tippy-content="Switch to Light Mode">
+                            <i class="fas fa-sun"></i> 
+                        </button>
+                        <div class="dropdown-container">
+                            <button class="tab-button" id="syntax-highlight" data-tippy-content="Change Syntax Highlighting Color">
+                                <i class="fas fa-palette"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="monokai">Monokai</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="dracula">Dracula</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="material">Material</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="ambiance">Ambiance</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="cobalt">Cobalt</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="twilight">Twilight</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="solarized dark">Solarized Dark</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="midnight">Midnight</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="lucario">Lucario</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="seti">Seti</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="blackboard">Blackboard</a></li>
+                                <li><a href="#" class="dropdown-item theme-option" data-theme="zenburn">Zenburn</a></li>
+                            </ul>
+                        </div>
+                       
+                        <button class="tab-button" id="dark-mode-pop-up-window" data-tippy-content="Switch the Pop Up Window to Dark Mode">
+                            <i class="fas fa-adjust"></i> 
+                        </button>
 
-                       <!-- Hint Box -->
-                       <div class="hintbox-container" id="hintbox-container" style="display: none;">
-                           <h4>Hints</h4>
-                           <ul id="hintbox" class="hintbox"></ul>
-                       </div>
-                   </div>     
-                   <!-- Darren's Code -->               
-                   <div class="card-header">Coding Area</div>
-                   <textarea id="code-editor" rows="20" style="height: 100%;">
+                        <button class="tab-button" id="review-course-content" data-tippy-content="Review Course Content">
+                            <i class="fas fa-book"></i> 
+                        </button>
+
+                        <button class="tab-button" id="autocomplete" data-tippy-content="Enable Autocomplete">
+                            <i class="fas fa-magic"></i> 
+                        </button>
+            
+                        <!-- Hints Container
+                        <div class="dropdown-container">
+                            <button class="tab-button" id="hints-button" data-tippy-content="Your Personalized Hints">
+                                <i class="fas fa-lightbulb"></i> 
+                            </button>
+                            <div class="hintbox-container" id="hintbox-container" style="display: none;">
+                                <h4>Hints</h4>
+                                <ul id="hintbox" class="hintbox"></ul>
+                            </div>
+                        </div> -->
+                        <!-- Hint Button with Dropdown -->
+                        <div class="dropdown-container" style="display: none;">
+                            <button class="tab-button" id="hints-button" data-tippy-content="Personalized Hints">
+                                <i class="fas fa-lightbulb"></i>
+                            </button>
+                            <ul class="dropdown-menu" id="hints-dropdown" style="display: none;">
+                                <li><button class="dropdown-item" data-hint="1">Get Hint 1</button></li>
+                                <li><button class="dropdown-item" data-hint="2">Get Hint 2</button></li>
+                                <li><button class="dropdown-item" data-hint="3">Get Hint 3</button></li>
+                            </ul>
+                        </div>
+
+                        <!-- Hint Box -->
+                        <div class="hintbox-container" id="hintbox-container" style="display: none;">
+                            <h4 style="display: none">Hints</h4>
+                            <ul id="hintbox" class="hintbox" style="display: none"></ul>
+                        </div>
+
+                        <div class="robot-description text-coding-options ">
+                            <p>The Fetch Pick and Place Robot: Move the robot's gripper to the object, open its gripper around the object, close it to grasp the object, & transport it near the target ball. </p>
+                            <br>
+                        </div>
+                    </div>
+                    <!-- Darren's Code -->                    
+                    <div class="card-header">Coding Area</div>
+                    <textarea id="code-editor" rows="20" style="height: 100%;">
+# Fetch Pick and Place Robot Task: Guide the robot's gripper to the (object's) block's position, open the gripper through the open action
+# around the gripper, close the gripper to grasp the object, and finally transport it to its destination, being the ball
+
+# Given: A distance threshold to determine when the gripper is close enough to the object.
 distance_threshold = 0.01
-close_grip_action = np.array([0, 0, 0, -1])
+
+# Given: Define the actions for the robot
+# Action to close the gripper
+close_grip_action = np.array([0, 0, 0, -1]) 
+# Action to open the gripper
 open_grip_action = np.array([0, 0, 0, 1])
+# Action to lift the gripper
 lift_action = np.array([0, 0, 0.1, 0])
 
+# TODO: Get the position of the target ball
 ball_position = env.sim.data.get_site_xpos('target0')
+
+# TODO: Apply the open gripper action to the environment
 env.step(open_grip_action)
 
+# Given: Move the gripper horizontally (XY-plane) towards the object
 while True:
-    box_position = env.sim.data.get_site_xpos('object0')
+    # TODO: Get the position of the object (the block)
+    object_position = env.sim.data.get_site_xpos('object0')
+
+    #TODO: Get the position of the gripper
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')
 
-    horizontal_distance = np.linalg.norm(box_position[:2] - gripper_position[:2])
+    # TODO: Calculate the direction vector (horizontal distance) from the gripper to the object
+    # *Remember*: Subtract the gripper position from the ball position
+    # *Remeber*: We are only concerned with the XY-plane here, 
+    #            only extract the x and y coordinates of the gripper and the object
+    #            using [:2]
+    horizontal_distance = np.array(object_position[:2]) - np.array(gripper_position[:2])
 
-    if horizontal_distance <= distance_threshold:
+    # TODO: Normalize the horizontal distance to get its magnitude, a scalar value to later compare to another scalar value, the distance_threshold 
+    horizontal_distance_magnitude = np.linalg.norm(horizontal_distance)
+        
+    # TODO: Check if the gripper is already within distance_threshold of the object, we exit the loop (stop moving)
+    if horizontal_distance_magnitude <= distance_threshold:
         break
 
-    direction = box_position - gripper_position
-    direction_normalized = direction / (np.linalg.norm(direction[:2]) + 1e-8)
+    # TODO: Normalize the horizontal distance to compute the unit direction vector for movement.
+    horizontal_distance_normalized =  horizontal_distance / (horizontal_distance_magnitude + 1e-8)
 
+    # FILL IN: Define the horizontal action of the robot using the previously computed unit direction vector 
     horizontal_action = np.array([
-        direction_normalized[0] * 0.1,
-        direction_normalized[1] * 0.1,
-        0,
-        0
+        horizontal_distance_normalized[0] * 0.1, # Movement in x-direction
+        horizontal_distance_normalized[1] * 0.1, # Move in y-direction
+        0, # No movement in the z-direction
+        0 # No gripper action 
     ])
+
+    # TODO: Apply the horizontal action to the environment
     env.step(horizontal_action)
 
+# Given: Move the gripper downward (Z-axis) until it reaches the object
 while True:
-    box_position = env.sim.data.get_site_xpos('object0')
+    # TODO: Get the position of the object (the block)
+    object_position = env.sim.data.get_site_xpos('object0')
+
+    # TODO: Get the position of the gripper 
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')
 
-    vertical_distance = box_position[2] - gripper_position[2]
+    # TODO: Calculate the vertical distance between the gripper and the object
+    # *Remember*: We are only concerned with the Z-axis here, 
+    #            only extract the z coordinate of the gripper and the object
+    #            using [2]
+    vertical_distance = object_position[2] - gripper_position[2]
 
+    # TODO: Check if the gripper is already within distance_threshold of the block, we exit the loop (stop moving)
+    # Note: Take the absolute value of the vertical_distance
+    # - If vertical_distance is positive, the object is above the gripper.
+    # - If vertical_distance is negative, the object is below the gripper.
+    # Since we only care about how close the gripper is, regardless of direction,
+    # we use abs(vertical_distance) so movement stops when within the distance_threshold.
     if abs(vertical_distance) <= distance_threshold:
         break
 
-    descend_action = np.array([0, 0, vertical_distance * 0.1, 0])
+    # Given: The descend action for the robot
+    descend_action = np.array([
+        0, # No movement in the x-direction
+        0, # No movement in the y-direction
+        vertical_distance * 0.1, # Move downward in the z-direction
+        0 # No gripper action (remains as is)   
+    ])
+
+    # TODO: Apply the vertical descending action to the evnironment
     env.step(descend_action)
 
+# TODO: At this point the open gripper is around the object, apply the close gripper action to grasp the object
 env.step(close_grip_action)
 
+# Given: Stabilizing the robot by waiting for 10 steps without movement
 for _ in range(10):
     env.step(np.array([0, 0, 0, 0]))
 
-box_to_ball_threshold = 0.03
+# Given: The distance threshold (stop condition) for reaching the target position (the ball)
+object_to_ball_threshold = 0.03
 
-num_steps = 100  # Adjust this number based on your needs
+# Given: Define the number of steps the loop will run at most
+num_steps = 100 
 
+# Given: Start moving the object towards the ball
 for _ in range(num_steps):
+    # TODO: Get the position of the gripper
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')
-    box_position = env.sim.data.get_site_xpos('object0')
+
+    # TODO: Get the position of the object
+    object_position = env.sim.data.get_site_xpos('object0')
+
+    # TODO: Keep the gripper closed, apply the close gripper action to the environment
     env.step(close_grip_action)
 
-    distance_to_ball = np.linalg.norm(ball_position - gripper_position)
-    distance_to_box = np.linalg.norm(ball_position - box_position)
-    
-    if distance_to_box <= box_to_ball_threshold:  
+    # TODO: Calculate the full 3D distance between the object and the ball
+    distance_from_object_to_ball = np.array(ball_position) - np.array(object_position)
+
+    # TODO: Normalize the distance from the object to the ball in order to get its magnitude, a scalar value to later compare to another scalar value, the box_to_ball_threshold 
+    distance_from_object_to_ball_magnitude = np.linalg.norm(distance_from_object_to_ball)
+
+    # TODO: Check if the block has already reached the ball, we exit the loop (stop moving)
+    if distance_from_object_to_ball_magnitude <= object_to_ball_threshold:  
         break
 
-    direction_to_ball = ball_position - gripper_position
-    direction_normalized = direction_to_ball / (np.linalg.norm(direction_to_ball) + 1e-8)
-    
+    # TODO: Normalize the distance to the ball to compute the unit direction vector for movement.
+    distance_from_object_to_ball_normalized = distance_from_object_to_ball / (distance_from_object_to_ball_magnitude + 1e-8)
+
+    # Given: The action to move the object to the ball
     move_to_ball_action = np.array([
-        direction_normalized[0] * 0.3,
-        direction_normalized[1] * 0.3,
-        direction_normalized[2] * 0.3,
-        0
+        distance_from_object_to_ball_normalized[0] * 0.3, # Move in x-direction
+        distance_from_object_to_ball_normalized[1] * 0.3, # Move in y-direction
+        distance_from_object_to_ball_normalized[2] * 0.3, # Move in z-direction
+        0 # Keep gripper closed
     ])
-    
-    # Step through the environment with the gripper closing and moving
+
+    # Given: Step through the environment with the gripper closing and moving
     env.step(close_grip_action)
     env.step(move_to_ball_action)
                     </textarea>
-                </div>
+                    <div class="row align-items-center">
+                        <!-- Output Box -->
+                        <div class="col-md-8">
+                          <div id="secondary-output-box" class="secondary-output-card secondary-output-hidden">
+                          </div>
+                        </div>
+                      
+                        <!-- Run Button -->
+                        <div class="col-md-4 d-flex justify-content-end run-button-container">
+                          <button id="run-code" class="run-button">Run</button>
+                        </div>
+                      </div>
+                      
+                    <!-- Popup Window -->           
+                    <div id="popup-window" class="modal">
+                        <div class="modal-header">
+                            <div>Output Window</div>
+                            <div class="actions">
+                                <button id="minimize-popup">_</button>
+                                <button id="maximize-popup" style="display: none;">⤢</button>
+                                <button id="close-popup">&times;</button>
+                            </div>
+                        </div>
+                        <div class="modal-content">
+                            <!-- Tabs -->
+                            <div id="popup-window-tabs" class="popup-window-tabs">
+                                <button class="popup-window-tab active" data-tab="popup-window-compilation-results">Compilation Results</button>
+                                <button class="popup-window-tab" data-tab="popup-window-additional-tab">Hints</button>
+                                <button class="popup-window-tab" data-tab="popup-window-review-course-content">Review Course Content</button>
+                            </div>
 
-                <!-- Ball and Gripper Position, Run Button, Collision Notification -->
-                <div class="row align-items-start" style="margin-top: 5px;"> <!-- Reduced margin-top -->
-                    <div class="col-md-8">
-                        <h5>Ball Position:</h5>
-                        <p id="ball-position">X: --, Y: --, Z: --</p>
-                        <h5>Gripper Position:</h5>
-                        <p id="gripper-position">X: --, Y: --, Z: --</p>
+                            <!-- Tab Contents -->
+                            <div id="popup-window-compilation-results" class="popup-window-tab-content active">
+                                <p id="popup-message">This is a test message!</p>
+                            </div>
+                            <div id="popup-window-additional-tab" class="popup-window-tab-content">
+                                <button id="clear-hints-history" class="clear-hints-button" style="margin-bottom: 10px;">Clear Hints History</button>
+                                <div id="hints-history-content">
+                                    <p>No specific hints available.</p>
+                                </div>
+                            </div>
+                            <div id="popup-window-review-course-content" class="popup-window-tab-content">
+                                <h3>Review Course Content</h3>
+                                <iframe id="course-content-frame" src="/embedded-course-content" width="100%" height="500px" style="border: none;"></iframe>
+                            </div>                            
+                        </div>
                     </div>
-                    <div class="col-md-4 d-flex justify-content-end">
-                        <button id="run-code" class="aesthetic-button">Run</button>
-                    </div>
-                </div>
 
-                <!-- Collision Notification -->
-                <div id="collision-notification" class="alert alert-success" style="margin-top: 5px; display: none;">
-                    Collision detected between the gripper and the ball!
+                    <!-- Ball and Gripper Position -->
+                    <!-- <div class="row align-items-start" style="margin-top: 5px;">
+                        <div class="col-md-8">
+                            <h5>Ball Position:</h5>
+                            <p id="ball-position">X: --, Y: --, Z: --</p>
+                            <h5>Gripper Position:</h5>
+                            <p id="gripper-position">X: --, Y: --, Z: --</p>
+                        </div>
+                    </div>
+
+                    Collision Notification -->
+                    <!-- <div id="collision-notification" class="alert alert-success" style="margin-top: 5px; display: none;">
+                        Collision detected between the gripper and the ball!
+                    </div> -->
                 </div>
             </div>
-            <!-- End of Darren's Code-->
+            
+            <!-- <div class="chatbot-container">
+                <div id="chatbox" class="chatbox"></div>
+                <div class="chat-input-container">
+                    <input type="text" id="userInput" placeholder="Type a message">
+                    <button id="sendBtn">Send</button>
+                </div>
+            </div> -->
+            
+            <!-- <div class="col-md-6 d-flex flex-column">
+                <div class="card simulation-card">
+                    <div class="card-header">Simulation</div>
+                    <div class="simulation-video-container">
+                        <img src="{{ url_for('video_feed') }}" class="simulation-video">
+                    </div>
+                </div>
+            </div> -->
 
             <div class="col-md-6 d-flex flex-column">
                 <div class="card simulation-card h-80">
@@ -183,23 +342,39 @@ for _ in range(num_steps):
                         <img src="{{ url_for('video_feed') }}" width="100%" class="simulation-video">
                     </div>
                 </div>
-
+            
                 <!-- Output Terminal - Placed Below Simulation -->
-                <div class="card output-card">
+                <!-- <div class="card output-card">
                     <div class="card-header">Output Terminal</div>
                     <div class="card-body" id="output-box">
-                        <!-- Output will appear here -->
+                        Output will appear here -->
+                    <!-- </div>
+                </div> -->
+
+                <div class="card output-card robotic-environment" style="display: none;">
+                    <div class="card-header">Output Terminal</div>
+                    <div class="card-body">
+                        <!-- Tabs -->
+                        <!-- <div class="output-tabs">
+                            <button class="output-tab-button active" data-tab="output-box">Compilation Results</button>
+                        </div> -->
+                
+                        <!-- Tab Content -->
+                        <div class="output-tab-content">
+                            <div id="output-box" class="output-tab-pane active">
+                                <p>Output will appear here.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
 </section>
 
 <!-- CodeMirror and Script Initialization -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/monokai.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css" rel="stylesheet">
 <!-- Dracula Theme -->
@@ -277,8 +452,8 @@ for _ in range(num_steps):
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
 
 <script>
-     let currentTheme = "monokai"; 
-     let isAutocompleteEnabled = false;
+    let currentTheme = "monokai"; 
+    let isAutocompleteEnabled = false; 
 
     // Initialize CodeMirror
     const codeEditor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
@@ -302,8 +477,8 @@ for _ in range(num_steps):
 
     codeEditor.setSize("100%", "calc(80vh - 100px)");
 
-       // AUTOCOMPLETE
-       function inputReadHandler(editor, change) {
+    // AUTOCOMPLETE
+    function inputReadHandler(editor, change) {
         if (change.text[0] !== " ") {
             console.log("Input detected:", change.text[0]);
             editor.showHint({ hint: CodeMirror.hint.python });
@@ -415,37 +590,424 @@ for _ in range(num_steps):
             .catch(error => console.error('Error checking collision:', error));
     }
 
-    // JS to /run-code backend
-    document.getElementById('run-code').addEventListener('click', function () {
-        const code = codeEditor.getValue(); 
+    let hintsHistory = [];
 
-        const formData = new FormData();
-        formData.append('code', code);
+    function clearAllErrorHighlights() {
+    codeEditor.operation(() => {
+        for (let i = 0; i < codeEditor.lineCount(); i++) {
+        codeEditor.removeLineClass(i, 'background', 'error-line');
+        }
+    });
+    }
 
-        fetch('/run-code', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            const outputBox = document.getElementById('output-box');
-            const hintsButton = document.getElementById('hints-button');
-            const hintboxContainer = document.getElementById('hintbox-container');
-            outputBox.innerHTML = '';
+    function highlightErrorLine(lineIndex) {
+    if (lineIndex >= 0 && lineIndex < codeEditor.lineCount()) {
+        codeEditor.addLineClass(lineIndex, 'background', 'error-line');
+    }
+    }
 
-            if (data.error) {
-                outputBox.innerHTML += `<p style="color: red;">Error: ${data.error}</p>`;
-                hintsButton.style.display = 'inline-block';
-                getBotResponse(code, data.error);
-            } else {
-                outputBox.innerHTML += `<p>${data.message}</p>`;
-                hintsButton.style.display = 'none';
-                hintboxContainer.style.display = 'none';
-            }
-        })
-        .catch(error => {
-            console.error('Error running code:', error);
+    function highlightErrorLineStaticIssue(lineIndex) {
+    if (lineIndex >= 0 && lineIndex < codeEditor.lineCount()) {
+        codeEditor.addLineClass(lineIndex, 'background', 'static-issue-line');
+    }
+    }
+
+    function getLineNumberFromError(errorMessage) {
+    const match = errorMessage.match(/line\s+(\d+)/);
+    if (match && match[1]) {
+        return parseInt(match[1], 10); // parse substring as an integer
+    }
+    return null; 
+    }
+
+    const popupWindow = document.getElementById('popup-window');
+    const popupMessage = document.getElementById('popup-message');
+    const minimizePopup = document.getElementById('minimize-popup');
+    const maximizePopup = document.getElementById('maximize-popup');
+    const closePopup = document.getElementById('close-popup');
+
+
+    const popupWindowTabs = document.querySelectorAll('.popup-window-tab');
+    const popupWindowTabContents = document.querySelectorAll('.popup-window-tab-content');
+
+    popupWindowTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            popupWindowTabs.forEach(tab => tab.classList.remove('active'));
+            popupWindowTabContents.forEach(content => content.classList.remove('active'));
+            tab.classList.add('active');
+            const tabId = tab.getAttribute('data-tab');
+            document.getElementById(tabId).classList.add('active');
         });
+    });
+
+
+    function showPopup(message, isError = false, activeTab = "popup-window-compilation-results") {
+        popupMessage.innerHTML = message;
+        popupWindow.style.borderTop = isError ? '4px solid red' : '4px solid green';
+        popupWindow.style.display = 'none';
+        document.querySelectorAll('.popup-window-tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.popup-window-tab-content').forEach(content => content.classList.remove('active'));
+        document.querySelector(`[data-tab="${activeTab}"]`).classList.add('active');
+        document.getElementById(activeTab).classList.add('active');
+
+        setTimeout(() => {
+            popupWindow.style.display = 'block';
+            popupWindow.classList.add('maximized');
+            popupWindow.classList.remove('minimized');
+            popupWindow.style.transform = 'translateY(0)';
+        }, 10);
+
+        maximizePopup.style.display = 'none';
+        minimizePopup.style.display = 'inline-block';
+    }
+
+    document.getElementById("review-course-content").addEventListener("click", function () {
+        const popupWindow = document.getElementById("popup-window");
+        const tooltipButton = this;
+
+        if (popupWindow.style.display === "block") {
+            popupWindow.style.transform = "translateY(100%)"; 
+            setTimeout(() => {
+                popupWindow.style.display = "none";
+            }, 600);
+
+            if (tooltipButton._tippy) {
+                tooltipButton._tippy.setContent("Review Course Content");
+            }
+        } else {
+            showPopup("Reviewing course content...", false, "popup-window-review-course-content");
+
+            if (tooltipButton._tippy) {
+                tooltipButton._tippy.setContent("Disable Course Content");
+            }
+
+            document.querySelectorAll('.popup-window-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.popup-window-tab-content').forEach(content => content.classList.remove('active'));
+
+            document.querySelector('[data-tab="popup-window-review-course-content"]').classList.add('active');
+            document.getElementById('popup-window-review-course-content').classList.add('active');
+        }
+    });
+
+    closePopup.addEventListener('click', () => {
+        popupWindow.style.transform = 'translateY(100%)'; 
+        setTimeout(() => {
+            popupWindow.style.display = 'none';
+        }, 600); 
+    });
+
+    minimizePopup.addEventListener('click', () => {
+        popupWindow.classList.add('minimized');
+        popupWindow.classList.remove('maximized');
+        minimizePopup.style.display = 'none';
+        maximizePopup.style.display = 'inline-block';
+
+        popupWindow.style.height = '50%'; 
+        popupWindow.style.bottom = '0';
+        popupWindow.style.transform = 'translateY(0)'; 
+    });
+
+    maximizePopup.addEventListener('click', () => {
+        popupWindow.classList.remove('minimized');
+        popupWindow.classList.add('maximized');
+        maximizePopup.style.display = 'none';
+        minimizePopup.style.display = 'inline-block';
+
+        popupWindow.style.height = '100%'; 
+        popupWindow.style.bottom = '0'; 
+        popupWindow.style.transform = 'translateY(0)'; 
+    });
+
+    let errorAttempts = 0;
+
+    document.getElementById('run-code').addEventListener('click', async function () {
+        clearAllErrorHighlights();
+
+        const code = codeEditor.getValue();
+        const formData = new FormData();
+
+        const pageContexts = {
+            "/Fetch-Reach-Robot": "Fetch Reach",
+            "/PickAndPlacePage": "Pick and Place",
+            "/FetchStackPage": "Fetch Stack",
+            "/FetchOrganizePage": "Fetch Organize",
+            "/FetchOrganizeSensorsPage": "Fetch Sensors",
+            "/CarPage": "Car",
+        };
+
+        const currentPath = window.location.pathname;
+        const pageContext = pageContexts[currentPath] || "General";
+
+        console.log("Current Path:", currentPath);
+        console.log("Fixed Page Context:", pageContext);
+
+        formData.append('code', code);
+        formData.append('context', pageContext);
+
+        const outputCard = document.querySelector('.output-card');
+        const secondaryOutputCard = document.getElementById('secondary-output-box'); 
+        const additionalTabContent = document.getElementById('popup-window-additional-tab'); 
+
+        outputCard.classList.remove('visible');
+        secondaryOutputCard.classList.remove('secondary-output-visible', 'success', 'error');
+        secondaryOutputCard.classList.add('secondary-output-hidden');
+
+        try {
+            const response = await fetch('/run-code', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+            const outputBox = document.getElementById('output-box');
+            const hintboxContainer = document.getElementById('hintbox-container');
+            const hintBox = document.getElementById('hintbox');
+
+            outputBox.innerHTML = '';
+            secondaryOutputCard.innerHTML = '';
+
+            console.log('Response from the server:', data);
+
+            outputCard.classList.add('visible');
+            secondaryOutputCard.classList.remove('secondary-output-hidden');
+            secondaryOutputCard.classList.add('secondary-output-visible');
+
+            if (data.error || (data.static_issues && data.static_issues.length > 0)) {
+                errorAttempts++; // an error occured, increment counter
+
+                secondaryOutputCard.classList.add('error');
+                secondaryOutputCard.innerHTML = `<p>Your code ran into problems 😢</p>`;
+
+                let popupMessage = '';
+                let hintMessage = '';
+                let additionalTabHintMessage = '';
+                let errorLine = null;
+                let errorMessage = '';
+
+                if (data.error) {
+                    outputBox.innerHTML += `<p class="error">Error: ${data.error}</p>`;
+                    popupMessage += `Error: ${data.error}<br>`;
+
+                    hintMessage = data.errorHint || 'No specific hints available for this error.';
+                    additionalTabHintMessage = hintMessage;
+                    errorLine = getLineNumberFromError(data.error);
+                    errorMessage = data.error;
+
+                    if (errorLine !== null) {
+                        highlightErrorLine(errorLine - 1);
+                    }
+                }
+
+                if (data.static_issues && data.static_issues.length > 0) {
+                    outputBox.innerHTML += `<p style="color: orange;">Static Issues:</p><ul>`;
+                    popupMessage += 'Your code has static issues:<br>';
+                    data.static_issues.forEach(issue => {
+                        const issueLine = issue.line;
+                        const issueMessage = issue.message;
+
+                        outputBox.innerHTML += `<li>Line ${issueLine}: ${issueMessage}</li>`;
+                        popupMessage += `Line ${issueLine}: ${issueMessage}<br>`;
+
+                        if (issue.hint) {
+                            hintMessage += `<br>Hint for Line ${issueLine}: ${issue.hint}`;
+                        }
+
+                        if (typeof issueLine === 'number') {
+                            highlightErrorLineStaticIssue(issueLine - 1);
+                        }
+
+                        if (errorLine === null) {
+                            errorLine = issue.line;
+                            errorMessage = issue.message;
+                        }
+                    });
+                    outputBox.innerHTML += `</ul>`;
+                }
+
+                showPopup(popupMessage, true);
+
+                if (errorLine !== null && errorMessage) {
+                    const errorTracker = JSON.parse(sessionStorage.getItem('errorTracker') || '{}');
+                    const errorKey = `${errorLine}-${errorMessage}`;
+                    const hintLevel = errorTracker[errorKey]?.hintLevel || 1;
+
+                    const hints = await fetchHints({
+                        code: code,
+                        errorLine: errorLine,
+                        errorMessage: errorMessage,
+                        pageContext: pageContext,
+                        hintLevel: hintLevel
+                    });
+
+                    if (hints.length > 0) {
+                        const hintCount = parseInt(sessionStorage.getItem('hintCount') || '0', 10);
+                        const newHintCount = hintCount + 1;
+                        sessionStorage.setItem('hintCount', newHintCount.toString());
+
+                        errorTracker[errorKey] = {
+                            hintLevel: hintLevel + 1,
+                            lastUpdated: Date.now(),
+                        };
+                        sessionStorage.setItem('errorTracker', JSON.stringify(errorTracker));
+
+                        console.log(`Hint count now at: ${newHintCount}`);
+                        console.log(`Hint level for '${errorKey}' is now ${hintLevel + 1}`);
+                    }
+
+                    populateDropdownMenu(hints);
+                    updateAdditionalTab(hints);
+                } else {
+                    updateAdditionalTab([]);
+                }
+            } else {
+                secondaryOutputCard.classList.add('success');
+                secondaryOutputCard.innerHTML = `<p>Your code ran successfully 😊</p>`;
+                outputBox.innerHTML += `<p>${data.message}</p>`;
+
+                if (errorAttempts > 0) {
+                    outputBox.innerHTML = '';
+                    outputCard.classList.remove('visible');
+
+                    clearAllErrorHighlights();
+
+                    // Hide pop up window, we don't need it anymore
+                    const popupWindow = document.getElementById('popup-window');
+                    if (popupWindow) {
+                        popupWindow.style.display = 'none';
+                    }
+
+                    hintboxContainer.style.display = 'none';
+                    const hintsDropdown = document.getElementById('hints-dropdown');
+                    if (hintsDropdown) {
+                        hintsDropdown.style.display = 'none';
+                    }
+
+                    errorAttempts = 0;
+                } else {
+                    hintboxContainer.style.display = 'none';
+                    const hintsDropdown = document.getElementById('hints-dropdown');
+                    if (hintsDropdown) {
+                        hintsDropdown.style.display = 'none';
+                    }
+                }
+
+                updateAdditionalTab([]);
+            }
+        } catch (error) {
+            outputCard.classList.add('visible');
+            secondaryOutputCard.classList.remove('secondary-output-hidden');
+            secondaryOutputCard.classList.add('secondary-output-visible', 'error');
+            secondaryOutputCard.innerHTML = `<p>Code ran into problems</p>`;
+
+            showPopup('Code ran into problems 😢<br>Unable to run code. Please try again.', true);
+            const outputBox = document.getElementById('output-box');
+            outputBox.innerHTML = `<p class="error">Error: Unable to run code. Please try again.</p>`;
+            updateAdditionalTab(['Unable to run code. Please check your connection and try again.']);
+        }
+    });
+
+    function populateDropdownMenu(hints) {
+        const dropdownMenu = document.getElementById('hints-dropdown');
+        const hintBoxContainer = document.getElementById('hintbox-container');
+        const hintBox = document.getElementById('hintbox');
+        const randomBox = document.getElementById('random-box'); 
+
+        dropdownMenu.innerHTML = ''; 
+        const closeButton = document.createElement('button');
+        closeButton.className = 'dropdown-close';
+        closeButton.textContent = 'X';
+        closeButton.style.cssText = 'float: right; background: none; border: none; font-size: 18px; cursor: pointer; padding: 5px; color: red;';
+        closeButton.addEventListener('click', () => {
+            dropdownMenu.style.display = 'none';
+            hintBoxContainer.style.display = 'none'; 
+        });
+
+        dropdownMenu.appendChild(closeButton);
+
+        if (hints.length > 0) {
+            hints.forEach((hint, index) => {
+                const listItem = document.createElement('li');
+                const button = document.createElement('button');
+                button.className = 'dropdown-item';
+                button.dataset.hint = index + 1;
+                button.textContent = `Get Hint ${index + 1}`;
+                listItem.appendChild(button);
+                dropdownMenu.appendChild(listItem);
+            });
+
+            updateHintBox([hints[0]]);
+        } else {
+            const noHintsItem = document.createElement('li');
+            noHintsItem.textContent = 'No hints available';
+            dropdownMenu.appendChild(noHintsItem);
+        }
+
+        dropdownMenu.style.display = 'block'; 
+    }
+
+    document.getElementById('hints-dropdown').addEventListener('click', (event) => {
+        if (event.target.classList.contains('dropdown-item')) {
+            const hintIndex = parseInt(event.target.dataset.hint, 10) - 1;
+            if (currentHints && currentHints[hintIndex]) {
+                updateHintBox([currentHints[hintIndex]]);
+            }
+        }
+    });
+
+    function updateHintBox(hintMessages) {
+        const hintBox = document.getElementById('hintbox');
+        const hintBoxContainer = document.getElementById('hintbox-container');
+
+        hintBox.innerHTML = '';
+        if (hintMessages && hintMessages.length > 0) {
+            hintMessages.forEach((hint, index) => {
+                const hintItem = document.createElement('li');
+                hintItem.textContent = `${index + 1}. ${hint}`;
+                hintBox.appendChild(hintItem);
+            });
+            hintBoxContainer.style.display = 'block';
+        } else {
+            hintBoxContainer.style.display = 'none';
+        }
+    }
+
+    function updateAdditionalTab(newHints) {
+        const hintsHistoryContent = document.getElementById('hints-history-content');
+
+        if (!Array.isArray(newHints)) {
+            newHints = [newHints];
+        }
+
+        hintsHistory.push(...newHints);
+        localStorage.setItem('hintsHistory', JSON.stringify(hintsHistory));
+
+        hintsHistoryContent.innerHTML = '';
+
+        if (hintsHistory.length > 0) {
+            const hintList = document.createElement('ul');
+
+            hintsHistory.forEach((hint, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${index + 1}. ${hint}`;
+                hintList.appendChild(listItem);
+            });
+
+            hintsHistoryContent.appendChild(hintList);
+        } else {
+            hintsHistoryContent.innerHTML = '<p>No specific hints available.</p>';
+        }
+    }
+
+    function clearHintsHistory() {
+        hintsHistory = []; 
+        localStorage.removeItem('hintsHistory'); 
+        updateAdditionalTab([]); 
+    }
+
+    document.getElementById('clear-hints-history').addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear the hints history?')) {
+            clearHintsHistory();
+        }
     });
 
     window.addEventListener('load', updatePositions);
@@ -582,7 +1144,6 @@ for _ in range(num_steps):
                 "{{ url_for('static', filename='img/pets/bird/gray_with_ball_8fps.gif') }}"
             ]
 
-
         };
 
         const defaultGif = petGifs[currentPet][0];
@@ -597,8 +1158,8 @@ for _ in range(num_steps):
         const petHeight = 50;
         const lineNumberWidth = 40;
 
-        const bottomY = editorRect.height - petHeight - 165;
-        const initialLeftX = lineNumberWidth + 10 + 20;
+        const bottomY = editorRect.height - petHeight - 165; // Need to adjust this value for different device sizes
+        const initialLeftX = lineNumberWidth + 10 + 20; // Need to adjust this value for different device sizes
 
         codingPetContainer.style.transform = `translate(${initialLeftX}px, ${bottomY}px)`;
 
@@ -831,6 +1392,25 @@ for _ in range(num_steps):
     });
 
     document.getElementById("syntax-highlight").addEventListener("click", toggleSyntaxHighlighting);
-    
+
+    document.getElementById("dark-mode-pop-up-window").addEventListener("click", () => {
+        const popupWindow = document.getElementById("popup-window");
+        popupWindow.classList.toggle("dark-mode");
+        const isDarkMode = popupWindow.classList.contains("dark-mode");
+        const button = document.getElementById("dark-mode-pop-up-window");
+
+        if (button._tippy) {
+            button._tippy.setContent(
+                isDarkMode
+                    ? "Switch the Pop-Up Window to Light Mode"
+                    : "Switch the Pop-Up Window to Dark Mode"
+            );
+        }
+
+        button.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; 
+
+        alert(isDarkMode ? "Dark Mode Enabled for the Pop-Up Window!" : "Light Mode Enabled for the Pop-Up Window!");
+    });
+
 </script>
 {% endblock %}

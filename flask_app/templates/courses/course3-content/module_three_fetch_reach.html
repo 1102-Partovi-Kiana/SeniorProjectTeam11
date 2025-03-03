@@ -1,102 +1,98 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Robot Anatomy - CORE</title>
+<title>Meet the Robots - Fetch - CORE</title>
 {% endblock %}
 
 {% block body %}
 <div class="course-container">
-        <!-- Sidebar for module navigation -->
-        <div class="course-sidebar">
-            <div class="course-sidebar-header">
-                <i class="fas fa-list"></i>
-                <span>Contents</span>
-            </div>
-            <ul class="course-list">
-                <li class="course-item"> 
-                    <a href="#objectives" class="course-link">Objectives</a>
-                </li>
-                <li class="course-item active">
-                    <a href="#overview" class="course-link">Fetch Reach</a>
-                </li>
-                <li class="course-item">
-                    <a href="#overview" class="course-link">Fetch Pick-and-Place</a>
-                </li>
-                <li class="course-item">
-                    <a href="#overview" class="course-link">Fetch Organize with Sensor</a>
-                </li>
-            </ul>
-        </div> <!-- End of course-sidebar -->
-
-        <div class="course-main-content">
-            <!-- Page Header -->
-            <header class="page-header">
-                <h1 class="page-title">Fetch Reach</h1>
-                <p class="page-description"></p>
-            </header>
-    
-            <div class="divider">
-                <span class="divider-text">Let's Dive In</span>
-            </div>
-    
-            <!-- Section 1: Low-Level Programming  -->
-            <div class="module-section" id="lowlevel">
-                <h3>Objectives</h3>
-                <p>Students should be able to understand foundational programming concepts and its applications towards robotics. Students should be able to dive into a basic virtual robotics lab and make the robot move.</p>
-                <!-- Examples - Low-Level Programming -->
-            </div> <!-- End of module-section -->
-    
-             <!-- Section 2: High-Level Programming-->
-             <div class="module-section" id="highlevel">
-                <h3>About the Robot</h3>
-                <p>The Fetch-Reach robot is a simple robotic arm that provides an intuitive entry point into robotics programming. This robot is designed to demonstrate fundamental concepts of control and automation. The Fetch-Reach robot is equipped with several joints and actuators, allowing it to perform basic movements. The goal of this robot is to reach the destination point with the tip of the robot.</p>
-            </div> <!-- End of module-section -->
-    
-            <!-- Section 3: Programming Interfaces -->
-            <div class="module-section" id="programming-interface">
-                <h3>What is Given</h3>
-                <!-- Examples - Programming Interfaces -->
-                <div class="subsection">
-                    <ul>
-                        <li><strong>global env&nbsp;</strong>This represents the robot's environment, which contains the robot's current state and methods for interacting with it. The environment has various “getters” and “setters”</li>
-                        <li><strong>env = ReachEnv()&nbsp;</strong>The environment object that is initialized and is part of the task setup.</li>
-                        <li><strong>distance_threshold&nbsp;</strong>The distance value that will be used to determine when the gripper is "close enough" to the ball.</li>
-                        <li><strong>step_size&nbsp;</strong>The size of each movement step that the gripper will make towards the ball.</li>
-                </div>
-            </div> <!-- End of module-section -->
-    
-            <div class="module-section" id="programming-interface">
-                <h3>What Needs to be Retrieved</h3>
-                <!-- Examples - Programming Interfaces -->
-                <div class="subsection">
-                    <ul>
-                        <li><strong>ball_position&nbsp;</strong>This value represents the current position of the ball in the environment. The student will retrieve this by calling a method or function from the global variable “env”.</li>
-                        <li><strong>gripper_position()&nbsp;</strong>This value represents the current position of the robot's gripper. It’s essential for calculating the direction and updating the gripper’s position after each movement. It will be retrieved by calling a method or function from the global variable “env”.</li>
-                        <li><strong>direction&nbsp;</strong>The direction from the gripper to the ball, calculated by subtracting the gripper's position from the ball's position. This will be used to calculate how the gripper should move to reach the ball.</li>
-                    </ul>
-                </div>
-            </div> <!-- End of module-section -->
-    
-            <div class="module-section" id="programming-interface">
-                <h3>What Needs to be Coded</h3>
-                <!-- Examples - Programming Interfaces -->
-                <div class="subsection">
-                    <ul>
-                        <li><strong>Understanding the Environment:&nbsp;</strong>You are provided with a robot environment (env), which holds the current state of the robot and provides functions to interact with it. Specifically, it has "getters" to retrieve information like the position of the ball and the gripper.</li>
-                        <li><strong>Retrieve Key Positions: &nbsp;</strong>Begin by getting the current positions of both the ball and the gripper. These positions will be used to calculate the direction in which the gripper needs to move. You'll need to use the environment to obtain these positions.</li>
-                        <li><strong>Calculate the Direction: &nbsp;</strong>The robot’s gripper must move towards the ball. To determine this, calculate the vector from the gripper’s current position to the ball’s position. This direction vector will guide the movement of the gripper.</li>
-                        <li><strong>Distance threshold:&nbsp;</strong>This value determines how close the gripper must be to the ball before it stops. If the distance between the gripper and the ball is smaller than this threshold, the gripper is considered to have reached the ball.</li>
-                        <li><strong>Step size: &nbsp;</strong>This defines how much the gripper will move in each step. A small value is generally used to ensure smooth movement.</li>
-                        <li><strong>End Condition: &nbsp;</strong>The loop will terminate when the distance between the gripper and the ball becomes small enough (less than the distance threshold). At that point, print the final position of the gripper to confirm it has reached near the ball.</li>
-                        <li><strong>Test the Outcome:&nbsp;</strong>Once the loop finishes, the robot's gripper should be near the ball. Print the gripper’s final position and confirm that the robot has successfully moved the gripper to the ball.</li>
-                    </ul>
-                </div>
-            </div> <!-- End of module-section -->
-        
-        <!-- Next Button -->
-        <div class="next-button text-right mt-4">
-            <a href="{{ url_for('module_three_fetch_pick') }}" class="secondary-button">Next: Fetch Pick-and-Place</a>
+    <!-- Sidebar for navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-robot"></i>
+            <span>Meet the Robots</span>
         </div>
+        <ul class="course-list">
+            <li class="course-item">
+                <a href="#fetch-reach" class="course-link">Fetch Reach</a>
+            </li>
+            <li class="course-item">
+                <a href="#fetch-pick-place" class="course-link">Fetch Pick-and-Place</a>
+            </li>
+            <li class="course-item">
+                <a href="#fetch-organize" class="course-link">Fetch Organize with Sensor</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Meet the Fetch Robots</h1>
+            <p class="page-description">Explore the capabilities of our Fetch robots in the CORE robotics platform.</p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Explore</span>
+        </div>
+
+        <!-- General Blurb about Fetch Robot Class -->
+        <div class="module-section" id="fetch-intro" style="text-align: center;">
+            <h3>About the Fetch Robot Class</h3>
+            <p>The Fetch robot class consists of multiple tasks the Fetch Robot can complete including, reaching, picking up and placing objects, stacking objects on top of each other, using sensors to organize certain objects, etc. These robots are great for students and researchers to learn about robotics, programming, and how robots move and complete tasks.</p>
+            <iframe src="https://player.vimeo.com/video/126306100" width="640" height="360" frameborder="0" allowfullscreen style="display: block; margin: auto;"></iframe>
+        </div>
+
+        <!-- Another Fetch Video -->
+        <div class="module-section" id="video">
+            <h3>Fetch Organize Robot Simulation Video</h3>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <iframe width="560" height="315" 
+                    src="https://www.youtube.com/embed/CEIUrF7iOXk" 
+                    frameborder="0" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div> 
+        
+        <!-- Fetch Reach Section -->
+        <div class="module-section" id="fetch-reach">
+            <h3>Fetch Reach</h3>
+            <p>The <strong>Fetch Reach</strong> robot is designed to demonstrate basic <strong>reaching mechanics</strong>, teaching students how to program robotic arms to move towards objects efficiently.</p>
+        </div>
+
+        <!--https://vimeo.com/126306100-->
+        <!--https://www.newequipment.com/plant-operations/article/22059665/fetchs-quick-install-mobile-robots-lead-warehouse-revolution-->
+        <!--https://www.researchgate.net/figure/Rosie-embodied-on-a-Fetch-robot-learning-a-new-puzzle_fig1_334844330-->
+        
+        
+        <!-- Image Row -->
+        <div class="robot-images" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+            <img src="{{ url_for('static', filename='img/fetch2arms.avif') }}" alt="Fetch Robot 1" style="width: 30%;">
+            <img src="{{ url_for('static', filename='img/fetchblocks.jpg') }}" alt="Fetch Robot 2" style="width: 30%;">
+            <img src="{{ url_for('static', filename='img/FetchB.jpg') }}" alt="Fetch Robot 3" style="width: 30%;">
+        </div> 
+
+        <!-- Fetch Pick-and-Place Section -->
+        <div class="module-section" id="fetch-pick-place">
+            <h3>Fetch Pick-and-Place</h3>
+            <p>This Fetch robot focuses on object manipulation, including picking up and placing objects with precision.</p>
+        </div>
+
+        <!-- Fetch Organize Section FIX -->
+        <div class="module-section" id="fetch-organize">
+            <h3>Fetch Organize with Sensor</h3>
+            <p>With additional sensor capabilities, this Fetch robot organizes objects based on pre-defined criteria.</p>
+        </div> 
+
+        <!-- Fetch Organize with Sensor Section -->
+        <div class="module-section" id="fetch-organize">
+            <h3>Fetch Organize with Sensor</h3>
+            <p>With additional sensor capabilities, this Fetch robot organizes objects based on pre-defined criteria.</p>
+        </div>
+
+        <!-- Next Button -->
+        
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->
 {% endblock %}

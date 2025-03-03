@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Robot Environment - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_eleven') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_about') }}" class="course-link">About</a>
+                <ul class="sub-list">
+                    <li><a href="#about-car">Autonomous Car Robot</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Car</a></li>
+                    <li><a href="#gallery">Autonomous Car Gallery</a></li>
+                    <li><a href="#real-world">Real-World Applicability</a></li>
+                </ul>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_eleven_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-car">Word Bank</a></li>
+                    <li><a href="#given-car">What is Given</a></li>
+                    <li><a href="#retrieve-car">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-car">Word Bank</a></li>
+                    <li><a href="#understand-the-environment">Understand the Environment</a></li>
+                    <li><a href="#initialize-the-action">Initialize the Action</a></li>
+                    <li><a href="#retrieve-sensor-values">Retrieve Sensor Values</a></li>
+                    <li><a href="#determine-movement">Determine Movement</a></li>
+                    <li><a href="#prepare-actions">Prepare Actions</a></li>
+                    <li><a href="#apply-actions">Apply Actions</a></li>
+                    <li><a href="#small-delay">Add a Delay</a></li>
+                    <li><a href="#while-loop">Embedding a While Loop</a></li>
+                    <li><a href="#key-takeaways">Key Takeaways</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Robot Environment</h1>
+            <p class="page-description">Understand the components of the robot's environment and how to interact with them.</p>
+        </header>
+
+        <!-- Word Bank Section -->
+        <div class="word-bank" id="word-bank-car" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
+            <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin: 10px 0;">
+                    <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>➡️ Forward:</strong> Distance retrieved using the robot's forward sensor.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>⬅️ Left:</strong> Distance retrieved using the robot's left sensor.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>➡️ Right:</strong> Distance retrieved using the robot's right sensor.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>🔄 Action:</strong> List representing the robot’s movement and steering inputs.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>📊 Sensor Readings:</strong> A dictionary mapping sensor directions to their respective distance values.
+                </li>
+            </ul>
+        </div>
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look at the Autonomous Car Labeled</span>
+        </div>
+
+        <div class="module-section" id="sim">
+            <h3>Autonomous Car Simulation</h3>
+            <img src="{{ url_for('static', filename='img/labeledcar.png') }}" alt="Autonomous Car" class="robot-image">
+            <br>
+            <p>Here is a simulation of the Autonomous Car that you will be interacting with and programming.</p>
+            <p><strong>The Task of the Autonomous Car:</strong> The car has to keep driving without hitting anything. It has sensors that help it figure out where there’s the most space to move. If there’s more space in front, it goes forward. If there’s more space to the left, it turns left. If there’s more space to the right, it turns right. The car keeps doing this continuously to navigate safely.</p>
+        </p>
+        </div>
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look at What is Given to us</span>
+        </div>
+
+        <!-- Section 1: What is Given -->
+        <div class="module-section" id="given-car">
+            <h3>What is Given</h3>
+            <ul>
+                <li><strong>global env:</strong> This represents the robot's environment, which contains the robot's current state and methods for interacting with it. The environment has various "getters" and "setters."</li>
+                <li><strong>action:</strong> A list representing the robot’s movement and steering inputs.</li>
+                <li><strong>sensor readings:</strong> A dictionary that maps sensor directions to their distance values.</li>
+            </ul>
+        </div> <!-- End of What is Given Section -->
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look at What needs to be Retrieved</span>
+        </div>
+
+        <!-- Section 2: What Needs to be Retrieved -->
+        <div class="module-section" id="retrieve-car">
+            <h3>What Needs to be Retrieved</h3>
+            <ul>
+                <li><strong>forward:</strong> The sensor value representing the distance directly in front of the robot.</li>
+                <li><strong>right:</strong> The sensor value representing the distance to the robot's right.</li>
+                <li><strong>left:</strong> The sensor value representing the distance to the robot's left.</li>
+                <li><strong>greatest_direction:</strong> The direction with the highest sensor value, indicating the most open space.</li>
+            </ul>
+        </div> <!-- End of What Needs to be Retrieved Section -->
+
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_eleven_about') }}" class="secondary-button">Back: About</a>
+            <a href="{{ url_for('module_eleven_code') }}" class="secondary-button">Next: Coding Logic</a>
+        </div>
+
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Debugging - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_naming_conventions') }}" class="course-link">Naming Conventions</a>
+                <ul class="sub-list">
+                    <li><a href="#why-it-matters">Why They Matter</a></li>
+                    <li><a href="#best-practices">Best Practices</a></li>
+                    <li><a href="#common-naming-mistakes">Common Naming Mistakes</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_comments') }}" class="course-link">Commenting</a>
+                <ul class="sub-list">
+                    <li><a href="#why-comments-matter">Why It Matters</a></li>
+                    <li><a href="#focus-on-the-why">Write Meaningful Comments</a></li>
+                    <li><a href="#clear">Being Clear & Concise</a></li>
+                    <li><a href="#single-line">Single Line Commenting</a></li>
+                    <li><a href="#block-commenting">Block Commenting</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_indentation') }}" class="course-link">Indentation</a>
+                <ul class="sub-list">
+                    <li><a href="#why-indenting-matters">Indent Properly</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_variables') }}" class="course-link">Variables</a>
+                <ul class="sub-list">
+                    <li><a href="#what-are-variables">What are Variables</a></li>
+                    <li><a href="#naming-variables">How to Name Variables</a></li>
+                    <li><a href="#initializing-variables">Initializing Variables</a></li>
+                    <li><a href="#variable-types">Variable Types</a></li>
+                    <li><a href="#using-constants">The Use of Constants</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_control_flow') }}" class="course-link">Control Flow</a>
+                <ul class="sub-list">
+                    <li><a href="#conditional-statements">Conditional Statements</a></li>
+                    <li><a href="#loops">Loops</a></li>
+                    <li><a href="#break-and-continue">Break and Continue</a></li>
+                    <li><a href="#nested-control-flow">Nested Control Flow</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_loops') }}" class="course-link">Loops</a>
+                <ul class="sub-list">
+                    <li><a href="#for-loops">For Loops</a></li>
+                    <li><a href="#while-loops">While Loops</a></li>
+                    <li><a href="#do-while-loops">Do-While Loops</a></li>
+                    <li><a href="#best-practices">Best Practices</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_functions') }}" class="course-link">Functions</a>
+                <ul class="sub-list">
+                    <li><a href="#what-are-they">What are Functions</a></li>
+                    <li><a href="#function-syntax">Function Syntax</a></li>
+                    <li><a href="#function-parameters">Function Parameters</a></li>
+                    <li><a href="#return-values">Return Values</a></li>
+                </ul>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_four_debugging') }}" class="course-link">Debugging Techniques</a>
+                <ul class="sub-list">
+                    <li><a href="#print-statements">Print Statements</a></li>
+                    <li><a href="#debugger-tools">Debugging Tools</a></li>
+                    <li><a href="#rubber-duck-debugging">Rubber Duck Debugging</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Debugging Techniques</h1>
+            <p class="page-description">Learn essential techniques to identify and resolve errors in your code.</p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Let's Dive In</span>
+        </div>
+
+        <!-- Section 1: Print Statements -->
+        <div class="module-section" id="print-statements">
+            <h3>1. Print Statements</h3>
+            <p><strong>Print statements</strong> are a common debugging method.</p>
+            <p>How To: Insert print statements to check where and what is happening in your code.</p>
+            <pre><code>print(f"Variable x: {x}, Step: {step}")</code></pre>
+            <p>Use this method for quick debugging, but remember to remove print statements after debugging to keep your code clean.</p>
+        </div>
+
+        <!-- Section 2: Debugger Tools -->
+        <div class="module-section" id="debugger-tools">
+            <h3>2. Debugger Tools</h3>
+            <p>Debugger tools allow you to pause program execution, inspect variables, and step through your code to find the problem area. Python provides the <code>pdb</code> module for this purpose:</p>
+            <pre><code>import pdb
+pdb.set_trace()  # Insert this where you want to pause execution</code></pre>
+            <p>Many IDEs, such as VSCode, have built-in debuggers for helpful debugging.</p>
+        </div>
+
+        <!-- Section 3: Rubber Duck Debugging -->
+        <div class="module-section" id="rubber-duck">
+            <h3>3. Rubber Duck Debugging</h3>
+            <p>This technique involves explaining your code, line by line, to an inanimate object (like a rubber duck). This can help you clarify your thought process and identify errors.</p>
+        </div>
+
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_four_functions') }}" class="secondary-button">Back: Functions</a> 
+            <a href="{{ url_for('module_four_download') }}" class="secondary-button">Next: Cheat Sheet</a>
+        </div>
+
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

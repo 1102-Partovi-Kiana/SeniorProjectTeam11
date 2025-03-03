@@ -48,9 +48,43 @@ tippy('#syntax-highlight', {
       }
     },
   });
+
+  tippy('#review-course-content', {
+    content: "Review Course Content",
+    animation: 'fade',
+    onShow(instance) {
+      const tooltip = instance.popper.querySelector('.tippy-box');
+      if (tooltip) {
+        tooltip.classList.add('animate__animated', 'animate__tada');
+      }
+    },
+    onHidden(instance) {
+      const tooltip = instance.popper.querySelector('.tippy-box');
+      if (tooltip) {
+        tooltip.classList.remove('animate__animated', 'animate__tada');
+      }
+    },
+  });
   
 tippy('#autocomplete', {
     content: "Enable Autocomplete",
+    animation: 'fade',
+    onShow(instance) {
+      const tooltip = instance.popper.querySelector('.tippy-box');
+      if (tooltip) {
+        tooltip.classList.add('animate__animated', 'animate__tada');
+      }
+    },
+    onHidden(instance) {
+      const tooltip = instance.popper.querySelector('.tippy-box');
+      if (tooltip) {
+        tooltip.classList.remove('animate__animated', 'animate__tada');
+      }
+    },
+  });
+
+tippy('#dark-mode-pop-up-window', {
+    content: "Switch the Pop Up Window to Dark Mode",
     animation: 'fade',
     onShow(instance) {
       const tooltip = instance.popper.querySelector('.tippy-box');

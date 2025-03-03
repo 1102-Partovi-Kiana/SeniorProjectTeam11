@@ -5,7 +5,7 @@ from gym.envs.robotics import fetch_env
 
 # This path is specific for 'venv38' virtual environment
 MODEL_XML_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), 
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
     "venv38", 
     "lib", 
     "python3.8", 

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Robot Environment - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+     <!-- Sidebar for module navigation -->
+     <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_eight') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eight_about') }}" class="course-link">About</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_eight_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-stack">Word Bank</a></li>
+                    <li><a href="#given-fetch-stack">What is Given</a></li>
+                    <li><a href="#retrieve-fetch-stack">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eight_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-stack">Word Bank</a></li>
+                    <li><a href="#code-fetch-stack">What Needs to Be Coded</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eight_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Robot Environment</h1>
+            <p class="page-description">Understand the components of the robot's environment and how to interact with them.</p>
+        </header>
+
+        <!-- Word Bank Section -->
+        <div class="word-bank" id="word-bank-fetch-stack" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
+            <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin: 10px 0;">
+                    <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>🔧 FetchOrganizeEnv:</strong> The specific environment object for the task setup.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>📏 Distance Threshold:</strong> Maximum allowable distance between gripper and object.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>📐 Stack Threshold:</strong> A small distance value that determines when an object is "close enough" to be stacked successfully.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>📊 Height Threshold:</strong> The height value used to determine the appropriate lifting or stacking positions.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>🔐 Close Grip Action:</strong> Array representing the action to close the gripper.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>🔓 Open Grip Action:</strong> Array representing the action to open the gripper.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>⬆️ Lift Action:</strong> Array representing small upward movement to lift the gripper while holding an object.
+                </li>
+                <li style="margin: 10px 0;">
+                    <strong>📦 Box Positions:</strong> A list containing the identifiers of objects to be stacked.
+                </li>
+            </ul>
+        </div>
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look At the Fetch Stack Robot Labeled</span>
+        </div>
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look At What Is Given To Us</span>
+        </div>
+
+        <!-- Section 1: What is Given -->
+        <div class="module-section" id="given-fetch-stack">
+            <h3>What is Given</h3>
+            <ul>
+                <li><strong>global env:</strong> This represents the robot's environment, which contains the robot's current state and methods for interacting with it. The environment has various "getters" and "setters."</li>
+                <li><strong>distance_threshold:</strong> The distance value that will be used to determine when the gripper is "close enough" to the object.</li>
+                <li><strong>stack_threshold:</strong> A small distance value that determines when an object is "close enough" to be stacked successfully.</li>
+                <li><strong>height_threshold:</strong> The height value used to determine the appropriate lifting or stacking positions.</li>
+                <li><strong>close_grip_action and open_grip_action:</strong> Arrays representing actions to close or open the gripper, respectively.</li>
+                <li><strong>lift_action:</strong> Array representing small upward movement to lift the gripper while holding an object.</li>
+                <li><strong>box_positions:</strong> A list containing the identifiers of objects to be stacked.</li>
+            </ul>
+        </div> <!-- End of What is Given Section -->
+
+        <div class="divider">
+            <span class="divider-text">Let’s Look At What Needs To Be Retrieved</span>
+        </div>
+
+        <!-- Section 2: What Needs to be Retrieved -->
+        <div class="module-section" id="retrieve-fetch-stack">
+            <h3>What Needs to be Retrieved</h3>
+            <ul>
+                <li><strong>gripper_position:</strong> This value represents the current position of the robot's gripper. It’s essential for calculating the direction and updating the gripper’s position after each movement. It will be retrieved by calling a method or function from the global variable “env.”</li>
+                <li><strong>box_position:</strong> This value represents the current position of the box. It’s essential for calculating the direction after each movement. It will be retrieved by calling a method or function from the global variable “env.”</li>
+                <li><strong>horizontal_distance:</strong> The horizontal distance between the gripper and the object or between two objects. It is used to guide horizontal alignment.</li>
+                <li><strong>vertical_distance:</strong> The vertical distance between the gripper and the object or between stacked objects.</li>
+                <li><strong>direction_normalized:</strong> Adjusting the difference between each step when calculating the distance to the container.</li>
+            </ul>
+        </div> <!-- End of What Needs to be Retrieved Section -->
+
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_eight_about') }}" class="secondary-button">Back: About</a>
+            <a href="{{ url_for('module_eight_code') }}" class="secondary-button">Next: Coding Logic</a>
+        </div>
+    
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

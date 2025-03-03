@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Naming Conventions - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_four_naming_conventions') }}" class="course-link">Naming Conventions</a>
+                <ul class="sub-list">
+                    <li><a href="#why-it-matters">Why Naming Conventions Matter</a></li>
+                    <li><a href="#best-practices">Best Practices for Naming Conventions</a></li>
+                    <li><a href="#common-naming-mistakes">Common Naming Mistakes</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_comments') }}" class="course-link">Commenting</a>
+                <ul class="sub-list">
+                    <li><a href="#why-comments-matter">Why It Matters</a></li>
+                    <li><a href="#focus-on-the-why">Write Meaningful Comments</a></li>
+                    <li><a href="#clear">Being Clear & Concise</a></li>
+                    <li><a href="#single-line">Single Line Commenting</a></li>
+                    <li><a href="#block-commenting">Block Commenting</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_indentation') }}" class="course-link">Indentation</a>
+                <ul class="sub-list">
+                    <li><a href="#why-indenting-matters">Indent Properly</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_variables') }}" class="course-link">Variables</a>
+                <ul class="sub-list">
+                    <li><a href="#what-are-variables">What are Variables</a></li>
+                    <li><a href="#naming-variables">How to Name Variables</a></li>
+                    <li><a href="#initializing-variables">Initializing Variables</a></li>
+                    <li><a href="#variable-types">Variable Types</a></li>
+                    <li><a href="#using-constants">The Use of Constants</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_control_flow') }}" class="course-link">Control Flow</a>
+                <ul class="sub-list">
+                    <li><a href="#conditional-statements">Conditional Statements</a></li>
+                    <li><a href="#loops">Loops</a></li>
+                    <li><a href="#break-and-continue">Break and Continue</a></li>
+                    <li><a href="#nested-control-flow">Nested Control Flow</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_loops') }}" class="course-link">Loops</a>
+                <ul class="sub-list">
+                    <li><a href="#for-loops">For Loops</a></li>
+                    <li><a href="#while-loops">While Loops</a></li>
+                    <li><a href="#do-while-loops">Do-While Loops</a></li>
+                    <li><a href="#best-practices">Best Practices</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_functions') }}" class="course-link">Functions</a>
+                <ul class="sub-list">
+                    <li><a href="#what-are-they">What are Functions</a></li>
+                    <li><a href="#function-syntax">Function Syntax</a></li>
+                    <li><a href="#function-parameters">Function Parameters</a></li>
+                    <li><a href="#return-values">Return Values</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_debugging') }}" class="course-link">Debugging Techniques</a>
+                <ul class="sub-list">
+                    <li><a href="#print-statements">Print Statements</a></li>
+                    <li><a href="#debugger-tools">Debugging Tools</a></li>
+                    <li><a href="#rubber-duck-debugging">Rubber Duck Debugging</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Naming Conventions</h1>
+            <p class="page-description">Learn the importance of having proper naming conventions to enhance your coding skills.</p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Let's Dive In</span>
+        </div>
+
+        <!-- Section 1: Importance of Naming Conventions -->
+        <div class="module-section" id="why-it-matters">
+            <h3>Why Naming Conventions Matter</h3>
+            <p>Naming conventions make your code easier to read and understand, especially when working in teams.</p>
+            <p>Good naming practices:</p>
+            <ul>
+                <li>Provide clear context for variables and functions.</li>
+                <li>Reduce the need for additional comments.</li>
+                <li>Make code self-explanatory.</li>
+            </ul>
+        </div> <!-- End of Importance Section -->
+
+        <!-- Section 2: Best Practices -->
+        <div class="module-section" id="best-practices">
+            <h3>Best Practices for Naming Conventions</h3>
+            <p>Adopt these naming strategies:</p>
+            <ul>
+                <li><strong>Variables:</strong> Use <em>camelCase</em> and keep names descriptive. Avoid single letter variable names (except for loop counters like <code>i</code> or <code>j</code>).
+                    <pre><code># Good
+userHeight = 25
+
+# Bad
+he = 25</code></pre>
+                </li>
+                <li><strong>Functions:</strong> Use <em>snake_case</em>, starting with verbs to indicate actions.
+                    <pre><code># Good
+def fetch_user_data(user_id):
+    ...
+
+# Bad
+def getData(uid):
+    ...
+    </code></pre>
+                </li>
+                <li><strong>Constants:</strong> Use <em>UPPERCASE_WITH_UNDERSCORES</em> for values that remain unchanged.
+                    <pre><code># Good
+PI = 3.14159
+
+# Bad
+Pi = 3.14159</code></pre>
+                </li>
+                <li><strong>Avoid Ambiguity:</strong> Avoid abbreviations or unclear terms that could confuse other developers.
+                    <pre><code># Good
+total_pounds_of_rice = 30
+
+# Bad
+rice = 30</code></pre>
+                </li>
+            </ul>
+        </div> <!-- End of Best Practices Section -->
+
+        <!-- Section 3: Common Naming Mistakes -->
+        <div class="module-section" id="common-naming-mistakes">
+            <h3>Common Naming Mistakes</h3>
+            <p>Avoid these common pitfalls:</p>
+            <ul>
+                <li><strong>Overuse of Generic Names:</strong> Names like <code>number</code or><code>data</code> or <code>value</code> are too vague.</li>
+                <li><strong>Inconsistent Casing:</strong> Mixing styles like <code>camelCase</code> and <code>snake_case</code> within the same codebase can cause confusion.</li>
+                <li><strong>Too Long or Too Short:</strong> Finding a balance is key. Avoid names that are excessively verbose.</li>
+            </ul>
+        </div> <!-- End of Common Naming Mistakes Section -->
+
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_four') }}" class="secondary-button">Back: Learning Objectives</a> 
+            <a href="{{ url_for('module_four_comments') }}" class="secondary-button">Next: Commenting</a>
+        </div>
+
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

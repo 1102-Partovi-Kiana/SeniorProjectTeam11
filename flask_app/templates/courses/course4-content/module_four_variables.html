@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Variables - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_naming_conventions') }}" class="course-link">Naming Conventions</a>
+                <ul class="sub-list">
+                    <li><a href="#why-it-matters">Why They Matter</a></li>
+                    <li><a href="#best-practices">Best Practices</a></li>
+                    <li><a href="#common-naming-mistakes">Common Naming Mistakes</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_comments') }}" class="course-link">Commenting</a>
+                <ul class="sub-list">
+                    <li><a href="#why-comments-matter">Why It Matters</a></li>
+                    <li><a href="#focus-on-the-why">Write Meaningful Comments</a></li>
+                    <li><a href="#clear">Being Clear & Concise</a></li>
+                    <li><a href="#single-line">Single Line Commenting</a></li>
+                    <li><a href="#block-commenting">Block Commenting</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_indentation') }}" class="course-link">Indentation</a>
+                <ul class="sub-list">
+                    <li><a href="#why-indenting-matters">Indent Properly</a></li>
+                </ul>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_four_variables') }}" class="course-link">Variables</a>
+                <ul class="sub-list">
+                    <li><a href="#what-are-variables">What are Variables</a></li>
+                    <li><a href="#naming-variables">How to Name Variables</a></li>
+                    <li><a href="#initializing-variables">Initializing Variables</a></li>
+                    <li><a href="#variable-types">Variable Types</a></li>
+                    <li><a href="#using-constants">The Use of Constants</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_control_flow') }}" class="course-link">Control Flow</a>
+                <ul class="sub-list">
+                    <li><a href="#conditional-statements">Conditional Statements</a></li>
+                    <li><a href="#loops">Loops</a></li>
+                    <li><a href="#break-and-continue">Break and Continue</a></li>
+                    <li><a href="#nested-control-flow">Nested Control Flow</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_loops') }}" class="course-link">Loops</a>
+                <ul class="sub-list">
+                    <li><a href="#for-loops">For Loops</a></li>
+                    <li><a href="#while-loops">While Loops</a></li>
+                    <li><a href="#do-while-loops">Do-While Loops</a></li>
+                    <li><a href="#best-practices">Best Practices</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_functions') }}" class="course-link">Functions</a>
+                <ul class="sub-list">
+                    <li><a href="#what-are-they">What are Functions</a></li>
+                    <li><a href="#function-syntax">Function Syntax</a></li>
+                    <li><a href="#function-parameters">Function Parameters</a></li>
+                    <li><a href="#return-values">Return Values</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_debugging') }}" class="course-link">Debugging Techniques</a>
+                <ul class="sub-list">
+                    <li><a href="#print-statements">Print Statements</a></li>
+                    <li><a href="#debugger-tools">Debugging Tools</a></li>
+                    <li><a href="#rubber-duck-debugging">Rubber Duck Debugging</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Variables</h1>
+            <p class="page-description">Learn the purpose and use of variables.</p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Let's Dive In</span>
+        </div>
+
+        <!-- Section 1: What Are Variables? -->
+        <div class="module-section">
+            <h3>1. What Are Variables?</h3>
+            <p>Variables store data that can be used and changed throughout your program.</p>
+            <pre><code># Example
+album_name = "1989"
+release_year = 2014
+    </code></pre>
+        </div>
+
+        <!-- Section 2: Naming Variables -->
+        <div class="module-section">
+            <h3>2. Naming Variables</h3>
+            <p>Choose descriptive names that reflect the purpose of the variable. Follow consistent naming conventions, like <strong>snake_case</strong> in Python.</p>
+            <pre><code># Good
+total_tracks = 13
+favorite_song = "Blank Space"
+
+# Bad
+x = 13
+favS = "Blank Space"
+    </code></pre>
+        </div>
+
+        <!-- Section 3: Variable Initialization -->
+        <div class="module-section">
+            <h3>3. Initializing Variables</h3>
+            <p>Always initialize variables before using them. This way your code won't reference undefined values.</p>
+            <pre><code># Good
+album_title = "Red"
+
+# Bad
+print(album_title)  # Error: album_title is not defined
+    </code></pre>
+        </div>
+
+        <!-- Section 4: Variable Types -->
+        <div class="module-section">
+            <h3>4. Variable Types</h3>
+            <p>Python variables can hold different data types, such as strings, integers, lists, and more. Python allows dynamic typing, meaning you don't need to specify the exact data type you want to use explicitly.</p>
+            <pre><code># Example
+artist = "Taylor Swift"  # String
+release_year = 2020  # Integer
+track_list = ["Willow", "Cardigan", "Evermore"]  # List
+is_pop_genre = True  # Boolean
+    </code></pre>
+        </div>
+
+        <!-- Section 5: Use Constants for Fixed Values -->
+        <div class="module-section">
+            <h3>5. Use Constants for Fixed Values</h3>
+            <p>For values that don’t change, use <strong>UPPERCASE</strong> names for constants.</p>
+            <pre><code># Example
+MAX_TRACKS = 20
+DEFAULT_GENRE = "Pop"
+    </code></pre>
+        </div>
+
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_four_indentation') }}" class="secondary-button">Back: Indentation</a> 
+            <a href="{{ url_for('module_four_control_flow') }}" class="secondary-button">Next: Control Flow</a>
+        </div>
+
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

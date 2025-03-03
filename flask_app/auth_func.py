@@ -85,7 +85,7 @@ def generate_class_code():
         existing_code = ClassCodes.query.filter_by(class_code = class_code).first()
         if (existing_code is None):
             return class_code
-
+        
 def update_and_get_module_completion(user_id, subsection_number):
     module_completed = {}
     subsection = StudentAssignedCourseSubsections.query.filter_by(course_subsection_number=subsection_number, user_id=user_id).first()

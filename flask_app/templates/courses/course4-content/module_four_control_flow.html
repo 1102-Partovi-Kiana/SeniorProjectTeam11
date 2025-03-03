@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Control Flow - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_naming_conventions') }}" class="course-link">Naming Conventions</a>
+                <ul class="sub-list">
+                    <li><a href="#why-it-matters">Why They Matter</a></li>
+                    <li><a href="#best-practices">Best Practices</a></li>
+                    <li><a href="#common-naming-mistakes">Common Naming Mistakes</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_comments') }}" class="course-link">Commenting</a>
+                <ul class="sub-list">
+                    <li><a href="#why-comments-matter">Why It Matters</a></li>
+                    <li><a href="#focus-on-the-why">Write Meaningful Comments</a></li>
+                    <li><a href="#clear">Being Clear & Concise</a></li>
+                    <li><a href="#single-line">Single Line Commenting</a></li>
+                    <li><a href="#block-commenting">Block Commenting</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_indentation') }}" class="course-link">Indentation</a>
+                <ul class="sub-list">
+                    <li><a href="#why-indenting-matters">Indent Properly</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_variables') }}" class="course-link">Variables</a>
+                <ul class="sub-list">
+                    <li><a href="#what-are-variables">What are Variables</a></li>
+                    <li><a href="#naming-variables">How to Name Variables</a></li>
+                    <li><a href="#initializing-variables">Initializing Variables</a></li>
+                    <li><a href="#variable-types">Variable Types</a></li>
+                    <li><a href="#using-constants">The Use of Constants</a></li>
+                </ul>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_four_control_flow') }}" class="course-link">Control Flow</a>
+                <ul class="sub-list">
+                    <li><a href="#conditional-statements">Conditional Statements</a></li>
+                    <li><a href="#loops">Loops</a></li>
+                    <li><a href="#break-and-continue">Break and Continue</a></li>
+                    <li><a href="#nested-control-flow">Nested Control Flow</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_loops') }}" class="course-link">Loops</a>
+                <ul class="sub-list">
+                    <li><a href="#for-loops">For Loops</a></li>
+                    <li><a href="#while-loops">While Loops</a></li>
+                    <li><a href="#do-while-loops">Do-While Loops</a></li>
+                    <li><a href="#best-practices">Best Practices</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_functions') }}" class="course-link">Functions</a>
+                <ul class="sub-list">
+                    <li><a href="#what-are-they">What are Functions</a></li>
+                    <li><a href="#function-syntax">Function Syntax</a></li>
+                    <li><a href="#function-parameters">Function Parameters</a></li>
+                    <li><a href="#return-values">Return Values</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_debugging') }}" class="course-link">Debugging Techniques</a>
+                <ul class="sub-list">
+                    <li><a href="#print-statements">Print Statements</a></li>
+                    <li><a href="#debugger-tools">Debugging Tools</a></li>
+                    <li><a href="#rubber-duck-debugging">Rubber Duck Debugging</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Control Flow</h1>
+            <p class="page-description">Understand how to guide your program's behavior with tools like conditionals, loops, and other control structures</p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Let's Dive In</span>
+        </div>
+
+        <!-- Section 1: Conditional Statements -->
+        <div class="module-section" id="conditionals">
+            <h3>1. Conditional Statements</h3>
+            <p>Conditional statements allow your program to make decisions based on conditions.</p>
+            <pre><code># Example: Deciding which album to recommend with if-else statements
+favorite_genre = "pop"
+
+if favorite_genre == "pop":
+    print("You might like Taylor Swift's '1989'")
+elif favorite_genre == "rock":
+    print("Check out 'Bohemian Rhapsody' by Queen")
+else:
+    print("Explore some new genres!")</code></pre>
+        </div>
+
+        <!-- Section 2: Loops -->
+        <div class="module-section" id="loops">
+            <h3>2. Loops</h3>
+            <p>Loops are used to repeat actions, either a specific number of times or until a condition is met. They follow the DRY principle: Don't Repeat Yourself. Use loops to avoid duplicating code.</p>
+            <pre><code># Example: Print top 3 albums
+top_albums = ["1989", "Fearless", "Folklore"]
+
+for album in top_albums:
+    print(album)
+
+# Example: Countdown to a concert
+countdown = 5
+while countdown > 0:
+    print(f"{countdown} days left!")
+    countdown -= 1</code></pre>
+        </div>
+
+        <!-- Section 3: Break and Continue -->
+        <div class="module-section" id="break-continue">
+            <h3>3. Break and Continue</h3>
+            <p>Use <code>break</code> to exit a loop early or <code>continue</code> to skip the current iteration.</p>
+            <pre><code># Example: Stop when finding the favorite album
+albums = ["Red", "1989", "Midnights", "Folklore"]
+
+for album in albums:
+    if album == "1989":
+        print("Found the favorite album!")
+        break
+
+# Example: Skip specific albums
+for album in albums:
+    if album == "Midnights":
+        continue
+    print(album)</code></pre>
+        </div>
+
+        <!-- Section 4: Nested Control Flow -->
+        <div class="module-section" id="nested">
+            <h3>4. Nested Control Flow</h3>
+            <p>Control flow statements can be nested to handle more complex logic.</p>
+            <pre><code># Example: Checking album ratings
+album_ratings = {
+    "1989": 9,
+    "Fearless": 8,
+    "Reputation": 7,
+}
+
+for album, rating in album_ratings.items():
+    if rating > 8:
+        print(f"{album} is highly rated!")
+    else:
+        print(f"{album} has a decent rating.")</code></pre>
+        </div>
+
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_four_variables') }}" class="secondary-button">Back: Variables</a> 
+            <a href="{{ url_for('module_four_loops') }}" class="secondary-button">Next: Loops</a>
+        </div>
+
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

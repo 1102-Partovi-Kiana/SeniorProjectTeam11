@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Debugging - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_naming_conventions') }}" class="course-link">Naming Conventions</a>
+                <ul class="sub-list">
+                    <li><a href="#why-it-matters">Why They Matter</a></li>
+                    <li><a href="#best-practices">Best Practices</a></li>
+                    <li><a href="#common-naming-mistakes">Common Naming Mistakes</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_comments') }}" class="course-link">Commenting</a>
+                <ul class="sub-list">
+                    <li><a href="#why-comments-matter">Why It Matters</a></li>
+                    <li><a href="#focus-on-the-why">Write Meaningful Comments</a></li>
+                    <li><a href="#clear">Being Clear & Concise</a></li>
+                    <li><a href="#single-line">Single Line Commenting</a></li>
+                    <li><a href="#block-commenting">Block Commenting</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_indentation') }}" class="course-link">Indentation</a>
+                <ul class="sub-list">
+                    <li><a href="#why-indenting-matters">Indent Properly</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_variables') }}" class="course-link">Variables</a>
+                <ul class="sub-list">
+                    <li><a href="#what-are-variables">What are Variables</a></li>
+                    <li><a href="#naming-variables">How to Name Variables</a></li>
+                    <li><a href="#initializing-variables">Initializing Variables</a></li>
+                    <li><a href="#variable-types">Variable Types</a></li>
+                    <li><a href="#using-constants">The Use of Constants</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_control_flow') }}" class="course-link">Control Flow</a>
+                <ul class="sub-list">
+                    <li><a href="#conditional-statements">Conditional Statements</a></li>
+                    <li><a href="#loops">Loops</a></li>
+                    <li><a href="#break-and-continue">Break and Continue</a></li>
+                    <li><a href="#nested-control-flow">Nested Control Flow</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_loops') }}" class="course-link">Loops</a>
+                <ul class="sub-list">
+                    <li><a href="#for-loops">For Loops</a></li>
+                    <li><a href="#while-loops">While Loops</a></li>
+                    <li><a href="#do-while-loops">Do-While Loops</a></li>
+                    <li><a href="#best-practices">Best Practices</a></li>
+                </ul>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_four_functions') }}" class="course-link">Functions</a>
+                <ul class="sub-list">
+                    <li><a href="#what-are-they">What are Functions</a></li>
+                    <li><a href="#function-syntax">Function Syntax</a></li>
+                    <li><a href="#function-parameters">Function Parameters</a></li>
+                    <li><a href="#return-values">Return Values</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_debugging') }}" class="course-link">Debugging Techniques</a>
+                <ul class="sub-list">
+                    <li><a href="#print-statements">Print Statements</a></li>
+                    <li><a href="#debugger-tools">Debugging Tools</a></li>
+                    <li><a href="#rubber-duck-debugging">Rubber Duck Debugging</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Functions</h1>
+            <p class="page-description">Learn how to utilize functions to make your code modular.</p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Let's Dive In</span>
+        </div>
+
+            <!-- Section 1: What are Functions? -->
+        <div class="module-section" id="definition">
+            <h3>What are Functions?</h3>
+            <p>A function is a reusable block of code designed to perform a specific task. They follow the DRY principle: Don't Repeat Yourself. Use functions to avoid duplicating code</p>
+            <p>Functions are used to:</p>
+            <ul>
+                <li>Encapsulate logic into reusable components.</li>
+                <li>Reduce code duplication.</li>
+                <li>Make programs easier to debug.</li>
+                <li>Make programs easier to maintain.</li>
+            </ul>
+        </div>
+
+        <!-- Section 3: Function Syntax -->
+        <div class="module-section" id="syntax">
+            <h3>Function Syntax</h3>
+            <p>In Python, a function is defined using the <code>def</code> keyword:</p>
+            <pre><code># Example of a simple function
+def print_hello():
+print("Hello, world!")</code></pre>
+            <p>To call the function, simply use its name followed by parentheses:</p>
+            <pre><code>print_hello()  # Outputs: Hello, world!</code></pre>
+        </div>
+
+        <!-- Section 4: Function Parameters -->
+        <div class="module-section" id="parameters">
+            <h3>Function Parameters</h3>
+            <p>Functions can accept parameters. Parameters are specified in parentheses during function definition:</p>
+            <pre><code># Function with parameters
+def print_name(name):
+print(f"Hello, {name}!")</code></pre>
+            <p>When calling the function, provide the proper arguments for the parameters:</p>
+            <pre><code>print_name("Bob")  # Outputs: Hello, Bob!</code></pre>
+        </div>
+
+        <!-- Section 5: Return Values -->
+        <div class="module-section" id="return-values">
+            <h3>Return Values</h3>
+            <p>Functions can return values using the <code>return</code> statement, allowing you to get and use the result:</p>
+            <pre><code># Function with a return value
+def add_numbers(a, b):
+    return a + b
+
+result = add_numbers(4, 2)
+print(result)  # Outputs: 6</code></pre>
+        </div>
+
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_four_loops') }}" class="secondary-button">Back: Loops</a> 
+            <a href="{{ url_for('module_four_debugging') }}" class="secondary-button">Next: Debugging Techniques</a>
+        </div>
+        
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

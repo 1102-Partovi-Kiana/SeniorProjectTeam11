@@ -54,7 +54,7 @@
                     <li><a href="#collaborative-robots">Collaborative Robots</a></li>
                 </ul>
             </li>
-            <li class="course-item">
+            <li class="course-item active">
                 {% if module_completed[1.14]%}
                 <a href="{{ url_for('typesofrobots') }}" class="course-link">
                     Types of Robots
@@ -71,6 +71,25 @@
                 </ul>
             </li>
             <li class="course-item">
+<<<<<<< HEAD
+                {% if module_completed[1.14]%}
+                <a href="{{ url_for('typesofrobots') }}" class="course-link">
+                    Types of Robots
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">Types of Robots</a>
+                {% endif %}
+                <ul class="sub-list">
+                    <li><a href="#industrial">Industrial robots</a></li>
+                    <li><a href="#humanoid">Humanoid robots</a></li>
+                    <li><a href="#mobile">Mobile robots</a></li>
+                    <li><a href="#collaborative-tools">Collaborative tools</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+=======
+>>>>>>> user-study-branch
                 {% if module_completed[1.15] %}
                 <a href="{{ url_for('importanceandapp') }}" class="course-link">
                     Importance and Applications of Robotics
@@ -144,7 +163,11 @@
                     <li><a href="#programming-interface">Programming Interfaces</a></li>
                 </ul>
             </li>
+<<<<<<< HEAD
             <li class="course-item active">
+=======
+            <li class="course-item">
+>>>>>>> user-study-branch
                 {% if module_completed[1.19] %}
                 <a href="{{ url_for('implications') }}" class="course-link">
                     Social and Ethical Implications

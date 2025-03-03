@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>About the Autonomous Car with Sensors Robot - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_eleven') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_eleven_about') }}" class="course-link">About</a>
+                <ul class="sub-list">
+                    <li><a href="#about-car">Autonomous Car Robot</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Car</a></li>
+                    <li><a href="#gallery">Autonomous Car Gallery</a></li>
+                    <li><a href="#real-world">Real-World Applicability</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-car">Word Bank</a></li>
+                    <li><a href="#given-car">What is Given</a></li>
+                    <li><a href="#retrieve-car">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-car">Word Bank</a></li>
+                    <li><a href="#understand-the-environment">Understand the Environment</a></li>
+                    <li><a href="#initialize-the-action">Initialize the Action</a></li>
+                    <li><a href="#retrieve-sensor-values">Retrieve Sensor Values</a></li>
+                    <li><a href="#determine-movement">Determine Movement</a></li>
+                    <li><a href="#prepare-actions">Prepare Actions</a></li>
+                    <li><a href="#apply-actions">Apply Actions</a></li>
+                    <li><a href="#small-delay">Add a Delay</a></li>
+                    <li><a href="#while-loop">Embedding a While Loop</a></li>
+                    <li><a href="#key-takeaways">Key Takeaways</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">About the Autonomous Car with Sensors Robot</h1>
+            <p class="page-description">Learn the purpose of the Autonomous Car with Sensors Robot.</p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Let's Explore</span>
+        </div>
+
+        <!-- Section 1: Introduction -->
+        <div class="module-section" id="about-car">
+            <h3>Autonomous Car with Sensors Robot</h3>
+            <p>The <strong>Autonomous Car With Sensors robot</strong> is designed to introduce students to autonomous navigation using sensor data. The robot is equipped with proximity sensors that provide distance values in various directions (left, right, forward), and steering and movement controls based on the environmental input. The goal of this robot is to find its way through the path without getting stuck.</p>
+        </div>  
+
+        <!-- Section 2: Table -->
+        <div class="module-section" id="sim-v-real">
+            <h3>Simulation vs. Real Autonomous Car</h3>
+            <p>In this module, you'll be working with a simulated autonomous car in an environment that mimics real-world physics. While this simulation runs within a controlled environment, the logic and skills you develop here will apply to real autonomous navigation systems.</p>
+            <div class="table-responsive">
+                <table class="table-aesthetic">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Simulated Autonomous Car</th>
+                            <th>Real Autonomous Car</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Physics</td>
+                            <td>Simulated physics engine</td>
+                            <td>Real-world conditions (friction, weather, uneven terrain)</td>
+                        </tr>
+                        <tr>
+                            <td>Sensor Data</td>
+                            <td>Simulated sensor readings (perfect values)</td>
+                            <td>Real sensors (LIDAR, ultrasonic, camera-based detection)</td>
+                        </tr>
+                        <tr>
+                            <td>Decision Making</td>
+                            <td>Uses simplified logic and AI-based movement</td>
+                            <td>Must handle unpredictable human-driven vehicles and pedestrians</td>
+                        </tr>
+                        <tr>
+                            <td>Communication</td>
+                            <td>Uses API-based controls</td>
+                            <td>Uses real-world protocols like CAN Bus and IoT networks</td>
+                        </tr>
+                        <tr>
+                            <td>Error Handling</td>
+                            <td>Instant resets on failure</td>
+                            <td>Requires debugging and physical repair</td>
+                        </tr>
+                        <tr>
+                            <td>Failure Risk</td>
+                            <td>No risk</td>
+                            <td>Possible hardware damage or accidents</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>The simulation allows you to experiment in a <strong>risk-free</strong> environment, while real-world autonomous driving requires accounting for dynamic conditions.</p>
+        </div>        
+
+        <!-- Section 3: Gallery -->
+        <div class="module-section" id="gallery">
+            <h3>Autonomous Car Gallery</h3>
+            <div class="slider-container">
+                <div class="image-slider">
+                    <img src="{{ url_for('static', filename='img/carauto.jpg') }}" alt="Simulated Autonomous Car" class="slider-image">
+                    <img src="{{ url_for('static', filename='img/autocar.jpg') }}" alt="Real Autonomous Car 1" class="slider-image">
+                    <img src="{{ url_for('static', filename='img/carlabeled.jpg') }}" alt="Real Autonomous Car 2" class="slider-image">
+                    <img src="{{ url_for('static', filename='img/tesla.webp') }}" alt="Real Autonomous Car 3" class="slider-image">
+                </div>
+                <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+                <button class="next" onclick="moveSlide(1)">&#10095;</button> 
+            </div>
+            <br>
+            <p>The first image showcases the <strong>simulated autonomous car</strong>, which you will be working with in this module.</p>
+            <p>The next three images display real-world autonomous cars that use advanced sensor technologies and AI-driven decision-making for navigation.</p>
+            <div class="reference-section">
+                <h6>References</h6>
+                <p>
+                   <a href="https://www.techslang.com/autonomous-car-challenges-are-we-any-nearer-to-realizing-self-driving-vehicles/" target="_blank">https://www.techslang.com/autonomous-car-challenges-are-we-any-nearer-to-realizing-self-driving-vehicles/</a>
+                   <a href="https://circuitpennhockey01yh.z13.web.core.windows.net/autonomous-car-sensor-diagram.html" target="_blank">https://circuitpennhockey01yh.z13.web.core.windows.net/autonomous-car-sensor-diagram.html</a>
+                   <a href="https://www.gadgets360.com/auto/news/elon-musk-tesla-full-self-driving-cars-later-this-year-4182670" target="_blank">https://www.gadgets360.com/auto/news/elon-musk-tesla-full-self-driving-cars-later-this-year-4182670</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Section 4: Real-World Applicability -->
+        <div class="module-section" id="real-world">
+            <h3>Real-World Applicability</h3>
+            <p>Understanding the simulated car will provide you with valuable insights into self-driving car technology.Concepts like <strong>obstacle detection, path planning, and collision avoidance</strong> that you learn in this module are the foundation for real-world <strong>autonomous vehicle development</strong>.</p>
+        </div> 
+        
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_eleven') }}" class="secondary-button">Back: Learning Objectives</a>
+            <a href="{{ url_for('module_eleven_given') }}" class="secondary-button">Next: Robot Environment</a>
+        </div>
+
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}
