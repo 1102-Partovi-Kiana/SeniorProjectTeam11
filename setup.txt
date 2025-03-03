@@ -1,0 +1,67 @@
+
+How to Setup the Program
+
+1.) If on Windows Computer, the user can use VM box or WSL to get a Linux Distribution: Ubuntu. 
+If the user is on a Mac computer, a virtual machine like VM box should work.
+
+2.) To install WSL (as an Powershell Admin):
+wsl --install -d Ubuntu
+
+3.) Download Python 3.8.20:
+sudo apt update
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt install python3.8 -y
+sudo apt install python3.8-dev -y
+sudo apt install build-essential -y
+sudo apt install -y libglib2.0-0 -y
+sudo apt install libglu1-mesa libgl1 -y
+sudo apt install libgl1-mesa-dev libglu1-mesa-dev libosmesa6-dev -y
+sudo apt install patchelf -y
+sudo apt install libpq-dev -y
+sudo apt install postgresql postgresql-contrib -y
+
+4.) Create a virtual environment:
+sudo apt install python3.8-venv -y
+python3.8 -m venv venv38
+
+5.) Activate the virtual environment:
+source venv38/bin/activate
+*Note: Your terminal should display (venv38) hostname@computername:directory/$
+
+6.) Download all of the neccessary libraries:
+pip install --upgrade pip
+pip install -r requirements.txt
+
+7.) Download mujoco:
+mkdir -p ~/.mujoco
+cd ~/.mujoco
+wget https://mujoco.org/download/mujoco210-linux-x86_64.tar.gz
+tar -xvf mujoco210-linux-x86_64.tar.gz
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/tang/.mujoco/mujoco210/bin
+
+8.) Run the example code "code.py":
+python3.8 code.py
+*Note: If you are given a black screen, do "export LIBGL_ALWAYS_SOFTWARE=1"
+
+9.) Download PostgreSQL:
+sudo apt install postgresql
+
+To switch to the PostgreSQL default admin user and enter the command-line interface:
+sudo -i -u postgres
+psql
+
+To create a new database
+CREATE DATABASE <database_name>
+
+To connect to the database
+\c <database_name>
+
+To exit the psql prompt:
+\q
+
+To create a new user
+CREATE USER my_user WITH PASSWORD 'password' <additional options>;
+
+To login to new user
+psql-U <username> -d <database>
