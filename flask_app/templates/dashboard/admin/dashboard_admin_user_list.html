@@ -99,15 +99,17 @@
                                     </td>
                                 </tr>
                                 
+                                <!-- Edit User Modal -->
                                 <div id="edit-modal-{{ user.user_id }}" class="modal admin_dashboard">
                                     <div class="modal-content admin_dashboard">
                                         <span class="close-modal">&times;</span>
                                         <h2>User Management</h2>
                                         <p>Editing: {{ user.first_name }} {{ user.last_name }}</p>
-                                
+
                                         <!-- Scrollable Content -->
                                         <div class="modal-body">
-                                            <form method="POST" action="{{ url_for('update_user') }}">
+                                            <!-- Update User Form -->
+                                            <form method="POST" action="{{ url_for('update_user') }}" id="update-user-form">
                                                 <input type="hidden" name="user_id" value="{{ user.user_id }}">
                                                 <label for="role">Change Role:</label>
                                                 <select name="role_id" id="role">
@@ -115,34 +117,37 @@
                                                     <option value="2" {% if user.role_id == 2 %} selected {% endif %}>Student</option>
                                                     <option value="3" {% if user.role_id == 3 %} selected {% endif %}>Admin</option>
                                                 </select>
-                                
+
                                                 <label for="first_name">First Name:</label>
                                                 <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" required>
-                                
+
                                                 <label for="last_name">Last Name:</label>
                                                 <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" required>
-                                
+
                                                 <label for="email">Email:</label>
                                                 <input type="email" name="email" id="email" value="{{ user.email }}" required>
-                                
+
                                                 <label for="new_password">New Password (leave blank to keep current password):</label>
                                                 <input type="password" name="new_password" id="new_password" placeholder="New password">
-                                
+
                                                 <label for="confirm_password">Confirm Password:</label>
                                                 <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password">
-                                                
+
                                                 <!-- Footer to hold buttons in the same row -->
                                                 <div class="modal-footer">
                                                     <button type="submit" class="apply-changes-button">Apply Changes</button>
-                                            </form>       
-                                            <form method="POST" action="{{ url_for('remove_user') }}">
-                                                <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                                                    <button type="submit" name="action" value="remove" id="remove-button">Remove User</button>
+                                                    <button type="submit" name="action" value="remove" id="remove-button" form="remove-user-form">Remove User</button>
+                                                </div>
                                             </form>
-                                                </div> <!-- End of modal-footer -->
-                                        </div>
-                                    </div>
-                                </div>
+
+                                            <!-- Remove User Form -->
+                                            <form method="POST" action="{{ url_for('remove_user') }}" id="remove-user-form">
+                                                <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                                            </form>
+                                        </div> <!-- End of modal-body -->
+                                    </div> <!-- End of modal-content -->
+                                </div> <!-- End of edit-modal -->
+
                                 <!-- Confirmation Modal -->
                                 <div id="confirmation-modal" class="modal confirmation-modal" style="display: none;">
                                     <div class="modal-content confirmation-modal">

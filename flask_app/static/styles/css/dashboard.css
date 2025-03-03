@@ -1376,3 +1376,150 @@ h3 svg {
 #remove-button:hover {
     background-color: #c82333;
 }
+
+/* Confirmation Modal */
+.confirmation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999; /* Extremely large z-index */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Confirmation Modal Content */
+.confirmation-modal .modal-content {
+    position: relative;
+    background-color: white;
+    padding: 24px;
+    width: 400px; /* Fixed width for confirmation modal */
+    max-width: 90%; /* Responsive max-width */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Confirmation Modal */
+.confirmation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Confirmation Modal Content */
+.confirmation-modal .modal-content {
+    position: relative;
+    background-color: white;
+    padding: 24px;
+    width: 400px;
+    max-width: 90%;
+    border-radius: 12px;
+    max-height: 30%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Confirmation Modal Body */
+.confirmation-modal .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Scrollbar for Confirmation Modal Body */
+.confirmation-modal .modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.confirmation-modal .modal-body::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}
+
+.confirmation-modal .modal-body::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
+}
+
+/* Confirmation Modal Footer (Buttons Container) */
+.confirmation-modal .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+/* Confirmation Modal Buttons */
+.confirmation-modal .modal-footer button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* Confirm Button */
+.confirmation-modal .confirm-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.confirmation-modal .confirm-button:hover {
+    background-color: #0056b3;
+}
+
+/* Cancel Button */
+.confirmation-modal .cancel-button {
+    background-color: #6c757d;
+    color: white;
+}
+
+.confirmation-modal .cancel-button:hover {
+    background-color: #5a6268;
+}
+
+/* Close Button for Confirmation Modal */
+.confirmation-modal .close-confirmation-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #666;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.confirmation-modal .close-confirmation-modal:hover,
+.confirmation-modal .close-confirmation-modal:focus {
+    color: #000;
+}
+
+/* Confirmation Modal Header */
+.confirmation-modal h2 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.confirmation-modal p {
+    margin: 8px 0 16px;
+    color: #666;
+}
