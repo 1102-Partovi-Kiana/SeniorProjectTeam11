@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiDAR Simulation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: rgb(30, 30, 30);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        canvas {
+            display: block;
+            border: 1px solid white;
+        }
+        #controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        #controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #tableContainer {
+            margin-top: 20px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 300px; 
+            overflow-y: auto;
+            border: 1px solid white;
+        }
+        #dataTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #dataTable th, #dataTable td {
+            border: 1px solid white;
+            padding: 8px;
+            text-align: center;
+        }
+        #dataTable th {
+            background-color: #444;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="simulationCanvas"></canvas>
+    <div id="controls">
+        <button id="runButton">Run Simulation</button>
+        <button id="moveUp">Up</button>
+        <button id="moveDown">Down</button>
+        <button id="moveLeft">Left</button>
+        <button id="moveRight">Right</button>
+    </div>
+    <div id="tableContainer">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Angle (°)</th>
+                    <th>Distance (px)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data rows will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const canvas = document.getElementById('simulationCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 800;
+        canvas.height = 600;
+
+        const BACKGROUND_COLOR = 'rgb(30, 30, 30)';
+        const SENSOR_COLOR = 'rgb(0, 255, 0)';
+        const LASER_COLOR = 'rgb(255, 0, 0)';
+        const MARK_COLOR = 'rgb(255, 255, 0)';
+        const NUM_LASERS = 360;
+        const LASER_LENGTH = canvas.width;
+
+        let sensor = { x: canvas.width / 2, y: canvas.height / 2, radius: 10 };
+        const obstacles = [
+            { x: 650, y: 250, width: 50, height: 100 },
+            { x: 150, y: 420, width: 50, height: 100 },
+            { x: 300, y: 100, width: 60, height: 120 },
+            { x: 500, y: 400, width: 80, height: 60 },
+            { x: 200, y: 200, width: 120, height: 40 },
+            { x: 0, y: 0, width: canvas.width, height: 5 },
+            { x: 0, y: canvas.height - 5, width: canvas.width, height: 5 },
+            { x: 0, y: 0, width: 5, height: canvas.height },
+            { x: canvas.width - 5, y: 0, width: 5, height: canvas.height }
+        ];
+        let marks = [];
+        let currentLaser = 0;
+        let isRunning = false;
+
+        // Array to store laser data (distance, angle)
+        let laserData = [];
+
+        const tableBody = document.querySelector('#dataTable tbody');
+
+        function drawSensor() {
+            ctx.fillStyle = SENSOR_COLOR;
+            ctx.beginPath();
+            ctx.arc(sensor.x, sensor.y, sensor.radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawObstacles() {
+            ctx.fillStyle = 'rgb(100, 100, 100)';
+            obstacles.forEach(obstacle => {
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+        }
+
+        function drawMarks() {
+            ctx.fillStyle = MARK_COLOR;
+            marks.forEach(mark => {
+                ctx.beginPath();
+                ctx.arc(mark.x, mark.y, 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function redrawCanvas() {
+            ctx.fillStyle = BACKGROUND_COLOR;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            drawObstacles();
+            drawMarks();
+
+            drawSensor();
+        }
+
+        function castLaser(angle) {
+            let x = sensor.x, y = sensor.y;
+            for (let i = 0; i < LASER_LENGTH; i += 1) {
+                x = sensor.x + Math.cos(angle) * i;
+                y = sensor.y + Math.sin(angle) * i;
+
+                for (const obstacle of obstacles) {
+                    if (x >= obstacle.x && x <= obstacle.x + obstacle.width &&
+                        y >= obstacle.y && y <= obstacle.y + obstacle.height) {
+                        return { x, y, distance: i };
+                    }
+                }
+            }
+            return { x, y, distance: LASER_LENGTH };
+        }
+
+        function resetSimulation() {
+            marks = [];
+            currentLaser = 0;
+            isRunning = false;
+            laserData = [];
+
+            const runButton = document.getElementById('runButton');
+            runButton.textContent = 'Run Simulation';
+            runButton.disabled = false;
+
+            redrawCanvas();
+        }
+
+        function updateTable() {
+            tableBody.innerHTML = '';
+
+            // Add rows for each laser data entry
+            laserData.forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${entry.angle}</td>
+                    <td>${entry.distance}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            const tableContainer = document.getElementById('tableContainer');
+            tableContainer.scrollTop = tableContainer.scrollHeight;
+        }
+
+        function animate() {
+            if (!isRunning) return;
+
+            ctx.fillStyle = BACKGROUND_COLOR;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            drawObstacles();
+            drawMarks();
+            drawSensor();
+
+            if (currentLaser < NUM_LASERS) {
+                const angle = (currentLaser * Math.PI) / 180;
+
+                const { x, y, distance } = castLaser(angle);
+
+                ctx.strokeStyle = LASER_COLOR;
+                ctx.beginPath();
+                ctx.moveTo(sensor.x, sensor.y);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+
+                if (distance < LASER_LENGTH) {
+                    marks.push({ x, y });
+                }
+
+                laserData.push({
+                    angle: currentLaser,
+                    distance: distance,
+                });
+
+                updateTable();
+
+                currentLaser++;
+            } else {
+                resetSimulation();
+                return;
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        const runButton = document.getElementById('runButton');
+        runButton.addEventListener('click', () => {
+            if (!isRunning) {
+                isRunning = true;
+                runButton.textContent = 'Running...';
+                runButton.disabled = true;
+                animate();
+            }
+        });
+
+        const moveUp = document.getElementById('moveUp');
+        const moveDown = document.getElementById('moveDown');
+        const moveLeft = document.getElementById('moveLeft');
+        const moveRight = document.getElementById('moveRight');
+
+        const MOVE_STEP = 10;
+
+        moveUp.addEventListener('click', () => {
+            sensor.y -= MOVE_STEP;
+            if (sensor.y < 0) sensor.y = 0;
+            redrawCanvas();
+        });
+
+        moveDown.addEventListener('click', () => {
+            sensor.y += MOVE_STEP;
+            if (sensor.y > canvas.height) sensor.y = canvas.height;
+            redrawCanvas();
+        });
+
+        moveLeft.addEventListener('click', () => {
+            sensor.x -= MOVE_STEP;
+            if (sensor.x < 0) sensor.x = 0;
+            redrawCanvas();
+        });
+
+        moveRight.addEventListener('click', () => {
+            sensor.x += MOVE_STEP;
+            if (sensor.x > canvas.width) sensor.x = canvas.width;
+            redrawCanvas();
+        });
+    </script>
+</body>
+</html>

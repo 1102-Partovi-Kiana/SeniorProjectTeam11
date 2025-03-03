@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiDAR Simulation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: rgb(30, 30, 30);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        canvas {
+            display: block;
+            border: 1px solid white;
+        }
+        #controls {
+            margin-top: 10px;
+            display: flex;
+            gap: 5px;
+        }
+        #runButton {
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 3px;
+        }
+        #stopButton {
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 3px;
+        }
+        #resetButton {
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 3px;
+        }
+        #controls button {
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        #tableContainer {
+            margin-top: 10px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 200px; 
+            overflow-y: auto;
+            border: 1px solid white;
+        }
+        #dataTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #dataTable th, #dataTable td {
+            border: 1px solid white;
+            padding: 5px;
+            text-align: center;
+            font-size: 12px;
+        }
+        #dataTable th {
+            background-color: #444;
+        }
+        #dpad {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+            position: relative;
+            width: 100px;
+            height: 100px;
+            background-color: #444;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        #dpad button {
+            width: 30px;
+            height: 30px;
+            font-size: 14px;
+            text-align: center;
+            border: none;
+            background-color: #666;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        #dpad button:hover {
+            background-color: #888;
+            transform: scale(1.1);
+        }
+        #dpad button:active {
+            transform: scale(0.95);
+        }
+        #moveUp {
+            position: absolute;
+            top: 0;
+        }
+        #moveDown {
+            position: absolute;
+            bottom: 0;
+        }
+        #moveLeft {
+            position: absolute;
+            left: 0;
+            top: 33%;
+        }
+        #moveRight {
+            position: absolute;
+            right: 0;
+            top: 33%;
+        }
+        #title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="title">LiDAR Sensor Simulation</h1>
+    <canvas id="simulationCanvas"></canvas>
+    <div id="controls">
+        <button id="runButton">Run</button>
+        <button id="stopButton">Stop</button>
+        <button id="resetButton">Reset</button>
+        <div id="dpad">
+            <button id="moveUp">↑</button>
+            <button id="moveLeft">←</button>
+            <button id="moveRight">→</button>
+            <button id="moveDown">↓</button>
+        </div>
+    </div>
+    <div id="tableContainer">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Angle (°)</th>
+                    <th>Distance (px)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data rows will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const canvas = document.getElementById('simulationCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 800;
+        canvas.height = 450;
+
+        const BACKGROUND_COLOR = 'rgb(30, 30, 30)';
+        const SENSOR_COLOR = 'rgb(0, 255, 0)';
+        const LASER_COLOR = 'rgb(255, 0, 0)';
+        const MARK_COLOR = 'rgb(255, 255, 0)';
+        const NUM_LASERS = 360;
+        const LASER_LENGTH = canvas.width;
+        const STEP_SIZE = 20;
+
+        let sensor = { x: canvas.width / 2, y: canvas.height / 2, radius: 10 };
+        const obstacles = [
+            { x: 550, y: 250, width: 50, height: 100 },
+            { x: 150, y: 300, width: 50, height: 100 },
+            { x: 300, y: 100, width: 60, height: 120 },
+            { x: 500, y: 350, width: 80, height: 60 },
+            { x: 200, y: 200, width: 120, height: 40 },
+            { x: 0, y: 0, width: canvas.width, height: 5 },
+            { x: 0, y: canvas.height - 5, width: canvas.width, height: 5 },
+            { x: 0, y: 0, width: 5, height: canvas.height },
+            { x: canvas.width - 5, y: 0, width: 5, height: canvas.height }
+        ];
+        let marks = [];
+        let currentLaser = 0;
+        let isRunning = false;
+        let isPaused = false;
+        let extendStep = 0;
+        let retractStep = 0;
+        let laserData = [];
+
+        const tableBody = document.querySelector('#dataTable tbody');
+
+        function drawSensor() {
+            ctx.fillStyle = SENSOR_COLOR;
+            ctx.beginPath();
+            ctx.arc(sensor.x, sensor.y, sensor.radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawObstacles() {
+            ctx.fillStyle = 'rgb(100, 100, 100)';
+            obstacles.forEach(obstacle => {
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+        }
+
+        function drawMarks() {
+            ctx.fillStyle = MARK_COLOR;
+            marks.forEach(mark => {
+                ctx.beginPath();
+                ctx.arc(mark.x, mark.y, 5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function redrawCanvas() {
+            ctx.fillStyle = BACKGROUND_COLOR;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            drawObstacles();
+            drawMarks();
+            drawSensor();
+        }
+
+        function castLaser(angle) {
+            let x = sensor.x, y = sensor.y;
+            for (let i = 0; i < LASER_LENGTH; i += 1) {
+                x = sensor.x + Math.cos(angle) * i;
+                y = sensor.y + Math.sin(angle) * i;
+
+                for (const obstacle of obstacles) {
+                    if (x >= obstacle.x && x <= obstacle.x + obstacle.width &&
+                        y >= obstacle.y && y <= obstacle.y + obstacle.height) {
+                        return { x, y, distance: i };
+                    }
+                }
+            }
+            return { x, y, distance: LASER_LENGTH };
+        }
+
+        function resetSimulation() {
+            marks = [];
+            currentLaser = 0;
+            isRunning = false;
+            isPaused = false;
+            laserData = [];
+            extendStep = 0;
+            retractStep = 0;
+
+            sensor.x = canvas.width / 2;
+            sensor.y = canvas.height / 2;
+
+            const runButton = document.getElementById('runButton');
+            runButton.textContent = 'Run';
+            runButton.disabled = false;
+
+            redrawCanvas();
+        }
+
+        function updateTable() {
+            tableBody.innerHTML = '';
+            laserData.forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${entry.angle}</td>
+                    <td>${entry.distance}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            const tableContainer = document.getElementById('tableContainer');
+            tableContainer.scrollTop = tableContainer.scrollHeight;
+        }
+
+        function animate() {
+            if (!isRunning || isPaused) return;
+
+            redrawCanvas();
+
+            if (currentLaser < NUM_LASERS) {
+                const angle = (currentLaser * Math.PI) / 180;
+                const { x, y, distance } = castLaser(angle);
+                const cosAngle = Math.cos(angle);
+                const sinAngle = Math.sin(angle);
+
+                if (extendStep < distance) {
+                    extendStep += STEP_SIZE;
+                    const laserXStep = sensor.x + cosAngle * extendStep;
+                    const laserYStep = sensor.y + sinAngle * extendStep;
+
+                    ctx.beginPath();
+                    ctx.moveTo(sensor.x, sensor.y);
+                    ctx.lineTo(laserXStep, laserYStep);
+                    ctx.strokeStyle = LASER_COLOR;
+                    ctx.stroke();
+                } else if (retractStep < distance) {
+                    retractStep += STEP_SIZE;
+                    const laserXStep = x - cosAngle * retractStep;
+                    const laserYStep = y - sinAngle * retractStep;
+
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(laserXStep, laserYStep);
+                    ctx.strokeStyle = LASER_COLOR;
+                    ctx.stroke();
+                } else {
+                    if (distance < LASER_LENGTH) {
+                        marks.push({ x, y });
+                    }
+
+                    laserData.push({
+                        angle: currentLaser,
+                        distance: distance,
+                    });
+
+                    currentLaser++;
+                    extendStep = 0;
+                    retractStep = 0;
+                    updateTable();
+                }
+            } else {
+                isRunning = false;
+                runButton.textContent = 'Run';
+                runButton.disabled = false;
+                return;
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        const runButton = document.getElementById('runButton');
+        runButton.addEventListener('click', () => {
+            if (!isRunning) {
+                isRunning = true;
+                isPaused = false;
+                runButton.textContent = 'Running...';
+                runButton.disabled = true;
+                animate();
+            } else if (isPaused) {
+                isPaused = false;
+                runButton.textContent = 'Running...';
+                runButton.disabled = true;
+                animate();
+            }
+        });
+
+        const stopButton = document.getElementById('stopButton');
+        stopButton.addEventListener('click', () => {
+            if (isRunning) {
+                isPaused = true;
+                runButton.textContent = 'Resume';
+                runButton.disabled = false;
+            }
+        });
+
+        const resetButton = document.getElementById('resetButton');
+        resetButton.addEventListener('click', resetSimulation);
+
+        const moveUp = document.getElementById('moveUp');
+        const moveDown = document.getElementById('moveDown');
+        const moveLeft = document.getElementById('moveLeft');
+        const moveRight = document.getElementById('moveRight');
+
+        const MOVE_STEP = 10;
+
+        function isColliding(newX, newY) {
+            for (const obstacle of obstacles) {
+                if (newX + sensor.radius > obstacle.x &&
+                    newX - sensor.radius < obstacle.x + obstacle.width &&
+                    newY + sensor.radius > obstacle.y &&
+                    newY - sensor.radius < obstacle.y + obstacle.height) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        moveUp.addEventListener('click', () => {
+            const newY = sensor.y - MOVE_STEP;
+            if (newY - sensor.radius >= 0 && !isColliding(sensor.x, newY)) {
+                sensor.y = newY;
+                redrawCanvas();
+            }
+        });
+
+        moveDown.addEventListener('click', () => {
+            const newY = sensor.y + MOVE_STEP;
+            if (newY + sensor.radius <= canvas.height && !isColliding(sensor.x, newY)) {
+                sensor.y = newY;
+                redrawCanvas();
+            }
+        });
+
+        moveLeft.addEventListener('click', () => {
+            const newX = sensor.x - MOVE_STEP;
+            if (newX - sensor.radius >= 0 && !isColliding(newX, sensor.y)) {
+                sensor.x = newX;
+                redrawCanvas();
+            }
+        });
+
+        moveRight.addEventListener('click', () => {
+            const newX = sensor.x + MOVE_STEP;
+            if (newX + sensor.radius <= canvas.width && !isColliding(newX, sensor.y)) {
+                sensor.x = newX;
+                redrawCanvas();
+            }
+        });
+    </script>
+</body>
+</html>
