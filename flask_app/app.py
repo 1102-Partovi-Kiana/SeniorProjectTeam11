@@ -25,7 +25,7 @@ import gymnasium as gym
 import ast
 from PIL import Image, ImageDraw, ImageFont
 import io
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 import matplotlib.pyplot as plt
 import base64
 from sqlalchemy import func
@@ -2133,6 +2133,45 @@ def RenderAdminDashboard():
         return redirect(url_for('RenderHomepage'))
     '''
 
+    recent_users = (
+        User.query
+        .order_by(User.created_at.desc())
+        .limit(10)
+        .all()
+    )
+
+    # Query recent class creations (last 10 classes)
+    recent_classes = (
+        Classes.query
+        .order_by(Classes.created_at.desc())
+        .limit(10)
+        .all()
+    )
+
+    # Combine and sort the activities by creation date
+    recent_activities = []
+    for user in recent_users:
+        recent_activities.append({
+            'type': 'user',
+            'name': user.username,  # Assuming 'username' is a field in the User model
+            'created_at': user.created_at  # This is already a datetime.datetime object
+        })
+
+    for class_ in recent_classes:
+        # Construct the class name using class_course_code and section_number
+        class_name = f"{class_.class_course_code} - Section {class_.class_section_number}"
+
+        # Convert date to datetime by adding a time component (00:00:00)
+        class_created_at = datetime.combine(class_.created_at, time.min)  # Use datetime.time.min
+        recent_activities.append({
+            'type': 'class',
+            'name': class_name,  # Use the constructed class name
+            'created_at': class_created_at  # Now a datetime.datetime object
+        })
+
+    # Sort activities by creation date (most recent first)
+    recent_activities.sort(key=lambda x: x['created_at'], reverse=True)
+
     # Calculate the date 7 days ago from today
     one_week_ago = datetime.utcnow() - timedelta(days=7)
 
@@ -2230,6 +2269,7 @@ def RenderAdminDashboard():
                            is_admin_dashboard=True, 
                            users_stats=users_stats, 
                            classes_stats=classes_stats,
+                           recent_activities=recent_activities,
                            user="random")
 
 @app.route('/dashboard/admin-view/user-list', methods=['GET', 'POST'])
@@ -2255,6 +2295,64 @@ def RenderAdminUserList():
                            registered_users=registered_users, 
                            selected_user=None, user="random")
 
+@app.route('/dashboard/admin/update-user', methods=['POST'])
+def update_user():
+    user_id = request.form.get('user_id')
+    new_role_id = request.form.get('role_id')
+    new_first_name = request.form.get('first_name')
+    new_last_name = request.form.get('last_name')
+    new_email = request.form.get('email')
+    new_password = request.form.get('new_password')
+    confirm_password = request.form.get('confirm_password')
+
+    print(new_email)
+
+    if not user_id:
+        flash("Invalid request.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    user = User.query.get(user_id)
+    if not user:
+        flash("User not found.", 'popup')
+        return redirect(url_for('RenderAdminUserList'))
+
+    try:
+        # Update role if changed
+        if new_role_id:
+            role = Roles.query.get(new_role_id)
+            if role:
+                user.role_id = new_role_id
+            else:
+                flash("Invalid role.", 'popup')
+
+        # Update name
+        if new_first_name and new_last_name:
+            user.first_name = new_first_name
+            user.last_name = new_last_name
+
+        # Update email
+        if new_email and is_valid_email(new_email):
+            user.email = new_email
+        else:
+            flash("Invalid Email Address", 'popup')
+
+        # Update password (if provided)
+        if new_password:
+            if new_password == confirm_password and check_password_requirements(new_password):
+                user.password = hash_password(new_password)
+            else:
+                flash("Passwords do not match or do not meet security requirements.", 'popup')
+
+        # Commit changes
+        db.session.commit()
+        flash("User updated successfully.", 'popup')
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error: {str(e)}", 'popup')
+
+    return redirect(url_for('RenderAdminUserList'))
+
 @app.route('/dashboard/admin/remove-user', methods=['POST'])
 def remove_user():
     user_id = request.form.get('user_id')
@@ -2278,126 +2376,6 @@ def remove_user():
         flash(f"Error: {str(e)}", 'popup')
 
     return redirect(url_for('RenderAdminUserList'))
-
-@app.route('/dashboard/admin/change-role', methods=['POST'])
-def change_user_role():
-    user_id = request.form.get('user_id')
-    new_role_id = request.form.get('role_id')
-
-    if not user_id or not new_role_id:
-        flash("Invalid request.", 'popup')
-        return redirect(url_for('RenderAdminUserList'))
-
-    user = User.query.get(user_id)
-    if not user:
-        flash("User not found.", 'popup')
-        return redirect(url_for('RenderAdminUserList'))
-
-    role = Roles.query.get(new_role_id)
-    if not role:
-        flash("Invalid role.", 'popup')
-        return redirect(url_for('RenderAdminUserList'))
-
-    # Update the user's role
-    try:
-        user.role_id = new_role_id
-        db.session.commit()
-        flash("User role updated successfully.", 'popup')
-    except Exception as e:
-        db.session.rollback()
-        flash(f"Error: {str(e)}", 'popup')
-
-    return redirect(url_for('RenderAdminUserList'))
-
-@app.route('/dashboard/admin/change-name', methods=['POST'])
-def change_user_name():
-    user_id = request.form.get('user_id')
-    new_first_name = request.form.get('first_name')
-    new_last_name = request.form.get('last_name')
-
-    if not user_id or not new_first_name or not new_last_name:
-        flash("Invalid request.", 'popup')
-        return redirect(url_for('RenderAdminUserList'))
-
-    # Retrieve the user and check if they exist
-    user = User.query.get(user_id)
-    if not user:
-        flash("User not found.", 'popup')
-        return redirect(url_for('RenderAdminUserList'))
-
-    try:
-        user.first_name = new_first_name
-        user.last_name = new_last_name
-        db.session.commit()
-        flash("User name updated successfully.", 'popup')
-    except Exception as e:
-        db.session.rollback()
-        flash(f"Error: {str(e)}", 'popup')
-
-    return redirect(url_for('RenderAdminUserList'))
-
-@app.route('/dashboard/admin/change-password', methods=['POST'])
-def change_user_password():
-    user_id = request.form.get('user_id')
-    new_password = request.form.get('new_password')
-    confirm_password = request.form.get('confirm_password')
-
-    if not user_id or not new_password or not confirm_password:
-        flash("Invalid request.", 'popup')
-        return redirect(url_for('RenderAdminUserList'))
-    
-    if (not check_password_requirements(password)):
-        flash("Invalid password.", 'popup')
-        return redirect(url_for('RenderAdminUserList'))
-
-    user = User.query.get(user_id)
-    if not user:
-        flash("User not found.", 'popup')
-        return redirect(url_for('RenderAdminUserList'))
-
-    try:
-        if new_password != confirm_password:
-            flash("Password does not match.", 'popup')
-            return redirect(url_for('RenderAdminUserList'))
-        else:
-            password = hash_password(new_password)
-        user.password = password
-        db.session.commit()
-        flash("Password updated successfully.", 'popup')
-    except Exception as e:
-        db.session.rollback()
-        flash(f"Error: {str(e)}", 'popup')
-
-    return redirect(url_for('RenderAdminUserList'))
-
-@app.route('/dashboard/admin/change-email', methods=['POST'])
-def change_user_email():
-    user_id = request.form.get('user_id')
-    new_email = request.form.get('email')
-
-    if not user_id or not new_email:
-        flash("Invalid request.", 'popup')
-        return redirect(url_for('RenderAdminUserList'))
-    
-    if (not is_valid_email(new_email)):
-        flash("Invalid Email Address", 'popup')
-        return redirect(url_for('RenderAdminUserList'))
-
-    user = User.query.get(user_id)
-    if not user:
-        flash("User not found.", 'popup')
-        return redirect(url_for('RenderAdminUserList'))
-
-    try:
-        user.email = new_email
-        db.session.commit()
-        flash("User email updated successfully.", 'popup')
-    except Exception as e:
-        db.session.rollback()
-        flash(f"Error: {str(e)}", 'popup')
-    
-    return redirect(url_for('RenderAdminUserList'))
-
     
 @app.route('/dashboard/admin-view/classes', methods=['GET', 'POST'])
 def RenderAdminClassesList():
@@ -3071,176 +3049,6 @@ def course10_card():
 @app.route('/module11/start-page-11')
 def course11_card():
     return render_template('courses/course11-content/module_eleven.html') 
-
-@app.route('/module1/introduction/overview')
-def overview():
-    user = session.get('user')
-    if not user:
-        flash('You must be logged in to access this page.')
-        return redirect(url_for('RenderLogin'))
-
-    user_id = user['user_id']
-    role = user['role_id']
-
-    subsection_number = 1.12
-    if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
-    else:
-        module_completed = {}
-    return render_template('courses/course1-content/overview.html', module_completed=module_completed)
-
-@app.route('/module1/introduction/history')
-def history():
-    user = session.get('user')
-    if not user:
-        flash('You must be logged in to access this page.')
-        return redirect(url_for('RenderLogin'))
-
-    user_id = user['user_id']
-    role = user['role_id']
-
-    subsection_number = 1.13
-    if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
-    else:
-        module_completed = {}
-    return render_template('courses/course1-content/history_of_robotics.html', module_completed=module_completed)
-
-@app.route('/module1/introduction/types-of-robots')
-def typesofrobots():
-    user = session.get('user')
-    if not user:
-        flash('You must be logged in to access this page.')
-        return redirect(url_for('RenderLogin'))
-
-    user_id = user['user_id']
-    role = user['role_id']
-
-    subsection_number = 1.14
-    if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
-    else:
-        module_completed = {}
-    return render_template('courses/course1-content/types_of_robots.html', module_completed=module_completed)
-
-@app.route('/module1/introduction/importance-and-applications-of-robotics')
-def importanceandapp():
-    user = session.get('user')
-    if not user:
-        flash('You must be logged in to access this page.')
-        return redirect(url_for('RenderLogin'))
-
-    user_id = user['user_id']
-    role = user['role_id']
-
-    subsection_number = 1.15
-    if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
-    else:
-        module_completed = {}
-    return render_template('courses/course1-content/importance_and_app.html', module_completed=module_completed)
-
-@app.route('/module1/introduction/course1-quiz-1')
-def course1quiz1():
-    user = session.get('user')
-    if not user:
-        flash('You must be logged in to access this page.')
-        return redirect(url_for('RenderLogin'))
-
-    user_id = user['user_id']
-    role = user['role_id']
-
-    subsection_number = 1.9
-    if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
-    else:
-        module_completed = {}
-    return render_template('courses/course1-content/course1-quiz1.html', module_completed=module_completed)
-
-@app.route('/module1/introduction/robot-anatomy')
-def robotanatomy():
-    user = session.get('user')
-    if not user:
-        flash('You must be logged in to access this page.')
-        return redirect(url_for('RenderLogin'))
-
-    user_id = user['user_id']
-    role = user['role_id']
-
-    subsection_number = 1.16
-    if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
-    else:
-        module_completed = {}
-    return render_template('courses/course1-content/robot_anatomy.html', module_completed=module_completed)
-
-@app.route('/module1/introduction/challenges')
-def challenges():
-    user = session.get('user')
-    if not user:
-        flash('You must be logged in to access this page.')
-        return redirect(url_for('RenderLogin'))
-
-    user_id = user['user_id']
-    role = user['role_id']
-
-    subsection_number = 1.17
-    if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
-    else:
-        module_completed = {}
-    return render_template('courses/course1-content/challenges_in_robotics.html', module_completed=module_completed)
-
-@app.route('/module1/introduction/robot-programming')
-def robotprogramming():
-    user = session.get('user')
-    if not user:
-        flash('You must be logged in to access this page.')
-        return redirect(url_for('RenderLogin'))
-
-    user_id = user['user_id']
-    role = user['role_id']
-
-    subsection_number = 1.18
-    if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
-    else:
-        module_completed = {}
-    return render_template('courses/course1-content/robot_programming.html', module_completed=module_completed)
-
-@app.route('/module1/introduction/social-and-ethical-implications')
-def implications():
-    user = session.get('user')
-    if not user:
-        flash('You must be logged in to access this page.')
-        return redirect(url_for('RenderLogin'))
-
-    user_id = user['user_id']
-    role = user['role_id']
-
-    subsection_number = 1.19
-    if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
-    else:
-        module_completed = {}
-    return render_template('courses/course1-content/social_and_ethical_imp.html', module_completed=module_completed)
-
-@app.route('/module1/introduction/future-trends')
-def futuretrends():
-    user = session.get('user')
-    if not user:
-        flash('You must be logged in to access this page.')
-        return redirect(url_for('RenderLogin'))
-
-    user_id = user['user_id']
-    role = user['role_id']
-
-    subsection_number = 1.21
-    if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
-    else:
-        module_completed = {}
-    return render_template('courses/course1-content/future_trends.html', module_completed=module_completed)
 
 @app.route('/module2/introduction')
 def module_two():

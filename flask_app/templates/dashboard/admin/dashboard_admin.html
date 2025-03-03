@@ -183,7 +183,20 @@
         </div>
         <div class="dashboard-row two">
             <div class="section-four"> 
-                <div class="dashboard-card four"></div>
+                <div class="dashboard-card four">
+                    <div class="recent-activity-feed">
+                        <h3>Recent Activity</h3>
+                        <ul>
+                            {% for activity in recent_activities %}
+                                <li>
+                                    <span class="activity-type">{{ activity.type|title }}</span>
+                                    <span class="activity-name">{{ activity.name }}</span>
+                                    <span class="activity-date">{{ activity.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="section-five"> 
                 <div class="dashboard-card five">

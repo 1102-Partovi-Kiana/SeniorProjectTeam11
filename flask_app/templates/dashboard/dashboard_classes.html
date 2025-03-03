@@ -142,7 +142,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="course-list">
+                        <div class="course-list classes">
                             <div class="course-list-table-container">
                                 <table class="course-list-table">
                                     <thead>
@@ -180,7 +180,7 @@
     </div>
     {% if class_code %}
     <div class="custom-modal-container">
-        <div class="modal fade" id="classCodeModal" tabindex="-1" aria-labelledby="classCodeModalLabel" aria-hidden="true">
+        <div class="modal fade custom-modal" id="classCodeModal" tabindex="-1" aria-labelledby="classCodeModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -188,7 +188,11 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Your class code for class {{ class_id }} is: <strong>{{ class_code }}</strong></p>
+                        <p>Your class code for class <strong>{{ class_id }}</strong> is: <strong>{{ class_code }}</strong></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Copy Code</button>
                     </div>
                 </div>
             </div>

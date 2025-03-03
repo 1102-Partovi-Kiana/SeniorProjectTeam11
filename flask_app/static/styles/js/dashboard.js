@@ -163,3 +163,33 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+function openConfirmationModal() {
+    document.getElementById('confirmation-modal').style.display = 'flex';
+}
+
+function closeConfirmationModal() {
+    document.getElementById('confirmation-modal').style.display = 'none';
+}
+
+document.querySelector('.close-confirmation-modal').addEventListener('click', closeConfirmationModal);
+document.getElementById('cancel-action-button').addEventListener('click', closeConfirmationModal);
+
+document.querySelector('.apply-changes-button').addEventListener('click', function(event) {
+    event.preventDefault();
+    openConfirmationModal();
+    window.pendingForm = event.target.closest('form');
+});
+
+document.getElementById('remove-button').addEventListener('click', function(event) {
+    event.preventDefault();
+    openConfirmationModal();
+
+    window.pendingForm = event.target.closest('form');
+});
+
+document.getElementById('confirm-action-button').addEventListener('click', function() {
+    if (window.pendingForm) {
+        window.pendingForm.submit();
+    }
+    closeConfirmationModal();
+});
