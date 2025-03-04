@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Logs - CORE</title>
+{% endblock %}
+
+{% block body %}
+    <h1>Logs for User {{ user_id }}</h1>
+    {% if logs %}
+        <table style="border: 1px solid black; border-collapse: collapse; width: 100%;">
+            <tr>
+                <th style="border: 1px solid black; min-width: 100px;">Timestamp</th>
+                <th style="border: 1px solid black; min-width: 100px;">Page Context</th>
+                <th style="border: 1px solid black; min-width: 300px;">Code</th>
+                <th style="border: 1px solid black; min-width: 150px;">Static Issues</th>
+                <th style="border: 1px solid black; min-width: 100px;">Error</th>
+                <th style="border: 1px solid black; min-width: 150px;">Hints</th>
+            </tr>
+            {% for log in logs %}
+            <tr>
+                <td style="border: 1px solid black;">{{ log.timestamp }}</td>
+                <td style="border: 1px solid black;">{{ log.page_context }}</td>
+                <td style="border: 1px solid black;"><pre>{{ log.code }}</pre></td>
+                <td style="border: 1px solid black;">
+                    {% if log.static_issues and log.static_issues|length > 0 %}
+                        <ul>
+                        {% for issue in log.static_issues %}
+                            <li>
+                                {% if issue.line is defined %}Line {{ issue.line }}: {% endif %}{{ issue.message }}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <span style="color: gray;">None</span>
+                    {% endif %}
+                </td>
+                <td style="border: 1px solid black;">{{ log.error|default("None") }}</td>
+                <td style="border: 1px solid black;">
+                    {% if log.hints and log.hints|length > 0 %}
+                        <ul>
+                        {% for hint in log.hints %}
+                            <li>{{ hint }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <span style="color: gray;">None</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No logs found for this user.</p>
+    {% endif %}
+{% endblock %}

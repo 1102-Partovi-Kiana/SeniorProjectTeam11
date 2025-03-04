@@ -24,9 +24,10 @@ class FetchStackEnv(fetch_env.FetchEnv, utils.EzPickle):
             'robot0:slide0': 0.405,
             'robot0:slide1': 0.48,
             'robot0:slide2': 0.0,
-            'object0:joint': [1.25, 0.8, 0.4, 1., 0., 0., 0.],  # Position of first block
+            'object0:joint': [5, 0.8, 0.4, 1., 0., 0., 0.],  # Position of first block
             'object1:joint': [1.3, 0.6, 0.4, 1., 0., 0., 0.],  # Position of second block
             'object2:joint': [1.35, 1, 0.4, 1., 0., 0., 0.],  # Position of third block
+            'object3:joint': [1.25, .8, 0.4, 1., 0., 0., 0.],  # Position of third block
         }
        
         fetch_env.FetchEnv.__init__(

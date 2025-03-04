@@ -27,7 +27,10 @@ from flask import send_from_directory
 import os
 import traceback
 import requests
-
+from flask import send_file
+from PIL import Image, ImageDraw, ImageFont
+import io
+from reportlab.pdfgen import canvas
 
 app = Flask(__name__, static_folder='static')
 app.config.from_object(Config)
@@ -1251,190 +1254,6 @@ def check_horizontal_distance_subtraction_fetch_organize(tree):
 
     return issues
 
-# ---------------- Static Analysis Functions for AUTONOMOUS CAR ROBOT -------------------------#
-def check_sensor_forward_value_retrieval_car(tree):
-    """Check that `env.get_sensor_forward_value()` is called inside of the infinite while loop."""
-    issues = []
-    last_line_number = 1
-    forward_sensor_called = False
-    inside_while_true_loop = False
-
-    for node in ast.walk(tree):
-        if hasattr(node, "lineno"):
-            last_line_number = node.lineno  
-
-        if isinstance(node, ast.While):
-            if isinstance(node.test, ast.Constant) and node.test.value is True:
-                inside_while_true_loop = True
-
-        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
-            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
-                if node.func.attr == "get_sensor_forward_value":
-                    forward_sensor_called = True
-
-    if inside_while_true_loop and not forward_sensor_called:
-        issues.append({
-            "message": "Missing call to `env.get_sensor_forward_value()`. This function needs to be called inside the infinite while loop to retrieve the forward sensor value of the car.",
-            "line": last_line_number
-        })
-
-    return issues
-
-def check_sensor_right_value_retrieval_car(tree):
-    """Check that `env.get_sensor_right_value()` is called inside of the infinite while loop."""
-    issues = []
-    last_line_number = 1
-    right_sensor_called = False
-    inside_while_true_loop = False
-
-    for node in ast.walk(tree):
-        if hasattr(node, "lineno"):
-            last_line_number = node.lineno  
-
-        if isinstance(node, ast.While):
-            if isinstance(node.test, ast.Constant) and node.test.value is True:
-                inside_while_true_loop = True
-
-        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
-            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
-                if node.func.attr == "get_sensor_right_value":
-                    right_sensor_called = True
-
-    if inside_while_true_loop and not right_sensor_called:
-        issues.append({
-            "message": "Missing call to `env.get_sensor_right_value()`. This function needs to be called inside the infinite while loop to retrieve the right sensor value for the car.",
-            "line": last_line_number
-        })
-
-    return issues
-
-def check_sensor_left_value_retrieval_car(tree):
-    """Check that `env.get_sensor_left_value()` is called inside of the infinite while loop."""
-    issues = []
-    last_line_number = 1
-    left_sensor_called = False
-    inside_while_true_loop = False
-
-    for node in ast.walk(tree):
-        if hasattr(node, "lineno"):
-            last_line_number = node.lineno  
-
-        if isinstance(node, ast.While):
-            if isinstance(node.test, ast.Constant) and node.test.value is True:
-                inside_while_true_loop = True
-
-        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
-            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
-                if node.func.attr == "get_sensor_left_value":
-                    left_sensor_called = True
-
-    if inside_while_true_loop and not left_sensor_called:
-        issues.append({
-            "message": "Missing call to `env.get_sensor_left_value()`. This function needs to be called inside the infinite while loop to retrieve the left sensor value.",
-            "line": last_line_number
-        })
-
-    return issues
-
-def check_sensor_readings_variable_usage_car(tree):
-    """Check that the correct sensor variables are used in the `sensor_readings` dictionary"""
-    issues = []
-    last_line_number = 1
-    
-    sensor_variables = {
-        "Forward": None,
-        "Right": None,
-        "Left": None
-    }
-
-    for node in ast.walk(tree):
-        if hasattr(node, "lineno"):
-            last_line_number = node.lineno  
-
-        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
-            if isinstance(node.value.func, ast.Attribute) and isinstance(node.value.func.value, ast.Name):
-                if node.value.func.value.id == "env":
-                    if node.value.func.attr == "get_sensor_forward_value":
-                        sensor_variables["Forward"] = node.targets[0].id
-                    elif node.value.func.attr == "get_sensor_right_value":
-                        sensor_variables["Right"] = node.targets[0].id
-                    elif node.value.func.attr == "get_sensor_left_value":
-                        sensor_variables["Left"] = node.targets[0].id
-
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Dict):
-            if isinstance(node.targets[0], ast.Name) and node.targets[0].id == "sensor_readings":
-                keys = [k.s for k in node.value.keys if isinstance(k, ast.Str)]  
-                values = [v.id if isinstance(v, ast.Name) else None for v in node.value.values] 
-
-                for key in sensor_variables:
-                    if key in keys:
-                        index = keys.index(key)
-                        assigned_var = values[index]
-
-                        if assigned_var is None:
-                            issues.append({
-                                "message": f"The `{key}` sensor reading is missing a value in `sensor_readings`. Please assign a variable.",
-                                "line": node.lineno
-                            })
-                        elif assigned_var != sensor_variables[key]:
-                            issues.append({
-                                "message": f"The `{key}` sensor reading should use the variable `{sensor_variables[key]}`, but `{assigned_var}` was used instead.",
-                                "line": node.lineno
-                            })
-                    else:
-                        issues.append({
-                            "message": f"The `{key}` sensor reading is missing from `sensor_readings`. Check to include all sensor readings.",
-                            "line": node.lineno
-                        })
-
-    return issues
-
-def check_dictionary_key_safety_car(tree):
-    """Check if dictionary key accesses are safe."""
-    issues = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name) and isinstance(node.slice, ast.Constant):
-            dict_name = node.value.id
-            key_name = node.slice.value
-            if dict_name == "values" and key_name not in {"Forward", "Right", "Left"}:
-                issues.append({
-                    "message": f"Possible unsafe dictionary lookup: '{key_name}' not guaranteed to exist.",
-                    "line": node.lineno
-                })
-    return issues
-
-def check_max_direction_usage_car(tree):
-    """Check that a variable is assigned using `max(sensor_readings, key=sensor_readings.get)` correctly."""
-    issues = []
-    last_line_number = 1
-    found_max_usage = False
-
-    for node in ast.walk(tree):
-        if hasattr(node, "lineno"):
-            last_line_number = node.lineno  
-
-        if isinstance(node, ast.Assign):
-            if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name) and node.value.func.id == "max":
-                if len(node.value.args) > 0 and isinstance(node.value.args[0], ast.Name) and node.value.args[0].id == "sensor_readings":
-                    for keyword in node.value.keywords:
-                        if keyword.arg == "key" and isinstance(keyword.value, ast.Attribute):
-                            if (
-                                isinstance(keyword.value.value, ast.Name)
-                                and keyword.value.value.id == "sensor_readings"
-                                and keyword.value.attr == "get"
-                            ):
-                                found_max_usage = True
-                                break
-
-    if not found_max_usage:
-        issues.append({
-            "message": "A variable must be assigned using `max(sensor_readings, key=sensor_readings.get)`. Check `max()` is applied correctly.",
-            "line": last_line_number
-        })
-
-    return issues
-
 # ---------------- Static Analysis Functions for FETCH SENSORS ROBOT -------------------------#
 def check_one_env_step_sensors(tree):
     """Check that at least one call to env.step() is present."""
@@ -1597,6 +1416,273 @@ def check_ascend_action_in_correct_for_loop_sensors(tree):
 
     return issues
 
+# ---------------- Static Analysis Functions for AUTONOMOUS CAR ROBOT -------------------------#
+def check_sensor_forward_value_retrieval_car(tree):
+    """Check that `env.get_sensor_forward_value()` is called inside of the infinite while loop and that its return value is stored in a variable."""
+    issues = []
+    last_line_number = 1
+    forward_sensor_called = False
+    forward_sensor_assigned = False
+    inside_while_true_loop = False
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.While):
+            if isinstance(node.test, ast.Constant) and node.test.value is True:
+                inside_while_true_loop = True
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
+                if node.func.attr == "get_sensor_forward_value":
+                    forward_sensor_called = True
+
+        if isinstance(node, ast.Assign):
+            if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute):
+                if (isinstance(node.value.func.value, ast.Name) and 
+                    node.value.func.value.id == "env" and 
+                    node.value.func.attr == "get_sensor_forward_value"):
+                    forward_sensor_assigned = True
+
+    if inside_while_true_loop and forward_sensor_called and not forward_sensor_assigned:
+        issues.append({
+            "message": "The return value of `env.get_sensor_forward_value()` should be stored in a variable.",
+            "line": last_line_number
+        })
+
+    if inside_while_true_loop and not forward_sensor_called:
+        issues.append({
+            "message": "Missing call to `env.get_sensor_forward_value()`. This function needs to be called inside the infinite while loop to retrieve the forward sensor value of the car.",
+            "line": last_line_number
+        })
+
+    return issues
+
+def check_sensor_right_value_retrieval_car(tree):
+    """Check that `env.get_sensor_right_value()` is called inside of the infinite while loop and that its return value is stored in a variable."""
+    issues = []
+    last_line_number = 1
+    right_sensor_called = False
+    right_sensor_assigned = False
+    inside_while_true_loop = False
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.While):
+            if isinstance(node.test, ast.Constant) and node.test.value is True:
+                inside_while_true_loop = True
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
+                if node.func.attr == "get_sensor_right_value":
+                    right_sensor_called = True
+
+        if isinstance(node, ast.Assign):
+            if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute):
+                if (isinstance(node.value.func.value, ast.Name) and 
+                    node.value.func.value.id == "env" and 
+                    node.value.func.attr == "get_sensor_right_value"):
+                    right_sensor_assigned = True
+
+    if inside_while_true_loop and right_sensor_called and not right_sensor_assigned:
+        issues.append({
+            "message": "The return value of `env.get_sensor_right_value()` should be stored in a variable.",
+            "line": last_line_number
+        })
+
+    if inside_while_true_loop and not right_sensor_called:
+        issues.append({
+            "message": "Missing call to `env.get_sensor_right_value()`. This function needs to be called inside the infinite while loop to retrieve the right sensor value for the car.",
+            "line": last_line_number
+        })
+
+    return issues
+
+def check_sensor_left_value_retrieval_car(tree):
+    """Check that `env.get_sensor_left_value()` is called inside of the infinite while loop and that its return value is stored in a variable."""
+    issues = []
+    last_line_number = 1
+    left_sensor_called = False
+    left_sensor_assigned = False
+    inside_while_true_loop = False
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.While):
+            if isinstance(node.test, ast.Constant) and node.test.value is True:
+                inside_while_true_loop = True
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
+                if node.func.attr == "get_sensor_left_value":
+                    left_sensor_called = True
+
+        if isinstance(node, ast.Assign):
+            if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute):
+                if (isinstance(node.value.func.value, ast.Name) and 
+                    node.value.func.value.id == "env" and 
+                    node.value.func.attr == "get_sensor_left_value"):
+                    left_sensor_assigned = True
+
+    if inside_while_true_loop and left_sensor_called and not left_sensor_assigned:
+        issues.append({
+            "message": "The return value of `env.get_sensor_left_value()` should be stored in a variable.",
+            "line": last_line_number
+        })
+
+    if inside_while_true_loop and not left_sensor_called:
+        issues.append({
+            "message": "Missing call to `env.get_sensor_left_value()`. This function needs to be called inside the infinite while loop to retrieve the left sensor value for the car.",
+            "line": last_line_number
+        })
+
+    return issues
+
+
+def check_sensor_readings_variable_usage_car(tree):
+    """Check that the correct sensor variables are used in the `sensor_readings` dictionary"""
+    issues = []
+    last_line_number = 1
+    
+    sensor_variables = {
+        "Forward": None,
+        "Right": None,
+        "Left": None
+    }
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            if isinstance(node.value.func, ast.Attribute) and isinstance(node.value.func.value, ast.Name):
+                if node.value.func.value.id == "env":
+                    if node.value.func.attr == "get_sensor_forward_value":
+                        sensor_variables["Forward"] = node.targets[0].id
+                    elif node.value.func.attr == "get_sensor_right_value":
+                        sensor_variables["Right"] = node.targets[0].id
+                    elif node.value.func.attr == "get_sensor_left_value":
+                        sensor_variables["Left"] = node.targets[0].id
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Dict):
+            if isinstance(node.targets[0], ast.Name) and node.targets[0].id == "sensor_readings":
+                keys = [k.s for k in node.value.keys if isinstance(k, ast.Str)]  
+                values = [v.id if isinstance(v, ast.Name) else None for v in node.value.values] 
+
+                for key in sensor_variables:
+                    if key in keys:
+                        index = keys.index(key)
+                        assigned_var = values[index]
+
+                        if assigned_var is None:
+                            issues.append({
+                                "message": f"The `{key}` sensor reading is missing a value in `sensor_readings`. Please assign a variable.",
+                                "line": node.lineno
+                            })
+                        elif assigned_var != sensor_variables[key]:
+                            issues.append({
+                                "message": f"The `{key}` sensor reading should use the variable `{sensor_variables[key]}`, but `{assigned_var}` was used instead.",
+                                "line": node.lineno
+                            })
+                    else:
+                        issues.append({
+                            "message": f"The `{key}` sensor reading is missing from `sensor_readings`. Check to include all sensor readings.",
+                            "line": node.lineno
+                        })
+
+    return issues
+
+def check_dictionary_key_safety_car(tree):
+    """Check if dictionary key accesses are safe."""
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name) and isinstance(node.slice, ast.Constant):
+            dict_name = node.value.id
+            key_name = node.slice.value
+            if dict_name == "values" and key_name not in {"Forward", "Right", "Left"}:
+                issues.append({
+                    "message": f"Possible unsafe dictionary lookup: '{key_name}' not guaranteed to exist.",
+                    "line": node.lineno
+                })
+    return issues
+
+# def check_max_direction_usage_car(tree):
+#     """Check that a variable is assigned using `max(sensor_readings, key=sensor_readings.get)` correctly."""
+#     issues = []
+#     last_line_number = 1
+#     found_max_usage = False
+
+#     for node in ast.walk(tree):
+#         if hasattr(node, "lineno"):
+#             last_line_number = node.lineno  
+
+#         if isinstance(node, ast.Assign):
+#             if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name) and node.value.func.id == "max":
+#                 if len(node.value.args) > 0 and isinstance(node.value.args[0], ast.Name) and node.value.args[0].id == "sensor_readings":
+#                     for keyword in node.value.keywords:
+#                         if keyword.arg == "key" and isinstance(keyword.value, ast.Attribute):
+#                             if (
+#                                 isinstance(keyword.value.value, ast.Name)
+#                                 and keyword.value.value.id == "sensor_readings"
+#                                 and keyword.value.attr == "get"
+#                             ):
+#                                 found_max_usage = True
+#                                 break
+
+#     if not found_max_usage:
+#         issues.append({
+#             "message": "A variable must be assigned using `max(sensor_readings, key=sensor_readings.get)`. Check `max()` is applied correctly.",
+#             "line": last_line_number
+#         })
+
+#     return issues
+
+
+def check_max_direction_usage_car(tree):
+    """Check that a variable is assigned using `max(sensor_readings, key=sensor_readings.get)` correctly, regardless of variable name."""
+    issues = []
+    last_line_number = 1
+    found_max_usage = False
+    assigned_variable_name = None 
+    first_missing_reference = None  
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.Assign):
+            if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name) and node.value.func.id == "max":
+                if len(node.value.args) > 0 and isinstance(node.value.args[0], ast.Name) and node.value.args[0].id == "sensor_readings":
+                    for keyword in node.value.keywords:
+                        if keyword.arg == "key" and isinstance(keyword.value, ast.Attribute):
+                            if (
+                                isinstance(keyword.value.value, ast.Name)
+                                and keyword.value.value.id == "sensor_readings"
+                                and keyword.value.attr == "get"
+                            ):
+                                if isinstance(node.targets[0], ast.Name):
+                                    assigned_variable_name = node.targets[0].id
+                                    found_max_usage = True
+                                break 
+
+        if isinstance(node, ast.Name):
+            if assigned_variable_name is None and first_missing_reference is None:
+                first_missing_reference = node.lineno 
+
+    if not found_max_usage and first_missing_reference is not None:
+        issues.append({
+            "message": "A variable must be assigned using `max(sensor_readings, key=sensor_readings.get)`. Check `max()` is applied correctly.",
+            "line": first_missing_reference 
+        })
+
+    return issues
+
 def check_if_else_with_greatest_direction_car(tree):
     """Check that the variable assigned with `max(sensor_readings, key=sensor_readings.get)` is the same variable used in the if-else conditions."""
     issues = []
@@ -1625,12 +1711,12 @@ def check_if_else_with_greatest_direction_car(tree):
                 if isinstance(node.test.left, ast.Name):
                     condition_variable = node.test.left.id  
 
-                    if max_variable is None:
-                        issues.append({
-                            "message": "A variable must be assigned using `max(sensor_readings, key=sensor_readings.get)` before the if-else statement.",
-                            "line": node.lineno
-                        })
-                    elif condition_variable != max_variable:
+                    # if max_variable is None:
+                    #     issues.append({
+                    #         "message": "A variable must be assigned using `max(sensor_readings, key=sensor_readings.get)` before the if-else statement.",
+                    #         "line": node.lineno
+                    #     })
+                    if condition_variable != max_variable:
                         issues.append({
                             "message": f"The if-else statement should use `{max_variable}`, but `{condition_variable}` was used instead.",
                             "line": node.lineno
@@ -1754,6 +1840,20 @@ def analyze_robotics_code(code, context="Car"):
     return issues
 
 
+logs_db = {}  
+
+def log_event(user_id, page_context, code, static_issues, error, hints):
+    """Stores a log entry for a given user_id."""
+    entry = {
+        "timestamp": time.time(),
+        "page_context": page_context,
+        "code": code,
+        "static_issues": static_issues,
+        "error": error,
+        "hints": hints
+    }
+    logs_db.setdefault(user_id, []).append(entry)
+
 @app.route('/chatbot-api', methods=['POST'])
 def ChatbotAPI():
     print("Chatbot API called")
@@ -1762,6 +1862,12 @@ def ChatbotAPI():
     global static_issues
     global last_error_line
     global hint_level
+
+    user = session.get('user')
+    if not user:
+        return jsonify({'error': 'You must be logged in to use the chatbot API.'}), 401
+
+    user_id = user['user_id']
 
     if 'last_error_line' not in globals():
         last_error_line = None
@@ -1893,6 +1999,18 @@ def ChatbotAPI():
     if "HINTS:" in chatbot_response:
         hints_section = chatbot_response.split("HINTS:")[-1].strip()
         hints = [hint.strip() for hint in hints_section.split("\n") if hint.strip()]
+
+    log_event(
+        user_id=user_id,
+        page_context=page_context,
+        code=user_submitted_code,
+        static_issues=static_issues,
+        error=last_error,
+        hints=hints
+    )
+
+    print("Logging the event after hints......")
+    print("Current logs for this user:", logs_db.get(user_id, []))
 
     print("Extracted Hints:", hints)
 
@@ -2952,6 +3070,16 @@ def run_code():
     global junk_array
     global env
 
+    # Logging users activity
+    user = session.get('user')
+    if not user:
+        return jsonify({'error': 'You must be logged in to run code.'}), 401
+
+    user_id = user['user_id']
+
+    print("Session user:", user) 
+    print("User ID is:", user["user_id"])
+
     env.reset()
 
     data = request.get_json(silent=True)
@@ -2998,6 +3126,25 @@ def run_code():
             'static_issues': static_issues,
             'context': page_context,  
         }
+        log_event(
+            user_id=user_id,
+            page_context=page_context,
+            code=code,
+            static_issues=static_issues,
+            error=None,
+            hints=[]
+        )
+        print("Logging the event......")
+        print({
+            "user_id": user_id,
+            "page_context": page_context,
+            "code": code,
+            "static_issues": static_issues,
+            "error": None,
+            "hints": []
+        })
+        print("Current logs for this user:", logs_db.get(user_id, []))
+
         print("Returning early due to static issues:", return_data)
         return jsonify(return_data)  
 
@@ -3009,6 +3156,7 @@ def run_code():
         print("Executing user code...")
         local_context = {}
 
+        code = code.replace("\t", "    ")
         exec(code, globals(), local_context)  
 
         return_data = {
@@ -3018,13 +3166,42 @@ def run_code():
             'context': page_context,  
         }
 
+        log_event(
+            user_id=user_id,
+            page_context=page_context,
+            code=code,
+            static_issues=static_issues,
+            error=None,
+            hints=[]
+        )
+
         print("Successful Response Data:", return_data)
         return jsonify(return_data)
 
     except Exception as e:
         last_error = str(e)
         print("Error Message from Run Code:", last_error)
+        log_event(
+            user_id=user_id,
+            page_context=page_context,
+            code=code,
+            static_issues=static_issues,
+            error=last_error,
+            hints=[]
+        )
         return jsonify({'error': last_error, 'static_issues': static_issues, 'context': page_context})
+
+@app.route('/logs/<int:user_id>', methods=['GET'])
+def get_logs(user_id):
+    user_logs = logs_db.get(user_id, [])
+    print("User logs:", user_logs)  
+    return jsonify({"user_id": user_id, "logs": user_logs})
+
+@app.route('/view-logs/<int:user_id>', methods=['GET'])
+def view_logs(user_id):
+    user_logs = logs_db.get(user_id, [])
+    return render_template('display_logs.html', user_id=user_id, logs=user_logs)
+
 
 # @app.route('/run-code', methods=['POST'])
 # def run_code():
@@ -3183,6 +3360,88 @@ def next_question():
 @app.route('/quiz1', methods=['GET'])
 def render_quiz_page():
     return render_template('quiz1.html')
+
+@app.route("/certificate")
+def module_eleven_certificate_car():
+    return render_template('courses/course11-content/module_eleven_certificate_car.html') 
+
+def generate_certificate():
+    """Generates a certificate image with the given text and returns it as a BytesIO object."""
+    # Load the certificate template
+    image = Image.open("static/certificate_template.png")
+    draw = ImageDraw.Draw(image)
+
+    name = "John Doe"
+    date = "2/3/2025"
+    text_color = (0, 0, 0)
+    name_font_size = 100
+    date_font_size = 50
+
+    try:
+        name_font = ImageFont.truetype("static/cookie-regular.ttf", name_font_size)
+    except OSError:
+        name_font = ImageFont.load_default()
+
+    image_width, image_height = image.size
+
+    # Calculate text position (centered horizontally, slightly lower vertically)
+    name_bbox = name_font.getbbox(name)
+    name_text_width = name_bbox[2] - name_bbox[0]  # Width of the text
+    name_text_height = name_bbox[3] - name_bbox[1]  # Height of the text
+
+    name_x_offset = 0
+    name_y_offset = 75
+    name_x = (image_width - name_text_width) // 2 + name_x_offset
+    name_y = (image_height - name_text_height) // 2 + name_y_offset
+
+    try:
+        date_font = ImageFont.truetype("static/cookie-regular.ttf", date_font_size)
+    except OSError:
+        date_font = ImageFont.load_default()
+
+    date_bbox = date_font.getbbox(date)
+    date_text_width = date_bbox[2] - date_bbox[0]
+    date_text_height = date_bbox[3] - date_bbox[1]
+
+    date_x_offset = 155
+    date_y_offset = 140
+    date_x = 0 + date_x_offset #Increasing x = move rightwards
+    date_y = (image_height - date_text_height) - date_y_offset #Increasing y = move downwards
+
+    # Draw the text on the image
+    draw.text((name_x, name_y), name, font=name_font, fill=text_color)
+    draw.text((date_x, date_y), date, font=date_font, fill=text_color)
+
+    # Convert image to bytes
+    img_bytes = io.BytesIO()
+    image.save(img_bytes, format="PNG")
+    img_bytes.seek(0)
+
+    return img_bytes
+
+@app.route("/view_certificate")
+def view_certificate():
+    """Returns the generated certificate as an image."""
+    img_bytes = generate_certificate()
+    return Response(img_bytes.getvalue(), mimetype="image/png")
+
+@app.route("/download_certificate")
+def download_certificate():
+    """Returns the generated certificate as a downloadable PDF."""
+    img_bytes = generate_certificate()
+
+    # Convert the image to PDF
+    pdf_bytes = io.BytesIO()
+    Image.open(img_bytes).save(pdf_bytes, format="PDF")
+    pdf_bytes.seek(0)
+
+    return send_file(
+        pdf_bytes,
+        mimetype="application/pdf",
+        as_attachment=True,
+        download_name="certificate.pdf"
+    )
+
 
 if __name__ == '__main__':
     app.run(debug=True)

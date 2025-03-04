@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Certificate - CORE</title>
+{% endblock %}
+
+{% block body %}
+    <script>
+        function updateCertificatePreview() {
+            document.getElementById("certificatePreview").src = "/view_certificate?" + new Date().getTime();
+        }
+
+        window.onload = updateCertificatePreview;
+    </script>
+<body>
+    <h1>Download Your Certificate</h1>
+
+    <!-- Certificate Preview -->
+    <img id="certificatePreview" src="" alt="Certificate Preview" style="display: flex; align-items: center; justify-content: center; width: 50%; border: 1px solid black; margin-bottom: 20px;">
+
+    <br>
+    <button onclick="updateCertificatePreview()">Refresh Preview</button>
+    <a href="/download_certificate">
+        <button>Download Certificate</button>
+    </a>
+</body>
+{% endblock %}
