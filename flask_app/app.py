@@ -2119,7 +2119,6 @@ def RenderInstructorDashboard():
 
 @app.route('/dashboard/admin-view/home', methods=['GET', 'POST'])
 def RenderAdminDashboard():
-    '''
     user = session.get('user')
     if not user:
         flash('You must be logged in to access this page.', 'popup')
@@ -2131,7 +2130,8 @@ def RenderAdminDashboard():
     if role != ROLE_ADMIN:
         flash('You have insufficient permissions to access this page.', 'popup')
         return redirect(url_for('RenderHomepage'))
-    '''
+
+    role_name = Roles.query.filter_by(role_id=role).first().role_name
 
     recent_users = (
         User.query
@@ -2270,11 +2270,11 @@ def RenderAdminDashboard():
                            users_stats=users_stats, 
                            classes_stats=classes_stats,
                            recent_activities=recent_activities,
-                           user="random")
+                           user=user,
+                           role_name=role_name)
 
 @app.route('/dashboard/admin-view/user-list', methods=['GET', 'POST'])
 def RenderAdminUserList():
-    '''
     user = session.get('user')
     if not user:
         flash('You must be logged in to access this page.', 'popup')
@@ -2286,14 +2286,17 @@ def RenderAdminUserList():
     if role != ROLE_ADMIN:
         flash('You have insufficient permissions to access this page.', 'popup')
         return redirect(url_for('RenderHomepage'))
-    '''
+
+    role_name = Roles.query.filter_by(role_id=role).first().role_name
 
     registered_users = db.session.query(User).join(Roles).order_by(Roles.role_name).all()
     return render_template('dashboard/admin/dashboard_admin_user_list.html', 
-                           is_dashboard=True, 
-                           is_admin_dashboard=True, 
-                           registered_users=registered_users, 
-                           selected_user=None, user="random")
+                            is_dashboard=True, 
+                            is_admin_dashboard=True, 
+                            registered_users=registered_users, 
+                            selected_user=None,
+                            user=user,
+                            role_name=role_name)
 
 @app.route('/dashboard/admin/update-user', methods=['POST'])
 def update_user():
@@ -2379,7 +2382,6 @@ def remove_user():
     
 @app.route('/dashboard/admin-view/classes', methods=['GET', 'POST'])
 def RenderAdminClassesList():
-    '''
     user = session.get('user')
     if not user:
         flash('You must be logged in to access this page.', 'popup')
@@ -2391,7 +2393,8 @@ def RenderAdminClassesList():
     if role != ROLE_ADMIN:
         flash('You have insufficient permissions to access this page.', 'popup')
         return redirect(url_for('RenderHomepage'))
-    '''
+
+    role_name = Roles.query.filter_by(role_id=role).first().role_name
 
     registered_classes = db.session.query(Classes).all()
 
@@ -2420,8 +2423,8 @@ def RenderAdminClassesList():
         is_admin_dashboard=True,
         class_data=class_data,
         instructors=instructors,
-        user="Random"
-    )
+        user=user,
+        role_name=role_name)
 
 
 @app.route('/dashboard/classes/remove_class', methods=['POST'])

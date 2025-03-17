@@ -9,129 +9,155 @@
 {% include "alert/full.html" %}
 <body>
 <!-- Sidebar-->
-    <div class="sidebar-wrapper">
-        <div class="sidebar-header">
-            <img src="/static/img/profile_pic.png" alt="Profile Picture" class="profile-image">
-            <span class="sidebar-name">{{ user['username'] }}</span>
-            <button class="collapse-btn" onclick="toggleSidebar()">
-                <svg class="sidebar-arrow-icon"><use xlink:href="/static/img/sidebar-icons.svg#arrow-icon" fill="currentColor"></use></svg>
-            </button>
+<div class="sidebar-wrapper">
+    <div class="sidebar-header">
+        <img src="/static/img/profile_pic.png" alt="Profile Picture" class="profile-image">
+        <div class="sidebar-user-info">
+            <span class="sidebar-name">{{ user['first_name'] }} {{ user['last_name'] }}</span>
+            <span class="sidebar-role">{{ role_name }}</span> 
         </div>
-        <a href="{{ url_for('RenderAdminUserList') }}">
-            <ul>
-                <li>
-                    <svg class="sidebar-home-icon"><use xlink:href="/static/img/sidebar-icons.svg#home-icon" fill="currentColor"></use></svg>
-                    <span class="home-text">USERS</span>
-                </li>   
-            </ul>
-        </a>
-        <a href="{{ url_for('RenderAdminClassesList') }}">
-            <ul>
-                <li>
-                    <svg class="sidebar-class-icon"><use xlink:href="/static/img/sidebar-icons.svg#class-icon" fill="currentColor"></use></svg>
-                    <span class="home-text">CLASSES</span>
-                </li>   
-            </ul>
-        </a>
-        <a href="{{ url_for('RenderLogout') }}">
-            <ul>
-                <li>
-                    <svg class="sidebar-logout-icon"><use xlink:href="/static/img/sidebar-icons.svg#logout-icon" fill="currentColor"></use></svg>
-                    <span class="home-text">LOG OUT</span>
-                </li>   
-            </ul>
-        </a>
+        <button class="collapse-btn" onclick="toggleSidebar()">
+            <svg class="sidebar-arrow-icon"><use xlink:href="/static/img/sidebar-icons.svg#arrow-icon" fill="currentColor"></use></svg>
+        </button>
     </div>
+    <a href="{{ url_for('RenderAdminDashboard') }}" class="sidebar-item">
+        <ul>
+            <li>
+                <svg class="sidebar-home-icon"><use xlink:href="/static/img/sidebar-icons.svg#home-icon" fill="currentColor"></use></svg>
+                <span class="home-text">HOME</span>
+            </li>   
+        </ul>
+    </a>
+    <a href="{{ url_for('RenderAdminUserList') }}" class="sidebar-item">
+        <ul>
+            <li>
+                <svg class="sidebar-user-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#multiple-users-icon" fill="currentColor"></use></svg>
+                <span class="home-text">USERS</span>
+            </li>   
+        </ul>
+    </a>
+    <a href="{{ url_for('RenderAdminClassesList') }}" class="sidebar-item active">
+        <ul>
+            <li>
+                <svg class="sidebar-class-icon"><use xlink:href="/static/img/sidebar-icons.svg#class-icon" fill="currentColor"></use></svg>
+                <span class="home-text">CLASSES</span>
+            </li>   
+        </ul>
+    </a>
+    <a href="{{ url_for('RenderLogout') }}">
+        <ul>
+            <li>
+                <svg class="sidebar-logout-icon"><use xlink:href="/static/img/sidebar-icons.svg#logout-icon" fill="currentColor"></use></svg>
+                <span class="home-text">LOG OUT</span>
+            </li>   
+        </ul>
+    </a>
+</div>
 <!-- Sidebar-->
-
     <div class="dashboard-container">
-        <!-- Header Reused From dashboard_classes -->
-        <div class="dashboard-classes-header">
-            <h1>Classes</h1>
-        </div>
-        <!-- Header Reused From dashboard_classes -->
-
-        <div class="user-list-container">
-            <div class="user-list">
-                <table class="user-list-table">
-                    <thead>
-                        <tr>
-                            <th>Class</th>
-                            <th>Number of Students</th>
-                            <th>Instructor Name</th>
-                            <th>Edit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if class_data %}
-                            {% for cls in class_data %}
+        <div class = "dashboard-content user-list">
+            <div class = "user-list-section-one">
+                <!-- Header Reused From dashboard_classes-->
+                <div class="dashboard-classes-header">
+                    <h1>Classes</h1>
+                    <button class="create-user-button">Create Class</button>
+                </div>
+                <!-- Grey Line -->
+                <hr class="grey-line">
+                <!-- Header Reused From dashboard_classes-->
+                <div class="user-list-container">
+                    <div class="user-list">
+                        <table class="user-list-table">
+                            <thead>
                                 <tr>
-                                    <td>{{ cls.course_info }}</td>
-                                    <td>{{ cls.student_count }}</td>
-                                    <td>{{ cls.instructor_name }}</td>
-                                    <td>
-                                        <!-- Edit Button -->
-                                        <form method="POST" action="{{ url_for('RenderAdminUserList') }}">
-                                            <input type="hidden" name="selected_class_id" value="{{ cls.class_id }}">
-                                            <button type="submit" name="action" value="edit" class="edit-button">
-                                                <svg class="edit-icon">
-                                                    <use xlink:href="/static/img/sidebar-icons.svg#edit-icon"></use>
-                                                </svg>
-                                            </button>
-                                        </form>                                        
-                                    </td>
+                                    <th>Class</th>
+                                    <th>Number of Students</th>
+                                    <th>Instructor Name</th>
+                                    <th>Edit</th>
                                 </tr>
-                                <!-- Modal for Editing Class -->
-                                <div id="edit-modal-{{ cls.class_id }}" class="modal">
-                                    <div class="modal-content">
-                                        <span class="close-modal" onclick="closeModal('{{ cls.class_id }}')">&times;</span>
-                                        <h2>Edit Class</h2>
-                                        <p>Editing: {{ cls.course_info }}</p>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input type="text" id="class-search" placeholder="Search by Class" oninput="filterTableClasses()">
+                                    </td>
+                                    <td>
+                                        <input type="text" id="students-search" placeholder="Search by Students" oninput="filterTableClasses()">
+                                    </td>
+                                    <td>
+                                        <input type="text" id="instructor-search" placeholder="Search by Instructor" oninput="filterTableClasses()">
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                {% if class_data %}
+                                    {% for cls in class_data %}
+                                        <tr>
+                                            <td>{{ cls.course_info }}</td>
+                                            <td>{{ cls.student_count }}</td>
+                                            <td>{{ cls.instructor_name }}</td>
+                                            <td>
+                                                <!-- Edit Button -->
+                                                <form method="POST" action="{{ url_for('RenderAdminUserList') }}">
+                                                    <input type="hidden" name="selected_class_id" value="{{ cls.class_id }}">
+                                                    <button type="submit" name="action" value="edit" class="edit-button">
+                                                        <svg class="edit-icon">
+                                                            <use xlink:href="/static/img/sidebar-icons.svg#edit-icon"></use>
+                                                        </svg>
+                                                    </button>
+                                                </form>                                        
+                                            </td>
+                                        </tr>
+                                        <!-- Modal for Editing Class -->
+                                        <div id="edit-modal-{{ cls.class_id }}" class="modal">
+                                            <div class="modal-content">
+                                                <span class="close-modal" onclick="closeModal('{{ cls.class_id }}')">&times;</span>
+                                                <h2>Edit Class</h2>
+                                                <p>Editing: {{ cls.course_info }}</p>
+                                                
+                                                <form method="POST" action="{{ url_for('remove_class') }}">
+                                                    <input type="hidden" name="class_id" value="{{ cls.class_id }}">
+                                                    <button type="submit" name="action" value="remove">Remove Class</button>
+                                                </form>
+                                                
+                                                <form method="POST" action="{{ url_for('change_class_name') }}">
+                                                    <input type="hidden" name="class_id" value="{{ cls.class_id }}">
+                                                
+                                                    <label for="class_course_code">Class Course Code:</label>
+                                                    <input type="text" name="class_course_code" id="class_course_code" value="{{ cls.class_course_code }}" required>
+                                                    
+                                                    <label for="class_section_number">Class Section Number:</label>
+                                                    <input type="text" name="class_section_number" id="class_section_number" value="{{ cls.class_section_number }}" required>
+                                                
+                                                    <button type="submit">Update Class</button>
+                                                </form>
+                                                
+                                                <form method="POST" action="{{ url_for('change_class_instructor') }}">
+                                                    <input type="hidden" name="class_id" value="{{ cls.class_id }}">
                                         
-                                        <form method="POST" action="{{ url_for('remove_class') }}">
-                                            <input type="hidden" name="class_id" value="{{ cls.class_id }}">
-                                            <button type="submit" name="action" value="remove">Remove Class</button>
-                                        </form>
+                                                    <label for="instructor">Change Instructor:</label>
+                                                    <select name="instructor_id" id="instructor">
+                                                        {% for instructor in instructors %}
+                                                            <option value="{{ instructor.user_id }}" {% if instructor.user_id == cls.instructor_id %} selected {% endif %}>
+                                                                {{ instructor.first_name }} {{ instructor.last_name }}
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
                                         
-                                        <form method="POST" action="{{ url_for('change_class_name') }}">
-                                            <input type="hidden" name="class_id" value="{{ cls.class_id }}">
-                                        
-                                            <label for="class_course_code">Class Course Code:</label>
-                                            <input type="text" name="class_course_code" id="class_course_code" value="{{ cls.class_course_code }}" required>
-                                            
-                                            <label for="class_section_number">Class Section Number:</label>
-                                            <input type="text" name="class_section_number" id="class_section_number" value="{{ cls.class_section_number }}" required>
-                                        
-                                            <button type="submit">Update Class</button>
-                                        </form>
-                                        
-                                        <form method="POST" action="{{ url_for('change_class_instructor') }}">
-                                            <input type="hidden" name="class_id" value="{{ cls.class_id }}">
-                                
-                                            <label for="instructor">Change Instructor:</label>
-                                            <select name="instructor_id" id="instructor">
-                                                {% for instructor in instructors %}
-                                                    <option value="{{ instructor.user_id }}" {% if instructor.user_id == cls.instructor_id %} selected {% endif %}>
-                                                        {{ instructor.first_name }} {{ instructor.last_name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                
-                                            <button type="submit" name="action" value="change_instructor">Change Instructor</button>
-                                        </form>
-                                        
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <tr><td colspan="4">No registered classes</td></tr>
-                        {% endif %}
-                    </tbody>
-                </table>
+                                                    <button type="submit" name="action" value="change_instructor">Change Instructor</button>
+                                                </form>
+                                                
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr><td colspan="4">No registered classes</td></tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-
 </body>
 {% endblock %}

@@ -162,3 +162,71 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Function to show the confirmation modal
+    function showConfirmationModal(event, form, userId) {
+        event.preventDefault(); // Prevent the form from submitting immediately
+        const confirmationModal = document.getElementById(`confirmation-modal-${userId}`);
+        confirmationModal.style.display = 'block'; // Show the confirmation modal
+        confirmationModal.setAttribute('aria-hidden', 'false'); // Improve accessibility
+
+        // Store the form in a data attribute
+        confirmationModal.dataset.formToSubmit = form.id;
+    }
+
+    // Function to hide the confirmation modal
+    function hideConfirmationModal(userId) {
+        const confirmationModal = document.getElementById(`confirmation-modal-${userId}`);
+        confirmationModal.style.display = 'none';
+        confirmationModal.setAttribute('aria-hidden', 'true');
+    }
+
+    // Event delegation for "Apply Changes" and "Remove User" buttons
+    document.addEventListener('click', function (event) {
+        const applyChangesButton = event.target.closest('.apply-changes-button');
+        const removeButton = event.target.closest('.remove-button');
+
+        if (applyChangesButton) {
+            const userId = applyChangesButton.dataset.userId;
+            const form = document.getElementById(`update-user-form-${userId}`);
+            showConfirmationModal(event, form, userId);
+        }
+
+        if (removeButton) {
+            const userId = removeButton.dataset.userId;
+            const form = document.getElementById(`remove-user-form-${userId}`);
+            showConfirmationModal(event, form, userId);
+        }
+    });
+
+    // Event delegation for confirmation and cancel buttons
+    document.addEventListener('click', function (event) {
+        const confirmButton = event.target.closest('.confirm-button');
+        const cancelButton = event.target.closest('.cancel-button');
+        const closeConfirmationModal = event.target.closest('.close-confirmation-modal');
+
+        if (confirmButton || cancelButton || closeConfirmationModal) {
+            const userId = (confirmButton || cancelButton || closeConfirmationModal).dataset.userId;
+            const confirmationModal = document.getElementById(`confirmation-modal-${userId}`);
+
+            if (confirmButton) {
+                const formId = confirmationModal.dataset.formToSubmit;
+                const form = document.getElementById(formId);
+                if (form) {
+                    form.submit(); // Submit the form
+                }
+            }
+
+            hideConfirmationModal(userId); // Hide the confirmation modal
+        }
+    });
+
+    // Close the confirmation modal if the user clicks outside of it
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('modal')) {
+            const userId = event.target.id.replace('confirmation-modal-', '');
+            hideConfirmationModal(userId);
+        }
+    });
+});

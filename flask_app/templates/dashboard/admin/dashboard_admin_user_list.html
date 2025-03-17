@@ -9,163 +9,179 @@
 {% include "alert/full.html" %}
 <body>
 <!-- Sidebar-->
-    <div class="sidebar-wrapper">
-        <div class="sidebar-header">
-            <img src="/static/img/profile_pic.png" alt="Profile Picture" class="profile-image">
-            <span class="sidebar-name">{{ user['username'] }}</span>
-            <button class="collapse-btn" onclick="toggleSidebar()">
-                <svg class="sidebar-arrow-icon"><use xlink:href="/static/img/sidebar-icons.svg#arrow-icon" fill="currentColor"></use></svg>
-            </button>
+<div class="sidebar-wrapper">
+    <div class="sidebar-header">
+        <img src="/static/img/profile_pic.png" alt="Profile Picture" class="profile-image">
+        <div class="sidebar-user-info">
+            <span class="sidebar-name">{{ user['first_name'] }} {{ user['last_name'] }}</span>
+            <span class="sidebar-role">{{ role_name }}</span> 
         </div>
-        <a href="{{ url_for('RenderAdminUserList') }}">
-            <ul>
-                <li>
-                    <svg class="sidebar-home-icon"><use xlink:href="/static/img/sidebar-icons.svg#home-icon" fill="currentColor"></use></svg>
-                    <span class="home-text">USERS</span>
-                </li>   
-            </ul>
-        </a>
-        <a href="{{ url_for('RenderAdminClassesList') }}">
-            <ul>
-                <li>
-                    <svg class="sidebar-class-icon"><use xlink:href="/static/img/sidebar-icons.svg#class-icon" fill="currentColor"></use></svg>
-                    <span class="home-text">CLASSES</span>
-                </li>   
-            </ul>
-        </a>
-        <a href="{{ url_for('RenderLogout') }}">
-            <ul>
-                <li>
-                    <svg class="sidebar-logout-icon"><use xlink:href="/static/img/sidebar-icons.svg#logout-icon" fill="currentColor"></use></svg>
-                    <span class="home-text">LOG OUT</span>
-                </li>   
-            </ul>
-        </a>
+        <button class="collapse-btn" onclick="toggleSidebar()">
+            <svg class="sidebar-arrow-icon"><use xlink:href="/static/img/sidebar-icons.svg#arrow-icon" fill="currentColor"></use></svg>
+        </button>
     </div>
+    <a href="{{ url_for('RenderAdminDashboard') }}" class="sidebar-item">
+        <ul>
+            <li>
+                <svg class="sidebar-home-icon"><use xlink:href="/static/img/sidebar-icons.svg#home-icon" fill="currentColor"></use></svg>
+                <span class="home-text">HOME</span>
+            </li>   
+        </ul>
+    </a>
+    <a href="{{ url_for('RenderAdminUserList') }}" class="sidebar-item active">
+        <ul>
+            <li>
+                <svg class="sidebar-user-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#multiple-users-icon" fill="currentColor"></use></svg>
+                <span class="home-text">USERS</span>
+            </li>   
+        </ul>
+    </a>
+    <a href="{{ url_for('RenderAdminClassesList') }}" class="sidebar-item">
+        <ul>
+            <li>
+                <svg class="sidebar-class-icon"><use xlink:href="/static/img/sidebar-icons.svg#class-icon" fill="currentColor"></use></svg>
+                <span class="home-text">CLASSES</span>
+            </li>   
+        </ul>
+    </a>
+    <a href="{{ url_for('RenderLogout') }}">
+        <ul>
+            <li>
+                <svg class="sidebar-logout-icon"><use xlink:href="/static/img/sidebar-icons.svg#logout-icon" fill="currentColor"></use></svg>
+                <span class="home-text">LOG OUT</span>
+            </li>   
+        </ul>
+    </a>
+</div>
 <!-- Sidebar-->
-
     <div class="dashboard-container">
-        <!-- Header Reused From dashboard_classes-->
-        <div class="dashboard-classes-header">
-            <h1>Users</h1>
-        </div>
-        <!-- Header Reused From dashboard_classes-->
-
-        <div class="user-list-container">
-            <div class="user-list">
-                <table class="user-list-table" id="user-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Edit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <input type="text" id="name-search" placeholder="Search by Name" oninput="filterTable()">
-                            </td>
-                            <td>
-                                <input type="text" id="email-search" placeholder="Search by Email" oninput="filterTable()">
-                            </td>
-                            <td>
-                                <select id="role-filter" onchange="sortTableByRole()">
-                                    <option value="Admin">Admin</option>
-                                    <option value="Instructor">Instructor</option>
-                                    <option value="Student">Student</option>
-                                </select>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>   
-                        {% if registered_users %}
-                            {% for user in registered_users %}
+        <div class = "dashboard-content user-list">
+            <div class = "user-list-section-one">
+                <!-- Header Reused From dashboard_classes-->
+                <div class="dashboard-classes-header">
+                    <h1>Users</h1>
+                    <button class="create-user-button">Create User</button>
+                </div>
+                <!-- Grey Line -->
+                <hr class="grey-line">
+                <!-- Header Reused From dashboard_classes-->
+                <div class="user-list-container">
+                    <div class="user-list">
+                        <table class="user-list-table" id="user-table">
+                            <thead>
                                 <tr>
-                                    <td>{{ user.first_name }} {{ user.last_name }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>{{ user.role.role_name }}</td>
-                                    <td>
-                                        <!-- Edit Button -->
-                                        <form method="POST" action="{{ url_for('RenderAdminUserList') }}">
-                                            <input type="hidden" name="selected_user_id" value="{{ user.user_id }}">
-                                            <button type="submit" name="action" value="edit" class="edit-button">
-                                                <svg class="edit-icon">
-                                                    <use xlink:href="/static/img/sidebar-icons.svg#edit-icon"></use>
-                                                </svg>
-                                            </button>
-                                        </form>
-                                    </td>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Edit</th>
                                 </tr>
-                                
-                                <!-- Edit User Modal -->
-                                <div id="edit-modal-{{ user.user_id }}" class="modal admin_dashboard">
-                                    <div class="modal-content admin_dashboard">
-                                        <span class="close-modal">&times;</span>
-                                        <h2>User Management</h2>
-                                        <p>Editing: {{ user.first_name }} {{ user.last_name }}</p>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input type="text" id="name-search" placeholder="Search by Name" oninput="filterTableUsers()">
+                                    </td>
+                                    <td>
+                                        <input type="text" id="email-search" placeholder="Search by Email" oninput="filterTableUsers()">
+                                    </td>
+                                    <td>
+                                        <select id="role-filter" onchange="sortTableByRole()">
+                                            <option value="Admin">Admin</option>
+                                            <option value="Instructor">Instructor</option>
+                                            <option value="Student">Student</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>   
+                                {% if registered_users %}
+                                    {% for user in registered_users %}
+                                        <tr>
+                                            <td>{{ user.first_name }} {{ user.last_name }}</td>
+                                            <td>{{ user.email }}</td>
+                                            <td>{{ user.role.role_name }}</td>
+                                            <td>
+                                                <!-- Edit Button -->
+                                                <form method="POST" action="{{ url_for('RenderAdminUserList') }}">
+                                                    <input type="hidden" name="selected_user_id" value="{{ user.user_id }}">
+                                                    <button type="submit" name="action" value="edit" class="edit-button">
+                                                        <svg class="edit-icon">
+                                                            <use xlink:href="/static/img/sidebar-icons.svg#edit-icon"></use>
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!-- Edit User Modal -->
+                                        <div id="edit-modal-{{ user.user_id }}" class="modal admin_dashboard">
+                                            <div class="modal-content admin_dashboard">
+                                                <span class="close-modal">&times;</span>
+                                                <h2>User Management</h2>
+                                                <p>Editing: {{ user.first_name }} {{ user.last_name }}</p>
 
-                                        <!-- Scrollable Content -->
-                                        <div class="modal-body">
-                                            <!-- Update User Form -->
-                                            <form method="POST" action="{{ url_for('update_user') }}" id="update-user-form">
-                                                <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                                                <label for="role">Change Role:</label>
-                                                <select name="role_id" id="role">
-                                                    <option value="1" {% if user.role_id == 1 %} selected {% endif %}>Instructor</option>
-                                                    <option value="2" {% if user.role_id == 2 %} selected {% endif %}>Student</option>
-                                                    <option value="3" {% if user.role_id == 3 %} selected {% endif %}>Admin</option>
-                                                </select>
+                                                <!-- Scrollable Content -->
+                                                <div class="modal-body">
+                                                    <!-- Update User Form -->
+                                                    <form method="POST" action="{{ url_for('update_user') }}" id="update-user-form-{{ user.user_id }}">
+                                                        <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                                                        <label for="role">Change Role:</label>
+                                                        <select name="role_id" id="role">
+                                                            <option value="1" {% if user.role_id == 1 %} selected {% endif %}>Instructor</option>
+                                                            <option value="2" {% if user.role_id == 2 %} selected {% endif %}>Student</option>
+                                                            <option value="3" {% if user.role_id == 3 %} selected {% endif %}>Admin</option>
+                                                        </select>
 
-                                                <label for="first_name">First Name:</label>
-                                                <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" required>
+                                                        <label for="first_name">First Name:</label>
+                                                        <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" required>
 
-                                                <label for="last_name">Last Name:</label>
-                                                <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" required>
+                                                        <label for="last_name">Last Name:</label>
+                                                        <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" required>
 
-                                                <label for="email">Email:</label>
-                                                <input type="email" name="email" id="email" value="{{ user.email }}" required>
+                                                        <label for="email">Email:</label>
+                                                        <input type="email" name="email" id="email" value="{{ user.email }}" required>
 
-                                                <label for="new_password">New Password (leave blank to keep current password):</label>
-                                                <input type="password" name="new_password" id="new_password" placeholder="New password">
+                                                        <label for="new_password">New Password (leave blank to keep current password):</label>
+                                                        <input type="password" name="new_password" id="new_password" placeholder="New password">
 
-                                                <label for="confirm_password">Confirm Password:</label>
-                                                <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password">
+                                                        <label for="confirm_password">Confirm Password:</label>
+                                                        <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password">
 
-                                                <!-- Footer to hold buttons in the same row -->
+                                                        <!-- Footer to hold buttons in the same row -->
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="apply-changes-button" data-user-id="{{ user.user_id }}">Apply Changes</button>
+                                                            <button type="submit" name="action" value="remove" class="remove-button" data-user-id="{{ user.user_id }}" form="remove-user-form-{{ user.user_id }}">Remove User</button>
+                                                        </div>
+                                                    </form>
+
+                                                    <!-- Remove User Form -->
+                                                    <form method="POST" action="{{ url_for('remove_user') }}" id="remove-user-form-{{ user.user_id }}">
+                                                        <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                                                    </form>
+                                                </div> <!-- End of modal-body -->
+                                            </div> <!-- End of modal-content -->
+                                        </div> <!-- End of edit-modal -->
+
+                                        <!-- Confirmation Modal for Each User -->
+                                        <div id="confirmation-modal-{{ user.user_id }}" class="modal confirmation-modal" style="display: none;">
+                                            <div class="modal-content confirmation-modal">
+                                                <span class="close-confirmation-modal" data-user-id="{{ user.user_id }}">&times;</span>
+                                                <h2>Confirm Action</h2>
+                                                <p>Are you sure you want to perform this action?</p>
                                                 <div class="modal-footer">
-                                                    <button type="submit" class="apply-changes-button">Apply Changes</button>
-                                                    <button type="submit" name="action" value="remove" id="remove-button" form="remove-user-form">Remove User</button>
+                                                    <button class="confirm-button" data-user-id="{{ user.user_id }}">Confirm</button>
+                                                    <button class="cancel-button" data-user-id="{{ user.user_id }}">Cancel</button>
                                                 </div>
-                                            </form>
-
-                                            <!-- Remove User Form -->
-                                            <form method="POST" action="{{ url_for('remove_user') }}" id="remove-user-form">
-                                                <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                                            </form>
-                                        </div> <!-- End of modal-body -->
-                                    </div> <!-- End of modal-content -->
-                                </div> <!-- End of edit-modal -->
-
-                                <!-- Confirmation Modal -->
-                                <div id="confirmation-modal" class="modal confirmation-modal" style="display: none;">
-                                    <div class="modal-content confirmation-modal">
-                                        <span class="close-confirmation-modal">&times;</span>
-                                        <h2>Confirm Action</h2>
-                                        <p>Are you sure you want to perform this action?</p>
-                                        <div class="modal-footer">
-                                            <button id="confirm-action-button" class="confirm-button">Confirm</button>
-                                            <button id="cancel-action-button" class="cancel-button">Cancel</button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <tr><td colspan="4">No registered users</td></tr>
-                        {% endif %}
-                    </tbody>
-                </table>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr><td colspan="4">No registered users</td></tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

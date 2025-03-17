@@ -1,4 +1,4 @@
-function filterTable() {
+function filterTableUsers() {
     const nameSearch = document.getElementById("name-search").value.toLowerCase();
     const emailSearch = document.getElementById("email-search").value.toLowerCase();
     const table = document.getElementById("user-table");
@@ -48,3 +48,31 @@ function sortTableByRole() {
     tbody.appendChild(searchRow); 
     rows.forEach(row => tbody.appendChild(row));
 }
+
+function filterTableClasses() {
+    let classSearch = document.getElementById("class-search").value.toLowerCase();
+    let studentsSearch = document.getElementById("students-search").value.toLowerCase();
+    let instructorSearch = document.getElementById("instructor-search").value.toLowerCase();
+
+    const table = document.querySelector(".user-list-table");
+    const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+    for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const classCell = row.getElementsByTagName("td")[0]?.textContent.toLowerCase() || "";
+        const studentsCell = row.getElementsByTagName("td")[1]?.textContent.toLowerCase() || "";
+        const instructorCell = row.getElementsByTagName("td")[2]?.textContent.toLowerCase() || "";
+
+        const classMatch = classCell.includes(classSearch);
+        const studentsMatch = studentsCell.includes(studentsSearch);
+        const instructorMatch = instructorCell.includes(instructorSearch);
+
+        // Show or hide rows based on search matches
+        if (classMatch && studentsMatch && instructorMatch) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    }
+}
+

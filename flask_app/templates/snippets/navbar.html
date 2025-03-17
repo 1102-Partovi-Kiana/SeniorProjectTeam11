@@ -125,6 +125,15 @@
                             <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>
                         </li>
                     {% elif is_admin_dashboard%}
+                        <li class="nav-item-icon">
+                            <svg class="navbar-bell-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#bell-icon" fill="currentColor"></use></svg>
+                        </li>
+                        <li class="nav-item-icon">
+                            <svg class="navbar-envelope-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#envelope-icon" fill="currentColor"></use></svg>
+                        </li>
+                        <li class="nav-item-icon">
+                            <svg class="navbar-user-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#three-dots-icon" fill="currentColor"></use></svg>
+                        </li>
                     {% endif %}
                 </ul>
             </div>
