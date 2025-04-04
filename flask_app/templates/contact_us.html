@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% block page_title %}
+<title>Contact Us - CORE</title>
+{% endblock %}
+
+{% block body %}
+
+<body>
+
+    <section class="contact-page-hero">
+        <div class="overlay"></div>
+        <div class="contact-page-hero-content">
+            <h1 id="typed-output"></h1> <!-- For the typed.js library -->
+        </div>
+    </section>
+
+    <section class="contact-page-container">
+        <div class="container">
+            <h2 class="text-center">Questions, bug reports, feedback — we’re here for it all.</h2>
+            <div class="row">
+                <!-- Left Side-->
+                <div class="col-md-6 contact-page-info">
+                    <h4>Select a topic:</h4>
+                    <div class="topic-grid">
+                        <span>
+                            <label class="topic">
+                                <input type="radio" name="topic" value="Coding" required>
+                                Coding
+                            </label>
+                        </span>
+                        <span>
+                            <label class="topic">
+                                <input type="radio" name="topic" value="Course Navigation" required>
+                                Course Navigation
+                            </label>
+                        </span>
+                        <span>
+                            <label class="topic">
+                                <input type="radio" name="topic" value="Connection trouble" required>
+                                Connection trouble
+                            </label>
+                        </span>
+                        <span>
+                            <label class="topic">
+                                <input type="radio" name="topic" value="Platform Performance" required>
+                                Platform Performance
+                            </label>
+                        </span>
+                        <span>
+                            <label class="topic">
+                                <input type="radio" name="topic" value="Robot Simulations" required>
+                                Robot Simulations
+                            </label>
+                        </span>
+                        <span>
+                            <label class="topic">
+                                <input type="radio" name="topic" value="Assessments" required>
+                                Assessments
+                            </label>
+                        </span>
+                        <span>
+                            <label class="topic">
+                                <input type="radio" name="topic" value="Account & Login Issues" required>
+                                Account & Login Issues
+                            </label>
+                        </span>
+                        <span>
+                            <label class="topic">
+                                <input type="radio" name="topic" value="Other" required>
+                                Other
+                            </label>
+                        </span>
+                    </div>
+                    <p class="text-muted">Or tell us a topic you need help with:</p>
+                    <div class="search-input">
+                        <input type="text" placeholder="Enter a topic, like “notifications”">
+                    </div>
+
+                    <section class="community-section">
+                        <div class="community-header text-center">
+                            <h3>You're in great company</h3>
+                            <p>Join thousands of users who love using our platform.</p>
+                        </div>
+
+                        <div class="community-grid">
+                            <div class="community-member">
+                                <div class="circle-bg green"></div>
+                                <img src="{{ url_for('static', filename='img/avatar-1.png') }}" alt="User 1">
+                                <span class="emoji">❤️</span>
+                            </div>
+
+                            <div class="community-member">
+                                <div class="circle-bg blue"></div>
+                                <img src="{{ url_for('static', filename='img/avatar-2.png') }}" alt="User 2">
+                                <span class="emoji">👏</span>
+                            </div>
+
+                            <div class="community-member">
+                                <div class="circle-bg red"></div>
+                                <img src="{{ url_for('static', filename='img/avatar-3.webp') }}" alt="User 3">
+                                <span class="emoji">👋</span>
+                            </div>
+
+                            <div class="community-member">
+                                <div class="circle-bg yellow"></div>
+                                <img src="{{ url_for('static', filename='img/avatar-1.png') }}" alt="User 4">
+                                <span class="emoji">🙌</span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Side -->
+                <div class="col-md-6 d-flex flex-column justify-content-between">
+                    <form class="contact-page-form flex-grow-1" method="POST" action="{{ url_for('RenderContactUs') }}">
+                        <p class="text-muted"><strong>Please note: All fields are required.</strong></p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>First Name</label>
+                                <input type="text" name="first_name" class="form-control" placeholder="Your First Name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Last Name</label>
+                                <input type="text" name="last_name" class="form-control" placeholder="Your Last Name" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Email</label>
+                            <input type="email" name="email" class="form-control" placeholder="Your Email Address" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Message</label>
+                            <textarea name="message" class="form-control" rows="4" placeholder="Your Message" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn contact-page-btn">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var typed = new Typed("#typed-output", {
+                strings: ["Contact Us", "We're Here to Help", "Reach Out Anytime"],
+                typeSpeed: 50,
+                backSpeed: 30,
+                startDelay: 300,
+                backDelay: 1500,
+                loop: true,
+                showCursor: true,
+                cursorChar: "|", 
+            });
+        });
+    </script>
+    
+    <script>
+        $(document).ready(function () {
+            $(".contact-page-form").submit(function (event) {
+                event.preventDefault();
+
+                let selectedTopic = $("input[name='topic']:checked").val();
+                if (!selectedTopic) {
+                    alert("Please select a topic before submitting, located to the left.");
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url_for('RenderContactUs') }}",
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.status === "success") {
+                            showConfetti();
+                            alert(response.message);
+                            $(".contact-page-form")[0].reset();  // Reset form after submission
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert("Uh Oh. Something went wrong. Please try again.");
+                    },
+                });
+            });
+
+            function showConfetti() {
+                confetti({
+                    particleCount: 200,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        });
+
+    </script>
+</body>
+
+{% endblock body %}

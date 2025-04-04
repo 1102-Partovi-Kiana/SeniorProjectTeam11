@@ -59,244 +59,246 @@
         </ul>
     </div> <!-- End of course-sidebar -->
 
-    <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Coding the Robot Movement</h1>
-            <p class="page-description">Learn how to implement the logic required to use the Fetch Reach Robot.</p>
-        </header>
+    <div class="robotics-content">
+        <div class="course-main-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <h1 class="page-title">Coding the Robot Movement</h1>
+                <p class="page-description">Learn how to implement the logic required to use the Fetch Reach Robot.</p>
+            </header>
 
-        <!-- Word Bank Section -->
-        <div class="word-bank" id="word-bank-fetch-reach" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
-            <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin: 10px 0;">
-                    <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔧 FetchReachEnv:</strong> The specific environment object for the task setup.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>📏 Distance Threshold:</strong> Maximum allowable distance between gripper and ball.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔄 Step Size:</strong> Incremental movement of the gripper.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🎯 Ball Position:</strong> Current coordinates of the ball.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🤖 Gripper Position:</strong> Current coordinates of the robot's gripper.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🧭 Direction:</strong> Vector from gripper to ball.
-                </li>
-            </ul>
-        </div>
-
-        <!-- Section: Understanding the Environment -->
-        <div class="module-section" id="understand-the-environment">
-            <h3>Understand the Environment</h3>
-            <p>You are provided with a robot environment (<code>env</code>), which holds the current state of the robot and provides functions to interact with it. Specifically, it has "getters" to retrieve information like the position of the ball and the gripper. The robotic environment comes <strong>pre-initialized</strong>. This means you can automatically use the built-in methods that come with the environment. For the Fetch Reach Robot
-                environment, these methods include:
-                <ul class="custom-list">
-                    <li><code>get_ball_position()</code> → Returns the ball’s position.</li>
-                    <li><code>get_gripper_position()</code> → Returns the gripper’s position.</li>
-                    <li><code>step(x = increment)</code> → Moves the gripper based on the provided action (increment).</li>
-                </ul>
-            </p>
-            <p>To access these methods, use <code><strong>env.</strong></code> followed by your desired method. For example,  if you would like to get the ball position in the robotic environment, the correct thing to do would be:
-                <code>env.get_ball_position()</code>
-             </p>
-        </div>
-
-        <!-- Section: Define the Distance Threshold -->
-        <div class="module-section" id="define-the-distance-threshold">
-            <h3>Define the Distance Threshold</h3>
-            <p><strong>Distance Threshold:</strong> This defines when the gripper is close enough to the ball.</p>
-            <small><strong>Note:</strong> The <code>distance_threshold</code> is provided in the code and specifies how close the gripper must get to the ball before stopping. It is predefined as <code>0.01</code>.</small>
-        </div>
-
-        <!-- Section: Define the Distance Threshold -->
-        <div class="module-section" id="define-the-step-size">
-            <h3>Define the Step Size</h3>
-            <p><strong>Step Size:</strong> This defines how much the gripper will move in each step. A small value is generally used to ensure smooth movement.</p>
-            <small><strong>Note:</strong> The <code>step_size</code> is provided in the code and determines the increment of the gripper’s movement in each iteration. It is predefined as <code>0.05</code></small>
-        </div>
-
-        <!-- Section: Retrieving Positions -->
-        <div class="module-section" id="retrieve-key-positions">
-            <h3>Retrieve Key Positions</h3>
-            <p>Begin by getting the current positions of both the ball and the gripper and store them in variables to use in the future. These vector (3D) positions will be used to calculate the direction in which the gripper needs to move. You'll need to use the environment (env) to obtain these positions.</p>
-            <p>Remeber we are working in a <strong>3D space</strong> (<code>[x, y, z]</code>)</p>
-            <p>Your ball position will be located at, for example, [1, 2, 3], and the gripper position at [0, 0, 0].</p>
-        </div>
-
-         <!-- Section: Calculating Direction Vector -->
-        <div class="module-section" id="calculate-the-direction-vector">
-            <h3>Calculate the Direction Vector</h3>
-            <p>To determine where to move the gripper, calculate the <strong>direction vector</strong>. The robot’s gripper must move towards the ball. To determine this, calculate the vector from the gripper’s current position to the ball’s position.</p>
-            <p>Since both the vector position and the ball position are represented as vectors, we must subtract them using vector arithmetic. In Python, this can be done using <strong>np.array()</strong>. This way the calculations are compatible with NumPy's vectorized operations.</p>
-            <pre class="code-snippet"><code>
-# This direction vector reprsents the path the gripper needs to follow.
-direction = np.array(ball_position) - np.array(gripper_position)
-            </code></pre>
-            <p><strong>Example:</strong></p>
-            <pre class="code-snippet"><code>
-ball_position = [3, 4, 0]
-gripper_position = [0, 0, 0]
-direction = [3 - 0, 4 - 0, 0 - 0]  # [3, 4, 0]
-            </code></pre>
-            <p> Now, direction correclty represents a vector pointing from the gripper to the ball.</p>
-        </div>
-
-        <!-- Section: Retrieving the Euclidean Norm of the DV -->
-        <div class="module-section" id="retrieve-the-euclidean-norm-of-the-direction-vector">
-            <h3>Retrieve the Euclidean Norm (Magnitude) of the Direction Vector</h3>
-            <p>We must normalize the direction vector.</p>
-            <p>Use <code>np.linalg.norm([...])</code> to calculate the Euclidean distance (or magnitude) of the direction vector:
-                <code>direction_normalized = np.linalg.norm(direction)</code>. 
-                This distance tells us the exact scalar value of how far the gripper is from the ball, which is essential for deciding when the gripper is "close enough" to get to the exit condition.
-            </li></p>
-        </div>
-
-
-        <!-- Section: Next Steps  -->
-        <div class="module-section" id="define-the-step-size">
-            <h3>Next Steps</h3>
-            <p>Now that we have defined everything, we are going to need to write a <strong>while loo</strong>p in order to move the gripper to the target ball position. The reason we use a while loop is because we don't know how many steps it will take. </p>
-        </div>
-
-        <!-- Section: While Loop Logic -->
-<div class="module-section" id="using-a-while-loop">
-    <h3>Using a While Loop</h3>
-    <p>Since we don’t know exactly how many steps it will take for the gripper to reach the ball, we use a <code>while</code> loop instead of a <code>for</code> loop. This loop should continue running as long as the gripper is still far from the ball,
-        <code>normalized_direction > disntace_threshold</code> OR
-    </p>
-    <p>In the while loop we compare two things, the direction of the gripper with regards to the ball to the distance_threshold. Once this path is crossed, we know our gripper has reached the ball, and our code is successful.</p>
-    <p>The thing we must consider now is that direction wich used to be a numpy array [ __, __, __] was normalized to its scalar using np.linalig.norm() and that distance_threshold is a singular value __. If you tried comparing previously is, you would get an Error of: cannot compare a vector to a scalar.</p>
-    <p>You cannot compare an array directly to a single number in a meaningful way. Therefore, we had to normalize the direction vector. This is called calculating its magnitue (or Euclidean distance) and can be done through:
-        <code>np.linalg.norm(direction)</code>
-    </p>
-    <h4>What needs to happen inside the loop?</h4>
-    <p>Each iteration of the loop should do the following:</p>
-    
-    <ol class="custom-list">
-        <li><strong>Compute the Action:</strong>  
-            <ul>
-                <li>The robot should always move in the direction of the ball, but the movement needs to be controlled.</li>
-                <li>How can we make the gripper move smoothly? We need to <strong>normalize</strong> the direction vector to unit length so that its length (magnitude) is always 1.</li>
-                <li>Then, scale this vector by a step size to control how far the gripper moves each iteration.</li>
-                <li>Finally, the action needs an additional parameter. What might this extra value represent?</li>
-            </ul>
-
-              <!-- Indented Block -->
-            <div class="indented-block">
-                <h5>Action Calculation:</h5>
-                <pre class="code-snippet"><code>
-        action = np.append(direction / np.linalg.norm(direction_normalized) * step_size, [1])
-                </code></pre>
-
-                <ul>
-                    <li><code>direction / direction_normalized</code>: Normalizes the direction vector to unit length, so its magnitude is 1.</li>
-                    <li><code>* step_size</code>: Scales the unit vector to the step size, ensuring the gripper moves a controlled distance.</li>
-                    <li><code>np.append(..., [1])</code>: Adds an extra control signal to stabilize the robotic arm while it moves (likely for gripper activation).</li>
+            <!-- Word Bank Section -->
+            <div class="word-bank" id="word-bank-fetch-reach" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
+                <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 10px 0;">
+                        <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔧 FetchReachEnv:</strong> The specific environment object for the task setup.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>📏 Distance Threshold:</strong> Maximum allowable distance between gripper and ball.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔄 Step Size:</strong> Incremental movement of the gripper.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🎯 Ball Position:</strong> Current coordinates of the ball.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🤖 Gripper Position:</strong> Current coordinates of the robot's gripper.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🧭 Direction:</strong> Vector from gripper to ball.
+                    </li>
                 </ul>
             </div>
-        </li>
 
-        <li><strong>Take a Step in the Environment:</strong>  
-            <ul>
-                <li>Now that we have an action, how do we apply it to the environment?</li>
-                <li>Remember, the environment provides a method that moves the robot when given an action.</li>
-                <li>What function should we use here?</li>
-                <code>env.step(action)</code>
-            </ul>
-        </li>
+            <!-- Section: Understanding the Environment -->
+            <div class="module-section" id="understand-the-environment">
+                <h3>Understand the Environment</h3>
+                <p>You are provided with a robot environment (<code>env</code>), which holds the current state of the robot and provides functions to interact with it. Specifically, it has "getters" to retrieve information like the position of the ball and the gripper. The robotic environment comes <strong>pre-initialized</strong>. This means you can automatically use the built-in methods that come with the environment. For the Fetch Reach Robot
+                    environment, these methods include:
+                    <ul class="custom-list">
+                        <li><code>get_ball_position()</code> → Returns the ball’s position.</li>
+                        <li><code>get_gripper_position()</code> → Returns the gripper’s position.</li>
+                        <li><code>step(x = increment)</code> → Moves the gripper based on the provided action (increment).</li>
+                    </ul>
+                </p>
+                <p>To access these methods, use <code><strong>env.</strong></code> followed by your desired method. For example,  if you would like to get the ball position in the robotic environment, the correct thing to do would be:
+                    <code>env.get_ball_position()</code>
+                </p>
+            </div>
 
-        <li><strong>Update the Gripper's Position:</strong>  
-            <ul>
-                <li>After taking a step, we need to retrieve the new gripper position.</li>
-                <li>What method should we call to get this updated information?</li>
-            </ul>
-        </li>
+            <!-- Section: Define the Distance Threshold -->
+            <div class="module-section" id="define-the-distance-threshold">
+                <h3>Define the Distance Threshold</h3>
+                <p><strong>Distance Threshold:</strong> This defines when the gripper is close enough to the ball.</p>
+                <small><strong>Note:</strong> The <code>distance_threshold</code> is provided in the code and specifies how close the gripper must get to the ball before stopping. It is predefined as <code>0.01</code>.</small>
+            </div>
 
-        <li><strong>Recalculate the Direction:</strong>  
-            <ul>
-                <li>The gripper has moved, so the direction vector may no longer be accurate.</li>
-                <li>How do we find the new direction?</li>
-                <li>Think about how we originally calculated it.</li>
-            </ul>
-        </li>
+            <!-- Section: Define the Distance Threshold -->
+            <div class="module-section" id="define-the-step-size">
+                <h3>Define the Step Size</h3>
+                <p><strong>Step Size:</strong> This defines how much the gripper will move in each step. A small value is generally used to ensure smooth movement.</p>
+                <small><strong>Note:</strong> The <code>step_size</code> is provided in the code and determines the increment of the gripper’s movement in each iteration. It is predefined as <code>0.05</code></small>
+            </div>
 
-        <li><strong>Normalize the Direction Vector:</strong>  
-            <ul>
-                <li>We must normalize the direction vector again.</li>
-                <li>How do we do this?</li>
-                <li>Think about how we originally calculated it using np.linalig.norm().</li>
-            </ul>
-        </li>
+            <!-- Section: Retrieving Positions -->
+            <div class="module-section" id="retrieve-key-positions">
+                <h3>Retrieve Key Positions</h3>
+                <p>Begin by getting the current positions of both the ball and the gripper and store them in variables to use in the future. These vector (3D) positions will be used to calculate the direction in which the gripper needs to move. You'll need to use the environment (env) to obtain these positions.</p>
+                <p>Remeber we are working in a <strong>3D space</strong> (<code>[x, y, z]</code>)</p>
+                <p>Your ball position will be located at, for example, [1, 2, 3], and the gripper position at [0, 0, 0].</p>
+            </div>
 
-        <li><strong>Check the Exit Condition:</strong>  
-            <ul>
-                <li>The loop should stop when the gripper is close enough to the ball.</li>
-                <li>What mathematical function can we use to measure the distance between the gripper and the ball?</li>
-                <li>How do we compare it to a threshold?</li>
-            </ul>
-        </li>
-    </ol>
+            <!-- Section: Calculating Direction Vector -->
+            <div class="module-section" id="calculate-the-direction-vector">
+                <h3>Calculate the Direction Vector</h3>
+                <p>To determine where to move the gripper, calculate the <strong>direction vector</strong>. The robot’s gripper must move towards the ball. To determine this, calculate the vector from the gripper’s current position to the ball’s position.</p>
+                <p>Since both the vector position and the ball position are represented as vectors, we must subtract them using vector arithmetic. In Python, this can be done using <strong>np.array()</strong>. This way the calculations are compatible with NumPy's vectorized operations.</p>
+                <pre class="code-snippet"><code>
+    # This direction vector reprsents the path the gripper needs to follow.
+    direction = np.array(ball_position) - np.array(gripper_position)
+                </code></pre>
+                <p><strong>Example:</strong></p>
+                <pre class="code-snippet"><code>
+    ball_position = [3, 4, 0]
+    gripper_position = [0, 0, 0]
+    direction = [3 - 0, 4 - 0, 0 - 0]  # [3, 4, 0]
+                </code></pre>
+                <p> Now, direction correclty represents a vector pointing from the gripper to the ball.</p>
+            </div>
 
-    <h4>Example Breakdown:</h4>
-    <p>Let's say the gripper is at (0,0,0) and the ball is at (3,4,0):</p>
+            <!-- Section: Retrieving the Euclidean Norm of the DV -->
+            <div class="module-section" id="retrieve-the-euclidean-norm-of-the-direction-vector">
+                <h3>Retrieve the Euclidean Norm (Magnitude) of the Direction Vector</h3>
+                <p>We must normalize the direction vector.</p>
+                <p>Use <code>np.linalg.norm([...])</code> to calculate the Euclidean distance (or magnitude) of the direction vector:
+                    <code>direction_normalized = np.linalg.norm(direction)</code>. 
+                    This distance tells us the exact scalar value of how far the gripper is from the ball, which is essential for deciding when the gripper is "close enough" to get to the exit condition.
+                </li></p>
+            </div>
 
-    <pre class="code-snippet"><code>
-# Direction vector before normalization
-direction = [3, 4, 0]
 
-# Normalize the direction (convert to unit length)
-normalized_direction = [3/5, 4/5, 0]  # [0.6, 0.8, 0]
+            <!-- Section: Next Steps  -->
+            <div class="module-section" id="define-the-step-size">
+                <h3>Next Steps</h3>
+                <p>Now that we have defined everything, we are going to need to write a <strong>while loo</strong>p in order to move the gripper to the target ball position. The reason we use a while loop is because we don't know how many steps it will take. </p>
+            </div>
 
-# Scale by step size (assume step_size = 0.05)
-scaled_direction = [0.6 * 0.05, 0.8 * 0.05, 0]  # [0.03, 0.04, 0]
+            <!-- Section: While Loop Logic -->
+    <div class="module-section" id="using-a-while-loop">
+        <h3>Using a While Loop</h3>
+        <p>Since we don’t know exactly how many steps it will take for the gripper to reach the ball, we use a <code>while</code> loop instead of a <code>for</code> loop. This loop should continue running as long as the gripper is still far from the ball,
+            <code>normalized_direction > disntace_threshold</code> OR
+        </p>
+        <p>In the while loop we compare two things, the direction of the gripper with regards to the ball to the distance_threshold. Once this path is crossed, we know our gripper has reached the ball, and our code is successful.</p>
+        <p>The thing we must consider now is that direction wich used to be a numpy array [ __, __, __] was normalized to its scalar using np.linalig.norm() and that distance_threshold is a singular value __. If you tried comparing previously is, you would get an Error of: cannot compare a vector to a scalar.</p>
+        <p>You cannot compare an array directly to a single number in a meaningful way. Therefore, we had to normalize the direction vector. This is called calculating its magnitue (or Euclidean distance) and can be done through:
+            <code>np.linalg.norm(direction)</code>
+        </p>
+        <h4>What needs to happen inside the loop?</h4>
+        <p>Each iteration of the loop should do the following:</p>
+        
+        <ol class="custom-list">
+            <li><strong>Compute the Action:</strong>  
+                <ul>
+                    <li>The robot should always move in the direction of the ball, but the movement needs to be controlled.</li>
+                    <li>How can we make the gripper move smoothly? We need to <strong>normalize</strong> the direction vector to unit length so that its length (magnitude) is always 1.</li>
+                    <li>Then, scale this vector by a step size to control how far the gripper moves each iteration.</li>
+                    <li>Finally, the action needs an additional parameter. What might this extra value represent?</li>
+                </ul>
 
-# Action to apply in the environment
-action = np.append(scaled_direction, [1])  # [0.03, 0.04, 0, 1]
-    </code></pre>
+                <!-- Indented Block -->
+                <div class="indented-block">
+                    <h5>Action Calculation:</h5>
+                    <pre class="code-snippet"><code>
+            action = np.append(direction / np.linalg.norm(direction_normalized) * step_size, [1])
+                    </code></pre>
 
-    <p><strong>Now, try writing out the full loop logic based on these concepts!</strong> What would the stopping condition look like? How would you integrate these steps?</p>
-</div>
+                    <ul>
+                        <li><code>direction / direction_normalized</code>: Normalizes the direction vector to unit length, so its magnitude is 1.</li>
+                        <li><code>* step_size</code>: Scales the unit vector to the step size, ensuring the gripper moves a controlled distance.</li>
+                        <li><code>np.append(..., [1])</code>: Adds an extra control signal to stabilize the robotic arm while it moves (likely for gripper activation).</li>
+                    </ul>
+                </div>
+            </li>
 
-    <!-- Section: Exit Condition -->
-    <div class="module-section" id="end-condition">
-        <h3>End Condition</h3>
-        <p>Once the loop finishes, the robot's gripper should be near the ball. Optionally, print the gripper’s final position and confirm that the robot has successfully moved the gripper to the ball.</p>
-        <p>The loop will terminate when the distance between the gripper and the ball becomes small enough (less than the distance threshold).</p>
+            <li><strong>Take a Step in the Environment:</strong>  
+                <ul>
+                    <li>Now that we have an action, how do we apply it to the environment?</li>
+                    <li>Remember, the environment provides a method that moves the robot when given an action.</li>
+                    <li>What function should we use here?</li>
+                    <code>env.step(action)</code>
+                </ul>
+            </li>
+
+            <li><strong>Update the Gripper's Position:</strong>  
+                <ul>
+                    <li>After taking a step, we need to retrieve the new gripper position.</li>
+                    <li>What method should we call to get this updated information?</li>
+                </ul>
+            </li>
+
+            <li><strong>Recalculate the Direction:</strong>  
+                <ul>
+                    <li>The gripper has moved, so the direction vector may no longer be accurate.</li>
+                    <li>How do we find the new direction?</li>
+                    <li>Think about how we originally calculated it.</li>
+                </ul>
+            </li>
+
+            <li><strong>Normalize the Direction Vector:</strong>  
+                <ul>
+                    <li>We must normalize the direction vector again.</li>
+                    <li>How do we do this?</li>
+                    <li>Think about how we originally calculated it using np.linalig.norm().</li>
+                </ul>
+            </li>
+
+            <li><strong>Check the Exit Condition:</strong>  
+                <ul>
+                    <li>The loop should stop when the gripper is close enough to the ball.</li>
+                    <li>What mathematical function can we use to measure the distance between the gripper and the ball?</li>
+                    <li>How do we compare it to a threshold?</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h4>Example Breakdown:</h4>
+        <p>Let's say the gripper is at (0,0,0) and the ball is at (3,4,0):</p>
+
+        <pre class="code-snippet"><code>
+    # Direction vector before normalization
+    direction = [3, 4, 0]
+
+    # Normalize the direction (convert to unit length)
+    normalized_direction = [3/5, 4/5, 0]  # [0.6, 0.8, 0]
+
+    # Scale by step size (assume step_size = 0.05)
+    scaled_direction = [0.6 * 0.05, 0.8 * 0.05, 0]  # [0.03, 0.04, 0]
+
+    # Action to apply in the environment
+    action = np.append(scaled_direction, [1])  # [0.03, 0.04, 0, 1]
+        </code></pre>
+
+        <p><strong>Now, try writing out the full loop logic based on these concepts!</strong> What would the stopping condition look like? How would you integrate these steps?</p>
     </div>
 
-    <!-- Section: Test the Outcome -->
-    <div class="module-section" id="test-outcomes">
-        <h3>Test the Outcome</h3>
-        <p>Once the loop finishes, the robot's gripper should be near the ball. Optionally, print the gripper’s final position and confirm that the robot has successfully moved the gripper to the ball.</p>
+        <!-- Section: Exit Condition -->
+        <div class="module-section" id="end-condition">
+            <h3>End Condition</h3>
+            <p>Once the loop finishes, the robot's gripper should be near the ball. Optionally, print the gripper’s final position and confirm that the robot has successfully moved the gripper to the ball.</p>
+            <p>The loop will terminate when the distance between the gripper and the ball becomes small enough (less than the distance threshold).</p>
+        </div>
+
+        <!-- Section: Test the Outcome -->
+        <div class="module-section" id="test-outcomes">
+            <h3>Test the Outcome</h3>
+            <p>Once the loop finishes, the robot's gripper should be near the ball. Optionally, print the gripper’s final position and confirm that the robot has successfully moved the gripper to the ball.</p>
+        </div>
+
+            <!-- Section: Key Takeaways -->
+            <div class="module-section" id="key-takeaways">
+                <h3>Key Takeaways</h3>
+                <ul class="custom-list">
+                    <li>📍 Use `env.get_ball_position()` & `env.get_gripper_position()` to track positions.</li>
+                    <li>📐 Calculate the direction as <code>direction = np.array(ball) - np.array(gripper)</code>.</li>
+                    <li>🔄 Use a `while` loop to keep moving the gripper until it's close to the ball.</li>
+                    <li>🏆 Success! The gripper reaches the ball when <code>np.linalg.norm(direction) > distance_threshold</code>.</li>
+                </ul>
+            </div>
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_six_given') }}" class="secondary-button">Back: Environment</a>
+                <a href="{{ url_for('module_six_download') }}" class="secondary-button">Next: Cheat Sheet</a>
+            </div>
+    
+        </div> <!-- End of course-main-content -->
     </div>
-
-        <!-- Section: Key Takeaways -->
-        <div class="module-section" id="key-takeaways">
-            <h3>Key Takeaways</h3>
-            <ul class="custom-list">
-                <li>📍 Use `env.get_ball_position()` & `env.get_gripper_position()` to track positions.</li>
-                <li>📐 Calculate the direction as <code>direction = np.array(ball) - np.array(gripper)</code>.</li>
-                <li>🔄 Use a `while` loop to keep moving the gripper until it's close to the ball.</li>
-                <li>🏆 Success! The gripper reaches the ball when <code>np.linalg.norm(direction) > distance_threshold</code>.</li>
-            </ul>
-        </div>
-
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_six_given') }}" class="secondary-button">Back: Environment</a>
-            <a href="{{ url_for('module_six_download') }}" class="secondary-button">Next: Cheat Sheet</a>
-        </div>
-   
-    </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->
 {% endblock %}
