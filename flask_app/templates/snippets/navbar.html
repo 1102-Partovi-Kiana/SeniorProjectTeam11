@@ -41,10 +41,10 @@
                             <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Courses</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('RenderStudentDashboard') }}">My Grades</a>
+                            <a class="nav-link" href="{{ url_for('RenderStudentDashboardGrades') }}">My Grades</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-uppercase" href="{{ url_for('playground') }}">Playground</a>
+                            <a class="nav-link text-uppercase" href="{{ url_for('RenderPlayground') }}">Playground</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>
@@ -69,48 +69,15 @@
                             </div>
                         </div>
                     {% elif is_instructor_dashboard %}
-                        <li class="nav-item custom-nav-item">
-                            <a class="nav-link custom-nav-link" href="#" data-bs-toggle="modal" data-bs-target="#createClassModal">Create a New Class</a>
+                        <li class="nav-item-icon">
+                            <svg class="navbar-bell-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#bell-icon" fill="currentColor"></use></svg>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Classes</a>
+                        <li class="nav-item-icon">
+                            <svg class="navbar-envelope-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#envelope-icon" fill="currentColor"></use></svg>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('RenderInstructorDashboard') }}">Feedback</a>
+                        <li class="nav-item-icon">
+                            <svg class="navbar-user-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#three-dots-icon" fill="currentColor"></use></svg>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-uppercase" href="{{ url_for('playground') }}">Playground</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>
-                        </li>
-                        <div class="modal fade custom-modal" id="createClassModal" tabindex="-1" aria-labelledby="createClassModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="createClassModalLabel">Create a New Class</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form method="POST" action="{{ url_for('RenderInstructorDashboard') }}">
-                                            <div class="mb-3">
-                                                <label for="classCourseCode" class="form-label">Course Code</label>
-                                                <input type="text" class="form-control" id="classCourseCode" name="classCourseCode" placeholder="Enter course code">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="classSection" class="form-label">Section Number</label>
-                                                <input type="text" class="form-control" id="classSection" name="classSection" placeholder="Enter class section number">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="classDate" class="form-label">Class Start Date</label>
-                                                <input type="date" class="form-control" id="classDate" name="classDate">
-                                            </div>
-                                            <button type="submit" class="btn custom-modal-btn">Create Class</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     {% elif is_course_page %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Classes</a>
@@ -119,7 +86,7 @@
                             <a class="nav-link" href="{{ url_for('RenderInstructorDashboard') }}">Feedback</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-uppercase" href="{{ url_for('playground') }}">Playground</a>
+                            <a class="nav-link text-uppercase" href="{{ url_for('RenderPlayground') }}">Playground</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>

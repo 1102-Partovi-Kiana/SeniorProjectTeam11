@@ -93,3 +93,28 @@ class Roles(db.Model):
     permission_id = db.Column(db.Integer)
 
     users = db.relationship('User', backref='role', lazy=True)
+
+class StudentGrades(db.Model):
+    __tablename__ = 'student_grades'
+    student_grades_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    percentage_grade = db.Column(db.Float, nullable=False)
+    course_subsection_id = db.Column(db.Integer, db.ForeignKey('course_subsections.course_subsection_id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    student = db.relationship('User', backref='grades')
+    subsection = db.relationship('CourseSubsections', backref='grades')
+
+class UserCodeLogs(db.Model):
+    __tablename__ = 'user_code_logs'
+    
+    user_log_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    code = db.Column(db.String(10000))
+    error = db.Column(db.String(1000))
+    hints = db.Column(db.String(1000))
+    page_context = db.Column(db.String(1000))
+    static_issues = db.Column(db.String(1000))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    
+    user = db.relationship('User', backref='logs')

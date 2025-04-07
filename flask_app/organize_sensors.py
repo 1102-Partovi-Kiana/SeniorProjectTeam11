@@ -21,13 +21,13 @@ MODEL_XML_PATH = os.path.join(
 class FetchOrganizeSensorsEnv(fetch_env.FetchEnv, utils.EzPickle):
     def __init__(self, reward_type='sparse'):
         initial_qpos = {
-            'robot0:slide0': 0.5049,
-            'robot0:slide1': 0.48,
+            'robot0:slide0': 0.54,
+            'robot0:slide1': 0.42,
             'robot0:slide2': 0,
-            'object0:joint': [1.3, 0.8, 0.4, 1., 0., 0., 0.],  # Position of first block
-            'object1:joint': [1.3, 0.55, 0.4, 1., 0., 0., 0.],  # Position of second block
-            'object2:joint': [1.45, .95, 0.4, 1., 0., 0., 0.],  # Position of third block
-            'object3:joint': [1.45, 0.65, 0.4, 1., 0., 0., 0.],  # Position of third block
+            'object0:joint': [1.4, 0.5, 0.4, 1., 0., 0., 0.],  # Position of first block
+            'object1:joint': [1.45, 0.6, 0.4, 1., 0., 0., 0.],  # Position of second block
+            'object2:joint': [1.5, .75, 0.4, 1., 0., 0., 0.],  # Position of third block
+            'object3:joint': [1.4, 0.7, 0.4, 1., 0., 0., 0.],  # Position of third block
         }
         fetch_env.FetchEnv.__init__(
             self, MODEL_XML_PATH, has_object=False, block_gripper=False, n_substeps=20,

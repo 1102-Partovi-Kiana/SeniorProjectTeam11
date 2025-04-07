@@ -18,7 +18,7 @@ from config import Config
 from email_func import *
 from classes import *
 from auth_func import *
-import time
+import time as time_module
 import glfw
 import threading
 import gymnasium as gym
@@ -32,7 +32,10 @@ from sqlalchemy import func
 import os
 import traceback
 import requests
-
+from flask import send_file
+from PIL import Image, ImageDraw, ImageFont
+import io
+from reportlab.pdfgen import canvas
 
 app = Flask(__name__, static_folder='static')
 app.config.from_object(Config)
@@ -63,7 +66,7 @@ CUSTOM_KEYWORDS = [
     "target_color", "geom_id", "rgba", "np.array_equal", "num_steps", "break", "handle_object", 
     "object_name", "'object0'", "'object1'", "'object2'", "'object3'", "forward", "right", "left", 
     "backward", "values", "greatest_direction", "greatest_value", "action", 
-    "[0.005, 0.007]", "[0.005, -0.007]", "[0.01, 0.0]", "max", "time.sleep", 
+    "[0.005, 0.007]", "[0.005, -0.007]", "[0.01, 0.0]", "max", "time_module.sleep", 
     '"Forward"', '"Right"', '"Left"'
 ]
 
@@ -1258,190 +1261,6 @@ def check_horizontal_distance_subtraction_fetch_organize(tree):
 
     return issues
 
-# ---------------- Static Analysis Functions for AUTONOMOUS CAR ROBOT -------------------------#
-def check_sensor_forward_value_retrieval_car(tree):
-    """Check that `env.get_sensor_forward_value()` is called inside of the infinite while loop."""
-    issues = []
-    last_line_number = 1
-    forward_sensor_called = False
-    inside_while_true_loop = False
-
-    for node in ast.walk(tree):
-        if hasattr(node, "lineno"):
-            last_line_number = node.lineno  
-
-        if isinstance(node, ast.While):
-            if isinstance(node.test, ast.Constant) and node.test.value is True:
-                inside_while_true_loop = True
-
-        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
-            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
-                if node.func.attr == "get_sensor_forward_value":
-                    forward_sensor_called = True
-
-    if inside_while_true_loop and not forward_sensor_called:
-        issues.append({
-            "message": "Missing call to `env.get_sensor_forward_value()`. This function needs to be called inside the infinite while loop to retrieve the forward sensor value of the car.",
-            "line": last_line_number
-        })
-
-    return issues
-
-def check_sensor_right_value_retrieval_car(tree):
-    """Check that `env.get_sensor_right_value()` is called inside of the infinite while loop."""
-    issues = []
-    last_line_number = 1
-    right_sensor_called = False
-    inside_while_true_loop = False
-
-    for node in ast.walk(tree):
-        if hasattr(node, "lineno"):
-            last_line_number = node.lineno  
-
-        if isinstance(node, ast.While):
-            if isinstance(node.test, ast.Constant) and node.test.value is True:
-                inside_while_true_loop = True
-
-        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
-            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
-                if node.func.attr == "get_sensor_right_value":
-                    right_sensor_called = True
-
-    if inside_while_true_loop and not right_sensor_called:
-        issues.append({
-            "message": "Missing call to `env.get_sensor_right_value()`. This function needs to be called inside the infinite while loop to retrieve the right sensor value for the car.",
-            "line": last_line_number
-        })
-
-    return issues
-
-def check_sensor_left_value_retrieval_car(tree):
-    """Check that `env.get_sensor_left_value()` is called inside of the infinite while loop."""
-    issues = []
-    last_line_number = 1
-    left_sensor_called = False
-    inside_while_true_loop = False
-
-    for node in ast.walk(tree):
-        if hasattr(node, "lineno"):
-            last_line_number = node.lineno  
-
-        if isinstance(node, ast.While):
-            if isinstance(node.test, ast.Constant) and node.test.value is True:
-                inside_while_true_loop = True
-
-        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
-            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
-                if node.func.attr == "get_sensor_left_value":
-                    left_sensor_called = True
-
-    if inside_while_true_loop and not left_sensor_called:
-        issues.append({
-            "message": "Missing call to `env.get_sensor_left_value()`. This function needs to be called inside the infinite while loop to retrieve the left sensor value.",
-            "line": last_line_number
-        })
-
-    return issues
-
-def check_sensor_readings_variable_usage_car(tree):
-    """Check that the correct sensor variables are used in the `sensor_readings` dictionary"""
-    issues = []
-    last_line_number = 1
-    
-    sensor_variables = {
-        "Forward": None,
-        "Right": None,
-        "Left": None
-    }
-
-    for node in ast.walk(tree):
-        if hasattr(node, "lineno"):
-            last_line_number = node.lineno  
-
-        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
-            if isinstance(node.value.func, ast.Attribute) and isinstance(node.value.func.value, ast.Name):
-                if node.value.func.value.id == "env":
-                    if node.value.func.attr == "get_sensor_forward_value":
-                        sensor_variables["Forward"] = node.targets[0].id
-                    elif node.value.func.attr == "get_sensor_right_value":
-                        sensor_variables["Right"] = node.targets[0].id
-                    elif node.value.func.attr == "get_sensor_left_value":
-                        sensor_variables["Left"] = node.targets[0].id
-
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Dict):
-            if isinstance(node.targets[0], ast.Name) and node.targets[0].id == "sensor_readings":
-                keys = [k.s for k in node.value.keys if isinstance(k, ast.Str)]  
-                values = [v.id if isinstance(v, ast.Name) else None for v in node.value.values] 
-
-                for key in sensor_variables:
-                    if key in keys:
-                        index = keys.index(key)
-                        assigned_var = values[index]
-
-                        if assigned_var is None:
-                            issues.append({
-                                "message": f"The `{key}` sensor reading is missing a value in `sensor_readings`. Please assign a variable.",
-                                "line": node.lineno
-                            })
-                        elif assigned_var != sensor_variables[key]:
-                            issues.append({
-                                "message": f"The `{key}` sensor reading should use the variable `{sensor_variables[key]}`, but `{assigned_var}` was used instead.",
-                                "line": node.lineno
-                            })
-                    else:
-                        issues.append({
-                            "message": f"The `{key}` sensor reading is missing from `sensor_readings`. Check to include all sensor readings.",
-                            "line": node.lineno
-                        })
-
-    return issues
-
-def check_dictionary_key_safety_car(tree):
-    """Check if dictionary key accesses are safe."""
-    issues = []
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name) and isinstance(node.slice, ast.Constant):
-            dict_name = node.value.id
-            key_name = node.slice.value
-            if dict_name == "values" and key_name not in {"Forward", "Right", "Left"}:
-                issues.append({
-                    "message": f"Possible unsafe dictionary lookup: '{key_name}' not guaranteed to exist.",
-                    "line": node.lineno
-                })
-    return issues
-
-def check_max_direction_usage_car(tree):
-    """Check that a variable is assigned using `max(sensor_readings, key=sensor_readings.get)` correctly."""
-    issues = []
-    last_line_number = 1
-    found_max_usage = False
-
-    for node in ast.walk(tree):
-        if hasattr(node, "lineno"):
-            last_line_number = node.lineno  
-
-        if isinstance(node, ast.Assign):
-            if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name) and node.value.func.id == "max":
-                if len(node.value.args) > 0 and isinstance(node.value.args[0], ast.Name) and node.value.args[0].id == "sensor_readings":
-                    for keyword in node.value.keywords:
-                        if keyword.arg == "key" and isinstance(keyword.value, ast.Attribute):
-                            if (
-                                isinstance(keyword.value.value, ast.Name)
-                                and keyword.value.value.id == "sensor_readings"
-                                and keyword.value.attr == "get"
-                            ):
-                                found_max_usage = True
-                                break
-
-    if not found_max_usage:
-        issues.append({
-            "message": "A variable must be assigned using `max(sensor_readings, key=sensor_readings.get)`. Check `max()` is applied correctly.",
-            "line": last_line_number
-        })
-
-    return issues
-
 # ---------------- Static Analysis Functions for FETCH SENSORS ROBOT -------------------------#
 def check_one_env_step_sensors(tree):
     """Check that at least one call to env.step() is present."""
@@ -1604,6 +1423,273 @@ def check_ascend_action_in_correct_for_loop_sensors(tree):
 
     return issues
 
+# ---------------- Static Analysis Functions for AUTONOMOUS CAR ROBOT -------------------------#
+def check_sensor_forward_value_retrieval_car(tree):
+    """Check that `env.get_sensor_forward_value()` is called inside of the infinite while loop and that its return value is stored in a variable."""
+    issues = []
+    last_line_number = 1
+    forward_sensor_called = False
+    forward_sensor_assigned = False
+    inside_while_true_loop = False
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.While):
+            if isinstance(node.test, ast.Constant) and node.test.value is True:
+                inside_while_true_loop = True
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
+                if node.func.attr == "get_sensor_forward_value":
+                    forward_sensor_called = True
+
+        if isinstance(node, ast.Assign):
+            if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute):
+                if (isinstance(node.value.func.value, ast.Name) and 
+                    node.value.func.value.id == "env" and 
+                    node.value.func.attr == "get_sensor_forward_value"):
+                    forward_sensor_assigned = True
+
+    if inside_while_true_loop and forward_sensor_called and not forward_sensor_assigned:
+        issues.append({
+            "message": "The return value of `env.get_sensor_forward_value()` should be stored in a variable.",
+            "line": last_line_number
+        })
+
+    if inside_while_true_loop and not forward_sensor_called:
+        issues.append({
+            "message": "Missing call to `env.get_sensor_forward_value()`. This function needs to be called inside the infinite while loop to retrieve the forward sensor value of the car.",
+            "line": last_line_number
+        })
+
+    return issues
+
+def check_sensor_right_value_retrieval_car(tree):
+    """Check that `env.get_sensor_right_value()` is called inside of the infinite while loop and that its return value is stored in a variable."""
+    issues = []
+    last_line_number = 1
+    right_sensor_called = False
+    right_sensor_assigned = False
+    inside_while_true_loop = False
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.While):
+            if isinstance(node.test, ast.Constant) and node.test.value is True:
+                inside_while_true_loop = True
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
+                if node.func.attr == "get_sensor_right_value":
+                    right_sensor_called = True
+
+        if isinstance(node, ast.Assign):
+            if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute):
+                if (isinstance(node.value.func.value, ast.Name) and 
+                    node.value.func.value.id == "env" and 
+                    node.value.func.attr == "get_sensor_right_value"):
+                    right_sensor_assigned = True
+
+    if inside_while_true_loop and right_sensor_called and not right_sensor_assigned:
+        issues.append({
+            "message": "The return value of `env.get_sensor_right_value()` should be stored in a variable.",
+            "line": last_line_number
+        })
+
+    if inside_while_true_loop and not right_sensor_called:
+        issues.append({
+            "message": "Missing call to `env.get_sensor_right_value()`. This function needs to be called inside the infinite while loop to retrieve the right sensor value for the car.",
+            "line": last_line_number
+        })
+
+    return issues
+
+def check_sensor_left_value_retrieval_car(tree):
+    """Check that `env.get_sensor_left_value()` is called inside of the infinite while loop and that its return value is stored in a variable."""
+    issues = []
+    last_line_number = 1
+    left_sensor_called = False
+    left_sensor_assigned = False
+    inside_while_true_loop = False
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.While):
+            if isinstance(node.test, ast.Constant) and node.test.value is True:
+                inside_while_true_loop = True
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if isinstance(node.func.value, ast.Name) and node.func.value.id == "env":
+                if node.func.attr == "get_sensor_left_value":
+                    left_sensor_called = True
+
+        if isinstance(node, ast.Assign):
+            if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute):
+                if (isinstance(node.value.func.value, ast.Name) and 
+                    node.value.func.value.id == "env" and 
+                    node.value.func.attr == "get_sensor_left_value"):
+                    left_sensor_assigned = True
+
+    if inside_while_true_loop and left_sensor_called and not left_sensor_assigned:
+        issues.append({
+            "message": "The return value of `env.get_sensor_left_value()` should be stored in a variable.",
+            "line": last_line_number
+        })
+
+    if inside_while_true_loop and not left_sensor_called:
+        issues.append({
+            "message": "Missing call to `env.get_sensor_left_value()`. This function needs to be called inside the infinite while loop to retrieve the left sensor value for the car.",
+            "line": last_line_number
+        })
+
+    return issues
+
+
+def check_sensor_readings_variable_usage_car(tree):
+    """Check that the correct sensor variables are used in the `sensor_readings` dictionary"""
+    issues = []
+    last_line_number = 1
+    
+    sensor_variables = {
+        "Forward": None,
+        "Right": None,
+        "Left": None
+    }
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            if isinstance(node.value.func, ast.Attribute) and isinstance(node.value.func.value, ast.Name):
+                if node.value.func.value.id == "env":
+                    if node.value.func.attr == "get_sensor_forward_value":
+                        sensor_variables["Forward"] = node.targets[0].id
+                    elif node.value.func.attr == "get_sensor_right_value":
+                        sensor_variables["Right"] = node.targets[0].id
+                    elif node.value.func.attr == "get_sensor_left_value":
+                        sensor_variables["Left"] = node.targets[0].id
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Dict):
+            if isinstance(node.targets[0], ast.Name) and node.targets[0].id == "sensor_readings":
+                keys = [k.s for k in node.value.keys if isinstance(k, ast.Str)]  
+                values = [v.id if isinstance(v, ast.Name) else None for v in node.value.values] 
+
+                for key in sensor_variables:
+                    if key in keys:
+                        index = keys.index(key)
+                        assigned_var = values[index]
+
+                        if assigned_var is None:
+                            issues.append({
+                                "message": f"The `{key}` sensor reading is missing a value in `sensor_readings`. Please assign a variable.",
+                                "line": node.lineno
+                            })
+                        elif assigned_var != sensor_variables[key]:
+                            issues.append({
+                                "message": f"The `{key}` sensor reading should use the variable `{sensor_variables[key]}`, but `{assigned_var}` was used instead.",
+                                "line": node.lineno
+                            })
+                    else:
+                        issues.append({
+                            "message": f"The `{key}` sensor reading is missing from `sensor_readings`. Check to include all sensor readings.",
+                            "line": node.lineno
+                        })
+
+    return issues
+
+def check_dictionary_key_safety_car(tree):
+    """Check if dictionary key accesses are safe."""
+    issues = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name) and isinstance(node.slice, ast.Constant):
+            dict_name = node.value.id
+            key_name = node.slice.value
+            if dict_name == "values" and key_name not in {"Forward", "Right", "Left"}:
+                issues.append({
+                    "message": f"Possible unsafe dictionary lookup: '{key_name}' not guaranteed to exist.",
+                    "line": node.lineno
+                })
+    return issues
+
+# def check_max_direction_usage_car(tree):
+#     """Check that a variable is assigned using `max(sensor_readings, key=sensor_readings.get)` correctly."""
+#     issues = []
+#     last_line_number = 1
+#     found_max_usage = False
+
+#     for node in ast.walk(tree):
+#         if hasattr(node, "lineno"):
+#             last_line_number = node.lineno  
+
+#         if isinstance(node, ast.Assign):
+#             if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name) and node.value.func.id == "max":
+#                 if len(node.value.args) > 0 and isinstance(node.value.args[0], ast.Name) and node.value.args[0].id == "sensor_readings":
+#                     for keyword in node.value.keywords:
+#                         if keyword.arg == "key" and isinstance(keyword.value, ast.Attribute):
+#                             if (
+#                                 isinstance(keyword.value.value, ast.Name)
+#                                 and keyword.value.value.id == "sensor_readings"
+#                                 and keyword.value.attr == "get"
+#                             ):
+#                                 found_max_usage = True
+#                                 break
+
+#     if not found_max_usage:
+#         issues.append({
+#             "message": "A variable must be assigned using `max(sensor_readings, key=sensor_readings.get)`. Check `max()` is applied correctly.",
+#             "line": last_line_number
+#         })
+
+#     return issues
+
+
+def check_max_direction_usage_car(tree):
+    """Check that a variable is assigned using `max(sensor_readings, key=sensor_readings.get)` correctly, regardless of variable name."""
+    issues = []
+    last_line_number = 1
+    found_max_usage = False
+    assigned_variable_name = None 
+    first_missing_reference = None  
+
+    for node in ast.walk(tree):
+        if hasattr(node, "lineno"):
+            last_line_number = node.lineno  
+
+        if isinstance(node, ast.Assign):
+            if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name) and node.value.func.id == "max":
+                if len(node.value.args) > 0 and isinstance(node.value.args[0], ast.Name) and node.value.args[0].id == "sensor_readings":
+                    for keyword in node.value.keywords:
+                        if keyword.arg == "key" and isinstance(keyword.value, ast.Attribute):
+                            if (
+                                isinstance(keyword.value.value, ast.Name)
+                                and keyword.value.value.id == "sensor_readings"
+                                and keyword.value.attr == "get"
+                            ):
+                                if isinstance(node.targets[0], ast.Name):
+                                    assigned_variable_name = node.targets[0].id
+                                    found_max_usage = True
+                                break 
+
+        if isinstance(node, ast.Name):
+            if assigned_variable_name is None and first_missing_reference is None:
+                first_missing_reference = node.lineno 
+
+    if not found_max_usage and first_missing_reference is not None:
+        issues.append({
+            "message": "A variable must be assigned using `max(sensor_readings, key=sensor_readings.get)`. Check `max()` is applied correctly.",
+            "line": first_missing_reference 
+        })
+
+    return issues
+
 def check_if_else_with_greatest_direction_car(tree):
     """Check that the variable assigned with `max(sensor_readings, key=sensor_readings.get)` is the same variable used in the if-else conditions."""
     issues = []
@@ -1632,12 +1718,12 @@ def check_if_else_with_greatest_direction_car(tree):
                 if isinstance(node.test.left, ast.Name):
                     condition_variable = node.test.left.id  
 
-                    if max_variable is None:
-                        issues.append({
-                            "message": "A variable must be assigned using `max(sensor_readings, key=sensor_readings.get)` before the if-else statement.",
-                            "line": node.lineno
-                        })
-                    elif condition_variable != max_variable:
+                    # if max_variable is None:
+                    #     issues.append({
+                    #         "message": "A variable must be assigned using `max(sensor_readings, key=sensor_readings.get)` before the if-else statement.",
+                    #         "line": node.lineno
+                    #     })
+                    if condition_variable != max_variable:
                         issues.append({
                             "message": f"The if-else statement should use `{max_variable}`, but `{condition_variable}` was used instead.",
                             "line": node.lineno
@@ -1761,6 +1847,34 @@ def analyze_robotics_code(code, context="Car"):
     return issues
 
 
+logs_db = {}  
+
+def log_event(user_id, page_context, code, static_issues, error, hints):
+    """Stores a log entry for a given user_id."""
+    entry = {
+        "timestamp": datetime.now(),
+        "page_context": page_context,
+        "code": code,
+        "static_issues": static_issues,
+        "error": error,
+        "hints": hints
+    }
+    logs_db.setdefault(user_id, []).append(entry)
+
+    new_log = UserCodeLogs(
+        user_id=user_id,
+        page_context=page_context,
+        code=code,
+        static_issues=static_issues,
+        error=error,
+        hints=hints,
+        created_at=datetime.utcnow()
+    )
+
+    db.session.add(new_log)
+    db.session.commit()
+
+
 @app.route('/chatbot-api', methods=['POST'])
 def ChatbotAPI():
     print("Chatbot API called")
@@ -1769,6 +1883,12 @@ def ChatbotAPI():
     global static_issues
     global last_error_line
     global hint_level
+
+    user = session.get('user')
+    if not user:
+        return jsonify({'error': 'You must be logged in to use the chatbot API.'}), 401
+
+    user_id = user['user_id']
 
     if 'last_error_line' not in globals():
         last_error_line = None
@@ -1901,6 +2021,18 @@ def ChatbotAPI():
         hints_section = chatbot_response.split("HINTS:")[-1].strip()
         hints = [hint.strip() for hint in hints_section.split("\n") if hint.strip()]
 
+    log_event(
+        user_id=user_id,
+        page_context=page_context,
+        code=user_submitted_code,
+        static_issues=static_issues,
+        error=last_error,
+        hints=hints
+    )
+
+    print("Logging the event after hints......")
+    print("Current logs for this user:", logs_db.get(user_id, []))
+
     print("Extracted Hints:", hints)
 
     return jsonify({
@@ -1954,10 +2086,10 @@ def RenderSignup():
         confirm_password = request.form.get('confirm_password')
         account_type = request.form.get('account_type')
 
-        if (not check_password_requirements(password)):
+        if not check_password_requirements(password):
             return render_template('account/signup.html', is_homepage=True)
         
-        if (not is_valid_email(email)):
+        if not is_valid_email(email):
             flash("Invalid Email Address")
             return render_template('account/signup.html', is_homepage=True)
 
@@ -1968,12 +2100,12 @@ def RenderSignup():
         new_user.email = email
         new_user.username = username
         new_user.password = hash_password(password)
-        if (account_type == 'instructor'):
+        if account_type == 'instructor':
             new_user.role_id = 1
-        elif (account_type == 'student'):
+        elif account_type == 'student':
             new_user.role_id = 2
 
-        if (check_default_values(new_user) == False):
+        if not check_default_values(new_user):
             if User.query.filter_by(username=username).first():
                 flash("Username is already taken.")
                 return render_template('account/signup.html')
@@ -1983,8 +2115,10 @@ def RenderSignup():
             if password != confirm_password:
                 flash("Password does not match.")
                 return render_template('account/signup.html')
+            
             db.session.add(new_user)
-            db.session.commit() 
+            db.session.commit()
+
             flash("Registration Successful", 'popup')
             session['user'] = {
                 'user_id': new_user.user_id,
@@ -1993,9 +2127,37 @@ def RenderSignup():
                 'last_name': new_user.last_name,
                 'role_id': new_user.role_id,
             }
-            if (new_user.role_id == 1):
+
+            if new_user.role_id == 2:
+                default_courses_name = [
+                    "Introduction to Robotics",
+                    "Types of Robots",
+                    "Robots in CORE",
+                    "How to Use the Lab"
+                ]
+                for course_name in default_courses_name:
+                    course = Courses.query.filter_by(course_name=course_name).first()
+                    if course:
+                        student_assignment = StudentAssignedCourses(
+                            user_id=new_user.user_id,
+                            course_id=course.course_id
+                        )
+                        db.session.add(student_assignment)
+
+                        section_number = course.section_number
+                        subsections = CourseSubsections.query.filter(
+                            CourseSubsections.course_subsection_number > section_number,
+                            CourseSubsections.course_subsection_number < section_number + 1
+                        ).all()
+                        for subsection in subsections:
+                            student_subsection_assignment = StudentAssignedCourseSubsections(user_id=new_user.user_id, course_subsection_number=subsection.course_subsection_number)
+                            db.session.add(student_subsection_assignment)
+
+                db.session.commit()
+
+            if new_user.role_id == 1:
                 return redirect(url_for('RenderInstructorDashboard'))
-            elif(new_user.role_id == 2):
+            elif new_user.role_id == 2:
                 return redirect(url_for('RenderStudentDashboard'))
 
     return render_template('account/signup.html', is_homepage=True)
@@ -2066,56 +2228,6 @@ def RenderResetPassword():
             flash("Passwords do not match.", "error")
         return redirect(url_for('reset_password'))
     return render_template('account/reset_password.html')
-
-@app.route('/dashboard/instructor-view', methods=['GET', 'POST'])
-def RenderInstructorDashboard():
-    user = session.get('user')
-    if not user:
-        flash('You must be logged in to access this page.', 'popup')
-        return redirect(url_for('RenderHomepage'))
-
-    user_id = user['user_id'] 
-    role = user['role_id']
-    
-    if role != ROLE_INSTRUCTOR:
-        flash('You must be an instructor to access this page.', 'popup')
-        return redirect(url_for('RenderStudentDashboard'))
-    
-    user_classes = get_classes(user_id)
-
-    if request.method == 'POST':
-        class_course_code = request.form['classCourseCode']
-        class_section = request.form['classSection']
-        class_date = request.form['classDate']
-
-        if (not is_valid_course_code(class_course_code)):
-            flash("Course Code Must Follow the Format: Letters + Numbers.", "popup")
-
-        if class_section.isdigit():
-            class_section = int(class_section)
-        else:
-            flash("Section Number Must Not Contain Any Characters.", "popup")
-
-        if (not is_valid_course_code(class_course_code) and not class_section.isdigit()):
-            return redirect(url_for('RenderInstructorDashboard'))
-
-        for user_class in user_classes:
-            if class_course_code == user_class.class_course_code and class_section == user_class.class_section_number:
-                flash('A class of the same name and section has already been created', 'popup')
-                return redirect(url_for('RenderInstructorDashboard'))
-            
-        new_class = Classes()
-        new_class.class_course_code = class_course_code
-        new_class.class_section_number = class_section
-        new_class.expired_at = class_date
-        new_class.user_id = user_id
-        db.session.add(new_class)
-        db.session.commit()
-        
-        flash('Class created successfully!', 'popup')
-        return redirect(url_for('RenderInstructorDashboard'))
-
-    return render_template('dashboard/dashboard_instructor.html', is_dashboard=True, is_instructor_dashboard=True, classes=user_classes, user=user)
 
 @app.route('/dashboard/admin-view/home', methods=['GET', 'POST'])
 def RenderAdminDashboard():
@@ -2603,7 +2715,196 @@ def RenderStudentDashboard():
 
     return render_template('dashboard/dashboard_student.html', is_dashboard=True, is_student_dashboard=True, user=user, assignments=assignments, in_class=in_class)
 
-@app.route('/dashboard/instructor-view/classes', methods=['GET'])
+@app.route('/dashboard/student-view/grades', methods=['GET', 'POST'])
+def RenderStudentDashboardGrades():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id'] 
+    role = user['role_id']
+    
+    if (role != ROLE_STUDENT):
+        flash('You must be an student to access this page.', 'popup')
+        return redirect(url_for('RenderInstructorDashboard'))
+    
+    if request.method == 'POST':
+        class_course_code = request.form['classCourseCode']
+
+        existing_class_course = ClassCodes.query.filter_by(class_code=class_course_code).first()
+        if (existing_class_course is not None):
+            class_id = existing_class_course.class_id
+            
+            existing_enrollment = Enrollment.query.filter_by(user_id=user_id, class_id=class_id).first()
+                
+            if (existing_enrollment is not None):
+                flash('You are already enrolled in this class.', 'popup')
+                return redirect(url_for('RenderStudentDashboard'))
+            
+            existing_enrollment = Enrollment.query.filter_by(user_id=user_id).first()
+            if existing_enrollment is not None:
+                flash('You are already enrolled in a class. You cannot enroll in another.', 'popup')
+                return redirect(url_for('RenderStudentDashboard'))
+
+            student_enrollment = Enrollment()
+            student_enrollment.user_id = user_id
+            student_enrollment.class_id = class_id
+
+            db.session.add(student_enrollment)
+            db.session.commit()
+
+            flash('You have successfully enrolled in the class.', 'popup')
+            return redirect(url_for('RenderStudentDashboard'))
+        else: 
+            flash('Invalid Course Code', 'popup')
+            return redirect(url_for('RenderStudentDashboard'))
+
+    existing_enrollment = Enrollment.query.filter_by(user_id=user_id).first()
+    in_class = existing_enrollment is not None
+
+    assignments = db.session.query(StudentAssignedCourses).filter(StudentAssignedCourses.user_id == user_id).all()
+
+    grades = db.session.query(
+        StudentGrades.course_subsection_id,
+        db.func.max(StudentGrades.percentage_grade).label('highest_grade')
+    ).filter(
+        StudentGrades.student_id == user_id
+    ).group_by(
+        StudentGrades.course_subsection_id
+    ).all()
+
+    # Fetch course subsection names and course names
+    grades_with_names = []
+    for grade in grades:
+        subsection = CourseSubsections.query.filter_by(course_subsection_id=grade.course_subsection_id).first()
+        if subsection:
+            # Extract the integer part of the course_subsection_number
+            course_section_number = int(float(subsection.course_subsection_number))
+            # Query the Courses table to get the course_name
+            course = Courses.query.filter(
+                Courses.section_number == course_section_number
+            ).first()
+            
+            if course:
+                grades_with_names.append({
+                    'course_subsection_name': subsection.course_subsection_name,
+                    'highest_grade': grade.highest_grade,
+                    'course_module_name': course.course_name
+                })
+
+    return render_template(
+        'dashboard/dashboard_student_grades.html',
+        is_dashboard=True,
+        is_student_dashboard=True,
+        user=user,
+        in_class=in_class,
+        assignments=assignments,
+        grades_with_names=grades_with_names
+    )
+
+@app.route('/dashboard/instructor-view', methods=['GET', 'POST'])
+def RenderInstructorDashboard():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.', 'popup')
+        return redirect(url_for('RenderHomepage'))
+
+    user_id = user['user_id'] 
+    role = user['role_id']
+    
+    if role != ROLE_INSTRUCTOR:
+        flash('You must be an instructor to access this page.', 'popup')
+        return redirect(url_for('RenderStudentDashboard'))
+    
+    user_classes = get_classes(user_id)
+    class_count = len(user_classes)
+    student_ids = []
+    for classes in user_classes:
+        enrollments = db.session.query(Enrollment.user_id).filter_by(class_id=classes.class_id).all()
+        for enrollment in enrollments:
+            student_ids.append(enrollment.user_id)
+    unique_student_ids = list(set(student_ids))
+    if unique_student_ids:
+        overall_avg_grade = db.session.query(
+        func.avg(StudentGrades.percentage_grade)
+        ).filter(
+            StudentGrades.student_id.in_(unique_student_ids)
+        ).scalar()
+    else:
+        overall_avg_grade = 0.0
+
+    class_stats = {
+        "class_count": class_count,
+        "unique_student_count": len(unique_student_ids),
+        "overall_avg_grade": overall_avg_grade,
+    }
+
+    page_contexts = [
+    "Fetch Reach",
+    "Fetch Pick & Place",
+    "Fetch Stack",
+    "Fetch Organize",
+    "Fetch Organize w/ Sensor",
+    "Car"
+    ]
+
+    results = {}
+    for context in page_contexts:
+        total_attempts = db.session.query(func.count(UserCodeLogs.user_log_id)).filter(
+            UserCodeLogs.page_context == context,
+            UserCodeLogs.user_id.in_(unique_student_ids)
+        ).scalar() or 0
+
+        completion_count = db.session.query(
+        func.count(UserCodeLogs.user_log_id)).filter(
+            UserCodeLogs.page_context == context,
+            UserCodeLogs.error.is_(None),
+            UserCodeLogs.user_id.in_(unique_student_ids)
+        ).scalar() or 0
+
+        average_attempts = total_attempts / completion_count if completion_count > 0 else 0
+
+        results[context] = {
+        'total_attempts': total_attempts,
+        'completion_count': completion_count,
+        'average_attempts': average_attempts
+        }
+
+        contexts = list(results.keys())
+        average_attempts = [results[context]['average_attempts'] for context in contexts]
+
+        plt.figure(figsize=(10, 5), facecolor='#f8f9fa')
+        plt.subplots_adjust(bottom=0.3)
+
+        bars = plt.bar(contexts, average_attempts)
+        plt.title('Average Attempts per Robotic Environment')
+        plt.xlabel('Robotic Environment')
+        plt.ylabel('Average Number of Attempts Taken')
+        plt.xticks(rotation=45, ha='right') 
+
+        for bar in bars:
+            height = bar.get_height()
+            plt.text(bar.get_x() + bar.get_width()/2., height,
+                    f'{height:.1f}',
+                    ha='center', va='bottom')
+
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        plt.close()
+
+        graph_image = base64.b64encode(buf.read()).decode('utf-8')
+
+    return render_template('dashboard/dashboard_instructor.html', 
+                           is_dashboard=True, 
+                           is_instructor_dashboard=True, 
+                           classes=user_classes, 
+                           user=user,
+                           class_stats=class_stats,
+                           graph_image=graph_image)
+
+@app.route('/dashboard/instructor-view/classes', methods=['GET', 'POST'])
 def RenderInstructorClasses():
     user = session.get('user')
     if not user:
@@ -2620,11 +2921,53 @@ def RenderInstructorClasses():
     user_classes = get_classes(user_id)
     courses = Courses.query.order_by(Courses.course_id).all()
 
+    if request.method == 'POST':
+        class_course_code = request.form['classCourseCode']
+        class_section = request.form['classSection'] 
+        class_date = request.form['classDate']
+
+        course_code_valid = is_valid_course_code(class_course_code)
+        section_valid = class_section.isdigit() 
+
+        if not course_code_valid:
+            flash("Course Code Must Follow the Format: Letters + Numbers.", "popup")
+
+        if not section_valid:
+            flash("Section Number Must Not Contain Any Characters.", "popup")
+
+        if not (course_code_valid and section_valid):
+            return redirect(url_for('RenderInstructorDashboard'))
+
+        class_section = int(class_section)
+
+        for user_class in user_classes:
+            if (class_course_code == user_class.class_course_code and 
+                class_section == user_class.class_section_number):
+                flash('A class of the same name and section has already been created', 'popup')
+                return redirect(url_for('RenderInstructorClasses'))
+            
+        new_class = Classes()
+        new_class.class_course_code = class_course_code
+        new_class.class_section_number = class_section
+        new_class.expired_at = class_date
+        new_class.user_id = user_id
+        db.session.add(new_class)
+        db.session.commit()
+        
+        flash('Class created successfully!', 'popup')
+        return redirect(url_for('RenderInstructorClasses'))
+
     class_code = session.get('class_code')
     
     session.pop('class_code', None)
 
-    return render_template('dashboard/dashboard_classes.html', is_dashboard=True, is_instructor_dashboard=True, classes=user_classes, class_code=class_code, user=user, courses=courses)
+    return render_template('dashboard/dashboard_classes.html', 
+                           is_dashboard=True, 
+                           is_instructor_dashboard=True, 
+                           classes=user_classes, 
+                           class_code=class_code, 
+                           user=user, 
+                           courses=courses)
 
 @app.route('/dashboard/instructor-view/classes/generate-class-code', methods=['POST'])
 def GenerateClassCode():
@@ -2815,7 +3158,7 @@ def RenderCourses():
     return render_template("courses.html", courses=filtered_course_catalog, query=query, user=user, complete_percentage=complete_percentage, is_student=is_student)
 
 @app.route('/playground')
-def playground():
+def RenderPlayground():
     return render_template('playground.html')
 
 @app.route('/module1/introduction')
@@ -2920,13 +3263,120 @@ def course1quiz1():
 
     user_id = user['user_id']
     role = user['role_id']
-
     subsection_number = 1.9
+    passing_score = 70.0
+
+    subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+
+    highest_score = (
+        db.session.query(db.func.max(StudentGrades.percentage_grade))
+        .filter_by(student_id=user_id, course_subsection_id=subsection.course_subsection_id)
+        .scalar()
+    )
+
+    if highest_score is None:
+        highest_score = 0.0 
+
     if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
+        if highest_score >= passing_score:
+            module_completed = update_and_get_module_completion(user_id, subsection_number)
+        else:
+            module_completed = {}
+            subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+            for subsection in subsections:
+                module_completed[subsection.course_subsection_number] = subsection.completion_status
     else:
         module_completed = {}
-    return render_template('courses/course1-content/course1-quiz1.html', module_completed=module_completed, is_course_page=True)
+
+    return render_template(
+        'courses/course1-content/course1-quiz1.html',
+        module_completed=module_completed,
+        is_course_page=True
+    )
+
+@app.route('/get-scores')
+def get_scores():
+    user = session.get('user')
+    if not user:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    user_id = user['user_id']
+    subsection_number = 1.9
+
+    subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+    if not subsection:
+        return jsonify({'error': 'Subsection not found'}), 404
+    
+    recent_score = (
+        db.session.query(StudentGrades.percentage_grade)
+        .filter_by(student_id=user_id, course_subsection_id=subsection.course_subsection_id)
+        .order_by(StudentGrades.created_at.desc())
+        .first()
+    )
+
+    highest_score = (
+        db.session.query(db.func.max(StudentGrades.percentage_grade))
+        .filter_by(student_id=user_id, course_subsection_id=subsection.course_subsection_id)
+        .scalar()
+    )
+
+    passing_score = 70.0
+
+    recent_score_value = recent_score[0] if recent_score else None
+
+    return jsonify({
+        'recent_score': recent_score_value,
+        'highest_score': highest_score,
+        'passing_score': passing_score
+    })
+
+@app.route('/submit-quiz', methods=['POST'])
+def submit_quiz():
+    user = session.get('user')  # Ensure the user is logged in
+    if not user:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    data = request.json
+    student_id = user['user_id']
+    score = data.get('score', 0)
+    total_questions = data.get('total_questions', 1)
+    percentage_grade = (score / total_questions) * 100  # Convert score to percentage
+    subsection_number = data.get('subsection_number')
+
+    subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+    if not subsection:
+        return jsonify({"error": "Subsection not found"}), 404
+
+    # Save quiz result in database
+    new_grade = StudentGrades(
+        student_id=student_id,
+        percentage_grade=percentage_grade,
+        course_subsection_id=subsection.course_subsection_id,
+        created_at=datetime.utcnow()
+    )
+
+    db.session.add(new_grade)
+    db.session.commit()
+
+    most_recent_score = db.session.query(StudentGrades.percentage_grade) \
+        .filter_by(student_id=student_id, course_subsection_id=subsection.course_subsection_id) \
+        .order_by(StudentGrades.created_at.desc()) \
+        .first()
+
+    highest_score = db.session.query(db.func.max(StudentGrades.percentage_grade)) \
+        .filter_by(student_id=student_id, course_subsection_id=subsection.course_subsection_id) \
+        .scalar()
+
+    passing_score = 70.0
+
+    return jsonify({
+        "message": "Quiz results saved successfully!",
+        "most_recent_score": most_recent_score[0] if most_recent_score else None,
+        "highest_score": highest_score if highest_score is not None else 0,
+        "passing_score": passing_score
+    })
+
 
 @app.route('/module1/introduction/robot-anatomy')
 def robotanatomy():
@@ -3281,7 +3731,7 @@ def embedded_course_content_car():
 def RenderFetchReachRobotSimulation():
     global env
     close_current_env()
-    time.sleep(.1)
+    time_module.sleep(.1)
     env = ReachEnv()
     return render_template('robotic_environment.html')
 
@@ -3289,7 +3739,7 @@ def RenderFetchReachRobotSimulation():
 def RenderPickAndPlaceEnv():
     global env
     close_current_env()
-    time.sleep(.1)
+    time_module.sleep(.1)
     env = FetchPickAndPlaceEnv()
     return render_template('robotic_pick_and_place_environment.html')
 
@@ -3297,7 +3747,7 @@ def RenderPickAndPlaceEnv():
 def RenderFetchStackEnv():
     global env
     close_current_env()
-    time.sleep(.1)
+    time_module.sleep(.1)
     env = FetchStackEnv()
     return render_template('fetch_stack_environment.html')
 
@@ -3305,7 +3755,7 @@ def RenderFetchStackEnv():
 def RenderCarEnv():
     global env
     close_current_env()
-    time.sleep(.1)
+    time_module.sleep(.1)
     env = CarEnv()
     return render_template('robotic_car_environment.html')
 
@@ -3313,7 +3763,7 @@ def RenderCarEnv():
 def RenderFetchOrganizeSensorsEnv():
     global env
     close_current_env()
-    time.sleep(.1)
+    time_module.sleep(.1)
     env = FetchOrganizeSensorsEnv()
     return render_template('robotic_organize_sensors_environment.html')
 
@@ -3321,7 +3771,7 @@ def RenderFetchOrganizeSensorsEnv():
 def RenderFetchOrganizeEnv():
     global env
     close_current_env()
-    time.sleep(.1)
+    time_module.sleep(.1)
     env = FetchOrganizeEnv()
     return render_template('robotic_organize_environment.html')
 
@@ -3337,14 +3787,14 @@ def close_current_env():
             finally:
                 glfw.make_context_current(None)
                 env = None
-                time.sleep(.1)
+                time_module.sleep(.1)
 
 
 def reset_glfw():
     # Terminate the previous GLFW context if it exists
     if glfw.init():
         glfw.terminate()
-        time.sleep(.1)
+        time_module.sleep(.1)
         print("GLFW terminated.")
     
     # Re-initialize GLFW
@@ -3357,7 +3807,7 @@ def reset_glfw():
     window = glfw.create_window(1, 1, "Offscreen", None, None)
 
     glfw.make_context_current(window)
-    time.sleep(.1)
+    time_module.sleep(.1)
     print("GLFW re-initialized with offscreen context.")
     return True
 
@@ -3368,7 +3818,7 @@ def generate_frames():
         with render_lock:
             if env is None:
                 print("No environment available for rendering. Skipping frame.")
-                time.sleep(0.1)
+                time_module.sleep(0.1)
                 continue
             try:
                 if not glfw.get_current_context():
@@ -3389,7 +3839,7 @@ def generate_frames():
                     print("Frame is None, skipping rendering.")
             except Exception as e:
                 print(f"Error rendering: {e}")
-                time.sleep(0.1)
+                time_module.sleep(0.1)
 
 @app.route('/video_feed')
 def video_feed():
@@ -3402,6 +3852,16 @@ def run_code():
     global static_issues
     global junk_array
     global env
+
+    # Logging users activity
+    user = session.get('user')
+    if not user:
+        return jsonify({'error': 'You must be logged in to run code.'}), 401
+
+    user_id = user['user_id']
+
+    print("Session user:", user) 
+    print("User ID is:", user["user_id"])
 
     env.reset()
 
@@ -3449,6 +3909,25 @@ def run_code():
             'static_issues': static_issues,
             'context': page_context,  
         }
+        log_event(
+            user_id=user_id,
+            page_context=page_context,
+            code=code,
+            static_issues=static_issues,
+            error=None,
+            hints=[]
+        )
+        print("Logging the event......")
+        print({
+            "user_id": user_id,
+            "page_context": page_context,
+            "code": code,
+            "static_issues": static_issues,
+            "error": None,
+            "hints": []
+        })
+        print("Current logs for this user:", logs_db.get(user_id, []))
+
         print("Returning early due to static issues:", return_data)
         return jsonify(return_data)  
 
@@ -3460,6 +3939,7 @@ def run_code():
         print("Executing user code...")
         local_context = {}
 
+        code = code.replace("\t", "    ")
         exec(code, globals(), local_context)  
 
         return_data = {
@@ -3469,13 +3949,42 @@ def run_code():
             'context': page_context,  
         }
 
+        log_event(
+            user_id=user_id,
+            page_context=page_context,
+            code=code,
+            static_issues=static_issues,
+            error=None,
+            hints=[]
+        )
+
         print("Successful Response Data:", return_data)
         return jsonify(return_data)
 
     except Exception as e:
         last_error = str(e)
         print("Error Message from Run Code:", last_error)
+        log_event(
+            user_id=user_id,
+            page_context=page_context,
+            code=code,
+            static_issues=static_issues,
+            error=last_error,
+            hints=[]
+        )
         return jsonify({'error': last_error, 'static_issues': static_issues, 'context': page_context})
+
+@app.route('/logs/<int:user_id>', methods=['GET'])
+def get_logs(user_id):
+    user_logs = logs_db.get(user_id, [])
+    print("User logs:", user_logs)  
+    return jsonify({"user_id": user_id, "logs": user_logs})
+
+@app.route('/view-logs/<int:user_id>', methods=['GET'])
+def view_logs(user_id):
+    user_logs = logs_db.get(user_id, [])
+    return render_template('display_logs.html', user_id=user_id, logs=user_logs)
+
 
 # @app.route('/run-code', methods=['POST'])
 # def run_code():
@@ -3645,8 +4154,8 @@ def render_quiz_page():
     return render_template('quiz1.html')
 
 @app.route("/certificate")
-def certificate_page():
-    return render_template("courses/course1-content/certificate.html")
+def module_eleven_certificate_car():
+    return render_template('courses/course11-content/module_eleven_certificate_car.html') 
 
 def generate_certificate():
     """Generates a certificate image with the given text and returns it as a BytesIO object."""

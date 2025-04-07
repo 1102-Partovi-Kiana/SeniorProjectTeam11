@@ -810,7 +810,7 @@ html, body {
 }
 
 .user-list-container {
-    height: calc(100% - 78px);
+    height: calc(100% - 148px);
     overflow: hidden;
 }
 
@@ -907,6 +907,7 @@ html, body {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
+    border: 1px solid black;
 }
 
 .course-list thead {
@@ -1131,10 +1132,11 @@ html, body {
 }
 
 .dashboard-card-content {
+    width: 100%; /* Ensure it respects parent width */
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
+    gap: 20px;
 }
 
 .dashboard-card-content.five {
@@ -1302,30 +1304,34 @@ h3 svg {
     background-color: white;
     padding: 24px;
     width: 50%;
-    height: 70%;
+    height: 50%;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    font-family: 'Arial', sans-serif;
+    font-family: "Work Sans", Helvetica, sans-serif;
     overflow: hidden;
     display: flex;
     flex-direction: column;
 }
 
+.modal-content.instructor_dashboard .modal-body,
 .modal-content.admin_dashboard .modal-body {
     flex: 1;
     overflow-y: auto;
     padding-right: 10px;
 }
 
+.modal-content.instructor_dashboard .modal-body::-webkit-scrollbar,
 .modal-content.admin_dashboard .modal-body::-webkit-scrollbar {
     width: 8px;
 }
 
+.modal-content.instructor_dashboard .modal-body::-webkit-scrollbar-thumb,
 .modal-content.admin_dashboard .modal-body::-webkit-scrollbar-thumb {
     background-color: #ccc;
     border-radius: 4px;
 }
 
+.modal-content.instructor_dashboard .modal-body::-webkit-scrollbar-thumb:hover,
 .modal-content.admin_dashboard .modal-body::-webkit-scrollbar-thumb:hover {
     background-color: #999;
 }
@@ -1347,7 +1353,7 @@ h3 svg {
 .close-modal {
     position: absolute;
     top: 10px;
-    right: 10px; /* Align it to the top-right corner */
+    right: 20px; /* Align it to the top-right corner */
     color: #666;
     font-size: 24px;
     font-weight: bold;
@@ -1419,6 +1425,10 @@ h3 svg {
 /* Apply Changes Button */
 .apply-changes-button{
     background-color: #3835dc;
+}
+
+.apply-changes-button{
+    background-color: #403df1;
 }
 
 /* Remove Button */
@@ -1600,4 +1610,351 @@ h3 svg {
 
 .create-class-button:hover {
     background-color: rgb(45, 34, 110);
+}
+
+.dashboard-container.grades {
+    display: flex;
+}
+
+.dashboard-column.one.grades {
+    width: 70%;
+    height: 100%;
+}
+
+.dashboard-column.two.grades {
+    width: 30%;
+    height: 100%;
+}
+
+.dashboard-row.one.grades{
+    width: 100%;
+    height: 20%;
+}
+
+.dashboard-row.two.grades{
+    width: 100%;
+    height: 50%;
+}
+
+.dashboard-row.three.grades{
+    display:flex;
+    width: 100%;
+    height: 30%;
+}
+
+.section-one.grades,
+.section-two.grades,
+.section-three.grades,
+.section-four.grades{
+    width: 25%;
+    height: 100%;
+    padding: 20px;
+}
+
+.section-one.grades{
+    padding-left: 40px;
+}
+.section-four.grades{
+    padding-right: 40px;
+}
+
+.section-five.grades{
+    width: 100%;
+    height: 100%;
+    padding: 20px 40px;
+}
+
+
+.section-six.grades{
+    width: 50%;
+    height: 100%;
+    padding: 20px 40px;
+}
+
+.section-seven.grades{
+    width: 50%;
+    height: 100%;
+    padding: 20px 40px;
+}
+
+.section-eight.grades{
+    width: 100%;
+    height: 100%;
+    padding: 20px 40px;
+}
+
+.dashboard-card.one.grades,
+.dashboard-card.two.grades,
+.dashboard-card.three.grades,
+.dashboard-card.four.grades,
+.dashboard-card.five.grades,
+.dashboard-card.six.grades,
+.dashboard-card.seven.grades{
+    width: 100%;
+    height: 100%;
+    background-color: #f8f9fa;
+    border-radius: 20px;
+    box-shadow: 6px 6px 10px rgba(0,0,0,0.2);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.dashboard-card.eight.grades{
+    width: 100%;
+    height: 100%;
+    background-color: #f8f9fa;
+    border-radius: 20px;
+    box-shadow: 6px 6px 10px rgba(0,0,0,0.2);
+    padding: 40px;
+}
+
+/* Title for the grades table */
+.grades-title {
+    font-size: 24px;
+    font-weight: bold;
+    padding-bottom: 20px;
+    color: #333;
+    border-bottom: #000 2px solid;
+}
+
+/* Grades table */
+.grades-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+
+.grades-table td {
+    padding: 10px;
+    text-align: left;
+    font-size: 16px;
+    color: #333;
+}
+
+.grades-table tr:not(:last-child) td {
+    border-bottom: 1px solid #ddd;
+}
+
+/* Grade bubbles */
+.grade-bubble {
+    display: inline-block;
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: #7e7e7e;
+}
+
+/* Color classes for the bubbles */
+.grade-bubble.green {
+    background-color: #4CAF50;
+}
+
+.grade-bubble.yellow {
+    background-color: #ffbd07;
+}
+
+.grade-bubble.red {
+    background-color: #F44336;
+}
+
+.grades-table td:last-child {
+    text-align: right;
+}
+
+.grades-table tr:last-child td {
+    font-size: 20px;
+    font-weight: bold;
+    border-top: 2px solid #000;
+    padding-top: 15px;
+}
+
+.quiz-name {
+    font-size: 16px; /* Larger font size for the quiz name */
+    font-weight: bold; /* Make the quiz name bold */
+    margin-bottom: 4px; /* Add some space between the quiz name and module name */
+}
+
+.course-module-name {
+    font-size: 12px; /* Smaller font size for the module name */
+    color: gray; /* Gray color for the module name */
+    font-style: italic; /* Optional: Italicize the module name */
+}
+
+#students-search,
+#instructor-search,
+#class-search {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: none;
+}
+
+.instructor-dash-student-icon,
+.instructor-dash-classes-icon,
+.instructor-dash-grades-icon{
+    width: 40px;
+    height: 40px;
+    fill: currentColor;
+}
+
+.modal.instructor_dashboard {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 2000; /* Ensure it's above other content */
+}
+
+.modal-content.instructor_dashboard {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 24px;
+    width: 40%;
+    height: 80%;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-family: "Work Sans", Helvetica, sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header.instructor_dashboard {
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e0e0e0; /* Grey line */
+    background-color: rgb(255,255,255) !important; 
+}
+
+.modal-header.instructor_dashboard h2{
+    color:#000;
+}
+
+.modal.instructor_dashboard .modal-body {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
+
+.modal.instructor_dashboard .modal-body form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.modal.instructor_dashboard .form-field-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.modal.instructor_dashboard .form-field-group label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.modal.instructor_dashboard .form-field-group input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    max-height: 50px;
+}
+
+.modal.instructor_dashboard .form-field-group select {
+    padding: 12px 0px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    max-height: 50px;
+}
+
+.modal.instructor_dashboard .modal-footer {
+    margin-top: auto;
+    padding-top: 16px;
+}
+
+.modal-content.class_code .copy-code-button,
+.modal-content.class_code .cancel-button,
+.modal-content.instructor_dashboard button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* Create Class Button */
+.modal-content.class_code .copy-code-button,
+.modal-content.instructor_dashboard .create-class-button{
+    background-color: #3835dc;
+    color:#ffffff;
+    font-weight: normal;
+}
+
+.modal-content.class_code .copy-code-button,
+.modal-content.instructor_dashboard .create-class-button{
+    background-color: #403df1;
+}
+
+/* Cancel Button */
+.modal-content.class_code .cancel-button,
+.modal-content.instructor_dashboard .cancel-button {
+    background-color: #bbbbbb;
+    color:#000000
+}
+
+.modal-content.class_code .cancel-button,
+.modal-content.instructor_dashboard .cancel-button:hover {
+    background-color: #adadad;
+}
+
+.modal-content.class_code {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 24px;
+    width: 40%;
+    height: 40%;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-family: "Work Sans", Helvetica, sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content.class_code .code-display{
+    font-size: 40px;
+}
+
+.chart-container {
+    width: 100%;
+    text-align: center;
+}
+
+.chart-container img {
+    max-width: 100%;
+    height: auto;
 }

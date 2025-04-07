@@ -101,58 +101,63 @@ buttons.forEach(button => {
     });
 });
 
+
 document.addEventListener("DOMContentLoaded", function () {
+    // For Create Class Modal
+    const createClassButton = document.querySelector(".create-class-modal");
+    if (createClassButton) {
+        createClassButton.addEventListener("click", function (event) {
+            event.preventDefault();
+            const modal = document.getElementById("createClassModal");
+            modal.style.display = "block";
+        });
+    }
+
+    // For Create Class Code Modal
+    const createClassCodeButton = document.querySelector(".create-class-code-modal");
+    if (createClassCodeButton) {
+        createClassCodeButton.addEventListener("click", function(event) {
+            event.preventDefault();
+            const modal = document.getElementById("createClassCodeModal");
+            modal.style.display = "block";
+        });
+    }
+
+    // For Assign Course Modal
+    const assignCourseButton = document.querySelector(".assign-course-modal");
+    if (assignCourseButton) {
+        assignCourseButton.addEventListener("click", function (event) {
+            event.preventDefault();
+            const modal = document.getElementById("assignCourseModal");
+            modal.style.display = "block";
+        });
+    }
+
+    // For Edit User Modals (keeping your existing code)
     const editButtons = document.querySelectorAll(".edit-button");
-    
     editButtons.forEach(button => {
         button.addEventListener("click", function (event) {
-            event.preventDefault(); // Prevent form submission
+            event.preventDefault();
             const userId = button.closest('form').querySelector('input[name="selected_user_id"]').value;
             const modal = document.getElementById(`edit-modal-${userId}`);
             modal.style.display = "block";
         });
     });
 
-    const closeModals = document.querySelectorAll(".close-modal");
+    // Close modals (works for both create and edit modals)
+    const closeModals = document.querySelectorAll(".close-modal, .cancel-button");
     closeModals.forEach(closeButton => {
         closeButton.addEventListener("click", function () {
             const modal = closeButton.closest('.modal');
             modal.style.display = "none";
-        });
-    });
-
-    window.addEventListener("click", function (event) {
-        const modals = document.querySelectorAll(".modal");
-        modals.forEach(modal => {
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        });
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    const editButtons = document.querySelectorAll(".edit-button");
-
-    editButtons.forEach(button => {
-        button.addEventListener("click", function (event) {
-            event.preventDefault(); // Prevent default action
-            const classId = button.closest('form').querySelector('input[name="selected_class_id"]').value;
-            const modal = document.getElementById(`edit-modal-${classId}`);
-            if (modal) {
-                modal.style.display = "block";
+            const form = modal.querySelector("form");
+            if (form) {
+                form.reset();
             }
         });
     });
 
-    const closeModals = document.querySelectorAll(".close-modal");
-    closeModals.forEach(closeButton => {
-        closeButton.addEventListener("click", function () {
-            const modal = closeButton.closest('.modal');
-            modal.style.display = "none";
-        });
-    });
-
+    // Close when clicking outside (works for all modals)
     window.addEventListener("click", function (event) {
         const modals = document.querySelectorAll(".modal");
         modals.forEach(modal => {

@@ -25,12 +25,16 @@
             </li>
             <li class="course-item active">
                 {% if module_completed[1.12] %}
-                <a href="{{ url_for('overview') }}" class="course-link">
-                    Definition and Overview of Robotics
-                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
-                </a>
+                    <a href="{{ url_for('overview') }}" class="course-link">
+                        Definition and Overview of Robotics
+                        <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                    </a>
+                {% elif module_completed[1.11] %}
+                    <a href="{{ url_for('overview') }}" class="course-link">
+                        Definition and Overview of Robotics
+                    </a>
                 {% else %}
-                <a class="course-link disabled">Definition and Overview of Robotics</a>
+                    <a class="course-link disabled">Definition and Overview of Robotics</a>
                 {% endif %}
                 <ul class="sub-list">
                     <li><a href="#what-is-robot">What is a robot?</a></li>
@@ -43,6 +47,10 @@
                 <a href="{{ url_for('history') }}" class="course-link">
                     History of Robotics
                     <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% elif module_completed[1.12] %}
+                <a href="{{ url_for('history') }}" class="course-link">
+                    History of Robotics
                 </a>
                 {% else %}
                 <a class="course-link disabled">History of Robotics</a>
@@ -60,6 +68,10 @@
                     Types of Robots
                     <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
                 </a>
+                {% elif module_completed[1.13] %}
+                <a href="{{ url_for('typesofrobots') }}" class="course-link">
+                    Types of Robots
+                </a>
                 {% else %}
                 <a class="course-link disabled">Types of Robots</a>
                 {% endif %}
@@ -75,6 +87,10 @@
                 <a href="{{ url_for('importanceandapp') }}" class="course-link">
                     Importance and Applications of Robotics
                     <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% elif module_completed[1.14] %}
+                <a href="{{ url_for('importanceandapp') }}" class="course-link">
+                    Importance and Applications of Robotics
                 </a>
                 {% else %}
                 <a class="course-link disabled">Importance and Applications of Robotics</a>
@@ -93,6 +109,10 @@
                     Quiz 1
                     <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
                 </a>
+                {% elif module_completed[1.15] %}
+                <a href="{{ url_for('course1quiz1') }}" class="course-link">
+                    Quiz 1
+                </a>
                 {% else %}
                 <a class="course-link disabled">Quiz 1</a>
                 {% endif %}
@@ -102,6 +122,10 @@
                 <a href="{{ url_for('robotanatomy') }}" class="course-link">
                     Robot Anatomy
                     <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% elif module_completed[1.9] %}
+                <a href="{{ url_for('robotanatomy') }}" class="course-link">
+                    Robot Anatomy
                 </a>
                 {% else %}
                 <a class="course-link disabled">Robot Anatomy</a>
@@ -119,6 +143,10 @@
                     Challenges in Robotics
                     <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
                 </a>
+                {% elif module_completed[1.16] %}
+                <a href="{{ url_for('challenges') }}" class="course-link">
+                    Challenges in Robotics
+                </a>
                 {% else %}
                 <a class="course-link disabled">Challenges in Robotics</a>
                 {% endif %}
@@ -135,6 +163,10 @@
                     Robot Programming
                     <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
                 </a>
+                {% elif module_completed[1.17] %}
+                <a href="{{ url_for('robotprogramming') }}" class="course-link">
+                    Robot Programming
+                </a>
                 {% else %}
                 <a class="course-link disabled">Robot Programming</a>
                 {% endif %}
@@ -150,6 +182,10 @@
                     Social and Ethical Implications
                     <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
                 </a>
+                {% elif module_completed[1.18] %}
+                <a href="{{ url_for('implications') }}" class="course-link">
+                    Social and Ethical Implications
+                </a>
                 {% else %}
                 <a class="course-link disabled">Social and Ethical Implications</a>
                 {% endif %}
@@ -164,6 +200,10 @@
                 <a href="{{ url_for('futuretrends') }}" class="course-link">
                     Future Trends
                     <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% elif module_completed[1.19] %}
+                <a href="{{ url_for('futuretrends') }}" class="course-link">
+                    Future Trends
                 </a>
                 {% else %}
                 <a class="course-link disabled">Future Trends</a>

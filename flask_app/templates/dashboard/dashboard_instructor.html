@@ -63,6 +63,14 @@
                 </li>   
             </ul>
         </a>
+        <a href="{{ url_for('RenderPlayground') }}">
+            <ul>
+                <li>
+                    <svg class="sidebar-playground-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#playground-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">PLAYGROUND</span>
+                </li>   
+            </ul>
+        </a>
         <a href="{{ url_for('RenderLogout') }}">
             <ul>
                 <li>
@@ -72,141 +80,97 @@
             </ul>
         </a>
     </div>
-    <div class="dashboard-start">
-        <section class = "dashboard-welcome"> 
-            <h1>Home</h1>
-            <h2>
-                Welcome,<br>
-                {{ user['first_name'] }} {{ user['last_name'] }}<br>
-                University of Nevada, Reno
-            </h2>
-        </section>
-    </div>
-    <div class="dashboard-table-container mt-4">
-        <div class="table-container-one">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">Classes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if classes %}
-                        {% for cls in classes %}
-                        <tr>
-                            <td class="class-info">
-                                <span class="class-section">Section: {{ cls.class_course_code }}.{{ cls.class_section_number }}</span>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td>
-                                <span class="class-section">No Classes Available - Create One to Start</span>
-                            </td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-            </table>
+    <div class="dashboard-container">
+        <div class="dashboard-row one">
+            <div class="section-one"> 
+                <div class="dashboard-card one">
+                    <div class="dashboard-card-content">
+                        <div class="dashboard-card-text">
+                            <h3>
+                                <svg class="instructor-dash-student-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#icon-users" fill="currentColor"></use></svg>
+                                Number of Students
+                            </h3>
+                            <!-- Display Total Users -->
+                            <p class="dashboard-user-count"> {{ class_stats.unique_student_count }} </p>
+                            <a href="#" class="dashboard-redirect-link">View More</a>
+                        </div>
+                        <div class="dashboard-progress-container">
+                            <svg class="dashboard-progress-circle" width="140" height="140">
+                                <!-- Background Circle -->
+                                <circle class="progress-bg" cx="70" cy="70" r="60"></circle>
+                                <!-- Progress Circle -->
+                                <circle class="progress" cx="70" cy="70" r="60"></circle>
+                            </svg>
+                            <!-- Number and text inside the circle -->
+                            <div class="progress-text">
+                                <!-- Display Users Added Since -->
+                                <p class="number"> +2 </p>
+                                <p class="date"> 3/31 </p> 
+                            </div>
+                        </div>
+                    </div>
+                </div>     
+            </div>                 
+            <div class="section-two"> 
+                <div class="dashboard-card two">
+                    <div class="dashboard-card-content">
+                        <div class="dashboard-card-text">
+                            <h3>
+                                <svg class="instructor-dash-classes-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#icon-classes" fill="currentColor"></use></svg>
+                                Number of Classes
+                            </h3>
+                            <!-- Display Total Users -->
+                            <p class="dashboard-user-count"> {{ class_stats.class_count }} </p>
+                            <a href="#" class="dashboard-redirect-link">View More</a>
+                        </div>
+                        <div class="dashboard-progress-container">
+                            <svg class="dashboard-progress-circle" width="140" height="140">
+                                <!-- Background Circle -->
+                                <circle class="progress-bg" cx="70" cy="70" r="60"></circle>
+                                <!-- Progress Circle -->
+                                <circle class="progress" cx="70" cy="70" r="60"></circle>
+                            </svg>
+                            <!-- Number and text inside the circle -->
+                            <div class="progress-text">
+                                <!-- Display Users Added Since -->
+                                <p class="number"> +6 </p>
+                                <p class="date"> 3/31 </p> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-three"> 
+                <div class="dashboard-card three">
+                    <div class="dashboard-card-content">
+                        <div class="dashboard-card-text">
+                            <h3>
+                                <svg class=".instructor-dash-grades-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#icon-grades" fill="currentColor"></use></svg>
+                                Average Grade
+                            </h3>
+                            <p class="dashboard-user-count"> {{ class_stats.overall_avg_grade}}</p>
+                            <a href="#" class="dashboard-redirect-link">View More</a>
+                        </div>
+                        <div class="dashboard-progress-container">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="table-container-two">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">Communications</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure</td>
-                    </tr>
-                    <tr>
-                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure</td>
-                    </tr>
-                    <tr>
-                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure</td>
-                    </tr>
-                    <tr>
-                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure</td>
-                    </tr>
-                    <tr>
-                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure</td>
-                    </tr>
-                    <tr>
-                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="table-container-three">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">Notifications</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>System maintenance scheduled for November 25th, 12:00 AM - 2:00 AM.</td>
-                    </tr>
-                    <tr>
-                        <td>New updates are available for the dashboard. Please refresh to apply changes.</td>
-                    </tr>
-                    <tr>
-                        <td>Reminder: Submit your project proposal by December 1st.</td>
-                    </tr>
-                    <tr>
-                        <td>Holiday schedule for support services has been published.</td>
-                    </tr>
-                    <tr>
-                        <td>Security alert: Update your password to meet the new policy requirements.</td>
-                    </tr>
-                    <tr>
-                        <td>New feature added: Dark mode is now available in settings.</td>
-                    </tr>
-                    <tr>
-                        <td>Weekly performance report is now available in your inbox.</td>
-                    </tr>
-                    <tr>
-                        <td>Join us for the upcoming webinar on AI trends, November 30th at 3 PM.</td>
-                    </tr>
-                    <tr>
-                        <td>Server outage resolved. All services are now operational.</td>
-                    </tr>
-                    <tr>
-                        <td>System downtime planned for December 5th, 1:00 AM - 3:00 AM for updates.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="table-container-four">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">Activity Feed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>New submission from John Doe for CS101.1001</td>
-                    </tr>
-                    <tr>
-                        <td>Assignment feedback posted for Sarah Smith in CS101.1002</td>
-                    </tr>
-                    <tr>
-                        <td>New comment on discussion board from Mark Lee in CS101.1003</td>
-                    </tr>
-                    <tr>
-                        <td>Course materials updated for CS101.1001</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="dashboard-row two">
+            <div class="section-four"> 
+                <div class="dashboard-card four">
+                    <div class="chart-container">
+                        <img src="data:image/png;base64,{{ graph_image }}" alt="Average Attempts Chart">
+                    </div>
+                </div>
+            </div>
+            <div class="section-five"> 
+                <div class="dashboard-card five">
+                    <div class="dashboard-card-content five">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

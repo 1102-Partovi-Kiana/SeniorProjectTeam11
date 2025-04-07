@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Home - CORE</title>
+{% endblock %}
+
+{% block body %}
+
+{% include "alert/full.html" %}
+<body>
+    <div class="sidebar-wrapper">
+        <div class="sidebar-header">
+            <img src="/static/img/profile_pic.png" alt="Profile Picture" class="profile-image">
+            <span class="sidebar-name">{{ user['username'] }}</span>
+            <button class="collapse-btn" onclick="toggleSidebar()">
+                <svg class="sidebar-arrow-icon"><use xlink:href="/static/img/sidebar-icons.svg#arrow-icon" fill="currentColor"></use></svg>
+            </button>
+        </div>
+        <a href="{{ url_for('RenderStudentDashboard') }}">
+            <ul>
+                <li>
+                    <svg class="sidebar-home-icon"><use xlink:href="/static/img/sidebar-icons.svg#home-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">HOME</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderCourses') }}">
+            <ul>
+                <li>
+                    <svg class="sidebar-course-icon"><use xlink:href="/static/img/sidebar-icons.svg#course-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">COURSES</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderLogout') }}">
+            <ul>
+                <li>
+                    <svg class="sidebar-logout-icon"><use xlink:href="/static/img/sidebar-icons.svg#logout-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">LOG OUT</span>
+                </li>   
+            </ul>
+        </a>
+    </div>
+    <div class="dashboard-container grades">
+        <div class="dashboard-column one grades">
+            <div class="dashboard-row one grades">
+                <div class="section-one grades">
+                    <div class="dashboard-card one grades"></div>
+                </div>
+                <div class="section-two grades">
+                    <div class="dashboard-card two grades"></div>
+                </div>
+                <div class="section-three grades">
+                    <div class="dashboard-card three grades"></div>
+                </div>
+                <div class="section-four grades">
+                    <div class="dashboard-card four grades"></div>
+                </div>
+            </div>
+            <div class="dashboard-row two grades">
+                <div class="section-five grades">
+                    <div class="dashboard-card five grades"></div>
+                </div>
+            </div>
+            <div class="dashboard-row three grades">
+                <div class="section-six grades">
+                    <div class="dashboard-card six grades"></div>
+                </div>
+                <div class="section-seven grades">
+                    <div class="dashboard-card seven grades"></div>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-column two grades">
+            <div class="section-eight grades">
+                <div class="dashboard-card eight grades">
+                    <h2 class="grades-title">Grades</h2>
+                    <table class="grades-table">
+                        {% if grades_with_names %}
+                            {% for grade in grades_with_names %}
+                            <tr>
+                                <td>
+                                    <div class="quiz-name">{{ grade.course_subsection_name }}</div>
+                                    <div class="course-module-name">{{ grade.course_module_name }}</div>
+                                </td>
+                                <td>
+                                    <span class="grade-bubble 
+                                        {% if grade.highest_grade >= 90 %}green
+                                        {% elif grade.highest_grade >= 70 %}yellow
+                                        {% else %}red
+                                        {% endif %}">
+                                        {{ grade.highest_grade }}%
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td>Total Grade:</td>
+                                <td>
+                                    {% set total_grade = ((grades_with_names | sum(attribute='highest_grade')) / (grades_with_names | length)) %}
+                                    <span class="grade-bubble 
+                                        {% if total_grade >= 80 %}green
+                                        {% elif total_grade >= 51 %}yellow
+                                        {% else %}red
+                                        {% endif %}">
+                                        {{ total_grade | round(2) }}%
+                                    </span>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>
+                                    <div class="quiz-name">No available grades</div>
+                                    <div class="course-module-name">No available grades</div>
+                                </td>
+                                <td>
+                                    <span class="grade-bubble">N/A</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Total Grade:</td>
+                                <td>
+                                    <span class="grade-bubble">N/A</span>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

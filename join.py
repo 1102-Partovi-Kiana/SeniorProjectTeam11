@@ -21,7 +21,6 @@ venv_path = os.path.join(
 # Ensure the destination directory exists
 os.makedirs(venv_path, exist_ok=True)
 
-
 # Copy files, deleting the original at the destination if it exists
 for source_file in source_files:
     destination_file = os.path.join(venv_path, os.path.basename(source_file))
