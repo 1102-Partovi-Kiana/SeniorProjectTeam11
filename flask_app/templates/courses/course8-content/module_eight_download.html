@@ -6,6 +6,58 @@
 
 {% block body %}
 <div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_eight') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eight_about') }}" class="course-link">About</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eight_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-stack">Word Bank</a></li>
+                    <li><a href="#given-fetch-stack">What is Given</a></li>
+                    <li><a href="#retrieve-fetch-stack">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eight_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-stack">Word Bank</a></li>
+                    <li><a href="#code-fetch-stack">What Needs to Be Coded</a></li>
+                    <li><a href="#understand-the-environment">Understand the Environment</a></li>
+                    <li><a href="#define-constants-and-action-parameters">Define Constants and Actions</a></li>
+                    <li><a href="#find-direction">Calculate Direction</a></li>
+                    <li><a href="#approach-target">Approach Target</a></li>
+                    <li><a href="#adjust-gripper">Adjust Gripper</a></li>
+                    <li><a href="#lifting-the-object">Lift the Object</a></li>
+                    <li><a href="#the-outcome">The Outcome</a></li>
+                    <li><a href="#key-takeaways">Key Takeaways</a></li>
+                    <li><a href="#"></a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course8quiz8') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_eight_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eight_certificate_stack') }}" class="course-link">Certificate</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eight_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
     <div class="course-main-content">
         <!-- Page Header -->
         <header class="page-header">
@@ -36,8 +88,8 @@
         <!-- Next Button -->
 
         <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_eight_code') }}" class="secondary-button">Back: Coding Logic</a>
-            <a href="{{ url_for('module_eight_link') }}" class="secondary-button">Next: Time to Code</a>
+            <a href="{{ url_for('course8quiz8') }}" class="secondary-button">Back: Quiz</a>
+            <a href="{{ url_for('module_eight_certificate_stack') }}" class="secondary-button">Next: Certificate</a>
         </div>
 
     </div> <!-- End of course-main-content -->

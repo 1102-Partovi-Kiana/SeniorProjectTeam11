@@ -50,8 +50,14 @@
                     <li><a href="#key-takeaways">Key Takeaways</a></li>
                 </ul>
             </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course6quiz6') }}" class="course-link">Quiz</a>
+            </li>
             <li class="course-item active">
                 <a href="{{ url_for ('module_six_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_certificate_reach') }}" class="course-link">Certificate</a>
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_six_link') }}" class="course-link">Time to Code</a>
@@ -89,8 +95,8 @@
         <!-- Next Button -->
 
         <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_six_code') }}" class="secondary-button">Back: Coding Logic</a>
-            <a href="{{ url_for('module_six_link') }}" class="secondary-button">Next: Time to Code</a>
+            <a href="{{ url_for('course6quiz6') }}" class="secondary-button">Back: Quiz</a>
+            <a href="{{ url_for('module_six_certificate_reach') }}" class="secondary-button">Next: Certificate</a>
         </div>
 
     </div> <!-- End of course-main-content -->

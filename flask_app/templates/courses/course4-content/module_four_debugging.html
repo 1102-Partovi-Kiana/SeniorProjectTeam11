@@ -86,7 +86,13 @@
                 </ul>
             </li>
             <li class="course-item">
+                <a href="{{ url_for ('course4quiz4') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
                 <a href="{{ url_for ('module_four_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_certificate_code') }}" class="course-link">Certificate</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
@@ -129,7 +135,7 @@ pdb.set_trace()  # Insert this where you want to pause execution</code></pre>
         <!-- Next Button -->
         <div class="navigation-buttons mt-4">
             <a href="{{ url_for('module_four_functions') }}" class="secondary-button">Back: Functions</a> 
-            <a href="{{ url_for('module_four_download') }}" class="secondary-button">Next: Cheat Sheet</a>
+            <a href="{{ url_for('course4quiz4') }}" class="secondary-button">Next: Quiz</a>
         </div>
 
     </div> <!-- End of course-main-content -->

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Certificate - CORE</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="course-container">
+     <!-- Sidebar for navigation -->
+     <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Meet the Robots</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item">
+                <a href="{{ url_for ('module_three_fetch_reach') }}" class="course-link">Fetch Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for('module_three_car') }}" class="course-link">Autonomous Car Robot</a>
+                <ul class="sub-list">
+                    <li><a href="#about-auto-car">About the Autonomous Car</a></li>
+                    <li><a href="#sensors-and-navigation">Sensors and Navigation</a></li>
+                    <li><a href="#decision-making">Decision-Making</a></li>
+                    <li><a href="#car-tasks">Real-World Tasks</a></li>
+                    <li><a href="#video">Real-World Autonmous Vehicle Video</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course3quiz3') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_three_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_three_certificate_meet') }}" class="course-link">Certificate</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <script>
+        function updateCertificatePreview() {
+            document.getElementById("certificatePreview").src = "/view_certificate?" + new Date().getTime();
+        }
+
+        window.onload = updateCertificatePreview;
+    </script>
+
+
+    <div class="course-main-content">
+
+        <!-- Certificate Section -->
+        <div class="module-section" id="certificate" style="display: flex; flex-direction: column; align-items: center;">
+            
+            <!-- Certificate Preview -->
+            <img id="certificatePreview" src="" alt="Certificate Preview"
+                style="width: 80%; max-width: 800px; border: 1px solid black; margin-bottom: 20px; border-radius: 8px;">
+
+            <div style="display: flex; gap: 10px;">
+                  <button class="download-button" onclick="updateCertificatePreview()">
+                    <i class="fas fa-sync-alt"></i> Refresh Preview
+                  </button>
+                  <a href="/download_certificate">
+                    <button class="download-button">
+                      <i class="fas fa-download"></i> Download Certificate
+                    </button>
+                  </a>
+                  
+            </div>
+        </div>
+        
+       <!-- Navigation Buttons -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_three_download') }}" class="secondary-button">Back: Cheat Sheet</a>
+        </div>
+        
+    </div> <!-- End of course-main-content -->
+    
+</div> <!-- End of course-container -->
+    
+{% endblock %}

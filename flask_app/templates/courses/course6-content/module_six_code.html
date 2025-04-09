@@ -51,7 +51,13 @@
                 </ul>
             </li>
             <li class="course-item">
+                <a href="{{ url_for ('course6quiz6') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
                 <a href="{{ url_for ('module_six_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_certificate_reach') }}" class="course-link">Certificate</a>
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_six_link') }}" class="course-link">Time to Code</a>
@@ -59,10 +65,20 @@
         </ul>
     </div> <!-- End of course-sidebar -->
 
-    <div class="robotics-content">
-        <div class="course-main-content">
+    <div class="course-main-content">
+        <div class="robotics-content">
             <!-- Page Header -->
             <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+
                 <h1 class="page-title">Coding the Robot Movement</h1>
                 <p class="page-description">Learn how to implement the logic required to use the Fetch Reach Robot.</p>
             </header>
@@ -295,10 +311,29 @@
             <!-- Next Button -->
             <div class="navigation-buttons mt-4">
                 <a href="{{ url_for('module_six_given') }}" class="secondary-button">Back: Environment</a>
-                <a href="{{ url_for('module_six_download') }}" class="secondary-button">Next: Cheat Sheet</a>
+                <a href="{{ url_for('course6quiz6') }}" class="secondary-button">Next: Quiz</a>
             </div>
+        </div>
+    </div> <!-- End of course-main-content -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSwitch = document.getElementById("toggle-explainer");
+            const notificationBubble = document.getElementById("notification");
     
-        </div> <!-- End of course-main-content -->
-    </div>
+            setTimeout(() => {
+                notificationBubble.classList.add("fade-out");
+            }, 1000);
+    
+            toggleSwitch.addEventListener("change", function () {
+                if (this.checked) {
+                    notificationBubble.textContent = "Toggle Me Off";
+                } else {
+                    notificationBubble.textContent = "Toggle Me To Explain Text";
+                }
+            });
+        });
+    </script>
+    
 </div> <!-- End of course-container -->
 {% endblock %}

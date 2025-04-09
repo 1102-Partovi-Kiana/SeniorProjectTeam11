@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Module Nine Cheat Sheet - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_nine') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_nine_about') }}" class="course-link">About</a>
+                <ul class="sub-list">
+                    <li><a href="#print-statement">About the Fetch Organize Robot</a></li>
+                    <li><a href="#gallery">Fetch Organize Robot Gallery</a></li>
+                    <li><a href="#video">Fetch Organize Robot Simulation Video</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Fetch Organize Robot</a></li>
+                    <li><a href="#video-two">Real Fetch Organize Robot Video</a></li>
+                </ul> 
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_nine_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-organize">Word Bank</a></li>
+                    <li><a href="#given-fetch-organize">What is Given</a></li>
+                    <li><a href="#retrieve-fetch-organize">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_nine_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-organize">Word Bank</a></li>
+                    <li><a href="#code-fetch-organizee">What Needs to Be Coded</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course9quiz9') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_nine_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_nine_certificate_organize') }}" class="course-link">Certificate</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_nine_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Cheat Sheet</h1>
+            <p class="page-description">Download a handy cheat sheet to help you remember key concepts.</p>
+        </header>
+
+        <div class="divider">
+            <span class="divider-text">Get Your Cheat Sheet</span>
+        </div>
+
+        <!-- Download Section -->
+        <div class="module-section" id="download">
+            <div class="download-card">
+                <div class="download-header">
+                    <i class="fas fa-robot download-icon"></i>
+                    <h3 class="download-title">Cheat Sheet</h3>
+                </div>
+                <p class="download-description">Get a quick reference guide for key concepts covered in this module. Click below to download your cheat sheet:</p>
+                <a href="{{ url_for('download_file', filename='fetch_organize_cheat_sheet.pdf') }}" download>
+                    <button class="primary-button download-button">
+                        <i class="fas fa-download"></i> Download Cheat Sheet
+                    </button>
+                </a>
+            </div>
+        </div>
+
+        <!-- Next Button -->
+
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('course9quiz9') }}" class="secondary-button">Back: Quiz</a>
+            <a href="{{ url_for('module_nine_certificate_organize') }}" class="secondary-button">Next: Certificate</a>
+        </div>
+
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

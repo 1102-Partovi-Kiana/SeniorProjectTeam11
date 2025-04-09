@@ -21,7 +21,7 @@
                 <ul class="sub-list">
                     <li><a href="#about-fetch-pick-and-place">Fetch Pick and Place Robot</a></li>
                     <li><a href="#video">Fetch Pick and Place Robot Simulation Vide</a></li>
-                    <li><a href="#sim-v-real">Simulation vs. Real Fetch Picka and Place Robot</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Fetch Pick and Place Robot</a></li>
                     <li><a href="#videotwo">Real Fetch Pick and Place Robot Video</a></li>
                     <li><a href="#real-world">Real-World Applicability</a></li>
                 </ul>
@@ -51,7 +51,13 @@
                 </ul>
             </li>
             <li class="course-item">
+                <a href="{{ url_for ('course7quiz7') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
                 <a href="{{ url_for ('module_seven_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_seven_certificate_pick_and_place') }}" class="course-link">Certificate</a>
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_seven_link') }}" class="course-link">Time to Code</a>
@@ -60,111 +66,161 @@
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">About the Fetch Pick and Place Robot</h1>
-            <p class="page-description">Learn the purpose of the Fetch Pick and Place Robot.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">About the Fetch Pick and Place Robot</h1>
+                <p class="page-description">Learn the purpose of the Fetch Pick and Place Robot.</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Explore</span>
-        </div>
-
-        <!-- Section 1: Print Statements -->
-        <div class="module-section" id="about-pick-and-place">
-            <h3>Fetch Pick and Place Robot</h3>
-            <p>The <strong>Fetch Pick And Place robot</strong> is a simple robotic arm that provides an intuitive entry point into robotics programming. This robot is designed to demonstrate fundamental concepts of control and automation. The Fetch Pick And Place robot is equipped with several joints and actuators, allowing it to perform basic movements. The goal of this robot is to move the object to the destination.</p>
-        </div>
-
-        <!-- Section 2: Video -->
-        <div class="module-section" id="video">
-            <h3>Fetch Pick and Place Robot Simulation Video</h3>
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <video width="560" height="315" controls>
-                    <source src="{{ url_for('static', filename='videos/fetchp&p.mp4') }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+            <div class="divider">
+                <span class="divider-text">Let's Explore</span>
             </div>
-        </div>
 
-        <!-- Section 3: Table -->
-        <div class="module-section" id="sim-v-real">
-            <h3>Simulation vs. Real Fetch Pick and Place Robot</h3>
-            <p>While you’ll be working with the simulated <strong>Fetch Pick and Place robot</strong> in <strong>OpenAI Gym</strong> using <strong>MuJoCo</strong>, it’s important to understand how it differs from a real Fetch Pick and Place robot. The principles you learn in simulation are transferable to real-world robotics.</p>
-            <div class="table-responsive">
-                <table class="table-aesthetic">
-                    <thead>
-                        <tr>
-                            <th>Aspect</th>
-                            <th>Simulated Fetch Pick and Place Robot</th>
-                            <th>Real Fetch Pick and Place Robot</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Physics</td>
-                            <td>Simulated physics engine</td>
-                            <td>Real-world physics (gravity, friction, object mass variations)</td>
-                        </tr>
-                        <tr>
-                            <td>Object Handling</td>
-                            <td>Objects respond to idealized physics</td>
-                            <td>Objects may slip, deform, or react unpredictably</td>
-                        </tr>
-                        <tr>
-                            <td>Sensor Data</td>
-                            <td>Simulated sensors (perfect readings)</td>
-                            <td>Real sensors (cameras, force sensors, encoders)</td>
-                        </tr>
-                        <tr>
-                            <td>Execution Speed</td>
-                            <td>Instant (fast simulation)</td>
-                            <td>Slower (real motors need time to move)</td>
-                        </tr>
-                        <tr>
-                            <td>Communication</td>
-                            <td>Uses OpenAI Gym API</td>
-                            <td>Uses ROS (Robot Operating System)</td>
-                        </tr>
-                        <tr>
-                            <td>Error Handling</td>
-                            <td>Can reset instantly</td>
-                            <td>Needs safety checks to avoid damage</td>
-                        </tr>
-                        <tr>
-                            <td>Failure Risk</td>
-                            <td>No risk</td>
-                            <td>Hardware can break</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Section 1: Print Statements -->
+            <div class="module-section" id="about-pick-and-place">
+                <h3>Fetch Pick and Place Robot</h3>
+                <p>The <strong>Fetch Pick And Place robot</strong> is a simple robotic arm that provides an intuitive entry point into robotics programming. This robot is designed to demonstrate fundamental concepts of control and automation. The Fetch Pick And Place robot is equipped with several joints and actuators, allowing it to perform basic movements. The goal of this robot is to move the object to the destination.</p>
             </div>
-            <p>The simulation allows you to experiment and learn without risk, while the real robot introduces you to real-world constraints such as sensor noise, execution delays, and hardware safety.</p>
-        </div> 
-        
-        <!-- Section 3: Video -->
-        <div class="module-section" id="videotwo">
-            <h3>Real Fetch Pick and Place Robot Video</h3>
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <iframe width="560" height="315" 
-                    src="https://www.youtube.com/embed/ZnAJ8OemU3U" 
-                    frameborder="0" 
-                    allowfullscreen>
-                </iframe>
+
+            <!-- Section 2: Video -->
+            <div class="module-section" id="video">
+                <h3>Fetch Pick and Place Robot Simulation Video</h3>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <video width="560" height="315" controls>
+                        <source src="{{ url_for('static', filename='videos/fetchp&p.mp4') }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
             </div>
-        </div> 
 
-          <!-- Section 4: Real-World Applicability -->
-          <div class="module-section" id="real-world">
-            <h3>Real-World Applicability</h3>
-            <p>As you can see in the two videos above, both the simulated Fetch Pick and Place robot and the real-world Fetch robot perform the same fundamental task—grasping an object and moving it to a designated goal area. While they may be programmed differently in terms of environment and implementation, the core robotics concepts remain the same. By learning to code the MuJoCo Fetch Pick and Place simulation, you gain essential skills to work with the real Fetch Pick and Place robot.</p>
-        </div>
+            <!-- Section 3: Table -->
+            <div class="module-section" id="sim-v-real">
+                <h3>Simulation vs. Real Fetch Pick and Place Robot</h3>
+                <p>While you’ll be working with the simulated <strong>Fetch Pick and Place robot</strong> in <strong>OpenAI Gym</strong> using <strong>MuJoCo</strong>, it’s important to understand how it differs from a real Fetch Pick and Place robot. The principles you learn in simulation are transferable to real-world robotics.</p>
+                <div class="table-responsive">
+                    <table class="table-aesthetic">
+                        <thead>
+                            <tr>
+                                <th>Aspect</th>
+                                <th>Simulated Fetch Pick and Place Robot</th>
+                                <th>Real Fetch Pick and Place Robot</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Physics</td>
+                                <td>Simulated physics engine</td>
+                                <td>Real-world physics (gravity, friction, object mass variations)</td>
+                            </tr>
+                            <tr>
+                                <td>Object Handling</td>
+                                <td>Objects respond to idealized physics</td>
+                                <td>Objects may slip, deform, or react unpredictably</td>
+                            </tr>
+                            <tr>
+                                <td>Sensor Data</td>
+                                <td>Simulated sensors (perfect readings)</td>
+                                <td>Real sensors (cameras, force sensors, encoders)</td>
+                            </tr>
+                            <tr>
+                                <td>Execution Speed</td>
+                                <td>Instant (fast simulation)</td>
+                                <td>Slower (real motors need time to move)</td>
+                            </tr>
+                            <tr>
+                                <td>Communication</td>
+                                <td>Uses OpenAI Gym API</td>
+                                <td>Uses ROS (Robot Operating System)</td>
+                            </tr>
+                            <tr>
+                                <td>Error Handling</td>
+                                <td>Can reset instantly</td>
+                                <td>Needs safety checks to avoid damage</td>
+                            </tr>
+                            <tr>
+                                <td>Failure Risk</td>
+                                <td>No risk</td>
+                                <td>Hardware can break</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>The simulation allows you to experiment and learn without risk, while the real robot introduces you to real-world constraints such as sensor noise, execution delays, and hardware safety.</p>
+            </div> 
+            
+            <!-- Section 3: Video -->
+            <div class="module-section" id="videotwo">
+                <h3>Real Fetch Pick and Place Robot Video</h3>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <iframe width="560" height="315" 
+                        src="https://www.youtube.com/embed/ZnAJ8OemU3U" 
+                        frameborder="0" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="reference-section">
+                    <h6>Reference</h6>
+                    <p>
+                    <a href="https://www.youtube.com/watch?v=ZnAJ8OemU3U&embeds_referring_euri=http%3A%2F%2F127.0.0.1%3A5000%2F&source_ve_path=MjM4NTE" target="_blank">https://www.youtube.com/watch?v=ZnAJ8OemU3U&embeds_referring_euri=http%3A%2F%2F127.0.0.1%3A5000%2F&source_ve_path=MjM4NTE</a>
+                    </p>
+                </div>
+            </div> 
 
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_seven') }}" class="secondary-button">Back: Learning Objectives</a>
-            <a href="{{ url_for('module_seven_given') }}" class="secondary-button">Next: Robot Environment</a>
+            <!-- Section 4: Real-World Applicability -->
+            <div class="module-section" id="real-world">
+                <h3>Real-World Applicability</h3>
+                <p>As you can see in the two videos above, both the simulated Fetch Pick and Place robot and the real-world Fetch robot perform the same fundamental task—grasping an object and moving it to a designated goal area. While they may be programmed differently in terms of environment and implementation, the core robotics concepts remain the same. By learning to code the MuJoCo Fetch Pick and Place simulation, you gain essential skills to work with the real Fetch Pick and Place robot.</p>
+            </div>
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_seven') }}" class="secondary-button">Back: Learning Objectives</a>
+                <a href="{{ url_for('module_seven_given') }}" class="secondary-button">Next: Robot Environment</a>
+            </div>
         </div>
     </div> <!-- End of course-main-content -->
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSwitch = document.getElementById("toggle-explainer");
+            const notificationBubble = document.getElementById("notification");
+    
+            // If either element isn't found, stop the script
+            if (!toggleSwitch || !notificationBubble) {
+                console.warn("Explainer toggle not initialized: elements not found.");
+                return;
+            }
+    
+            setTimeout(() => {
+                notificationBubble.classList.add("fade-out");
+            }, 1000);
+    
+            toggleSwitch.addEventListener("change", function () {
+                if (this.checked) {
+                    notificationBubble.textContent = "Toggle Me Off";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.add("highlight-explain");
+                    });
+                } else {
+                    notificationBubble.textContent = "Toggle Me To Explain Text";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.remove("highlight-explain");
+                    });
+                }
+            });
+        });
+    </script>
+
 </div> <!-- End of course-container -->
 {% endblock %}

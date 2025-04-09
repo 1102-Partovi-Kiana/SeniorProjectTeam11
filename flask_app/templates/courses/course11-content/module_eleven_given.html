@@ -49,7 +49,13 @@
                 </ul>
             </li>
             <li class="course-item">
+                <a href="{{ url_for ('course11quiz11') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
                 <a href="{{ url_for ('module_eleven_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_certificate_car') }}" class="course-link">Certificate</a>
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_eleven_link') }}" class="course-link">Time to Code</a>
@@ -58,86 +64,127 @@
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Robot Environment</h1>
-            <p class="page-description">Understand the components of the robot's environment and how to interact with them.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Robot Environment</h1>
+                <p class="page-description">Understand the components of the robot's environment and how to interact with them.</p>
+            </header>
 
-        <!-- Word Bank Section -->
-        <div class="word-bank" id="word-bank-car" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
-            <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin: 10px 0;">
-                    <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>➡️ Forward:</strong> Distance retrieved using the robot's forward sensor.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>⬅️ Left:</strong> Distance retrieved using the robot's left sensor.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>➡️ Right:</strong> Distance retrieved using the robot's right sensor.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔄 Action:</strong> List representing the robot’s movement and steering inputs.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>📊 Sensor Readings:</strong> A dictionary mapping sensor directions to their respective distance values.
-                </li>
-            </ul>
+            <!-- Word Bank Section -->
+            <div class="word-bank" id="word-bank-car" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
+                <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 10px 0;">
+                        <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>➡️ Forward:</strong> Distance retrieved using the robot's forward sensor.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>⬅️ Left:</strong> Distance retrieved using the robot's left sensor.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>➡️ Right:</strong> Distance retrieved using the robot's right sensor.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔄 Action:</strong> List representing the robot’s movement and steering inputs.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>📊 Sensor Readings:</strong> A dictionary mapping sensor directions to their respective distance values.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="divider">
+                <span class="divider-text">Let’s Look at the Autonomous Car Labeled</span>
+            </div>
+
+            <div class="module-section" id="sim">
+                <h3>Autonomous Car Simulation</h3>
+                <img src="{{ url_for('static', filename='img/updatedac.png') }}" alt="Autonomous Car" class="robot-image">
+                <br>
+                <p>Here is a simulation of the Autonomous Car that you will be interacting with and programming.</p>
+                <p><strong>The Task of the Autonomous Car:</strong> The car has to keep driving without hitting anything. It has sensors that help it figure out where there’s the most space to move. If there’s more space in front, it goes forward. If there’s more space to the left, it turns left. If there’s more space to the right, it turns right. The car keeps doing this continuously to navigate safely.</p>
+            </p>
+            </div>
+
+            <div class="divider">
+                <span class="divider-text">Let’s Look at What is Given to us</span>
+            </div>
+
+            <!-- Section 1: What is Given -->
+            <div class="module-section" id="given-car">
+                <h3>What is Given</h3>
+                <ul>
+                    <li><strong>global env:</strong> This represents the robot's environment, which contains the robot's current state and methods for interacting with it. The environment has various "getters" and "setters."</li>
+                    <li><strong>action:</strong> A list representing the robot’s movement and steering inputs.</li>
+                    <li><strong>sensor_readings:</strong> A dictionary that maps sensor directions to their distance values.</li>
+                </ul>
+            </div> <!-- End of What is Given Section -->
+
+            <div class="divider">
+                <span class="divider-text">Let’s Look at What needs to be Retrieved</span>
+            </div>
+
+            <!-- Section 2: What Needs to be Retrieved -->
+            <div class="module-section" id="retrieve-car">
+                <h3>What Needs to be Retrieved</h3>
+                <ul>
+                    <li><strong>forward:</strong> The sensor value representing the distance directly in front of the robot.</li>
+                    <li><strong>right:</strong> The sensor value representing the distance to the robot's right.</li>
+                    <li><strong>left:</strong> The sensor value representing the distance to the robot's left.</li>
+                    <li><strong>greatest_direction:</strong> The direction with the highest sensor value, indicating the most open space.</li>
+                </ul>
+            </div> <!-- End of What Needs to be Retrieved Section -->
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_eleven_about') }}" class="secondary-button">Back: About</a>
+                <a href="{{ url_for('module_eleven_code') }}" class="secondary-button">Next: Coding Logic</a>
+            </div>
         </div>
-
-        <div class="divider">
-            <span class="divider-text">Let’s Look at the Autonomous Car Labeled</span>
-        </div>
-
-        <div class="module-section" id="sim">
-            <h3>Autonomous Car Simulation</h3>
-            <img src="{{ url_for('static', filename='img/updatedac.png') }}" alt="Autonomous Car" class="robot-image">
-            <br>
-            <p>Here is a simulation of the Autonomous Car that you will be interacting with and programming.</p>
-            <p><strong>The Task of the Autonomous Car:</strong> The car has to keep driving without hitting anything. It has sensors that help it figure out where there’s the most space to move. If there’s more space in front, it goes forward. If there’s more space to the left, it turns left. If there’s more space to the right, it turns right. The car keeps doing this continuously to navigate safely.</p>
-        </p>
-        </div>
-
-        <div class="divider">
-            <span class="divider-text">Let’s Look at What is Given to us</span>
-        </div>
-
-        <!-- Section 1: What is Given -->
-        <div class="module-section" id="given-car">
-            <h3>What is Given</h3>
-            <ul>
-                <li><strong>global env:</strong> This represents the robot's environment, which contains the robot's current state and methods for interacting with it. The environment has various "getters" and "setters."</li>
-                <li><strong>action:</strong> A list representing the robot’s movement and steering inputs.</li>
-                <li><strong>sensor_readings:</strong> A dictionary that maps sensor directions to their distance values.</li>
-            </ul>
-        </div> <!-- End of What is Given Section -->
-
-        <div class="divider">
-            <span class="divider-text">Let’s Look at What needs to be Retrieved</span>
-        </div>
-
-        <!-- Section 2: What Needs to be Retrieved -->
-        <div class="module-section" id="retrieve-car">
-            <h3>What Needs to be Retrieved</h3>
-            <ul>
-                <li><strong>forward:</strong> The sensor value representing the distance directly in front of the robot.</li>
-                <li><strong>right:</strong> The sensor value representing the distance to the robot's right.</li>
-                <li><strong>left:</strong> The sensor value representing the distance to the robot's left.</li>
-                <li><strong>greatest_direction:</strong> The direction with the highest sensor value, indicating the most open space.</li>
-            </ul>
-        </div> <!-- End of What Needs to be Retrieved Section -->
-
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_eleven_about') }}" class="secondary-button">Back: About</a>
-            <a href="{{ url_for('module_eleven_code') }}" class="secondary-button">Next: Coding Logic</a>
-        </div>
-
     </div> <!-- End of course-main-content -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSwitch = document.getElementById("toggle-explainer");
+            const notificationBubble = document.getElementById("notification");
+    
+            if (!toggleSwitch || !notificationBubble) {
+                console.warn("Explainer toggle not initialized: elements not found.");
+                return;
+            }
+    
+            setTimeout(() => {
+                notificationBubble.classList.add("fade-out");
+            }, 1000);
+    
+            toggleSwitch.addEventListener("change", function () {
+                if (this.checked) {
+                    notificationBubble.textContent = "Toggle Me Off";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.add("highlight-explain");
+                    });
+                } else {
+                    notificationBubble.textContent = "Toggle Me To Explain Text";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.remove("highlight-explain");
+                    });
+                }
+            });
+        });
+    </script>
+
 </div> <!-- End of course-container -->
 {% endblock %}

@@ -85,8 +85,14 @@
                     <li><a href="#rubber-duck-debugging">Rubber Duck Debugging</a></li>
                 </ul>
             </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course4quiz4') }}" class="course-link">Quiz</a>
+            </li>
             <li class="course-item active">
                 <a href="{{ url_for ('module_four_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_certificate_code') }}" class="course-link">Certificate</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
@@ -120,7 +126,8 @@
 
         <!-- Next Button -->
         <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_four_debugging') }}" class="secondary-button">Back: Debugging Techniques</a> 
+            <a href="{{ url_for('course4quiz4') }}" class="secondary-button">Back: Quiz</a> 
+            <a href="{{ url_for('module_four_certificate_code') }}" class="secondary-button">Next: Certificate</a> 
         </div>
 
     </div> <!-- End of course-main-content -->

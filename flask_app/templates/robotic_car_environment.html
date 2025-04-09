@@ -288,6 +288,15 @@ while True:
             </div>
         </div>
     </div>
+
+    <div id="core-certificate-popup" class="core-cert-popup core-cert-popup-hidden">
+        <button class="core-cert-close" id="core-cert-close-button">&times;</button>
+        <h2 class="core-cert-title">SUCCESS</h2>
+        <p class="core-cert-message">YAY GOOD JOB!</p>
+        <a href="{{ url_for('module_eleven_certificate_car') }}" class="core-cert-button" target="_blank">Get My Certificate</a>
+    </div>
+    
+
 </section>
 
 <!-- CodeMirror and Script Initialization -->
@@ -584,15 +593,29 @@ while True:
         }, 600); 
     });
 
+    // minimizePopup.addEventListener('click', () => {
+    //     popupWindow.classList.add('minimized');
+    //     popupWindow.classList.remove('maximized');
+    //     minimizePopup.style.display = 'none';
+    //     maximizePopup.style.display = 'inline-block';
+
+    //     // popupWindow.style.height = '50%'; 
+    //     // popupWindow.style.bottom = '0';
+    //     popupWindow.style.transform = 'translateY(50%)'; 
+    // });
+
     minimizePopup.addEventListener('click', () => {
+        popupWindow.style.height = 'auto';
+        popupWindow.style.bottom = '0';
+
+        requestAnimationFrame(() => {
+            popupWindow.style.transform = 'translateY(50%)';
+        });
+
         popupWindow.classList.add('minimized');
         popupWindow.classList.remove('maximized');
         minimizePopup.style.display = 'none';
         maximizePopup.style.display = 'inline-block';
-
-        popupWindow.style.height = '50%'; 
-        popupWindow.style.bottom = '0';
-        popupWindow.style.transform = 'translateY(0)'; 
     });
 
     maximizePopup.addEventListener('click', () => {
@@ -751,6 +774,12 @@ while True:
                 secondaryOutputCard.classList.add('success');
                 secondaryOutputCard.innerHTML = `<p>Your code ran successfully 😊</p>`;
                 outputBox.innerHTML += `<p>${data.message}</p>`;
+
+                const certPopup = document.getElementById('core-certificate-popup');
+                if (certPopup) {
+                    certPopup.classList.remove('core-cert-popup-hidden');
+                    certPopup.classList.add('core-cert-popup-visible');
+                }
 
                 if (errorAttempts > 0) {
                     outputBox.innerHTML = '';

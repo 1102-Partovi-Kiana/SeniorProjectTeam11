@@ -739,17 +739,18 @@ closePopup.addEventListener('click', () => {
     }, 600); // Match the transition duration
 });
 
-// Minimize the popup (to the bottom half)
 minimizePopup.addEventListener('click', () => {
-    popupWindow.classList.add('minimized');
-    popupWindow.classList.remove('maximized');
-    minimizePopup.style.display = 'none';
-    maximizePopup.style.display = 'inline-block';
+        popupWindow.style.height = 'auto';
+        popupWindow.style.bottom = '0';
 
-    // Ensure it stays at the bottom and reduces height
-    popupWindow.style.height = '50%'; // Reduce height to half
-    popupWindow.style.bottom = '0'; // Stay anchored at the bottom
-    popupWindow.style.transform = 'translateY(0)'; // No upward movement
+        requestAnimationFrame(() => {
+            popupWindow.style.transform = 'translateY(50%)';
+        });
+
+        popupWindow.classList.add('minimized');
+        popupWindow.classList.remove('maximized');
+        minimizePopup.style.display = 'none';
+        maximizePopup.style.display = 'inline-block';
 });
 
 // Maximize the popup (to the full height)

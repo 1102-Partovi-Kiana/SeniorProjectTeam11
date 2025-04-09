@@ -42,132 +42,189 @@
                 </ul>
             </li>
             <li class="course-item">
+                <a href="{{ url_for ('course9quiz9') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_nine_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_nine_certificate_organize') }}" class="course-link">Certificate</a>
+            </li>
+            <li class="course-item">
                 <a href="{{ url_for ('module_nine_link') }}" class="course-link">Time to Code</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">About the Fetch Organize Robot</h1>
-            <p class="page-description">Learn the purpose of the Fetch Organize Robot.</p>
-        </header>
-
-        <div class="divider">
-            <span class="divider-text">Let's Explore</span>
-        </div>
-
-        <!-- Section 1: Print Statements -->
-        <div class="module-section" id="print-statement">
-            <h3>Fetch Organize Robot</h3>
-            <p>The <strong>Fetch Organize robot</strong> is designed to use what students have previously learned about the robots with the integration of color based organization. The goal of this robot is to identify objects, grasp them, and place them in the correct container.</p>
-        </div>
-
-        <!-- Section 2: Simulation -->
-        <div class="module-section" id="gallery">
-            <h3>Fetch Organize Robot Gallery</h3>
-            <div class="slider-container">
-                <div class="image-slider">
-                    <img src="{{ url_for('static', filename='img/fetchorganizeblue.png') }}" alt="Fetch Organize Robot 1" class="slider-image">
-                    <img src="{{ url_for('static', filename='img/nice.jpg') }}" alt="Fetch Organize Robot 2" class="slider-image">
-                    <img src="{{ url_for('static', filename='img/fetchrobots.webp') }}" alt="Fetch Organize Robot 3" class="slider-image">
-                    <img src="{{ url_for('static', filename='img/fetchb.webp') }}" alt="Fetch Organize Robot 4" class="slider-image">
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
                 </div>
-                <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
-                <button class="next" onclick="moveSlide(1)">&#10095;</button>
+                
+                <h1 class="page-title">About the Fetch Organize Robot</h1>
+                <p class="page-description">Learn the purpose of the Fetch Organize Robot.</p>
+            </header>
+
+            <div class="divider">
+                <span class="divider-text">Let's Explore</span>
             </div>
-            <br>
-            <p>The first image represents the <strong>simulated Fetch Organize robot</strong> in MuJoCo and OpenAI Gym, which you will be programming. This virtual environment allows you to experiment with the robotic and learning the its functionality in a safe and controlled setting.</p>
-            <p>The next three images showcase the <strong>real Fetch Organize robot</strong>, which operates in physical environments using the Robot Operating System (ROS).</p>
-            <div class="reference-section">
-                <h6>References</h6>
-                <p>
-                   <a href="" target="_blank"></a>
-                   <a href="https://tinyurl.com/4v26xmuk" target="_blank">https://tinyurl.com/4v26xmuk</a>
-                   <a href="https://spectrum.ieee.org/fetch-robotics-introduces-fetch-and-freight-your-warehouse-is-now-automated" target="_blank">https://spectrum.ieee.org/fetch-robotics-introduces-fetch-and-freight-your-warehouse-is-now-automated</a>
-                </p>
+
+            <!-- Section 1: Print Statements -->
+            <div class="module-section" id="print-statement">
+                <h3>Fetch Organize Robot</h3>
+                <p>The <strong>Fetch Organize robot</strong> is designed to use what students have previously learned about the robots with the integration of color based organization. The goal of this robot is to identify objects, grasp them, and place them in the correct container.</p>
+            </div>
+
+            <!-- Section 2: Simulation -->
+            <div class="module-section" id="gallery">
+                <h3>Fetch Organize Robot Gallery</h3>
+                <div class="slider-container">
+                    <div class="image-slider">
+                        <img src="{{ url_for('static', filename='img/fetchorganizeblue.png') }}" alt="Fetch Organize Robot 1" class="slider-image">
+                        <img src="{{ url_for('static', filename='img/nice.jpg') }}" alt="Fetch Organize Robot 2" class="slider-image">
+                        <img src="{{ url_for('static', filename='img/fetchrobots.webp') }}" alt="Fetch Organize Robot 3" class="slider-image">
+                        <img src="{{ url_for('static', filename='img/fetchb.webp') }}" alt="Fetch Organize Robot 4" class="slider-image">
+                    </div>
+                    <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+                    <button class="next" onclick="moveSlide(1)">&#10095;</button>
+                </div>
+                <br>
+                <p>The first image represents the <strong>simulated Fetch Organize robot</strong> in MuJoCo and OpenAI Gym, which you will be programming. This virtual environment allows you to experiment with the robotic and learning the its functionality in a safe and controlled setting.</p>
+                <p>The next three images showcase the <strong>real Fetch Organize robot</strong>, which operates in physical environments using the Robot Operating System (ROS).</p>
+                <div class="reference-section">
+                    <h6>References</h6>
+                    <p>
+                    <a href="" target="_blank"></a>
+                    <a href="https://tinyurl.com/4v26xmuk" target="_blank">https://tinyurl.com/4v26xmuk</a>
+                    <a href="https://spectrum.ieee.org/fetch-robotics-introduces-fetch-and-freight-your-warehouse-is-now-automated" target="_blank">https://spectrum.ieee.org/fetch-robotics-introduces-fetch-and-freight-your-warehouse-is-now-automated</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Section 3: Video -->
+            <div class="module-section" id="video">
+                <h3>Fetch Organize Robot Simulation Video</h3>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <video width="560" height="315" controls>
+                        <source src="{{ url_for('static', filename='videos/fetcho.mp4') }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+
+            <!-- Section 4: Simulation vs. Real Fetch Organize Robot -->
+            <div class="module-section" id="sim-v-real">
+                <h3>Simulation vs. Real Fetch Organize Robot</h3>
+                <p>While you’ll be working with the simulated <strong>Fetch Organize robot</strong> in <strong>OpenAI Gym</strong> (an open-source toolkit for training robotic tasks) using <strong>MuJoCo</strong> (a physics engine), a real Fetch Organize robot exists, and the skills you learn here are transferable to real-world applications.</p>
+                <div class="table-responsive">
+                    <table class="table-aesthetic">
+                        <thead>
+                            <tr>
+                                <th>Aspect</th>
+                                <th>Simulated Fetch Organize Robot</th>
+                                <th>Real Fetch Organize Robot</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Physics</td>
+                                <td>Simulated physics engine</td>
+                                <td>Real-world physics (friction, noise, delays)</td>
+                            </tr>
+                            <tr>
+                                <td>Sensor Data</td>
+                                <td>Simulated sensors (perfect readings)</td>
+                                <td>Real sensors (cameras, force sensors, encoders)</td>
+                            </tr>
+                            <tr>
+                                <td>Execution Speed</td>
+                                <td>Instant (fast simulation)</td>
+                                <td>Slower (real motors need time to move)</td>
+                            </tr>
+                            <tr>
+                                <td>Communication</td>
+                                <td>Uses OpenAI Gym API</td>
+                                <td>Uses ROS (Robot Operating System)</td>
+                            </tr>
+                            <tr>
+                                <td>Error Handling</td>
+                                <td>Can reset instantly</td>
+                                <td>Needs safety checks to avoid damage</td>
+                            </tr>
+                            <tr>
+                                <td>Failure Risk</td>
+                                <td>No risk</td>
+                                <td>Hardware can break</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Section 5: Video -->
+            <div class="module-section" id="video-two">
+                <h3>Real Fetch Organize Robot Video</h3>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <iframe width="560" height="315" 
+                        src="https://www.youtube.com/embed/4FTu7fFW6HU" 
+                        frameborder="0" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="reference-section">
+                    <h6>Reference</h6>
+                    <p>
+                    <a href="https://www.youtube.com/watch?v=4FTu7fFW6HU&embeds_referring_euri=http%3A%2F%2F127.0.0.1%3A5000%2F&source_ve_path=MjM4NTE" target="_blank">https://www.youtube.com/watch?v=4FTu7fFW6HU&embeds_referring_euri=http%3A%2F%2F127.0.0.1%3A5000%2F&source_ve_path=MjM4NTE</a>
+                    </p>
+                </div>
+            </div> 
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_nine') }}" class="secondary-button">Back: Learning Objectives</a>
+                <a href="{{ url_for('module_nine_given') }}" class="secondary-button">Next: Robot Environment</a>
             </div>
         </div>
-
-        <!-- Section 3: Video -->
-        <div class="module-section" id="video">
-            <h3>Fetch Organize Robot Simulation Video</h3>
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <video width="560" height="315" controls>
-                    <source src="{{ url_for('static', filename='videos/fetcho.mp4') }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-        </div>
-
-        <!-- Section 4: Simulation vs. Real Fetch Organize Robot -->
-        <div class="module-section" id="sim-v-real">
-            <h3>Simulation vs. Real Fetch Organize Robot</h3>
-            <p>While you’ll be working with the simulated <strong>Fetch Organize robot</strong> in <strong>OpenAI Gym</strong> (an open-source toolkit for training robotic tasks) using <strong>MuJoCo</strong> (a physics engine), a real Fetch Organize robot exists, and the skills you learn here are transferable to real-world applications.</p>
-            <div class="table-responsive">
-                <table class="table-aesthetic">
-                    <thead>
-                        <tr>
-                            <th>Aspect</th>
-                            <th>Simulated Fetch Organize Robot</th>
-                            <th>Real Fetch Organize Robot</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Physics</td>
-                            <td>Simulated physics engine</td>
-                            <td>Real-world physics (friction, noise, delays)</td>
-                        </tr>
-                        <tr>
-                            <td>Sensor Data</td>
-                            <td>Simulated sensors (perfect readings)</td>
-                            <td>Real sensors (cameras, force sensors, encoders)</td>
-                        </tr>
-                        <tr>
-                            <td>Execution Speed</td>
-                            <td>Instant (fast simulation)</td>
-                            <td>Slower (real motors need time to move)</td>
-                        </tr>
-                        <tr>
-                            <td>Communication</td>
-                            <td>Uses OpenAI Gym API</td>
-                            <td>Uses ROS (Robot Operating System)</td>
-                        </tr>
-                        <tr>
-                            <td>Error Handling</td>
-                            <td>Can reset instantly</td>
-                            <td>Needs safety checks to avoid damage</td>
-                        </tr>
-                        <tr>
-                            <td>Failure Risk</td>
-                            <td>No risk</td>
-                            <td>Hardware can break</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Section 5: Video -->
-        <div class="module-section" id="video-two">
-            <h3>Real Fetch Organize Robot Video</h3>
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <iframe width="560" height="315" 
-                    src="https://www.youtube.com/embed/4FTu7fFW6HU" 
-                    frameborder="0" 
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </div> 
-
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_nine') }}" class="secondary-button">Back: Learning Objectives</a>
-            <a href="{{ url_for('module_nine_given') }}" class="secondary-button">Next: Robot Environment</a>
-        </div>
-
     </div> <!-- End of course-main-content -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSwitch = document.getElementById("toggle-explainer");
+            const notificationBubble = document.getElementById("notification");
+    
+            if (!toggleSwitch || !notificationBubble) {
+                console.warn("Explainer toggle not initialized: elements not found.");
+                return;
+            }
+    
+            setTimeout(() => {
+                notificationBubble.classList.add("fade-out");
+            }, 1000);
+    
+            toggleSwitch.addEventListener("change", function () {
+                if (this.checked) {
+                    notificationBubble.textContent = "Toggle Me Off";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.add("highlight-explain");
+                    });
+                } else {
+                    notificationBubble.textContent = "Toggle Me To Explain Text";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.remove("highlight-explain");
+                    });
+                }
+            });
+        });
+    </script>
+
 </div> <!-- End of course-container -->
 {% endblock %}

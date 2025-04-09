@@ -794,14 +794,17 @@ handle_object(env, 'object3', target_color, container_position)  # Handle fourth
     });
 
     minimizePopup.addEventListener('click', () => {
+        popupWindow.style.height = 'auto';
+        popupWindow.style.bottom = '0';
+
+        requestAnimationFrame(() => {
+            popupWindow.style.transform = 'translateY(50%)';
+        });
+
         popupWindow.classList.add('minimized');
         popupWindow.classList.remove('maximized');
         minimizePopup.style.display = 'none';
         maximizePopup.style.display = 'inline-block';
-
-        popupWindow.style.height = '50%'; 
-        popupWindow.style.bottom = '0';
-        popupWindow.style.transform = 'translateY(0)'; 
     });
 
     maximizePopup.addEventListener('click', () => {

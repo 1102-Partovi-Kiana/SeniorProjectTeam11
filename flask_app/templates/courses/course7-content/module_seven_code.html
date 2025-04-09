@@ -51,443 +51,491 @@
                 </ul>
             </li>
             <li class="course-item">
+                <a href="{{ url_for ('course7quiz7') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
                 <a href="{{ url_for ('module_seven_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+             <li class="course-item">
+                <a href="{{ url_for ('module_seven_certificate_pick_and_place') }}" class="course-link">Certificate</a>
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_seven_link') }}" class="course-link">Time to Code</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
-
+    
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Coding the Robot Movement</h1>
-            <p class="page-description">Learn how to implement the logic required to use the Fetch Pick and Place Robot.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Coding the Robot Movement</h1>
+                <p class="page-description">Learn how to implement the logic required to use the Fetch Pick and Place Robot.</p>
+            </header>
 
-        <!-- Word Bank Section -->
-        <div class="word-bank" id="word-bank-fetch-pick-and-place" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
-            <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin: 10px 0;">
-                    <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔧 FetchPickAndPlaceEnv:</strong> The specific environment object for the task setup.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>📏 Distance Threshold:</strong>  Maximum allowable distance between pieces in the environment.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔄 Step Size:</strong> Incremental movement of the gripper.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔐 Close Grip Action:</strong> Array representing the action to close the gripper.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔓 Open Grip Action:</strong> Array representing the action to open the gripper.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>💪 Lift Action:</strong> Array representing small upward movement to lift the gripper while holding an object.
-                </li>
-            </ul>
-        </div>
-
-        <div class="module-section" id="define-constants-and-actions">
-            <h3>Defining Constants & Actions</h3>
-            <p>Before moving the robot, we define some important constants:</p>
-            <ul>
-                <li><strong>distance_threshold</strong>: Determines how close the gripper must be to the object before stopping movement.</li>
-                <li><strong>close_grip_action</strong>: Instructs the gripper to close (-1 value).</li>
-                <li><strong>open_grip_action</strong>: Instructs the gripper to open (+1 value).</li>
-                <li><strong>lift_action</strong>: Moves the gripper slightly upwards (Z-direction).</li>
-            </ul>
-            <pre class="code-snippet"><code>
-distance_threshold = 0.01  
-close_grip_action = np.array([0, 0, 0, -1])  
-open_grip_action = np.array([0, 0, 0, 1])    
-lift_action = np.array([0, 0, 0.1, 0])  
-            </code></pre>
-        </div>
-
-        <div class="module-section" id="get-target-position">
-            <h3>Getting the Target Position</h3>
-            <p>Get the position of the ball (named <code>target0</code>) using the <code>env.sim.data.get_site_xpos('target0')</code></p>
-        </div>
-
-        <div class="module-section" id="open-the-gripper">
-            <h3>Open the Gripper</h3>
-            <p>The gripper must be in the open position, allowing it to grab the box. Send an action command to the robot to spread the gripper fingers apart.</p> 
-            <code>env.step(open_grip_action)</code>  
-        </div> 
-
-        <div class="module-section" id="move-gripper">
-            <h3>Move the Gripper Horizontally Towards the Object</h3>
-            <p>Since we don’t know exactly how many steps it will take for the gripper to reach the box, we use a <code>while</code> loop instead of a <code>for</code> loop. This loop continues running as long as the gripper is still far from the object.</p>
-
-    <h4>What needs to happen inside the infinite while loop?</h4>
-    <p>Each iteration of the loop should do the following:</p>
-
-    <ol class="custom-list">
-        <li><strong>Get the Object Position(<code>object0</code>) and the Gripper Position(<code>robot0:grip</code>):</strong>  
-            <ul>
-                <li><code>object_position = env.sim.data.get_site_xpos('object0')</code></li>
-                <li><code>gripper_position = env.sim.data.get_site_xpos('robot0:grip')</code></li>
-            </ul> 
-        </li>
-
-        <li><strong>Compute the Horizontal Distance:</strong>  
-            <ul>
-                <li>The gripper moves only in the X and Y directions (no vertical movement yet).</li>
-                <li>We need to subtract the gripper position from the object position to know the distance to move.</li>
-                <li>We compare this distance to the threshold to decide if we should continue moving.</li>
-            </ul> 
-
-            <div class="indented-block">
-                <h5>Distance Calculation:</h5>
-                <pre class="code-snippet"><code>
-horizontal_distance = np.array(object_position[:2]) - np.array(gripper_position[:2])
-                </code></pre>
+            <!-- Word Bank Section -->
+            <div class="word-bank" id="word-bank-fetch-pick-and-place" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
+                <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 10px 0;">
+                        <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔧 FetchPickAndPlaceEnv:</strong> The specific environment object for the task setup.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>📏 Distance Threshold:</strong>  Maximum allowable distance between pieces in the environment.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔄 Step Size:</strong> Incremental movement of the gripper.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔐 Close Grip Action:</strong> Array representing the action to close the gripper.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔓 Open Grip Action:</strong> Array representing the action to open the gripper.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>💪 Lift Action:</strong> Array representing small upward movement to lift the gripper while holding an object.
+                    </li>
+                </ul>
             </div>
-        </li>
 
-        <li><strong>Compute the Magnitude of the Horizontal Distance:</strong>  
-            <ul>
-                <li>The horizontal distance is calculated using the Euclidean norm excluding the Z-axis.</li>
-                <li>We compute the euclidean norm of the horizontal distance to retrieve its scalar value to use later to compare to another scalar value.</li>
-                <li>We compare this distance to the threshold to decide if we should continue moving.</li>
-            </ul> 
-
-            <div class="indented-block">
-                <h5>Distance Calculation:</h5>
-                <pre class="code-snippet"><code>
-horizontal_distance_magnitude = np.linalg.norm(horizontal_distance)
-                </code></pre>
-            </div>
-        </li>
-
-        <li><strong>Check the Stopping Condition:</strong>  
-            <ul>
-                <li>If the euclidean norm of the horizontal distance is less than or equal to the threshold, the gripper is close enough, and we stop moving.</li>
-            </ul>
-
-            <div class="indented-block">
-                <h5>Stopping Condition:</h5>
-                <pre class="code-snippet"><code>
-if horizontal_distance_magnitude <= distance_threshold:
-    break  # Stop when the gripper is close enough to the object
-                </code></pre>
-            </div>
-        </li>
-
-        <li><strong>Normalize(Get the Unit Vector) of the Horizontal Distance:</strong>  
-            <ul>
-                <li>Since the direction vector could have any magnitude, we <strong>normalize</strong> it.</li>
-                <li>Normalization ensures the gripper moves at a constant speed, regardless of distance.</li>
-            </ul>
-
-            <div class="indented-block">
-                <h5>Normalization:</h5>
-                <pre class="code-snippet"><code>
-horizontal_distance_normalized =  horizontal_distance / (horizontal_distance_magnitude + 1e-8)
-                </code></pre>
-            </div>
-        </li>
-
-        <li><strong>Compute the Movement Action:</strong>  
-            <ul>
-                <li>The gripper needs to move only in X and Y.</li>
-                <li>We scale the normalized direction by a step size (0.1 in this case).</li>
-            </ul>
-
-            <div class="indented-block">
-                <h5>Action Calculation:</h5>
-                <pre class="code-snippet"><code>
-horizontal_action = np.array([
-horizontal_distance_normalized[0] * 0.1,  # Move in X direction
-horizontal_distance_normalized[1] * 0.1,  # Move in Y direction
-    0,  # No vertical movement in the z-direction
-    0   # No change in gripper state
-])
-                </code></pre>
-            </div>
-        </li>
-
-        <li><strong>Take a Step in the Environment:</strong>  
-            <ul>
-                <li>Apply the define calculation action to the environment so the gripper moves.</li>
-            </ul>
-            <div class="indented-block">
-                <h5>Move the Gripper:</h5>
-                <pre class="code-snippet"><code>
-env.step(horizontal_action)
-                </code></pre>
-            </div>
-        </li>
-    </ol>
-
-    <h4>Example Breakdown:</h4>
-    <p>Let's assume:</p>
-    <ul>
-        <li>The gripper starts at (0,0,0).</li>
-        <li>The box is at (3,4,0).</li>
-    </ul>
-
-    <pre class="code-snippet"><code>
-# Step 1: Compute the horizontal distance between the object and the gripper
-# Example: object_position = [7, 10], gripper_position = [4,6]
-# horizontal_distance = [7 - 4, 10 - 6] = [3, 4]
-
-# Step 2: Compute the magnitude (length) of the horizontal distance vector
-# Example: horizontal_distance_magnitude = np.linalg.norm(horizontal_distance)  
-# sqrt(3^2 + 4^2) = sqrt(9 + 16) = sqrt(25) = 5
-# horizontal_distance_magnitude = 5
-
-# Step 3: Normalize the horizontal distance to obtain a unit direction vector
-# Exmaple: horizontal_distance_normalized = horizontal_distance / (horizontal_distance_magnitude + 1e-8)
-# Example Output: If horizontal_distance = [3, 4], and horizontal_distance_magnitude = 5
-# horizontal_distance_normalized = [3/5, 4/5] = [0.6, 0.8]
-    </code></pre>
-
-    <p><strong>Now, try writing out the full loop logic based on these concepts!</strong> What would the stopping condition look like? How would you integrate these steps?</p>
-            
-        </div>
-
-        <div class="module-section" id="lower-gripper">
-            <h3>Lower the Gripper to Grasp the Object</h3>
-            <p>Once horizontally aligned, the gripper needs to move downward (in the Z direction) until it is at the correct height to grasp the box. This ensures that the gripper can securely hold the object.</p>   
-            <p>Now that the gripper is horizontally aligned with the box, it needs to move downward along the Z-axis until it reaches the object's surface. Since we don’t know exactly how many steps this will take, we use an infinite <code>while</code> loop again.</p>
-
-    <h4>What needs to happen inside the loop?</h4>
-    <p>Each iteration of the loop should do the following:</p>
-
-    <ol class="custom-list">
-        <li><strong>Retrieve the Positions:</strong>  
-            <ul>
-                <li>First, get the current positions of both the box and the gripper like we have done before.</li>
-            </ul>
-        </li>
-
-        <li><strong>Compute the Vertical Distance:</strong>  
-            <ul>
-                <li>Since we are only moving downward, we only compare the Z-axis values.</li>
-                <li>The difference between the box's height and the gripper's height gives us the vertical distance that needs to be covered.</li>
-            </ul>
-
-            <div class="indented-block">
-                <h5>Distance Calculation:</h5>
-                <pre class="code-snippet"><code>
-vertical_distance = box_position[2] - gripper_position[2]
-                </code></pre>
-            </div>
-        </li>
-
-        <li><strong>Check the Stopping Condition:</strong>  
-            <ul>
-                <li>We compare the absolute value of the vertical distance to the threshold.</li>
-                <li>If the distance is small enough, the gripper is close enough, and we stop moving.</li>
-            </ul>
-
-            <div class="indented-block">
-                <h5>Stopping Condition:</h5>
-                <pre class="code-snippet"><code>
-if abs(vertical_distance) <= distance_threshold:
-    break  # Stop when the gripper is close enough in the Z-axis
-                </code></pre>
-            </div>
-        </li>
-
-        <li><strong>Compute the Descend Action:</strong>  
-            <ul>
-                <li>The gripper needs to move only downward (Z direction).</li>
-                <li>The movement step size is scale by a factor of 0.1 to ensure smooth descent.</li>
-                <li>No movement occurs in the X or Y directions.</li>
-            </ul>
-
-            <div class="indented-block">
-                <h5>Action Calculation:</h5>
-                <pre class="code-snippet"><code>
-descend_action = np.array([0, 0, vertical_distance * 0.1, 0])
-                </code></pre>
-            </div>
-        </li>
-
-        <li><strong>Take a Step in the Environment:</strong>  
-            <ul>
-                <li>Apply the computed <strong>descend action</strong> to move the gripper downward.</li>
-            </ul>
-        </li>
-    </ol>
-
-    <h4>Example Breakdown:</h4>
-    <p>Let's assume:</p>
-    <ul>
-        <li>The gripper starts at Z = 0.5.</li>
-        <li>The box is at Z = 0.2.</li>
-    </ul>
-
-    <pre class="code-snippet"><code>
-# Current positions
-box_position = [0.1, 0.3, 0.2]
-gripper_position = [0.1, 0.3, 0.5]
-
-# Vertical distance calculation
-vertical_distance = 0.2 - 0.5  # -0.3 (negative since we move downward)
-
-# Stopping condition check
-if abs(-0.3) <= 0.01:
-    break  # Stop moving
-
-# Scale movement for smooth descent
-descend_action = np.array([0, 0, -0.3 * 0.1, 0])  # [0, 0, -0.03, 0]
-    </code></pre>
-
-    <p><strong>Now, try writing out the full loop logic based on these concepts!</strong> What would the stopping condition look like? How would you integrate these steps?</p>
-        </div>
-
-        <div class="module-section" id="close-gripper">
-            <h3>Close the Gripper Around the Object</h3>
-            <p>After reaching the object, send a command to close the gripper. This action should securely hold the object in place.</p>   
-        </div>
-
-        <div class="module-section" id="pause-gripper">
-            <h3>Pause to Stabilize the Grasp</h3>
-            <p>Allow the robot to hold the object for a brief moment to ensure it is stable and the grasp is firm. This avoids any unintended movements while lifting or moving the box.</p>   
-            <p>Pause for 10 steps to let the gripping action stabilize, as you want to wait before moving</p>
-            <pre class="code-snippet"><code>
-for _ in range(10):
-env.step(np.array([0, 0, 0, 0]))
-            </code></pre>
-        </div>
-
-        <div class="module-section" id="move-gripper-part-two">
-            <h3>Move the Gripper and Object Towards the Ball</h3>
-            <p> Calculate the direction from the object’s current position to the target ball position. Then, move the gripper (and the object it is holding) in small steps towards the ball. The movement should continue until the object is close enough to the ball, as defined by a specified distance threshold.</p>   
-            <p>Now that the gripper is holding the object, it must <strong>move toward the ball</strong>. We use a <code>for</code> loop to ensure movement occurs in controlled steps. The loop stops when the object reaches the target location (ball) or if the maximum step count is reached.</p>
-
-    <h4>What needs to happen inside the loop?</h4>
-    <p>Each iteration of the loop should do the following:</p>
-
-    <ol class="custom-list">
-        <li><strong>Retrieve Positions:</strong>  
-            <ul>
-                <li>Get the <strong>current gripper position</strong>.</li>
-                <li>Get the <strong>current box position</strong>.</li>
-            </ul>
-        </li>
-
-        <li><strong>Keep the Object Gripped:</strong>  
-            <ul>
-                <li>The gripper must <strong>continuously hold the box</strong> while moving.</li>
-                <li>This is done by applying the <strong>close grip action</strong>.</li>
-            </ul>
-
-            <div class="indented-block">
-                <h5>Maintain Grip:</h5>
-                <pre class="code-snippet"><code>
-env.step(close_grip_action)  # Keep gripping
-                </code></pre>
-            </div>
-        </li>
-
-        <li><strong>Measure Distances:</strong>  
-            <ul>
-                <li>Calculate the distance from the <strong>gripper + object to the ball</strong>.</li>
-                <li>We check <strong>gripper+object-to-ball distance</strong> because the goal is to move the box, not just the gripper.</li>
-            </ul>
-
-            <div class="indented-block">
-                <h5> 3D Distance Calculation:</h5>
-                <pre class="code-snippet"><code>
-distance_from_object_to_ball = np.array(ball_position) - np.array(object_position)
-                </code></pre>
-            </div>
-        </li>
-
-        <li><strong>Calculate the Euclidean Norm of the Distance:</strong> 
-            <ul>
-                <li>We have done this before.</li>
-                <li>Remeber to use np.linalg.norm()</li>
-            </ul> 
-        </li>
-
-        <li><strong>Check the Stopping Condition:</strong>  
-            <ul>
-                <li>Once the <strong>box is close enough</strong> to the ball (below the threshold), stop the movement.</li>
-            </ul>
-        </li>
-
-        <li><strong>Compute the Movement Direction:</strong>  
-            <ul>
-                <li>Find the direction from the gripper to the ball.</li>
-                <li>Normalize this vector to ensure controlled movement.</li>
-            </ul>
-
-            <div class="indented-block">
-                <h5>Normalize Direction:</h5>
-                <pre class="code-snippet"><code>
-distance_from_object_to_ball_normalized = distance_from_object_to_ball / (distance_from_object_to_ball_magnitude + 1e-8)
-                </code></pre>
-            </div>
-        </li>
-
-        <li><strong>Compute the Movement Action:</strong>  
-            <ul>
-                <li>The robot moves toward the ball by <strong>scaling the movement direction</strong>.</li>
-                <li>The movement occurs in all three axes (X, Y, Z) to reach the target smoothly.</li>
-            </ul>
-
-            <div class="indented-block">
-                <h5>Action Calculation:</h5>
-                <pre class="code-snippet"><code>
-move_to_ball_action = np.array([
-    distance_from_object_to_ball_normalized[0] * 0.3, # Move in x-direction
-    distance_from_object_to_ball_normalized[1] * 0.3, # Move in y-direction
-    distance_from_object_to_ball_normalized[2] * 0.3, # Move in z-direction
-    0 # Keep gripper closed
-])
-                </code></pre>
-            </div>
-        </li>
-
-        <li><strong>Move the Gripper and Box:</strong>  
-            <ul>
-                <li>Apply <strong>two actions</strong> in the environment:</li>
+            <div class="module-section" id="define-constants-and-actions">
+                <h3>Defining Constants & Actions</h3>
+                <p>Before moving the robot, we define some important constants:</p>
                 <ul>
-                    <li>First, keep gripping to prevent the box from falling by applying the close grip action to the enviornment.</li>
-                    <li>Then, move the gripper + object toward the ball using the new move_to_ball_action we have calculated.</li>
+                    <li><strong>distance_threshold</strong>: Determines how close the gripper must be to the object before stopping movement.</li>
+                    <li><strong>close_grip_action</strong>: Instructs the gripper to close (-1 value).</li>
+                    <li><strong>open_grip_action</strong>: Instructs the gripper to open (+1 value).</li>
+                    <li><strong>lift_action</strong>: Moves the gripper slightly upwards (Z-direction).</li>
                 </ul>
-            </ul>
-        </li>
-    </ol>
+                <pre class="code-snippet"><code>
+    distance_threshold = 0.01  
+    close_grip_action = np.array([0, 0, 0, -1])  
+    open_grip_action = np.array([0, 0, 0, 1])    
+    lift_action = np.array([0, 0, 0.1, 0])  
+                </code></pre>
+            </div>
 
-    <p><strong>Now, try writing out the full loop logic based on these concepts!</strong> What would the stopping condition look like? How would you integrate these steps?</p>
-        
-        </div>
+            <div class="module-section" id="get-target-position">
+                <h3>Getting the Target Position</h3>
+                <p>Get the position of the ball (named <code>target0</code>) using the <code>env.sim.data.get_site_xpos('target0')</code></p>
+            </div>
 
-        <div class="module-section" id="key-takeaways">
-            <h3>Key Takeaways</h3>
-                <ul class="custom-list">
-                    <li>🛠️ Define constants like `distance_threshold`, `close_grip_action`, and `lift_action` to control gripper behavior.</li>
-                    <li>📍 Use `env.sim.data.get_site_xpos('object0')` & `env.sim.data.get_site_xpos('robot0:grip')` to track the box and gripper positions.</li>
-                    <li>🚀 Move the gripper <strong>horizontally</strong> first using a `while` loop until the horizontal distance is below `distance_threshold`.</li>
-                    <li>📐 Compute the direction vector as <code>direction = box_position - gripper_position</code> and normalize it before moving.</li>
-                    <li>⬇️ Lower the gripper <strong>in the Z direction</strong> until it's close enough to grasp the box.</li>
-                    <li>✊ Close the gripper with <code>env.step(close_grip_action)</code> and pause for 10 steps to stabilize the grip.</li>
-                    <li>🎯 Move the gripper (holding the box) towards the target location (ball) using a `for` loop.</li>
-                    <li>🛑 Stop movement when the <strong>object is close enough</strong> to the target, ensuring smooth and controlled actions.</li>
-                    <li>🏆 Success! The box reaches the target when <code>np.linalg.norm(box_position - ball_position) &lt; box_to_ball_threshold</code>.</li>
+            <div class="module-section" id="open-the-gripper">
+                <h3>Open the Gripper</h3>
+                <p>The gripper must be in the open position, allowing it to grab the box. Send an action command to the robot to spread the gripper fingers apart.</p> 
+                <code>env.step(open_grip_action)</code>  
+            </div> 
+
+            <div class="module-section" id="move-gripper">
+                <h3>Move the Gripper Horizontally Towards the Object</h3>
+                <p>Since we don’t know exactly how many steps it will take for the gripper to reach the box, we use a <code>while</code> loop instead of a <code>for</code> loop. This loop continues running as long as the gripper is still far from the object.</p>
+
+        <h4>What needs to happen inside the infinite while loop?</h4>
+        <p>Each iteration of the loop should do the following:</p>
+
+        <ol class="custom-list">
+            <li><strong>Get the Object Position(<code>object0</code>) and the Gripper Position(<code>robot0:grip</code>):</strong>  
+                <ul>
+                    <li><code>object_position = env.sim.data.get_site_xpos('object0')</code></li>
+                    <li><code>gripper_position = env.sim.data.get_site_xpos('robot0:grip')</code></li>
+                </ul> 
+            </li>
+
+            <li><strong>Compute the Horizontal Distance:</strong>  
+                <ul>
+                    <li>The gripper moves only in the X and Y directions (no vertical movement yet).</li>
+                    <li>We need to subtract the gripper position from the object position to know the distance to move.</li>
+                    <li>We compare this distance to the threshold to decide if we should continue moving.</li>
+                </ul> 
+
+                <div class="indented-block">
+                    <h5>Distance Calculation:</h5>
+                    <pre class="code-snippet"><code>
+    horizontal_distance = np.array(object_position[:2]) - np.array(gripper_position[:2])
+                    </code></pre>
+                </div>
+            </li>
+
+            <li><strong>Compute the Magnitude of the Horizontal Distance:</strong>  
+                <ul>
+                    <li>The horizontal distance is calculated using the Euclidean norm excluding the Z-axis.</li>
+                    <li>We compute the euclidean norm of the horizontal distance to retrieve its scalar value to use later to compare to another scalar value.</li>
+                    <li>We compare this distance to the threshold to decide if we should continue moving.</li>
+                </ul> 
+
+                <div class="indented-block">
+                    <h5>Distance Calculation:</h5>
+                    <pre class="code-snippet"><code>
+    horizontal_distance_magnitude = np.linalg.norm(horizontal_distance)
+                    </code></pre>
+                </div>
+            </li>
+
+            <li><strong>Check the Stopping Condition:</strong>  
+                <ul>
+                    <li>If the euclidean norm of the horizontal distance is less than or equal to the threshold, the gripper is close enough, and we stop moving.</li>
                 </ul>
-        </div>
 
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_seven_given') }}" class="secondary-button">Back: Environment</a>
-            <a href="{{ url_for('module_seven_download') }}" class="secondary-button">Next: Cheat Sheet</a>
-        </div>
+                <div class="indented-block">
+                    <h5>Stopping Condition:</h5>
+                    <pre class="code-snippet"><code>
+    if horizontal_distance_magnitude <= distance_threshold:
+        break  # Stop when the gripper is close enough to the object
+                    </code></pre>
+                </div>
+            </li>
 
+            <li><strong>Normalize(Get the Unit Vector) of the Horizontal Distance:</strong>  
+                <ul>
+                    <li>Since the direction vector could have any magnitude, we <strong>normalize</strong> it.</li>
+                    <li>Normalization ensures the gripper moves at a constant speed, regardless of distance.</li>
+                </ul>
+
+                <div class="indented-block">
+                    <h5>Normalization:</h5>
+                    <pre class="code-snippet"><code>
+    horizontal_distance_normalized =  horizontal_distance / (horizontal_distance_magnitude + 1e-8)
+                    </code></pre>
+                </div>
+            </li>
+
+            <li><strong>Compute the Movement Action:</strong>  
+                <ul>
+                    <li>The gripper needs to move only in X and Y.</li>
+                    <li>We scale the normalized direction by a step size (0.1 in this case).</li>
+                </ul>
+
+                <div class="indented-block">
+                    <h5>Action Calculation:</h5>
+                    <pre class="code-snippet"><code>
+    horizontal_action = np.array([
+    horizontal_distance_normalized[0] * 0.1,  # Move in X direction
+    horizontal_distance_normalized[1] * 0.1,  # Move in Y direction
+        0,  # No vertical movement in the z-direction
+        0   # No change in gripper state
+    ])
+                    </code></pre>
+                </div>
+            </li>
+
+            <li><strong>Take a Step in the Environment:</strong>  
+                <ul>
+                    <li>Apply the define calculation action to the environment so the gripper moves.</li>
+                </ul>
+                <div class="indented-block">
+                    <h5>Move the Gripper:</h5>
+                    <pre class="code-snippet"><code>
+    env.step(horizontal_action)
+                    </code></pre>
+                </div>
+            </li>
+        </ol>
+
+        <h4>Example Breakdown:</h4>
+        <p>Let's assume:</p>
+        <ul>
+            <li>The gripper starts at (0,0,0).</li>
+            <li>The box is at (3,4,0).</li>
+        </ul>
+
+        <pre class="code-snippet"><code>
+    # Step 1: Compute the horizontal distance between the object and the gripper
+    # Example: object_position = [7, 10], gripper_position = [4,6]
+    # horizontal_distance = [7 - 4, 10 - 6] = [3, 4]
+
+    # Step 2: Compute the magnitude (length) of the horizontal distance vector
+    # Example: horizontal_distance_magnitude = np.linalg.norm(horizontal_distance)  
+    # sqrt(3^2 + 4^2) = sqrt(9 + 16) = sqrt(25) = 5
+    # horizontal_distance_magnitude = 5
+
+    # Step 3: Normalize the horizontal distance to obtain a unit direction vector
+    # Exmaple: horizontal_distance_normalized = horizontal_distance / (horizontal_distance_magnitude + 1e-8)
+    # Example Output: If horizontal_distance = [3, 4], and horizontal_distance_magnitude = 5
+    # horizontal_distance_normalized = [3/5, 4/5] = [0.6, 0.8]
+        </code></pre>
+
+        <p><strong>Now, try writing out the full loop logic based on these concepts!</strong> What would the stopping condition look like? How would you integrate these steps?</p>
+                
+            </div>
+
+            <div class="module-section" id="lower-gripper">
+                <h3>Lower the Gripper to Grasp the Object</h3>
+                <p>Once horizontally aligned, the gripper needs to move downward (in the Z direction) until it is at the correct height to grasp the box. This ensures that the gripper can securely hold the object.</p>   
+                <p>Now that the gripper is horizontally aligned with the box, it needs to move downward along the Z-axis until it reaches the object's surface. Since we don’t know exactly how many steps this will take, we use an infinite <code>while</code> loop again.</p>
+
+        <h4>What needs to happen inside the loop?</h4>
+        <p>Each iteration of the loop should do the following:</p>
+
+        <ol class="custom-list">
+            <li><strong>Retrieve the Positions:</strong>  
+                <ul>
+                    <li>First, get the current positions of both the box and the gripper like we have done before.</li>
+                </ul>
+            </li>
+
+            <li><strong>Compute the Vertical Distance:</strong>  
+                <ul>
+                    <li>Since we are only moving downward, we only compare the Z-axis values.</li>
+                    <li>The difference between the box's height and the gripper's height gives us the vertical distance that needs to be covered.</li>
+                </ul>
+
+                <div class="indented-block">
+                    <h5>Distance Calculation:</h5>
+                    <pre class="code-snippet"><code>
+    vertical_distance = box_position[2] - gripper_position[2]
+                    </code></pre>
+                </div>
+            </li>
+
+            <li><strong>Check the Stopping Condition:</strong>  
+                <ul>
+                    <li>We compare the absolute value of the vertical distance to the threshold.</li>
+                    <li>If the distance is small enough, the gripper is close enough, and we stop moving.</li>
+                </ul>
+
+                <div class="indented-block">
+                    <h5>Stopping Condition:</h5>
+                    <pre class="code-snippet"><code>
+    if abs(vertical_distance) <= distance_threshold:
+        break  # Stop when the gripper is close enough in the Z-axis
+                    </code></pre>
+                </div>
+            </li>
+
+            <li><strong>Compute the Descend Action:</strong>  
+                <ul>
+                    <li>The gripper needs to move only downward (Z direction).</li>
+                    <li>The movement step size is scale by a factor of 0.1 to ensure smooth descent.</li>
+                    <li>No movement occurs in the X or Y directions.</li>
+                </ul>
+
+                <div class="indented-block">
+                    <h5>Action Calculation:</h5>
+                    <pre class="code-snippet"><code>
+    descend_action = np.array([0, 0, vertical_distance * 0.1, 0])
+                    </code></pre>
+                </div>
+            </li>
+
+            <li><strong>Take a Step in the Environment:</strong>  
+                <ul>
+                    <li>Apply the computed <strong>descend action</strong> to move the gripper downward.</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h4>Example Breakdown:</h4>
+        <p>Let's assume:</p>
+        <ul>
+            <li>The gripper starts at Z = 0.5.</li>
+            <li>The box is at Z = 0.2.</li>
+        </ul>
+
+        <pre class="code-snippet"><code>
+    # Current positions
+    box_position = [0.1, 0.3, 0.2]
+    gripper_position = [0.1, 0.3, 0.5]
+
+    # Vertical distance calculation
+    vertical_distance = 0.2 - 0.5  # -0.3 (negative since we move downward)
+
+    # Stopping condition check
+    if abs(-0.3) <= 0.01:
+        break  # Stop moving
+
+    # Scale movement for smooth descent
+    descend_action = np.array([0, 0, -0.3 * 0.1, 0])  # [0, 0, -0.03, 0]
+        </code></pre>
+
+        <p><strong>Now, try writing out the full loop logic based on these concepts!</strong> What would the stopping condition look like? How would you integrate these steps?</p>
+            </div>
+
+            <div class="module-section" id="close-gripper">
+                <h3>Close the Gripper Around the Object</h3>
+                <p>After reaching the object, send a command to close the gripper. This action should securely hold the object in place.</p>   
+            </div>
+
+            <div class="module-section" id="pause-gripper">
+                <h3>Pause to Stabilize the Grasp</h3>
+                <p>Allow the robot to hold the object for a brief moment to ensure it is stable and the grasp is firm. This avoids any unintended movements while lifting or moving the box.</p>   
+                <p>Pause for 10 steps to let the gripping action stabilize, as you want to wait before moving</p>
+                <pre class="code-snippet"><code>
+    for _ in range(10):
+    env.step(np.array([0, 0, 0, 0]))
+                </code></pre>
+            </div>
+
+            <div class="module-section" id="move-gripper-part-two">
+                <h3>Move the Gripper and Object Towards the Ball</h3>
+                <p> Calculate the direction from the object’s current position to the target ball position. Then, move the gripper (and the object it is holding) in small steps towards the ball. The movement should continue until the object is close enough to the ball, as defined by a specified distance threshold.</p>   
+                <p>Now that the gripper is holding the object, it must <strong>move toward the ball</strong>. We use a <code>for</code> loop to ensure movement occurs in controlled steps. The loop stops when the object reaches the target location (ball) or if the maximum step count is reached.</p>
+
+        <h4>What needs to happen inside the loop?</h4>
+        <p>Each iteration of the loop should do the following:</p>
+
+        <ol class="custom-list">
+            <li><strong>Retrieve Positions:</strong>  
+                <ul>
+                    <li>Get the <strong>current gripper position</strong>.</li>
+                    <li>Get the <strong>current box position</strong>.</li>
+                </ul>
+            </li>
+
+            <li><strong>Keep the Object Gripped:</strong>  
+                <ul>
+                    <li>The gripper must <strong>continuously hold the box</strong> while moving.</li>
+                    <li>This is done by applying the <strong>close grip action</strong>.</li>
+                </ul>
+
+                <div class="indented-block">
+                    <h5>Maintain Grip:</h5>
+                    <pre class="code-snippet"><code>
+    env.step(close_grip_action)  # Keep gripping
+                    </code></pre>
+                </div>
+            </li>
+
+            <li><strong>Measure Distances:</strong>  
+                <ul>
+                    <li>Calculate the distance from the <strong>gripper + object to the ball</strong>.</li>
+                    <li>We check <strong>gripper+object-to-ball distance</strong> because the goal is to move the box, not just the gripper.</li>
+                </ul>
+
+                <div class="indented-block">
+                    <h5> 3D Distance Calculation:</h5>
+                    <pre class="code-snippet"><code>
+    distance_from_object_to_ball = np.array(ball_position) - np.array(object_position)
+                    </code></pre>
+                </div>
+            </li>
+
+            <li><strong>Calculate the Euclidean Norm of the Distance:</strong> 
+                <ul>
+                    <li>We have done this before.</li>
+                    <li>Remeber to use np.linalg.norm()</li>
+                </ul> 
+            </li>
+
+            <li><strong>Check the Stopping Condition:</strong>  
+                <ul>
+                    <li>Once the <strong>box is close enough</strong> to the ball (below the threshold), stop the movement.</li>
+                </ul>
+            </li>
+
+            <li><strong>Compute the Movement Direction:</strong>  
+                <ul>
+                    <li>Find the direction from the gripper to the ball.</li>
+                    <li>Normalize this vector to ensure controlled movement.</li>
+                </ul>
+
+                <div class="indented-block">
+                    <h5>Normalize Direction:</h5>
+                    <pre class="code-snippet"><code>
+    distance_from_object_to_ball_normalized = distance_from_object_to_ball / (distance_from_object_to_ball_magnitude + 1e-8)
+                    </code></pre>
+                </div>
+            </li>
+
+            <li><strong>Compute the Movement Action:</strong>  
+                <ul>
+                    <li>The robot moves toward the ball by <strong>scaling the movement direction</strong>.</li>
+                    <li>The movement occurs in all three axes (X, Y, Z) to reach the target smoothly.</li>
+                </ul>
+
+                <div class="indented-block">
+                    <h5>Action Calculation:</h5>
+                    <pre class="code-snippet"><code>
+    move_to_ball_action = np.array([
+        distance_from_object_to_ball_normalized[0] * 0.3, # Move in x-direction
+        distance_from_object_to_ball_normalized[1] * 0.3, # Move in y-direction
+        distance_from_object_to_ball_normalized[2] * 0.3, # Move in z-direction
+        0 # Keep gripper closed
+    ])
+                    </code></pre>
+                </div>
+            </li>
+
+            <li><strong>Move the Gripper and Box:</strong>  
+                <ul>
+                    <li>Apply <strong>two actions</strong> in the environment:</li>
+                    <ul>
+                        <li>First, keep gripping to prevent the box from falling by applying the close grip action to the enviornment.</li>
+                        <li>Then, move the gripper + object toward the ball using the new move_to_ball_action we have calculated.</li>
+                    </ul>
+                </ul>
+            </li>
+        </ol>
+
+        <p><strong>Now, try writing out the full loop logic based on these concepts!</strong> What would the stopping condition look like? How would you integrate these steps?</p>
+            
+            </div>
+
+            <div class="module-section" id="key-takeaways">
+                <h3>Key Takeaways</h3>
+                    <ul class="custom-list">
+                        <li>🛠️ Define constants like `distance_threshold`, `close_grip_action`, and `lift_action` to control gripper behavior.</li>
+                        <li>📍 Use `env.sim.data.get_site_xpos('object0')` & `env.sim.data.get_site_xpos('robot0:grip')` to track the box and gripper positions.</li>
+                        <li>🚀 Move the gripper <strong>horizontally</strong> first using a `while` loop until the horizontal distance is below `distance_threshold`.</li>
+                        <li>📐 Compute the direction vector as <code>direction = box_position - gripper_position</code> and normalize it before moving.</li>
+                        <li>⬇️ Lower the gripper <strong>in the Z direction</strong> until it's close enough to grasp the box.</li>
+                        <li>✊ Close the gripper with <code>env.step(close_grip_action)</code> and pause for 10 steps to stabilize the grip.</li>
+                        <li>🎯 Move the gripper (holding the box) towards the target location (ball) using a `for` loop.</li>
+                        <li>🛑 Stop movement when the <strong>object is close enough</strong> to the target, ensuring smooth and controlled actions.</li>
+                        <li>🏆 Success! The box reaches the target when <code>np.linalg.norm(box_position - ball_position) &lt; box_to_ball_threshold</code>.</li>
+                    </ul>
+            </div>
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_seven_given') }}" class="secondary-button">Back: Environment</a>
+                <a href="{{ url_for('course7quiz7') }}" class="secondary-button">Next: Quiz</a>
+            </div>
+        </div>
     </div> <!-- End of course-main-content -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSwitch = document.getElementById("toggle-explainer");
+            const notificationBubble = document.getElementById("notification");
+    
+            // If either element isn't found, stop the script
+            if (!toggleSwitch || !notificationBubble) {
+                console.warn("Explainer toggle not initialized: elements not found.");
+                return;
+            }
+    
+            setTimeout(() => {
+                notificationBubble.classList.add("fade-out");
+            }, 1000);
+    
+            toggleSwitch.addEventListener("change", function () {
+                if (this.checked) {
+                    notificationBubble.textContent = "Toggle Me Off";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.add("highlight-explain");
+                    });
+                } else {
+                    notificationBubble.textContent = "Toggle Me To Explain Text";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.remove("highlight-explain");
+                    });
+                }
+            });
+        });
+    </script>
+
 </div> <!-- End of course-container -->
 {% endblock %}

@@ -32,7 +32,15 @@ from PIL import Image, ImageDraw, ImageFont
 import io
 from reportlab.pdfgen import canvas
 from quiz.course1_quiz1 import quiz_data as quiz
-
+from quiz.course1_quiz1_2 import quiz_data as quiz
+from quiz.course3_quiz3 import quiz_data as quiz
+from quiz.course4_quiz4 import quiz_data as quiz
+from quiz.course6_quiz6 import quiz_data as quiz
+from quiz.course7_quiz7 import quiz_data as quiz
+from quiz.course8_quiz8 import quiz_data as quiz
+from quiz.course9_quiz9 import quiz_data as quiz
+from quiz.course10_quiz10 import quiz_data as quiz
+from quiz.course11_quiz11 import quiz_data as quiz
 
 app = Flask(__name__, static_folder='static')
 app.config.from_object(Config)
@@ -2309,23 +2317,6 @@ def importanceandapp():
         module_completed = {}
     return render_template('courses/course1-content/importance_and_app.html', module_completed=module_completed)
 
-@app.route('/module1/introduction/course1-quiz-1')
-def course1quiz1():
-    user = session.get('user')
-    if not user:
-        flash('You must be logged in to access this page.')
-        return redirect(url_for('RenderLogin'))
-
-    user_id = user['user_id']
-    role = user['role_id']
-
-    subsection_number = 1.9
-    if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
-    else:
-        module_completed = {}
-    return render_template('courses/course1-content/course1-quiz1.html', module_completed=module_completed)
-
 @app.route('/module1/introduction/robot-anatomy')
 def robotanatomy():
     user = session.get('user')
@@ -2431,6 +2422,10 @@ def module_three():
 def module_three_fetch_reach():
     return render_template('courses/course3-content/module_three_fetch_reach.html') 
 
+@app.route('/module3/autonomous-car')
+def module_three_car():
+    return render_template('courses/course3-content/module_three_car.html') 
+
 @app.route('/module3/fetch-pick-and-place')
 def module_three_fetch_pick():
     return render_template('courses/course3-content/module_three_fetch_pick.html') 
@@ -2482,23 +2477,35 @@ app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 def download_file(filename):
     return send_from_directory(app.config['DOWNLOAD_FOLDER'], filename, as_attachment=True)
 
-@app.route('/module4/test/test')
+@app.route('/module3/cheat-sheet/download')
+def module_three_download():
+    return render_template('courses/course3-content/module_three_download.html')
+
+@app.route('/module4/cheat-sheet/download')
 def module_four_download():
     return render_template('courses/course4-content/module_four_download.html')
 
-@app.route('/module6/test/test')
+@app.route('/module6/cheat-sheet/download')
 def module_six_download():
     return render_template('courses/course6-content/module_six_download.html')
 
-@app.route('/module7/test/test')
+@app.route('/module7/cheat-sheet/download')
 def module_seven_download():
     return render_template('courses/course7-content/module_seven_download.html')
 
-@app.route('/module8/test/test')
+@app.route('/module8/cheat-sheet/download')
 def module_eight_download():
     return render_template('courses/course8-content/module_eight_download.html')
 
-@app.route('/module11/test/test')
+@app.route('/module9/cheat-sheet/download')
+def module_nine_download():
+    return render_template('courses/course9-content/module_nine_download.html')
+
+@app.route('/module10/cheat-sheet/download')
+def module_ten_download():
+    return render_template('courses/course10-content/module_ten_download.html')
+
+@app.route('/module11/cheat-sheet/download')
 def module_eleven_download():
     return render_template('courses/course11-content/module_eleven_download.html')
 
@@ -2652,7 +2659,7 @@ def RenderContactUs():
 
     return render_template('contact_us.html', is_homepage=True)
 
-# kh With these engagements, Kiana has been able to develop a good foundation in technical and leadership competencies, preparing her for a successful career in the tech industry.
+
 @app.route('/about-us')
 def RenderAboutUs():
     team_members = [
@@ -3039,8 +3046,16 @@ def view_logs(user_id):
     # collision_detected = bool(distance < threshold_distance)
     # return jsonify({'collision': collision_detected})
 
-@app.route('/next-question', methods=['POST'])
-def next_question():
+@app.route('/next-question/<quiz_id>', methods=['POST'])
+def next_question(quiz_id):
+    import importlib
+
+    try:
+        quiz_module = importlib.import_module(f'quiz.{quiz_id}')
+        quiz = quiz_module.quiz_data
+    except ModuleNotFoundError:
+        return jsonify({"error": f"No quiz data found for: {quiz_id}"}), 404
+
     data = request.json
 
     questions_served = data.get('questions_served', 0)
@@ -3102,9 +3117,207 @@ def next_question():
         "done": False
     })
 
-@app.route('/quiz1', methods=['GET'])
-def render_quiz_page():
-    return render_template('quiz1.html')
+# @app.route('/quiz1', methods=['GET'])
+# def render_quiz_page():
+#     return render_template('quiz1.html')
+
+@app.route('/module1/introduction/course1-quiz-1')
+def course1quiz1():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.9
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/course1-quiz1.html', module_completed=module_completed)
+
+@app.route('/module1/introduction/course1-quiz-1_2')
+def course1quiz1_2():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.9
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course1-content/course1-quiz1_2.html', module_completed=module_completed)
+
+@app.route('/module3/meet-the-robots/course3-quiz-3')
+def course3quiz3():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.9
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course3-content/course3-quiz3.html', module_completed=module_completed)
+
+@app.route('/module4/coding-practices/course4-quiz-4')
+def course4quiz4():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.9
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course4-content/course4-quiz4.html', module_completed=module_completed)
+
+@app.route('/module6/fetch-organize/course6-quiz-6')
+def course6quiz6():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.9
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course6-content/course6-quiz6.html', module_completed=module_completed)
+
+@app.route('/module7/fetch-stack/course7-quiz-7')
+def course7quiz7():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.9
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course7-content/course7-quiz7.html', module_completed=module_completed)
+
+@app.route('/module8/fetch-stack/course8-quiz-8')
+def course8quiz8():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.9
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course8-content/course8-quiz8.html', module_completed=module_completed)
+
+@app.route('/module9/fetch-organize/course9-quiz-9')
+def course9quiz9():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.9
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course9-content/course9-quiz9.html', module_completed=module_completed)
+
+@app.route('/module10/fetch-sensors/course10-quiz-10')
+def course10quiz10():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.9
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course10-content/course10-quiz10.html', module_completed=module_completed)
+
+@app.route('/module11/autonomous-car/course11-quiz-11')
+def course11quiz11():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.9
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course11-content/course11-quiz11.html', module_completed=module_completed)
+
+@app.route("/certificate")
+def module_three_certificate_meet():
+    return render_template('courses/course3-content/module_three_certificate_meet.html') 
+
+@app.route("/certificate")
+def module_four_certificate_code():
+    return render_template('courses/course4-content/module_four_certificate_code.html') 
+
+@app.route("/certificate")
+def module_six_certificate_reach():
+    return render_template('courses/course6-content/module_six_certificate_reach.html') 
+
+@app.route("/certificate")
+def module_seven_certificate_pick_and_place():
+    return render_template('courses/course7-content/module_seven_certificate_pick_and_place.html') 
+
+@app.route("/certificate")
+def module_eight_certificate_stack():
+    return render_template('courses/course8-content/module_eight_certificate_stack.html') 
+
+@app.route("/certificate")
+def module_nine_certificate_organize():
+    return render_template('courses/course9-content/module_nine_certificate_organize.html') 
+
+@app.route("/certificate")
+def module_ten_certificate_organize_sensors():
+    return render_template('courses/course10-content/module_ten_certificate_organize_sensors.html') 
 
 @app.route("/certificate")
 def module_eleven_certificate_car():

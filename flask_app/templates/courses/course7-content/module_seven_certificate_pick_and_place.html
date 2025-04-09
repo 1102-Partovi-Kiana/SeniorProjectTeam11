@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Certificate - CORE</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_seven') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_seven_about_the_fetch_pick_and_place_robot') }}" class="course-link">About</a>
+                <ul class="sub-list">
+                    <li><a href="#about-fetch-pick-and-place">Fetch Pick and Place Robot</a></li>
+                    <li><a href="#video">Fetch Pick and Place Robot Simulation Vide</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Fetch Pick and Place Robot</a></li>
+                    <li><a href="#videotwo">Real Fetch Pick and Place Robot Video</a></li>
+                    <li><a href="#real-world">Real-World Applicability</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_seven_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-pick-and-place">Word Bank</a></li>
+                    <li><a href="#sim">Fetch Pick and Place Simulation</a></li>
+                    <li><a href="#given-fetch-pick-and-place">What is Given</a></li>
+                    <li><a href="#retrieve-fetch-pick-and-place">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_seven_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-pick-and-place">Word Bank</a></li>
+                    <li><a href="#define-constants-and-actions">Defining Constants & Actions</a></li>
+                    <li><a href="#get-target-position">Getting the Target Position</a></li>
+                    <li><a href="#open-the-gripper">Open the Gripper</a></li>
+                    <li><a href="#move-gripper">Move the Gripper Horizontally Towards the Box</a></li>
+                    <li><a href="#lower-gripper">Lower the Gripper to Grasp the Box</a></li>
+                    <li><a href="#close-gripper">Close the Gripper Around the Box</a></li>
+                    <li><a href="#pause-gripper">Pause to Stabilize the Grasp</a></li>
+                    <li><a href="#move-gripper-part-two">Move the Gripper and Box Towards the Ball</a></li>
+                    <li><a href="#key-takeaways">Key Takeaways</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course7quiz7') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_seven_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_seven_certificate_pick_and_place') }}" class="course-link">Certificate</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_seven_link') }}" class="course-link">Time to Code</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <script>
+        function updateCertificatePreview() {
+            document.getElementById("certificatePreview").src = "/view_certificate?" + new Date().getTime();
+        }
+
+        window.onload = updateCertificatePreview;
+    </script>
+
+
+    <div class="course-main-content">
+
+        <!-- Certificate Section -->
+        <div class="module-section" id="certificate" style="display: flex; flex-direction: column; align-items: center;">
+            
+            <!-- Certificate Preview -->
+            <img id="certificatePreview" src="" alt="Certificate Preview"
+                style="width: 80%; max-width: 800px; border: 1px solid black; margin-bottom: 20px; border-radius: 8px;">
+
+            <div style="display: flex; gap: 10px;">
+                  <button class="download-button" onclick="updateCertificatePreview()">
+                    <i class="fas fa-sync-alt"></i> Refresh Preview
+                  </button>
+                  <a href="/download_certificate">
+                    <button class="download-button">
+                      <i class="fas fa-download"></i> Download Certificate
+                    </button>
+                  </a>
+                  
+            </div>
+        </div>
+        
+       <!-- Navigation Buttons -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_seven_download') }}" class="secondary-button">Back: Cheat Sheet</a>
+            <a href="{{ url_for('module_seven_link') }}" class="secondary-button">Next: Time to Code</a>
+        </div>
+        
+    </div> <!-- End of course-main-content -->
+    
+</div> <!-- End of course-container -->
+    
+{% endblock %}

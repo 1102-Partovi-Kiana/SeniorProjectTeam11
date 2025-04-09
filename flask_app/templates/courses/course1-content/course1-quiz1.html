@@ -175,6 +175,9 @@
                     <li><a href="#hri">Human-Robot Interaction (HRI)</a></li>
                 </ul>
             </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course1quiz1_2') }}" class="course-link">Quiz 2</a>
+            </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
@@ -186,7 +189,12 @@
         </header>
         <!-- Quiz Section -->
         <div class="module-section" id="quiz-1">
-            <h3>Quiz: Importance and Applications of Robotics</h3>
+            <h3>Quiz 1</h3>
+
+            <script>
+                const quiz_id = "course1_quiz1";  
+            </script>
+
             <div id="quiz-container">
                 <!-- This will be dynamically populated by JavaScript -->
             </div>

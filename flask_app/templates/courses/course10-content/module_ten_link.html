@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>About the Fetch Reach Robot - CORE</title>
+<title>Time to Code the Fetch Reach Robot - CORE</title>
 {% endblock %}
 
 {% block body %}
@@ -34,6 +34,15 @@
                     <li><a href="#code-fetch-organize-with-sensors">What Needs to Be Coded</a></li>
                 </ul>
             </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course10quiz10') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_certificate_organize_sensors') }}" class="course-link">Certificate</a>
+            </li>
             <li class="course-item active">
                 <a href="{{ url_for ('module_ten_link') }}" class="course-link">Time to Code</a>
             </li>
@@ -55,32 +64,27 @@
         <!-- Robotic Environment Section -->
         <div class="module-section" id="robotic-environment">
             <h3>Interactive Simulation</h3>
-            <p>Below is the robotic environment where you can code and simulate the Fetch-Reach Robot:</p>
-
-            <!-- Embed Robotic Environment -->
+            <p>Below is the robotic environment where you can <strong>code</strong> and <strong>simulate</strong> the <strong>Fetch-Organize-with-Sensors Robot</strong>:</p>
           
-            <div class="module-section" id="robotic-environment">
-                <h3>Interactive Simulation</h3>
-                <p>Click the button below to navigate to the coding environment for the Fetch-Reach Robot:</p>
-            
-            <!--Button Link to Coding Environment --> 
-            <button class="cta">
-                <span>Hover me</span>
-                <svg width="20" height="20" viewBox="0 0 24 24">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              </button>
-              
-               <a href="{{ url_for('RenderFetchReachRobotSimulation') }}" class="primary-button">
-                    Open Coding Environment
+            <div style="text-align: center; margin-top: 20px;">
+                <div style="position: relative; display: inline-block;">
+                    <div style="background: #f0f0f0; color: #333; padding: 8px 14px; border-radius: 12px; font-weight: bold; font-family: 'Poppins', sans-serif; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                        CLICK ME to code!
+                    </div>
+                    <div style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid #f0f0f0;"></div>
+                </div>
+                <br>
+                <a href="{{ url_for('RenderFetchOrganizeSensorsEnv') }}" style="display: inline-block;">
+                    <img src="{{ url_for('static', filename='img/clearrobot.gif') }}" 
+                         alt="Chatbot Logo" 
+                         style="background-color: transparent; display: block; margin: 0 auto; width: 100px; height: auto; cursor: pointer;">
                 </a>
-            </div> 
-
+            </div>
         </div>
 
         <!-- Next Button -->
         <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_six_code') }}" class="secondary-button">Back: Coding Logic</a>
+            <a href="{{ url_for('module_ten_certificate_organize_sensors') }}" class="secondary-button">Back: Certificate</a>
         </div>
 
     </div> <!-- End of course-main-content -->

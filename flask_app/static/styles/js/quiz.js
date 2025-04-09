@@ -21,7 +21,7 @@ $(document).ready(function () {
 
     function fetchNextQuestion() { // use the POST call
         $.ajax({
-            url: "/next-question",
+            url: `/next-question/${quiz_id}`,
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify(state),
