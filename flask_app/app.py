@@ -2842,7 +2842,7 @@ def RenderInstructorDashboard():
 
     page_contexts = [
     "Fetch Reach",
-    "Fetch Pick & Place",
+    "Pick and Place",
     "Fetch Stack",
     "Fetch Organize",
     "Fetch Organize w/ Sensor",
