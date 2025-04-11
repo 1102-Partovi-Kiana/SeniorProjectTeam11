@@ -18,14 +18,14 @@ from config import Config
 from email_func import *
 from classes import *
 from auth_func import *
-import time as time_module
+import time
 import glfw
 import threading
 import gymnasium as gym
 import ast
 from PIL import Image, ImageDraw, ImageFont
 import io
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time as datetime_time
 import matplotlib.pyplot as plt
 import base64
 from sqlalchemy import func
@@ -36,12 +36,15 @@ from flask import send_file
 from PIL import Image, ImageDraw, ImageFont
 import io
 from reportlab.pdfgen import canvas
+from quiz.course1_quiz1 import quiz_data as quiz
+import json
 
 app = Flask(__name__, static_folder='static')
 app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
 mail.init_app(app)
+app.secret_key = "aa1e747aed8d320e7905cab3a78ed6fefee64885cd4fbf3716a80eae03b15dc4"
 
 ROLE_INSTRUCTOR = 1
 ROLE_STUDENT = 2
@@ -66,323 +69,11 @@ CUSTOM_KEYWORDS = [
     "target_color", "geom_id", "rgba", "np.array_equal", "num_steps", "break", "handle_object", 
     "object_name", "'object0'", "'object1'", "'object2'", "'object3'", "forward", "right", "left", 
     "backward", "values", "greatest_direction", "greatest_value", "action", 
-    "[0.005, 0.007]", "[0.005, -0.007]", "[0.01, 0.0]", "max", "time_module.sleep", 
+    "[0.005, 0.007]", "[0.005, -0.007]", "[0.01, 0.0]", "max", "time.sleep", 
     '"Forward"', '"Right"', '"Left"'
 ]
 
 env = None 
-
-# Quiz data
-quiz = {
-    "questions": {
-        "easy": [
-            {
-                "question": "What is a robot?",
-                "options": [
-                    "A machine that looks like a human",
-                    "An embodied agent capable of sensing and decision-making",
-                    "A tool used only in manufacturing",
-                    "An AI system without physical form"
-                ],
-                "answer": 1
-            },
-            {
-                "question": "What is the main purpose of robotics?",
-                "options": [
-                    "To build machines that can sense and interact with their environment",
-                    "To entertain people",
-                    "To replace human jobs",
-                    "To make machines that look like humans"
-                ],
-                "answer": 1
-            },
-            {
-                "question": "What are the three main functions typically performed by robots?",
-                "options": [
-                    "Sense, Compute, Act",
-                    "Build, Program, Learn",
-                    "Move, Interact, Process",
-                    "Detect, React, Develop"
-                ],
-                "answer": 0
-            },
-            {
-                "question": "What are collaborative robots (cobots) designed to do?",
-                "options": [
-                    "Work safely with humans",
-                    "Use sensors to detect and interact with humans",
-                    "Help with tasks like teamwork",
-                    "Perform tasks without human involvement"
-                ],
-                "answer": 3
-            },
-            {
-                "question": "In which industry are industrial robots most commonly used?",
-                "options": [
-                    "Healthcare",
-                    "Manufacturing",
-                    "Exploration",
-                    "Entertainment"
-                ],
-                "answer": 1
-            },
-            {
-                "question": "Which of the following disciplines does NOT play a core role in robotics?",
-                "options": [
-                    "Electrical Engineering",
-                    "Mechanical Engineering",
-                    "Computer Science",
-                    "Linguistics"
-                ],
-                "answer": 3
-            },
-            {
-                "question": "Which type of robot is designed to resemble and interact like humans?",
-                "options": [
-                    "Mobile Robots",
-                    "Industrial Robots",
-                    "Humanoid Robots",
-                    "Collaborative Robots"
-                ],
-                "answer": 2
-            },
-            {
-                "question": "Which of these is an example of where robots are commonly used?",
-                "options": [
-                    "Teaching students in a classroom",
-                    "Performing surgeries in hospitals",
-                    "Reading books to children",
-                    "Walking pets in the park"
-                ],
-                "answer": 1
-            },
-            {
-                "question": "What are agricultural robots (agribots) NOT designed to do?",
-                "options": [
-                    "Harvest and sort crops",
-                    "Build greenhouses",
-                    "Planting and seeding",
-                    "Design buildings"
-                ],
-                "answer": 3
-            },
-            {
-                "question": "What is one benefit of using robots in manufacturing?",
-                "options": [
-                    "They require no programming",
-                    "They replace all human workers",
-                    "They never need maintenance or repairs",
-                    "They work faster and with greater precision than humans"
-                ],
-                "answer": 3
-            }
-        ],
-        "medium": [
-            {
-                "question": "What topics does robotics intertwine with?",
-                "options": [
-                    "Artificial Intelligence",
-                    "Computer Vision",
-                    "Quantum Mechanics",
-                    "Applied Mathematics"
-                ],
-                "answer": 2
-            },
-            {
-                "question": "Which category of robots is specifically designed to navigate and operate in various environments autonomously or with minimal human intervention?",
-                "options": [
-                    "Industrial Robots",
-                    "Humanoid Robots",
-                    "Mobile Robots",
-                    "Collaborative Robots"
-                ],
-                "answer": 2
-            },
-            {
-                "question": "In robotics, what does the term manipulator refer to?",
-                "options": [
-                    "The sensory system of a robot",
-                    "The central processing unit",
-                    "The robotic arm used for moving objects",
-                    "The mobile base of a robot"
-                ],
-                "answer": 2
-            },
-            {
-                "question": "Which of these is an example of a collaborative robot (cobot)?",
-                "options": [
-                    "Atlas",
-                    "UR5",
-                    "Roomba",
-                    "Unimate"
-                ],
-                "answer": 1
-            },
-            {
-                "question": "Who coined the term 'robot'?",
-                "options": [
-                    "Isaac Asimov",
-                    "Karel Čapek",
-                    "George Devol",
-                    "Ada Lovelace"
-                ],
-                "answer": 1
-            },
-            {
-                "question": "Which invention by Charles Babbage helped influence robotics?",
-                "options": [
-                    "Analytical Engine",
-                    "Water Clock",
-                    "Jacquard Loom",
-                    "Difference Engine"
-                ],
-                "answer": 0
-            },
-            {
-                "question": "Which task is commonly performed by industrial robots?",
-                "options": [
-                    "Painting cars",
-                    "Playing chess",
-                    "Walking on two legs",
-                    "Making medical diagnoses"
-                ],
-                "answer": 0
-            },
-            {
-                "question": "Which invention by Joseph Jacquard in 1801 significantly influenced the development of programmable machines?",
-                "options": [
-                    "Water clock (Clepsydra)",
-                    "Analytical Engine",
-                    "Jacquard Loom",
-                    "Flute player automaton"
-                ],
-                "answer": 2
-            },
-            {
-                "question": "Which of these robots was designed for minimally invasive surgeries?",
-                "options": [
-                    "PR2",
-                    "Da Vinci Surgical System",
-                    "Unimate",
-                    "Sophia"
-                ],
-                "answer": 1
-            },
-            {
-                "question": "Which robot developed by Stanford University could reason about its environment?",
-                "options": [
-                    "Shakey",
-                    "PR2",
-                    "Spot",
-                    "Da Vinci Surgical System"
-                ],
-                "answer": 0
-            }
-        ],
-        "hard": [
-            {
-                "question": "Which robotics company developed robots like Atlas, Spot, and Handle?",
-                "options": [
-                    "Boston Dynamics",
-                    "Universal Robots",
-                    "Hanson Robotics",
-                    "Willow Garage"
-                ],
-                "answer": 0
-            },
-            {
-                "question": "What significant advancement in robotics was demonstrated by the Mars rovers such as Curiosity and Perseverance?",
-                "options": [
-                    "Development of humanoid mobility",
-                    "Autonomous navigation and scientific data collection in extreme environments",
-                    "Enhanced human-robot interaction capabilities",
-                    "Implementation of soft robotics materials"
-                ],
-                "answer": 1
-            },
-            {
-                "question": "What is a primary way in which animatronics and humanoid robots blur the lines between technology and entertainment in theme parks?",
-                "options": [
-                    "By performing repetitive tasks without interaction.",
-                    "By entertaining, educating, and creating immersive experiences for visitors, blurring the boundaries between technology and entertainment.",
-                    "By limiting their roles to backstage operations.",
-                    "By focusing solely on mechanical movements without narrative elements."
-                ],
-                "answer": 1
-            },
-            {
-                "question": "What key feature differentiates autonomous robots from other types of robots?",
-                "options": [
-                    "Ability to manipulate objects",
-                    "Capability to make decisions without human intervention",
-                    "Designed to resemble humans",
-                    "Equipped with multiple axes of motion"
-                ],
-                "answer": 1
-            },
-            {
-                "question": "Which of the following robotic systems integrates machine learning and artificial intelligence to adapt and make intelligent decisions based on environmental data?",
-                "options": [
-                    "Unimate",
-                    "PR2",
-                    "Da Vinci Surgical System",
-                    "Sophia"
-                ],
-                "answer": 3
-            },
-            {
-                "question": "How have collaborative robots (cobots) transformed human-robot collaboration in industrial settings compared to traditional industrial robots?",
-                "options": [
-                    "Cobots require extensive safety barriers, limiting interaction with humans",
-                    "Cobots are designed to operate independently without human intervention",
-                    "Cobots can safely work alongside humans, enhancing flexibility and productivity",
-                    "Cobots are exclusively used for hazardous tasks, away from human workers."
-                ],
-                "answer": 2
-            },
-            {
-                "question": "Which material is primarily used in soft robotics?",
-                "options": [
-                    "Metal",
-                    "Elastomers",
-                    "Carbon Fiber",
-                    "Plastic"
-                ],
-                "answer": 1
-            },
-            {
-                "question": "What is a collaborative robot (cobot) primarily designed to do?",
-                "options": [
-                    "Operate autonomously in hazardous environments",
-                    "Work safely alongside humans in a shared workspace",
-                    "Replace human workers in factories",
-                    "Navigate challenging terrains autonomously"
-                ],
-                "answer": 1
-            },
-            {
-                "question": "Which robot was the first industrial robot used in manufacturing?",
-                "options": [
-                    "Da Vinci Surgical System",
-                    "PR2",
-                    "Unimate",
-                    "Baxter"
-                ],
-                "answer": 2
-            },
-            {
-                "question": "Which robot developed by Boston Dynamics is known for its humanoid agility?",
-                "options": [
-                    "Atlas",
-                    "Spot",
-                    "Shakey",
-                    "Baxter"
-                ],
-                "answer": 0
-            }
-        ]
-    }
-}
 
 # Route for the homepage
 @app.route('/')
@@ -1861,19 +1552,23 @@ def log_event(user_id, page_context, code, static_issues, error, hints):
     }
     logs_db.setdefault(user_id, []).append(entry)
 
+    # Convert dictionaries/lists to JSON strings before storing
+    static_issues_str = json.dumps(static_issues) if static_issues else None
+    hints_str = json.dumps(hints) if hints else None
+    error_str = json.dumps(error) if isinstance(error, (dict, list)) else error
+
     new_log = UserCodeLogs(
         user_id=user_id,
         page_context=page_context,
         code=code,
-        static_issues=static_issues,
-        error=error,
-        hints=hints,
+        static_issues=static_issues_str,
+        error=error_str,
+        hints=hints_str,
         created_at=datetime.utcnow()
     )
 
     db.session.add(new_log)
     db.session.commit()
-
 
 @app.route('/chatbot-api', methods=['POST'])
 def ChatbotAPI():
@@ -2274,7 +1969,7 @@ def RenderAdminDashboard():
         class_name = f"{class_.class_course_code} - Section {class_.class_section_number}"
 
         # Convert date to datetime by adding a time component (00:00:00)
-        class_created_at = datetime.combine(class_.created_at, time.min)  # Use datetime.time.min
+        class_created_at = datetime.combine(class_.created_at, datetime_time.min)  # Use datetime.time.min
         recent_activities.append({
             'type': 'class',
             'name': class_name,  # Use the constructed class name
@@ -3726,12 +3421,66 @@ def embedded_course_content_organize():
 def embedded_course_content_car():
     return render_template('courses/course11-content/module_eleven_given.html')
 
+@app.route('/contact-us', methods=["GET", "POST"])
+def RenderContactUs():
+    if request.method == "POST":
+        first_name = request.form.get("first_name", "").strip()
+        last_name = request.form.get("last_name", "").strip()
+        email = request.form.get("email", "").strip()
+        message = request.form.get("message", "").strip()
+        topic = request.form.get("topic", "").strip()
+
+        print(f"Received: {first_name}, {last_name}, {email}, {message}, {topic}")
+
+        if not first_name or not last_name or not email or not message or not topic:
+            return jsonify({"status": "error", "message": "All fields, including topic selection, are required!"})
+
+        return jsonify({"status": "success", "message": "Your message has been sent successfully!"})
+
+    return render_template('contact_us.html', is_homepage=True)
+
+# kh With these engagements, Kiana has been able to develop a good foundation in technical and leadership competencies, preparing her for a successful career in the tech industry.
+@app.route('/about-us')
+def RenderAboutUs():
+    team_members = [
+        {
+            "name": "Timothy",
+            "role": "Developer",
+            "image": "img/timpic.png",
+            "linkedin": "https://www.linkedin.com/in/timothy-ang-622258318/",
+            "email": "jmmtimang@gmail.com",
+            "description": "Timothy is currently a junior at the University of Nevada, Reno, and will quite impressively be graduating early in December 2025 with a degree in Computer Science and Engineering. His course of study is accompanied by three minors in Cybersecurity, Mathematics, and Big Data. Timothy is particularly interested in cybersecurity and the workings of the ever-evolving field. Timothy is consistently honing his hands-on skills in his coursework and extracurricular activities that will prepare him for utmost success in his technology career."
+        },
+        {
+            "name": "Kiana",
+            "role": "Developer",
+            "image": "img/kianapic.jpg",
+            "linkedin": "https://www.linkedin.com/in/kianapartovi/",
+            "email": "kianapartovi04@gmail.com",
+            "description": "Kiana is an upcoming junior at the University of Nevada, Reno where she actively engages in both her academic along with extracurricular pursuits. She plans to graduate with a degree in Computer Science and Engineering degree along with three minors in: Mathematics, Information Systems, and Business Administration. She is an active member of the Association for Computing Machinery, Girls Who Code, and TechWise, a Google-sponsored initiative. Kiana is now a three time intern at NASA working in software engineering and data science."
+        },
+        {
+            "name": "Darren",
+            "role": "Developer",
+            "image": "img/darrenpic.png",
+            "linkedin": "https://www.linkedin.com/in/darren-ly-271887300/",
+            "email": "darren.ly04@gmail.com",
+            "description": "Darren is an upcoming junior at the University of Nevada, Reno. He is on track to graduate early with a degree in Computer Science and Engineering complemented by two minors, being in Mathematics and Cybersecurity. His utmost passion in computer science along with cybersecurity equips him in a continuation of innovatiion. Darren is looking to develop technical and soft skills to prepare himself for a career in the field. In this project, he has explored robotic fundamentals, full stack development, and large language learning models."
+        }
+    ]
+    print("team_members =", team_members)
+    return render_template('about_us.html', team_members=team_members, is_homepage=True)
+
+@app.route('/privacy-policy')
+def RenderPrivacyPolicy():
+    return render_template('privacy-policy.html')
+
 # Darren's Code
 @app.route('/Fetch-Reach-Robot')
 def RenderFetchReachRobotSimulation():
     global env
     close_current_env()
-    time_module.sleep(.1)
+    time.sleep(.1)
     env = ReachEnv()
     return render_template('robotic_environment.html')
 
@@ -3739,7 +3488,7 @@ def RenderFetchReachRobotSimulation():
 def RenderPickAndPlaceEnv():
     global env
     close_current_env()
-    time_module.sleep(.1)
+    time.sleep(.1)
     env = FetchPickAndPlaceEnv()
     return render_template('robotic_pick_and_place_environment.html')
 
@@ -3747,7 +3496,7 @@ def RenderPickAndPlaceEnv():
 def RenderFetchStackEnv():
     global env
     close_current_env()
-    time_module.sleep(.1)
+    time.sleep(.1)
     env = FetchStackEnv()
     return render_template('fetch_stack_environment.html')
 
@@ -3755,7 +3504,7 @@ def RenderFetchStackEnv():
 def RenderCarEnv():
     global env
     close_current_env()
-    time_module.sleep(.1)
+    time.sleep(.1)
     env = CarEnv()
     return render_template('robotic_car_environment.html')
 
@@ -3763,7 +3512,7 @@ def RenderCarEnv():
 def RenderFetchOrganizeSensorsEnv():
     global env
     close_current_env()
-    time_module.sleep(.1)
+    time.sleep(.1)
     env = FetchOrganizeSensorsEnv()
     return render_template('robotic_organize_sensors_environment.html')
 
@@ -3771,7 +3520,7 @@ def RenderFetchOrganizeSensorsEnv():
 def RenderFetchOrganizeEnv():
     global env
     close_current_env()
-    time_module.sleep(.1)
+    time.sleep(.1)
     env = FetchOrganizeEnv()
     return render_template('robotic_organize_environment.html')
 
@@ -3787,14 +3536,14 @@ def close_current_env():
             finally:
                 glfw.make_context_current(None)
                 env = None
-                time_module.sleep(.1)
+                time.sleep(.1)
 
 
 def reset_glfw():
     # Terminate the previous GLFW context if it exists
     if glfw.init():
         glfw.terminate()
-        time_module.sleep(.1)
+        time.sleep(.1)
         print("GLFW terminated.")
     
     # Re-initialize GLFW
@@ -3807,7 +3556,7 @@ def reset_glfw():
     window = glfw.create_window(1, 1, "Offscreen", None, None)
 
     glfw.make_context_current(window)
-    time_module.sleep(.1)
+    time.sleep(.1)
     print("GLFW re-initialized with offscreen context.")
     return True
 
@@ -3818,7 +3567,7 @@ def generate_frames():
         with render_lock:
             if env is None:
                 print("No environment available for rendering. Skipping frame.")
-                time_module.sleep(0.1)
+                time.sleep(0.1)
                 continue
             try:
                 if not glfw.get_current_context():
@@ -3839,7 +3588,7 @@ def generate_frames():
                     print("Frame is None, skipping rendering.")
             except Exception as e:
                 print(f"Error rendering: {e}")
-                time_module.sleep(0.1)
+                time.sleep(0.1)
 
 @app.route('/video_feed')
 def video_feed():
@@ -3909,14 +3658,6 @@ def run_code():
             'static_issues': static_issues,
             'context': page_context,  
         }
-        log_event(
-            user_id=user_id,
-            page_context=page_context,
-            code=code,
-            static_issues=static_issues,
-            error=None,
-            hints=[]
-        )
         print("Logging the event......")
         print({
             "user_id": user_id,
@@ -4236,4 +3977,5 @@ def download_certificate():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)
+

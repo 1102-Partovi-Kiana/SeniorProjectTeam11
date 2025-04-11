@@ -109,11 +109,11 @@ class UserCodeLogs(db.Model):
     __tablename__ = 'user_code_logs'
     
     user_log_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    code = db.Column(db.String(10000))
-    error = db.Column(db.String(1000))
-    hints = db.Column(db.String(1000))
-    page_context = db.Column(db.String(1000))
-    static_issues = db.Column(db.String(1000))
+    code = db.Column(db.String(50000))
+    error = db.Column(db.String(10000))
+    hints = db.Column(db.String(10000))
+    page_context = db.Column(db.String(10000))
+    static_issues = db.Column(db.String(10000))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     

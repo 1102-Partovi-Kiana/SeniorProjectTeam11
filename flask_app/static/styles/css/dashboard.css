@@ -253,7 +253,7 @@ html, body {
     width: calc(100% - 250px);
     background-color: #DDE4E9;
     z-index: 2;
-    height: calc(100% - 120px);
+    height: calc(100% - 60px);
     align-items: center;
     transition: margin-left 0.3s ease, width 0.3s ease;
 }

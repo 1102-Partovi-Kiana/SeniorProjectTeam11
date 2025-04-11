@@ -9,100 +9,106 @@
         {% endif %} 
         navbar-light bg-light fixed-top">
         <div class="container px-0">
-            <a class="navbar-brand d-flex align-items-center py-0 ms-0" href="{{ url_for('RenderHomepage') }}">
-                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="CORE Logo" style="width: 40px; height: 40px;">
-                <span class="navbar-logo">core</span>
-            </a>
+            <a class="navbar-brand" href="{{ url_for('RenderHomepage') }}">
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="CORE Logo" class="logo-img">
+                    <div class="text-container">
+                        <span class="navbar-logo">core</span>
+                        <span class="navbar-tagline">Center for Optimizing Robotics Education</span>
+                    </div>
+                </div>
+            </a>                     
             <button class="hamburger hamburger--elastic d-block d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="hamburger-box">
                     <span class="hamburger-inner"></span>
                 </span>
             </button>
-            <div class="collapse navbar-collapse flex-column-reverse flex-lg-column pb-5 pb-lg-0" id="navbarContent">
-                <ul class="navbar-nav ms-auto navbar-help ms-lg-auto me-lg-0 mt-3 mt-lg-0">
-                    {% if is_homepage %}
-                        <li class="nav-item">
-                            <a class="nav-link text-uppercase" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-uppercase" href="{{ url_for('RenderLogin') }}">Log In</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-uppercase" href="{{ url_for('RenderSignup') }}">Sign Up</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-uppercase" href="{{ url_for('RenderClassDetails') }}">Class Details</a>
-                        </li>
+            <div class="navbar-nav ms-auto navbar-help ms-lg-auto me-lg-0 mt-3 mt-lg-0">
+                {% if is_homepage %}
+                    <li class="nav-item">
+                        <a class="nav-link text-uppercase" href="{{ url_for('RenderHomepage') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-uppercase" href="{{ url_for('RenderAboutUs') }}">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-uppercase" href="{{ url_for('RenderLogin') }}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-uppercase" href="{{ url_for('RenderSignup') }}">Sign Up</a>
+                    </li>
+                    <li>
+                        <a class="nav-link text-uppercase" href="{{ url_for('RenderContactUs') }}">Contact Us</a>
+                    </li>
                     {% elif is_student_dashboard %}
-                        <li class="nav-item custom-nav-item">
-                            <a class="nav-link custom-nav-link" href="#" data-bs-toggle="modal" data-bs-target="#joinClassModal">Join a Class</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Courses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('RenderStudentDashboardGrades') }}">My Grades</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-uppercase" href="{{ url_for('RenderPlayground') }}">Playground</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>
-                        </li>
-                        <div class="modal fade custom-modal" id="joinClassModal" tabindex="-1" aria-labelledby="joinClassModal" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content custom-modal-content">
-                                    <div class="modal-header custom-modal-header">
-                                        <h5 class="modal-title" id="joinClassModalLabel">Join a Class</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body custom-modal-body">
-                                        <form method="POST" action="{{ url_for('RenderStudentDashboard') }}">
-                                            <div class="mb-3">
-                                                <label for="classCourseKey" class="form-label">Course Key</label>
-                                                <input type="text" class="form-control" id="classCourseCode" name="classCourseCode" placeholder="Enter course key">
-                                            </div>
-                                            <button type="submit" class="btn custom-modal-btn">Join</button>
-                                        </form>
-                                    </div>
+                    <li class="nav-item custom-nav-item">
+                        <a class="nav-link custom-nav-link" href="#" data-bs-toggle="modal" data-bs-target="#joinClassModal">Join a Class</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('RenderStudentDashboardGrades') }}">My Grades</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-uppercase" href="{{ url_for('RenderPlayground') }}">Playground</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>
+                    </li>
+                    <div class="modal fade custom-modal" id="joinClassModal" tabindex="-1" aria-labelledby="joinClassModal" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content custom-modal-content">
+                                <div class="modal-header custom-modal-header">
+                                    <h5 class="modal-title" id="joinClassModalLabel">Join a Class</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body custom-modal-body">
+                                    <form method="POST" action="{{ url_for('RenderStudentDashboard') }}">
+                                        <div class="mb-3">
+                                            <label for="classCourseKey" class="form-label">Course Key</label>
+                                            <input type="text" class="form-control" id="classCourseCode" name="classCourseCode" placeholder="Enter course key">
+                                        </div>
+                                        <button type="submit" class="btn custom-modal-btn">Join</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    {% elif is_instructor_dashboard %}
-                        <li class="nav-item-icon">
-                            <svg class="navbar-bell-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#bell-icon" fill="currentColor"></use></svg>
-                        </li>
-                        <li class="nav-item-icon">
-                            <svg class="navbar-envelope-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#envelope-icon" fill="currentColor"></use></svg>
-                        </li>
-                        <li class="nav-item-icon">
-                            <svg class="navbar-user-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#three-dots-icon" fill="currentColor"></use></svg>
-                        </li>
-                    {% elif is_course_page %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Classes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('RenderInstructorDashboard') }}">Feedback</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-uppercase" href="{{ url_for('RenderPlayground') }}">Playground</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>
-                        </li>
-                    {% elif is_admin_dashboard%}
-                        <li class="nav-item-icon">
-                            <svg class="navbar-bell-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#bell-icon" fill="currentColor"></use></svg>
-                        </li>
-                        <li class="nav-item-icon">
-                            <svg class="navbar-envelope-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#envelope-icon" fill="currentColor"></use></svg>
-                        </li>
-                        <li class="nav-item-icon">
-                            <svg class="navbar-user-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#three-dots-icon" fill="currentColor"></use></svg>
-                        </li>
-                    {% endif %}
-                </ul>
+                    </div>
+                {% elif is_instructor_dashboard %}
+                    <li class="nav-item-icon">
+                        <svg class="navbar-bell-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#bell-icon" fill="currentColor"></use></svg>
+                    </li>
+                    <li class="nav-item-icon">
+                        <svg class="navbar-envelope-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#envelope-icon" fill="currentColor"></use></svg>
+                    </li>
+                    <li class="nav-item-icon">
+                        <svg class="navbar-user-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#three-dots-icon" fill="currentColor"></use></svg>
+                    </li>
+                {% elif is_course_page %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Classes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('RenderInstructorDashboard') }}">Feedback</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-uppercase" href="{{ url_for('RenderPlayground') }}">Playground</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>
+                    </li>
+                {% elif is_admin_dashboard%}
+                    <li class="nav-item-icon">
+                        <svg class="navbar-bell-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#bell-icon" fill="currentColor"></use></svg>
+                    </li>
+                    <li class="nav-item-icon">
+                        <svg class="navbar-envelope-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#envelope-icon" fill="currentColor"></use></svg>
+                    </li>
+                    <li class="nav-item-icon">
+                        <svg class="navbar-user-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#three-dots-icon" fill="currentColor"></use></svg>
+                    </li>
+                {% endif %}
             </div>
         </div>
     </nav>

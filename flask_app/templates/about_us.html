@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block page_title %}
+<title>About Us - CORE</title>
+{% endblock %}
+
+{% block body %}
+
+
+<div class="responsive-container-block bigContainer">
+    <div class="responsive-container-block Container">
+      <div class="responsive-container-block leftSide">
+        <p class="text-blk heading">
+          Our Mission
+        </p>
+        <div class="section-divider-about-us"></div>
+        <p class="text-blk subHeading">
+          To make robotics education an accessible and enjoyable experience. The platform has been designed to streamline and enhance the learning experience for undergraduate students interested in and wanting to dip their feet into the fields of robotics or to further master the fundamentals of robotics.
+        </p>
+      </div>
+      <div class="responsive-container-block rightSide">
+        <img class="number1img" src="/static/img/abt-rbt.webp">
+        <img class="number2img" src="/static/img/abt-fetch.png">
+        <img class="number3img" src="/static/img/preview.jpg">
+        <img class="number5img" src="/static/img/hi-robot.gif">
+        <img class="number4vid" src="/static/img/fetch-real-2.jpg">
+        <img class="number7img" src="/static/img/abt-block.png">
+        <img class="number6img" src="/static/img/abt-real.webp">
+      </div>
+    </div>
+</div>
+
+<div class="vision-section-wrapper">
+  <div class="vision-card">
+    <div class="vision-image-box">
+      <img src="/static/img/ov.webp" alt="Robotics Illustration" class="vision-img">
+    </div>
+    <div class="vision-text-box">
+      <p class="vision-subheading">OUR VISION</p>
+      <h2 class="vision-heading">Creating a future through accessible robotics education</h2>
+      <p class="vision-paragraph">
+        We aim to build a future where every student—regardless of background or resources—has the opportunity to learn about robotics. We envision a world where robotics education thrives in a virtual learning environment. This project is designed to provide undergraduate students with a virtual robotics lab. Students will be able to learn about coding robotics simulations, apply what they've learned through quizzes and exams, and code in a live coding environment. Our platform will empower the next generation to shape the future of robotics, one simulation at a time.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="meet-creators-wrapper">
+    <h1>Our Team</h1>
+    <div class="meet-creators-team">
+        {% for member in team_members %}
+        <div class="meet-creators-team-member" id="{{ member.name|lower|replace(' ', '-') }}">
+            <div class="meet-creators-member-img">
+                <img src="{{ url_for('static', filename=member.image) }}" alt="{{ member.name }}">
+                <div class="meet-creators-social-media">
+                    <div class="meet-creators-linkedin item">
+                        <a href="{{ member.linkedin }}" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                    <div class="meet-creators-gmail item">
+                        <a href="mailto:{{ member.email }}" class="social-link">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <h3 id="name-{{ member.name|lower|replace(' ', '-') }}">{{ member.name }}</h3>
+            <span>{{ member.role }}</span>
+            <p>{{ member.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const heading = document.querySelector(".vision-heading");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            heading.classList.add("animate-drop");
+          }
+        });
+      },
+      {
+        threshold: 0.5,
+      }
+    );
+
+    if (heading) {
+      observer.observe(heading);
+    }
+  });
+</script>
+
+
+{% endblock body %}
