@@ -1,4 +1,3 @@
-# Quiz data
 quiz_data = {
     "questions": {
         "easy": [

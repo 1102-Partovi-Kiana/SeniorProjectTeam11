@@ -66,9 +66,9 @@
                             </ul>
                         </div>
                        
-                        <button class="tab-button" id="dark-mode-pop-up-window" data-tippy-content="Switch the Pop Up Window to Dark Mode">
+                        <!-- <button class="tab-button" id="dark-mode-pop-up-window" data-tippy-content="Switch the Pop Up Window to Dark Mode">
                             <i class="fas fa-adjust"></i> 
-                        </button>
+                        </button> -->
 
                         <button class="tab-button" id="review-course-content" data-tippy-content="Review Course Content">
                             <i class="fas fa-book"></i> 
@@ -288,6 +288,15 @@ while True:
             </div>
         </div>
     </div>
+
+    <div id="core-certificate-popup" class="core-cert-popup core-cert-popup-hidden">
+        <button class="core-cert-close" id="core-cert-close-button">&times;</button>
+        <h2 class="core-cert-title">SUCCESS</h2>
+        <p class="core-cert-message">YAY GOOD JOB!</p>
+        <a href="{{ url_for('module_eleven_certificate_car') }}" class="core-cert-button" target="_blank">Get My Certificate</a>
+    </div>
+    
+
 </section>
 
 <!-- CodeMirror and Script Initialization -->
@@ -367,6 +376,7 @@ while True:
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
 <script>
     let currentTheme = "monokai"; 
@@ -584,15 +594,29 @@ while True:
         }, 600); 
     });
 
+    // minimizePopup.addEventListener('click', () => {
+    //     popupWindow.classList.add('minimized');
+    //     popupWindow.classList.remove('maximized');
+    //     minimizePopup.style.display = 'none';
+    //     maximizePopup.style.display = 'inline-block';
+
+    //     // popupWindow.style.height = '50%'; 
+    //     // popupWindow.style.bottom = '0';
+    //     popupWindow.style.transform = 'translateY(50%)'; 
+    // });
+
     minimizePopup.addEventListener('click', () => {
+        popupWindow.style.height = 'auto';
+        popupWindow.style.bottom = '0';
+
+        requestAnimationFrame(() => {
+            popupWindow.style.transform = 'translateY(50%)';
+        });
+
         popupWindow.classList.add('minimized');
         popupWindow.classList.remove('maximized');
         minimizePopup.style.display = 'none';
         maximizePopup.style.display = 'inline-block';
-
-        popupWindow.style.height = '50%'; 
-        popupWindow.style.bottom = '0';
-        popupWindow.style.transform = 'translateY(0)'; 
     });
 
     maximizePopup.addEventListener('click', () => {
@@ -748,9 +772,23 @@ while True:
                     updateAdditionalTab([]);
                 }
             } else {
+            
                 secondaryOutputCard.classList.add('success');
                 secondaryOutputCard.innerHTML = `<p>Your code ran successfully 😊</p>`;
                 outputBox.innerHTML += `<p>${data.message}</p>`;
+
+                const certPopup = document.getElementById('core-certificate-popup');
+                if (certPopup) {
+                    certPopup.classList.remove('core-cert-popup-hidden');
+                    certPopup.classList.add('core-cert-popup-visible');
+
+                    confetti({
+                        particleCount: 150,
+                        spread: 100,
+                        origin: { y: 0.6 }
+                    });
+
+                }
 
                 if (errorAttempts > 0) {
                     outputBox.innerHTML = '';
@@ -1280,25 +1318,6 @@ while True:
     });
 
     document.getElementById("syntax-highlight").addEventListener("click", toggleSyntaxHighlighting);
-
-    document.getElementById("dark-mode-pop-up-window").addEventListener("click", () => {
-        const popupWindow = document.getElementById("popup-window");
-        popupWindow.classList.toggle("dark-mode");
-        const isDarkMode = popupWindow.classList.contains("dark-mode");
-        const button = document.getElementById("dark-mode-pop-up-window");
-
-        if (button._tippy) {
-            button._tippy.setContent(
-                isDarkMode
-                    ? "Switch the Pop-Up Window to Light Mode"
-                    : "Switch the Pop-Up Window to Dark Mode"
-            );
-        }
-
-        button.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; 
-
-        alert(isDarkMode ? "Dark Mode Enabled for the Pop-Up Window!" : "Light Mode Enabled for the Pop-Up Window!");
-    });
 
 </script>
 {% endblock %}

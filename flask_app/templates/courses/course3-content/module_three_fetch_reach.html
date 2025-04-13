@@ -9,89 +9,166 @@
     <!-- Sidebar for navigation -->
     <div class="course-sidebar">
         <div class="course-sidebar-header">
-            <i class="fas fa-robot"></i>
-            <span>Meet the Robots</span>
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
         </div>
         <ul class="course-list">
-            <li class="course-item">
-                <a href="#fetch-reach" class="course-link">Fetch Reach</a>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_three_fetch_reach') }}" class="course-link">Fetch Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#fetch-intro">About the Fetch Robot Class</a></li>
+                    <li><a href="#fetch-reach">Fetch Reach</a></li>
+                    <li><a href="#fetch-simulated">CORE's Simulated Fetch Robots</a></li>
+                    <li><a href="#images">Real-World Fetch Image Gallery</a></li>
+                    <li><a href="#fetch-pick-place">Fetch Pick and Place</a></li>
+                    <li><a href="#fetch-organize">Fetch Organize</a></li>
+                    <li><a href="#video"></a>Fetch Organize Real-World Video</li>
+                    <li><a href="#fetch-organize-sensor">Fetch Organize with Sensors</a></li>
+                  
+                </ul>
             </li>
             <li class="course-item">
-                <a href="#fetch-pick-place" class="course-link">Fetch Pick-and-Place</a>
+                <a href="{{ url_for ('module_three_car') }}" class="course-link">Autonomous Car</a>
             </li>
             <li class="course-item">
-                <a href="#fetch-organize" class="course-link">Fetch Organize with Sensor</a>
+                <a href="{{ url_for ('course3quiz3') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_three_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_three_certificate_meet') }}" class="course-link">Certificate</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Meet the Fetch Robots</h1>
-            <p class="page-description">Explore the capabilities of our Fetch robots in the CORE robotics platform.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Meet the Fetch Robots</h1>
+                <p class="page-description">Explore the capabilities of our Fetch robots in the CORE robotics platform.</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Explore</span>
-        </div>
-
-        <!-- General Blurb about Fetch Robot Class -->
-        <div class="module-section" id="fetch-intro" style="text-align: center;">
-            <h3>About the Fetch Robot Class</h3>
-            <p>The Fetch robot class consists of multiple tasks the Fetch Robot can complete including, reaching, picking up and placing objects, stacking objects on top of each other, using sensors to organize certain objects, etc. These robots are great for students and researchers to learn about robotics, programming, and how robots move and complete tasks.</p>
-            <iframe src="https://player.vimeo.com/video/126306100" width="640" height="360" frameborder="0" allowfullscreen style="display: block; margin: auto;"></iframe>
-        </div>
-
-        <!-- Another Fetch Video -->
-        <div class="module-section" id="video">
-            <h3>Fetch Organize Robot Simulation Video</h3>
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <iframe width="560" height="315" 
-                    src="https://www.youtube.com/embed/CEIUrF7iOXk" 
-                    frameborder="0" 
-                    allowfullscreen>
-                </iframe>
+            <div class="divider">
+                <span class="divider-text">Explore</span>
             </div>
-        </div> 
+
+            <!-- General Blurb about Fetch Robot Class -->
+            <div class="module-section" id="fetch-intro" style="text-align: center;">
+                <h3>About the Fetch Robot Class</h3>
+                <p>The <strong>Fetch</strong> robot class consists of multiple tasks the <strong>Fetch Robot</strong> can complete including, reaching, picking up and placing objects, stacking objects on top of each other, using sensors to organize certain objects, etc. These robots are great for students to learn about robotics, programming, and how robots move and complete tasks.</p>
+                <iframe src="https://player.vimeo.com/video/126306100" width="640" height="360" frameborder="0" allowfullscreen style="display: block; margin: auto;"></iframe>
+                <div class="reference-section">
+                    <h6>Reference</h6>
+                    <p>
+                    <a href="https://vimeo.com/126306100" target="_blank">https://vimeo.com/126306100</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Fetch Reach Section -->
+            <div class="module-section" id="fetch-simulated">
+                <h3>CORE's Simulated Fetch Robots</h3>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+                    <video class="playground-card-video" controls>
+                        <source src="/static/videos/fetchr.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <video class="playground-card-video" controls>
+                        <source src="/static/videos/fetchp&p.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <video class="playground-card-video" controls>
+                        <source src="/static/playground_videos/fetchstack3blocks.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <video class="playground-card-video" controls>
+                        <source src="/static/videos/fetcho.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <video class="playground-card-video" controls>
+                        <source src="/static/videos/fetchs.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video> 
+                </div>
+            </div>
+
+            <!-- Fetch Reach Section -->
+            <div class="module-section" id="fetch-reach">
+                <h3>Fetch Reach</h3>
+                <p>The <strong>Fetch Reach</strong> robot is designed to demonstrate basic <strong>reaching mechanics</strong>, teaching students how to program robotic arms to move towards objects efficiently.</p>
+            </div>
         
-        <!-- Fetch Reach Section -->
-        <div class="module-section" id="fetch-reach">
-            <h3>Fetch Reach</h3>
-            <p>The <strong>Fetch Reach</strong> robot is designed to demonstrate basic <strong>reaching mechanics</strong>, teaching students how to program robotic arms to move towards objects efficiently.</p>
+            <!-- Image Row -->
+            <div class="module-section" id="images">
+                <h3>Real-World Fetch Images</h3>
+                <div class="robot-images" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                    <img src="{{ url_for('static', filename='img/fetch2arms.avif') }}" alt="Fetch Robot 1" style="width: 30%;">
+                    <img src="{{ url_for('static', filename='img/fetchblocks.jpg') }}" alt="Fetch Robot 2" style="width: 30%;">
+                    <img src="{{ url_for('static', filename='img/FetchB.jpg') }}" alt="Fetch Robot 3" style="width: 30%;">
+                </div> 
+                <div class="reference-section">
+                    <h6>References</h6>
+                    <p>
+                    <a href="https://spectrum.ieee.org/fetch-robotics-introduces-fetch-and-freight-your-warehouse-is-now-automated" target="_blank">https://spectrum.ieee.org/fetch-robotics-introduces-fetch-and-freight-your-warehouse-is-now-automated</a>
+                    <a href="https://medium.com/@rtellez/simulations-are-the-key-to-intelligent-robots-c7a609868dbe" target="_blank">https://medium.com/@rtellez/simulations-are-the-key-to-intelligent-robots-c7a609868dbe</a>
+                    <a href="https://www.researchgate.net/figure/Rosie-embodied-on-a-Fetch-robot-learning-a-new-puzzle_fig1_334844330" target="_blank">https://www.researchgate.net/figure/Rosie-embodied-on-a-Fetch-robot-learning-a-new-puzzle_fig1_334844330</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Fetch Pick-and-Place Section -->
+            <div class="module-section" id="fetch-pick-place">
+                <h3>Fetch Pick-and-Place</h3>
+                <p>This <strong>Fetch Pick and Place</strong> robot focuses on object manipulation, including <strong>picking up</strong> and <strong>placing</strong> objects with precision. Students will learn how to program the robot to move objects from one location to another. This is essential in future tasks of organizing.</p>
+            </div>
+
+            <!-- Fetch Organize Section FIX -->
+            <div class="module-section" id="fetch-organize">
+                <h3>Fetch Organize</h3>
+                <p>This <strong>Fetch Organize</strong> robot <strong>organizes</strong> objects based on pre-defined criteria. It is a wonderful robot in aiding students with the exploration of simulating everyday tasks.  It’s a hands-on way to understand the basics of automation and how simple movements can be turned into repeatable, useful routines. </p>
+            </div> 
+
+            <!-- Another Fetch Video -->
+            <div class="module-section" id="video">
+                <h3>Fetch Organize Real-World Robot Video</h3>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <iframe width="560" height="315" 
+                        src="https://www.youtube.com/embed/CEIUrF7iOXk" 
+                        frameborder="0" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="reference-section">
+                    <h6>Reference</h6>
+                    <p>
+                    <a href="https://www.youtube.com/watch?v=CEIUrF7iOXk&embeds_referring_euri=http%3A%2F%2F127.0.0.1%3A5000%2F&source_ve_path=MjM4NTE" target="_blank">https://www.youtube.com/watch?v=CEIUrF7iOXk&embeds_referring_euri=http%3A%2F%2F127.0.0.1%3A5000%2F&source_ve_path=MjM4NTE</a>
+                    </p>
+                </div>
+            </div> 
+
+            <!-- Fetch Organize with Sensor Section -->
+            <div class="module-section" id="fetch-organize-sensor">
+                <h3>Fetch Organize with Sensors</h3>
+                <p>With additional <strong>sensor</strong> capabilities, this <strong>Fetch Organize</strong> robot <strong>organizes</strong> objects based on pre-defined criteria. Students will learn how to program the robot to sort items by characteristics utilizing its built-in sensors. The robot can detect different objects based on what it "sees" or "senses."</p>
+            </div>
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_eight') }}" class="secondary-button">Back: Learning Objectives</a>
+                <a href="{{ url_for('module_three_car') }}" class="secondary-button">Next: Autonomous Car</a>
+            </div>
         </div>
-
-        <!--https://vimeo.com/126306100-->
-        <!--https://www.newequipment.com/plant-operations/article/22059665/fetchs-quick-install-mobile-robots-lead-warehouse-revolution-->
-        <!--https://www.researchgate.net/figure/Rosie-embodied-on-a-Fetch-robot-learning-a-new-puzzle_fig1_334844330-->
-        
-        
-        <!-- Image Row -->
-        <div class="robot-images" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
-            <img src="{{ url_for('static', filename='img/fetch2arms.avif') }}" alt="Fetch Robot 1" style="width: 30%;">
-            <img src="{{ url_for('static', filename='img/fetchblocks.jpg') }}" alt="Fetch Robot 2" style="width: 30%;">
-            <img src="{{ url_for('static', filename='img/FetchB.jpg') }}" alt="Fetch Robot 3" style="width: 30%;">
-        </div> 
-
-        <!-- Fetch Pick-and-Place Section -->
-        <div class="module-section" id="fetch-pick-place">
-            <h3>Fetch Pick-and-Place</h3>
-            <p>This Fetch robot focuses on object manipulation, including picking up and placing objects with precision.</p>
-        </div>
-
-        <!-- Fetch Organize Section FIX -->
-        <div class="module-section" id="fetch-organize">
-            <h3>Fetch Organize with Sensor</h3>
-            <p>With additional sensor capabilities, this Fetch robot organizes objects based on pre-defined criteria.</p>
-        </div> 
-
-        <!-- Fetch Organize with Sensor Section -->
-        <div class="module-section" id="fetch-organize">
-            <h3>Fetch Organize with Sensor</h3>
-            <p>With additional sensor capabilities, this Fetch robot organizes objects based on pre-defined criteria.</p>
-        </div>
-
-        <!-- Next Button -->
         
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->

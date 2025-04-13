@@ -49,196 +49,243 @@
                 </ul>
             </li>
             <li class="course-item">
+                <a href="{{ url_for ('course11quiz11') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
                 <a href="{{ url_for ('module_eleven_download') }}" class="course-link">Cheat Sheet</a>
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_eleven_link') }}" class="course-link">Time to Code</a>
             </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_certificate_car') }}" class="course-link">Certificate</a>
+            </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Coding the Robot Movement</h1>
-            <p class="page-description">Learn how to implement the logic required to use the Autonomous Car.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Coding the Robot Movement</h1>
+                <p class="page-description">Learn how to implement the logic required to use the Autonomous Car.</p>
+            </header>
 
-        <!-- Word Bank Section -->
-        <div class="word-bank" id="word-bank-car" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
-            <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin: 10px 0;">
-                    <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>➡️ Forward:</strong> Distance retrieved using the robot's forward sensor.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>⬅️ Left:</strong> Distance retrieved using the robot's left sensor.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>➡️ Right:</strong> Distance retrieved using the robot's right sensor.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔄 Action:</strong> List representing the robot’s movement and steering inputs.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>📊 Sensor Readings:</strong> A dictionary mapping sensor directions to their respective distance values.
-                </li>
-            </ul>
-        </div>
-
-        <!-- Section: Understanding the Environment -->
-        <div class="module-section" id="understand-the-environment">
-            <h3>Understand the Environment</h3>
-            <p>The <strong>Autonomous Car with Sensors</strong> navigates using distance values from sensors. These sensors detect nearby obstacles and help the robot decide the best direction to move. The environment comes with pre-defined methods for retrieving sensor values and moving the robot:</p>
-            <ul class="custom-list">
-                <li><code>env.get_sensor_forward_value()</code> → Returns distance to the nearest obstacle ahead.</li>
-                <li><code>env.get_sensor_right_value()</code> → Returns distance to the nearest obstacle on the right.</li>
-                <li><code>env.get_sensor_left_value()</code> → Returns distance to the nearest obstacle on the left.</li>
-                <li><code>env.step(action)</code> → Moves the car based on the given action.</li>
-            </ul>
-        </div>
-
-        <!-- Section: Initialize the Action-->
-        <div class="module-section" id="initialize-the-action">
-            <h3>Initialize the Action:</h3>
-            <p>Start by setting the robot’s movement and steering input, so the robot won’t move or turn until sensor data is processed. This is done through, and will be provided in the code.:</p>
-                 <code>action = [0.00, 0.00]</code>
-        </div>
-
-       <!-- Section: Retrieve Sensor Values -->
-        <div class="module-section" id="retrieve-sensor-values">
-            <h3>Retrieve Sensor Values</h3>
-            <p>Before making movement decisions, the robot must gather sensor data to understand its surroundings.</p>
-            
-            <p>Start by retrieving the <strong>forward sensor value</strong> and storing it in a variable.</p>
-            <p>Next, retrieve the <strong>right sensor value</strong> and store it in a variable.</p>
-            <p>Finally, retrieve the <strong>left sensor value</strong> and store it in a variable.</p>
-
-            <div style="margin-left: 20px; padding: 10px;">
-                <p>💡 <strong>What do these values mean?</strong></p>
-                <ul style="margin-left: 20px;">
-                    <li>These values represent distance.</li>
-                    <li>📏 <strong>Higher values</strong> indicate <strong>open space</strong> with no obstacles nearby.</li>
-                    <li>🚧 <strong>Lower values</strong> suggest an <strong>obstacle is close</strong>, requiring an alternate path.</li>
+            <!-- Word Bank Section -->
+            <div class="word-bank" id="word-bank-car" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
+                <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 10px 0;">
+                        <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>➡️ Forward:</strong> Distance retrieved using the robot's forward sensor.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>⬅️ Left:</strong> Distance retrieved using the robot's left sensor.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>➡️ Right:</strong> Distance retrieved using the robot's right sensor.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔄 Action:</strong> List representing the robot’s movement and steering inputs.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>📊 Sensor Readings:</strong> A dictionary mapping sensor directions to their respective distance values.
+                    </li>
                 </ul>
-            </div>            
-        </div>
+            </div>
 
-        <!-- Section: Determine Movement -->
-        <div class="module-section" id="determine-movement">
-            <h3>Determine Movement</h3>
-            <p>Once the robot has gathered sensor data, it needs to decide where to move. The car will choose the direction with the most open space based on sensor values.</p>
+            <!-- Section: Understanding the Environment -->
+            <div class="module-section" id="understand-the-environment">
+                <h3>Understand the Environment</h3>
+                <p>The <strong>Autonomous Car with Sensors</strong> navigates using distance values from sensors. These sensors detect nearby obstacles and help the robot decide the best direction to move. The environment comes with pre-defined methods for retrieving sensor values and moving the robot:</p>
+                <ul class="custom-list">
+                    <li><code>env.get_sensor_forward_value()</code> → Returns distance to the nearest obstacle ahead.</li>
+                    <li><code>env.get_sensor_right_value()</code> → Returns distance to the nearest obstacle on the right.</li>
+                    <li><code>env.get_sensor_left_value()</code> → Returns distance to the nearest obstacle on the left.</li>
+                    <li><code>env.step(action)</code> → Moves the car based on the given action.</li>
+                </ul>
+            </div>
 
-            <!-- Step 1: Define a Mapping -->
-            <h4>Step 1: Define a Dictionary</h4>
-            <p>First, create a dictionary to link each direction with its sensor reading.</p>
-            <pre class="code-snippet"><code>
-# Create a dictionary to store sensor readings
-sensor_readings = {
-    "Forward": your_variable_name_for_forward_sensor_value,
-    "Right": your_variable_name_for_right_sensor_value,
-    "Left": your_variable_name_for_left_sensor_value
-}
-            </code></pre>
-            <p>This dictionary stores each <strong>direction</strong> as a key and its corresponding <strong>sensor value</strong> as the value.</p>
+            <!-- Section: Initialize the Action-->
+            <div class="module-section" id="initialize-the-action">
+                <h3>Initialize the Action:</h3>
+                <p>Start by setting the robot’s movement and steering input, so the robot won’t move or turn until sensor data is processed. This is done through, and will be provided in the code.:</p>
+                    <code>action = [0.00, 0.00]</code>
+            </div>
 
-            <!-- Step 2: Determine the Best Direction -->
-            <h4>Step 2: Find the Best Direction</h4>
-            <p>Next, use the <strong>max function</strong> to find the direction with the <strong>highest sensor value</strong> (meaning the most open space).</p>
-            <pre class="code-snippet"><code>
-# Find the direction with the most open space
-greatest_direction = max(sensor_readings, key=sensor_readings.get)
-            </code></pre>
-            <p>💡 <strong>How does this work?</strong> </p>
-            <ul style="margin-left: 20px;">
-                <li>🔍 max() scans the dictionary and finds the key (direction) with the largest value.</li>
-                <li>📏 The highest sensor reading means the <strong>most open space</strong> to move safely.</li>
-            </ul>
+        <!-- Section: Retrieve Sensor Values -->
+            <div class="module-section" id="retrieve-sensor-values">
+                <h3>Retrieve Sensor Values</h3>
+                <p>Before making movement decisions, the robot must gather sensor data to understand its surroundings.</p>
+                
+                <p>Start by retrieving the <strong>forward sensor value</strong> and storing it in a variable.</p>
+                <p>Next, retrieve the <strong>right sensor value</strong> and store it in a variable.</p>
+                <p>Finally, retrieve the <strong>left sensor value</strong> and store it in a variable.</p>
 
-            <!-- Step 3: Decision Making -->
-            <h4>Step 3: What Does This Mean?</h4>
-            <p>The selected <code>greatest_direction</code> will guide the robot’s movement. The direction with the largest value which represents the clearest path for the robot to follow. The car will now adjust its steering based on this decision.</p>
-        </div>
-
-        <!-- Section: Prepare Actions -->
-        <div class="module-section" id="prepare-actions">
-            <h3>Prepare Actions</h3>
-            <p>Now that the <strong>greatest direction</strong> has been determined, the car must adjust its movement accordingly.</p>
-
-            <h4>Step 1: Determine the Action</h4>
-            <p>The car has three possible actions: <strong>turn left, turn right, or move forward</strong>. The exact movement depends on which direction has the most open space.</p>
-            
-            <p>💡 Think about how you would define an action for each case:</p>
-            <ul>
-                <li>📍 If the car should turn <strong>left</strong>, its forward movement should be slightly slower while its turning rate is slightly higher:
-                    <pre class="code-snippet"><code>action = [0.005, 0.007]  # Turn left</code></pre>
-                </li>
-                <li>📍 If the car should turn <strong>right</strong>, the same principle applies, but in the opposite direction:
-                    <pre class="code-snippet"><code>action = [0.005, -0.007]  # Turn right</code></pre>
-                </li>
-                <li>📍 If the car can move <strong>forward</strong>, it should maximize its forward speed while keeping the turn rate at zero:
-                    <pre class="code-snippet"><code>action = [0.01, 0.0]  # Move forward</code></pre>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Section: Apply Actions -->
-        <div class="module-section" id="apply-actions">
-            <h3>Apply Actions</h3>
-            <p>Pass the chosen action to the robot to update the robot’s movement in the environment:</p>
-            <code>env.step(action)</code>
-        </div>
-
-        <!-- Section: Add a Small Delay -->
-        <div class="module-section" id="small-delay">
-            <h3>Apply a Delay</h3>
-            <p>Add a short pause to control the loop speed and make the robot’s movements smoother:</p>
-            <code>time.sleep(0.00001)</code>
-        </div>
-
-        <!-- Section: While Loop -->
-        <div class="module-section" id="while-loop">
-            <h3>Run Continuously in a Loop</h3>
-            <p>All of the above steps must be placed inside an infinite while loop so the robot can <strong>continuously navigate</strong> based on its sensor readings.</p>
-            <code>while True:</code>
-        </div>
-
-        <!-- Section: Key Takeaways -->
-        <div class="module-section" id="key-takeaways">
-            <h3>Key Takeaways</h3>
-            <p>Now that you've read through the movement logic for the Autonomous Car with Sensors, here are the most important concepts to remember:</p>
-            <ul>
-                <li>📡 Sensor values determine the safest path:
-                    <ul>
-                        <li>🔼 Higher values mean more open space.</li>
-                        <li>⛔ Lower values mean obstacles nearby.</li>
+                <div style="margin-left: 20px; padding: 10px;">
+                    <p>💡 <strong>What do these values mean?</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li>These values represent distance.</li>
+                        <li>📏 <strong>Higher values</strong> indicate <strong>open space</strong> with no obstacles nearby.</li>
+                        <li>🚧 <strong>Lower values</strong> suggest an <strong>obstacle is close</strong>, requiring an alternate path.</li>
                     </ul>
-                </li>
-                <li>📊 A dictionary is used to store and compare sensor readings, allowing the car to pick the best movement direction.</li>
-                <li>🔄 The robot moves based on predefined actions:
-                    <ul>
-                        <li>⬅️ Turn left: <code>action = [0.005, 0.007]</code></li>
-                        <li>➡️ Turn right: <code>action = [0.005, -0.007]</code></li>
-                        <li>⬆️ Move forward: <code>action = [0.01, 0.0]</code></li>
-                    </ul>
-                </li>
-                <li>⚡ Actions are applied using <code>env.step(action)</code>, which updates the car's movement.</li>
-                <li>🕰️ A small delay is added (<code>time.sleep(0.00001)</code>) to control the speed and smoothness of movement (~50 FPS).</li>
-                <li>🔁 The entire process runs continuously in a <code>while True</code> loop, keeping the car navigating its environment dynamically.</li>
-            </ul>
-    
-        </div>        
+                </div>            
+            </div>
 
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_eleven_given') }}" class="secondary-button">Back: Environment</a>
-            <a href="{{ url_for('module_eleven_download') }}" class="secondary-button">Next: Cheat Sheet</a>
+            <!-- Section: Determine Movement -->
+            <div class="module-section" id="determine-movement">
+                <h3>Determine Movement</h3>
+                <p>Once the robot has gathered sensor data, it needs to decide where to move. The car will choose the direction with the most open space based on sensor values.</p>
+
+                <!-- Step 1: Define a Mapping -->
+                <h4>Step 1: Define a Dictionary</h4>
+                <p>First, create a dictionary to link each direction with its sensor reading.</p>
+                <pre class="code-snippet"><code>
+    # Create a dictionary to store sensor readings
+    sensor_readings = {
+        "Forward": your_variable_name_for_forward_sensor_value,
+        "Right": your_variable_name_for_right_sensor_value,
+        "Left": your_variable_name_for_left_sensor_value
+    }
+                </code></pre>
+                <p>This dictionary stores each <strong>direction</strong> as a key and its corresponding <strong>sensor value</strong> as the value.</p>
+
+                <!-- Step 2: Determine the Best Direction -->
+                <h4>Step 2: Find the Best Direction</h4>
+                <p>Next, use the <strong>max function</strong> to find the direction with the <strong>highest sensor value</strong> (meaning the most open space).</p>
+                <pre class="code-snippet"><code>
+    # Find the direction with the most open space
+    greatest_direction = max(sensor_readings, key=sensor_readings.get)
+                </code></pre>
+                <p>💡 <strong>How does this work?</strong> </p>
+                <ul style="margin-left: 20px;">
+                    <li>🔍 max() scans the dictionary and finds the key (direction) with the largest value.</li>
+                    <li>📏 The highest sensor reading means the <strong>most open space</strong> to move safely.</li>
+                </ul>
+
+                <!-- Step 3: Decision Making -->
+                <h4>Step 3: What Does This Mean?</h4>
+                <p>The selected <code>greatest_direction</code> will guide the robot’s movement. The direction with the largest value which represents the clearest path for the robot to follow. The car will now adjust its steering based on this decision.</p>
+            </div>
+
+            <!-- Section: Prepare Actions -->
+            <div class="module-section" id="prepare-actions">
+                <h3>Prepare Actions</h3>
+                <p>Now that the <strong>greatest direction</strong> has been determined, the car must adjust its movement accordingly.</p>
+
+                <h4>Step 1: Determine the Action</h4>
+                <p>The car has three possible actions: <strong>turn left, turn right, or move forward</strong>. The exact movement depends on which direction has the most open space.</p>
+                
+                <p>💡 Think about how you would define an action for each case:</p>
+                <ul>
+                    <li>📍 If the car should turn <strong>left</strong>, its forward movement should be slightly slower while its turning rate is slightly higher:
+                        <pre class="code-snippet"><code>action = [0.005, 0.007]  # Turn left</code></pre>
+                    </li>
+                    <li>📍 If the car should turn <strong>right</strong>, the same principle applies, but in the opposite direction:
+                        <pre class="code-snippet"><code>action = [0.005, -0.007]  # Turn right</code></pre>
+                    </li>
+                    <li>📍 If the car can move <strong>forward</strong>, it should maximize its forward speed while keeping the turn rate at zero:
+                        <pre class="code-snippet"><code>action = [0.01, 0.0]  # Move forward</code></pre>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Section: Apply Actions -->
+            <div class="module-section" id="apply-actions">
+                <h3>Apply Actions</h3>
+                <p>Pass the chosen action to the robot to update the robot’s movement in the environment:</p>
+                <code>env.step(action)</code>
+            </div>
+
+            <!-- Section: Add a Small Delay -->
+            <div class="module-section" id="small-delay">
+                <h3>Apply a Delay</h3>
+                <p>Add a short pause to control the loop speed and make the robot’s movements smoother:</p>
+                <code>time.sleep(0.00001)</code>
+            </div>
+
+            <!-- Section: While Loop -->
+            <div class="module-section" id="while-loop">
+                <h3>Run Continuously in a Loop</h3>
+                <p>All of the above steps must be placed inside an infinite while loop so the robot can <strong>continuously navigate</strong> based on its sensor readings.</p>
+                <code>while True:</code>
+            </div>
+
+            <!-- Section: Key Takeaways -->
+            <div class="module-section" id="key-takeaways">
+                <h3>Key Takeaways</h3>
+                <p>Now that you've read through the movement logic for the Autonomous Car with Sensors, here are the most important concepts to remember:</p>
+                <ul>
+                    <li>📡 Sensor values determine the safest path:
+                        <ul>
+                            <li>🔼 Higher values mean more open space.</li>
+                            <li>⛔ Lower values mean obstacles nearby.</li>
+                        </ul>
+                    </li>
+                    <li>📊 A dictionary is used to store and compare sensor readings, allowing the car to pick the best movement direction.</li>
+                    <li>🔄 The robot moves based on predefined actions:
+                        <ul>
+                            <li>⬅️ Turn left: <code>action = [0.005, 0.007]</code></li>
+                            <li>➡️ Turn right: <code>action = [0.005, -0.007]</code></li>
+                            <li>⬆️ Move forward: <code>action = [0.01, 0.0]</code></li>
+                        </ul>
+                    </li>
+                    <li>⚡ Actions are applied using <code>env.step(action)</code>, which updates the car's movement.</li>
+                    <li>🕰️ A small delay is added (<code>time.sleep(0.00001)</code>) to control the speed and smoothness of movement (~50 FPS).</li>
+                    <li>🔁 The entire process runs continuously in a <code>while True</code> loop, keeping the car navigating its environment dynamically.</li>
+                </ul>
+        
+            </div>        
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_eleven_given') }}" class="secondary-button">Back: Environment</a>
+                <a href="{{ url_for('course11quiz11') }}" class="secondary-button">Next: Quiz</a>
+            </div>
         </div>
-
     </div> <!-- End of course-main-content -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSwitch = document.getElementById("toggle-explainer");
+            const notificationBubble = document.getElementById("notification");
+    
+            if (!toggleSwitch || !notificationBubble) {
+                console.warn("Explainer toggle not initialized: elements not found.");
+                return;
+            }
+    
+            setTimeout(() => {
+                notificationBubble.classList.add("fade-out");
+            }, 1000);
+    
+            toggleSwitch.addEventListener("change", function () {
+                if (this.checked) {
+                    notificationBubble.textContent = "Toggle Me Off";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.add("highlight-explain");
+                    });
+                } else {
+                    notificationBubble.textContent = "Toggle Me To Explain Text";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.remove("highlight-explain");
+                    });
+                }
+            });
+        });
+    </script>
+
 </div> <!-- End of course-container -->
 {% endblock %}

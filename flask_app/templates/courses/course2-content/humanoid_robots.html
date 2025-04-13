@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Humanoid Robots - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item"> 
+                <a href="{{ url_for ('intro_of_mobile_robots') }}" class="course-link">Introduction of Mobile Robotics</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('industrial_robots') }}" class="course-link">Industrial Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('service_robots') }}" class="course-link">Service Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('mobile_robots') }}" class="course-link">Mobile Robots</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('humanoid_robots') }}" class="course-link">Humanoid Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#humanoid-robots">Humanoid Robots</a></li>
+                    <li><a href="#apps-of-humanoid-robots">Applications of Humanoid Robots</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('agricultural_robots') }}" class="course-link">Agricultural Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('medical_robots') }}" class="course-link">Medical Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course2quiz2') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_two_certificate') }}" class="course-link">Certificate</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Humanoid Robots</h1>
+                <p class="page-description">Robots built to mimic human form and behavior.</p>
+            </header>
+
+            <!-- Page Divider -->
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
+            
+            <!-- Section 1: Humanoid Robots -->
+            <div class="module-section" id="humanoid-robots">
+                <h3>Humanoid Robots</h3>
+                <p>Humanoid robots are advanced robotic systems designed to resemble and mimic human capabilities, both in appearance and behavior. They are often equipped with sophisticated sensors, actuators, and artificial intelligence algorithms that enable them to interact with humans and perform complex tasks. The concept of humanoid robots dates back to ancient myths and legends, where human-like automatons were depicted. Humanoid robots play a crucial role in advancing scientific research and technological innovation. Their ability to closely mimic human movements and interactions allows researchers to study human locomotion, cognition, and social behavior. The research applications of humanoid robots gained momentum in the late 20th century. One of the most notable humanoid robots is Honda's ASIMO, introduced in 2000. ASIMO showcased remarkable mobility, balance, and dexterity; a multi-functional mobile assistant that could help people with poor mobility.</p>
+                <div style="text-align: center;">
+                    <img src="{{ url_for('static', filename='img/honda.png') }}" alt="Humanoid Hondas P series and ASIMO" style="max-width: 100%; height: auto;">
+                </div>
+                <p>Humanoid robots used in research often possess advanced sensing capabilities, including vision systems, tactile sensors, and force feedback mechanisms. These features enable them to perceive and interact with their environment, making them valuable tools for studying human-robot interaction and human-like behaviors.</p>
+                <p>Humanoid robots are employed in various applications including research, entertainment and human-robot interaction.</p>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 2: Applications of Humanoid Robots -->
+            <div class="category-section" id="apps-of-humanoid-robots">
+                <h2 class="category-title">Applications of Humanoid Robots</h2>
+                <div class="module-section">
+                    <h3>Research</h3>
+                    <ul>
+                        <li><strong><em>Neuroscience:</em>&nbsp;</strong>Humanoid robots help researchers understand the human brain by simulating cognitive processes and studying human motor control. The iCub robot, developed by the RobotCub Consortium, is used to investigate cognitive development in children.</li>
+                        <div style="text-align: center;">
+                            <img src="{{ url_for('static', filename='img/iCub.png') }}" alt="Humanoid iCub Robot" style="max-width: 100%; height: auto;">
+                        </div>
+                        <li><strong><em>Rehabilitation:</em>&nbsp;</strong>Humanoid robots assist in rehabilitation therapies for individuals with physical impairments, providing personalized assistance and monitoring progress. The RIBA-II robot, developed by RIKEN and Tokai Rubber Industries, aids in rehabilitation exercises and assists patients with mobility challenges.</li>
+                        <div style="text-align: center;">
+                            <img src="{{ url_for('static', filename='img/riba.png') }}" alt="RIBA-II" style="max-width: 100%; height: auto;">
+                        </div>
+                </div>
+                <div class="module-section">
+                    <h3>Entertainment</h3>
+                    <p>Humanoid robots have gained immense popularity in the entertainment industry, where their human-like appearance and interactive capabilities provide captivating experiences for audiences. Entertainment robots have a rich history, with early examples including Toyama's Gakutensoku in the 1920s and Walt Disney's animatronic characters in the 1960s. However, recent advancements in robotics have propelled entertainment robots to new heights. The first example of a humanoid robot for entertainment is Leonardo da Vinci’s mechanical knight around the year 1495. This mechanical knight was a series of mechanisms that allowed the automaton to stand up, sit down, move its arms and neck by a system of pulleys and cables used for entertainment at parties thrown by his wealthy patron. Nonetheless, entertainment robots are designed to engage and entertain people through their expressive movements, gestures, and interactive features. They often incorporate artificial intelligence and voice recognition technologies to enhance their communication capabilities.</p>
+                    <ul>
+                        <li><strong><em>Theme Parks and Shows:</em>&nbsp;</strong>Humanoid robots are used as performers in theme park shows and interactive attractions, providing captivating experiences for visitors.</li>
+                        <li><strong><em>Social Robots:</em>&nbsp;</strong>Humanoid robots are employed as social companions or interactive toys, offering entertainment and companionship for individuals.</li>
+                        <li><strong><em>Example:</em>&nbsp;</strong>SoftBank Robotics' Pepper robot, designed to interact with people in various settings, from homes to retail environments.</li>
+                    </ul>
+                </div> 
+
+                <div class="module-section">
+                    <h3>Human-robot interaction (HRI)</h3>
+                    <p>Human-robot interaction (HRI) research and design today span a wide range of topics. Numerous professional associations and ad hoc gatherings are contributing to the literature's rapid expansion, which is mostly occurring in the technical fields of mechanical and electrical engineering, computer and control science, and artificial intelligence. Human-robot interaction (HRI) focuses on developing effective and intuitive ways for humans to interact and collaborate with robots seamlessly. The field of HRI has evolved alongside advancements in robotics, cognitive science, and psychology, aiming to enhance the naturalness and usability of human-robot interactions. Humanoid robots utilized in HRI are designed to exhibit social and communicative behaviors, including recognizing and responding to human gestures, facial expressions, and vocal commands.</p>
+                    <p>Humanoid robots are extensively used in various applications involving human-robot interaction, such as:</p>
+                    <ul>
+                        <li><strong>Personal Assistants:</strong> Humanoid robots serve as personal assistants, helping with tasks and providing information and services in a user-friendly manner. Example: Boston Dynamics' Atlas robot, which can assist in household chores, carry objects, and perform various tasks.</li>
+                        <li><strong>Education and Research:</strong> Humanoid robots facilitate interactive learning experiences and assist in educational and research environments, promoting engagement and knowledge acquisition.</li>
+                    </ul>
+                    <p>Example: Quori, a novel, affordable, and modular social robot designed for human-robot interaction researchers.</p>
+                    <div class="robot-images" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                        <img src="{{ url_for('static', filename='img/quori.png') }}" alt="Quori" style="width: 30%;">
+                        <img src="{{ url_for('static', filename='img/ATLAS.png') }}" alt="ATLAS" style="width: 30%;">
+                    </div> 
+                </div> 
+            </div> <!-- End of module-section -->
+
+            <div class="reference-section">
+                <h6>References</h6>
+                <p>
+                    <a href="https://journals.sagepub.com/doi/epub/10.1177/0018720816644364" target="_blank">https://journals.sagepub.com/doi/epub/10.1177/0018720816644364</a>
+                    <a href="https://www.epfl.ch/labs/biorob/research/humanoid/page-36370-en-html/" target="_blank">https://www.epfl.ch/labs/biorob/research/humanoid/page-36370-en-html/</a>
+                    <a href="https://spectrum.ieee.org/riba-ii-healthcare-robot-gets-bigger-muscles-cuter-ears" target="_blank">https://spectrum.ieee.org/riba-ii-healthcare-robot-gets-bigger-muscles-cuter-ears</a>
+                    <a href="https://www.designboom.com/technology/watch-worlds-most-advanced-humanoid-atlas-robot-boston-dynamics-action-08-18-2021/" target="_blank">https://www.designboom.com/technology/watch-worlds-most-advanced-humanoid-atlas-robot-boston-dynamics-action-08-18-2021/</a>
+                </p>
+            </div>
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('mobile_robots') }}" class="secondary-button">Back: Mobile Robots</a>
+                <a href="{{ url_for('agricultural_robots') }}" class="secondary-button">Next: Agricultural Robots</a>
+            </div>
+        </div>
+        
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

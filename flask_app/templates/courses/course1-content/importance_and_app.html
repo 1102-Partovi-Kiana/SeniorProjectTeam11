@@ -215,109 +215,123 @@
                     <li><a href="#hri">Human-Robot Interaction (HRI)</a></li>
                 </ul>
             </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course1quiz1_2') }}" class="course-link">Quiz 2</a>
+            </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Importance and Applications of Robotics</h1>
-            <p class="page-description">Robotics has emerged as a transformative field with significant implications for various industries. We will explore the importance of robotics and its applications in key sectors, including manufacturing, healthcare, exploration, agriculture, and entertainment. Understanding the impact of robotics in these fields will provide insights into the potential benefits and future opportunities associated with this technology.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Importance and Applications of Robotics</h1>
+                <p class="page-description">Robotics has emerged as a transformative field with significant implications for various industries. We will explore the importance of robotics and its applications in key sectors, including manufacturing, healthcare, exploration, agriculture, and entertainment. Understanding the impact of robotics in these fields will provide insights into the potential benefits and future opportunities associated with this technology.</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
-        </div>
-
-        <!-- Section 1: Manufacturing  -->
-        <div class="module-section" id="manufacturing">
-            <h3>Manufacturing</h3>
-            <p>Robotics has revolutionized the manufacturing industry, enhancing productivity, efficiency, and quality. Industrial robots automate repetitive and labor-intensive tasks, such as assembly, welding, and material handling. They work with precision, speed, and consistency, resulting in improved production processes, reduced costs, and enhanced workplace safety. Manufacturers can achieve higher output and product consistency, leading to increased competitiveness in the market.</p>
-            <!-- Applications - Manufacturing -->
-            <div class="subsection">
-                <h4>Applications</h4>
-                <ul>
-                    <li>Assembly line operations</li>
-                    <li>Material handling and logistics</li>
-                    <li>Welding and soldering</li>
-                    <li>Quality inspection</li>
-                    <li>Packaging and palletizing</li>
-                </ul>
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
             </div>
-        </div> <!-- End of module-section -->
 
-        <!-- Section 2: Healthcare -->
-        <div class="module-section" id="healthcare">
-            <h3>Healthcare</h3>
-            <p>Robotics plays a vital role in healthcare, offering innovative solutions for diagnostics, surgeries, rehabilitation, and patient care. Telepresence robots facilitate remote consultations and medical education, improving access to healthcare services. Assistive robots assist people with disabilities, enhancing their independence and quality of life.</p>
-             <!-- Applications - Healthcare -->
-             <div class="subsection">
-                <h4>Applications</h4>
-                <ul>
-                    <li>Minimally invasive surgeries</li>
-                    <li>Rehabilitation and therapy</li>
-                    <li>Telemedicine and remote healthcare</li>
-                    <li>Prosthetics and exoskeletons</li>
-                    <li>Elderly care and assistance</li>
-                </ul>
-            </div>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 3: Exploration -->
-        <div class="module-section" id="exploration">
-            <h3>Exploration</h3>
-            <p>Robots have become invaluable tools for exploring challenging and hazardous environments, both on Earth and in space. Mars rovers, for example, collect data and samples, providing insights into planetary geology and the potential for extraterrestrial life. Autonomous underwater and aerial robots explore underwater ecosystems and remote environments, enabling scientific research and environmental monitoring.</p>
-              <!-- Applications - Exploration -->
-              <div class="subsection">
-                <h4>Applications</h4>
-                <ul>
-                    <li>Planetary exploration</li>
-                    <li>Underwater exploration</li>
-                    <li>Remote sensing and monitoring</li>
-                    <li>Search and rescue operations</li>
-                    <li>Hazardous environment exploration</li>
-                </ul>
-            </div>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 4: Agriculture -->
-        <div class="module-section" id="agriculture">
-            <h3>Agriculture</h3>
-            <p>Robotics has the potential to revolutionize agriculture by increasing efficiency, sustainability, and productivity. Agricultural robots, known as agribots, perform tasks such as planting, harvesting, monitoring crop health, and precision spraying. They can operate autonomously, optimizing resource utilization and reducing environmental impact. Robotics in agriculture enable precision farming techniques, improving crop yields and reducing labor-intensive processes.</p>
-               <!-- Applications - Agriculture -->
-               <div class="subsection">
-                <h4>Applications</h4>
-                <ul>
-                    <li>Planting and seeding</li>
-                    <li>Crop monitoring and management</li>
-                    <li>Harvesting and sorting</li>
-                    <li>Precision spraying and irrigation</li>
-                    <li>Greenhouse automation</li>
-                </ul>
-            </div>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 5: Entertainment -->
-        <div class="module-section" id="entertainment">
-            <h3>Entertainment</h3>
-            <p>Robotic technologies have found their place in the entertainment industry, captivating audiences, and providing engaging experiences. Robots, such as animatronics and humanoid robots, are used in theme parks, museums, and interactive exhibits. They entertain, educate, and create immersive experiences for visitors, blurring the boundaries between technology and entertainment.</p>
-                <!-- Applications - Entertainment -->
+            <!-- Section 1: Manufacturing  -->
+            <div class="module-section" id="manufacturing">
+                <h3>Manufacturing</h3>
+                <p>Robotics has revolutionized the manufacturing industry, enhancing productivity, efficiency, and quality. Industrial robots automate repetitive and labor-intensive tasks, such as assembly, welding, and material handling. They work with precision, speed, and consistency, resulting in improved production processes, reduced costs, and enhanced workplace safety. Manufacturers can achieve higher output and product consistency, leading to increased competitiveness in the market.</p>
+                <!-- Applications - Manufacturing -->
                 <div class="subsection">
                     <h4>Applications</h4>
                     <ul>
-                        <li>Animatronics in theme parks</li>
-                        <li>Humanoid robots in interactive exhibits</li>
-                        <li>Robotic characters in movies and shows</li>
-                        <li>Virtual reality and augmented reality experiences</li>
-                        <li>Gaming and robotic competitions</li>
+                        <li>Assembly line operations</li>
+                        <li>Material handling and logistics</li>
+                        <li>Welding and soldering</li>
+                        <li>Quality inspection</li>
+                        <li>Packaging and palletizing</li>
                     </ul>
                 </div>
-        </div> <!-- End of module-section -->
-        
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('typesofrobots') }}" class="secondary-button">Back: Types of Robots</a>
-            <a href="{{ url_for('course1quiz1') }}" class="secondary-button">Next: Quiz 1</a>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 2: Healthcare -->
+            <div class="module-section" id="healthcare">
+                <h3>Healthcare</h3>
+                <p>Robotics plays a vital role in healthcare, offering innovative solutions for diagnostics, surgeries, rehabilitation, and patient care. Telepresence robots facilitate remote consultations and medical education, improving access to healthcare services. Assistive robots assist people with disabilities, enhancing their independence and quality of life.</p>
+                <!-- Applications - Healthcare -->
+                <div class="subsection">
+                    <h4>Applications</h4>
+                    <ul>
+                        <li>Minimally invasive surgeries</li>
+                        <li>Rehabilitation and therapy</li>
+                        <li>Telemedicine and remote healthcare</li>
+                        <li>Prosthetics and exoskeletons</li>
+                        <li>Elderly care and assistance</li>
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 3: Exploration -->
+            <div class="module-section" id="exploration">
+                <h3>Exploration</h3>
+                <p>Robots have become invaluable tools for exploring challenging and hazardous environments, both on Earth and in space. Mars rovers, for example, collect data and samples, providing insights into planetary geology and the potential for extraterrestrial life. Autonomous underwater and aerial robots explore underwater ecosystems and remote environments, enabling scientific research and environmental monitoring.</p>
+                <!-- Applications - Exploration -->
+                <div class="subsection">
+                    <h4>Applications</h4>
+                    <ul>
+                        <li>Planetary exploration</li>
+                        <li>Underwater exploration</li>
+                        <li>Remote sensing and monitoring</li>
+                        <li>Search and rescue operations</li>
+                        <li>Hazardous environment exploration</li>
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 4: Agriculture -->
+            <div class="module-section" id="agriculture">
+                <h3>Agriculture</h3>
+                <p>Robotics has the potential to revolutionize agriculture by increasing efficiency, sustainability, and productivity. Agricultural robots, known as agribots, perform tasks such as planting, harvesting, monitoring crop health, and precision spraying. They can operate autonomously, optimizing resource utilization and reducing environmental impact. Robotics in agriculture enable precision farming techniques, improving crop yields and reducing labor-intensive processes.</p>
+                <!-- Applications - Agriculture -->
+                <div class="subsection">
+                    <h4>Applications</h4>
+                    <ul>
+                        <li>Planting and seeding</li>
+                        <li>Crop monitoring and management</li>
+                        <li>Harvesting and sorting</li>
+                        <li>Precision spraying and irrigation</li>
+                        <li>Greenhouse automation</li>
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 5: Entertainment -->
+            <div class="module-section" id="entertainment">
+                <h3>Entertainment</h3>
+                <p>Robotic technologies have found their place in the entertainment industry, captivating audiences, and providing engaging experiences. Robots, such as animatronics and humanoid robots, are used in theme parks, museums, and interactive exhibits. They entertain, educate, and create immersive experiences for visitors, blurring the boundaries between technology and entertainment.</p>
+                    <!-- Applications - Entertainment -->
+                    <div class="subsection">
+                        <h4>Applications</h4>
+                        <ul>
+                            <li>Animatronics in theme parks</li>
+                            <li>Humanoid robots in interactive exhibits</li>
+                            <li>Robotic characters in movies and shows</li>
+                            <li>Virtual reality and augmented reality experiences</li>
+                            <li>Gaming and robotic competitions</li>
+                        </ul>
+                    </div>
+            </div> <!-- End of module-section -->
+            
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('typesofrobots') }}" class="secondary-button">Back: Types of Robots</a>
+                <a href="{{ url_for('course1quiz1') }}" class="secondary-button">Next: Quiz 1</a>
+            </div>
         </div>
         
     </div> <!-- End of course-main-content -->

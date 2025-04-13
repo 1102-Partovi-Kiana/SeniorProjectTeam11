@@ -32,147 +32,208 @@
                 <ul class="sub-list">
                     <li><a href="#word-bank-fetch-stack">Word Bank</a></li>
                     <li><a href="#code-fetch-stack">What Needs to Be Coded</a></li>
+                    <li><a href="#understand-the-environment">Understand the Environment</a></li>
+                    <li><a href="#define-constants-and-action-parameters">Define Constants and Actions</a></li>
+                    <li><a href="#find-direction">Calculate Direction</a></li>
+                    <li><a href="#approach-target">Approach Target</a></li>
+                    <li><a href="#adjust-gripper">Adjust Gripper</a></li>
+                    <li><a href="#lifting-the-object">Lift the Object</a></li>
+                    <li><a href="#the-outcome">The Outcome</a></li>
+                    <li><a href="#key-takeaways">Key Takeaways</a></li>
+                    <li><a href="#"></a></li>
+
                 </ul>
             </li>
             <li class="course-item">
+                <a href="{{ url_for ('course8quiz8') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eight_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
                 <a href="{{ url_for ('module_eight_link') }}" class="course-link">Time to Code</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eight_certificate_stack') }}" class="course-link">Certificate</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Coding the Robot Movement</h1>
-            <p class="page-description">Learn how to implement the logic required to use the Fetch Pick and Place Robot.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Coding the Robot Movement</h1>
+                <p class="page-description">Learn how to implement the logic required to use the Fetch Pick and Place Robot.</p>
+            </header>
 
-        <!-- Word Bank Section -->
-        <div class="word-bank" id="word-bank-fetch-stack" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
-            <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin: 10px 0;">
-                    <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔧 FetchPickAndPlaceEnv:</strong> The specific environment object for the task setup.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>📏 Distance Threshold:</strong> Maximum allowable distance between the gripper and the object.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔄 Step Size:</strong> Incremental movement of the gripper.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔐 Close Grip Action:</strong> Array representing the action to close the gripper.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔓 Open Grip Action:</strong> Array representing the action to open the gripper.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>💪 Lift Action:</strong> Array representing small upward movement to lift the gripper while holding an object.
-                </li>
-            </ul>
-        </div>
-
-        <!-- Section: What Needs to be Coded -->
-        <div class="module-section" id="code-fetch-stack">
-            <h3>What Needs to be Coded</h3>
-            <ul>
-                <li><strong>Open the Gripper:</strong> Start by ensuring the gripper is in the open position, allowing it to grab the box. This involves sending an action command to the robot to spread the gripper fingers apart.</li>
-                <li><strong>Move the Gripper Horizontally Towards the Object:</strong> The gripper should move in the horizontal plane (X and Y directions) until it aligns with the box. This requires calculating the horizontal distance between the gripper and the object and making small, incremental steps in that direction until the gripper is close enough.</li>
-                <li><strong>Lower the Gripper to Grasp the Object:</strong> Once horizontally aligned, the gripper needs to move downward (in the Z direction) until it is at the correct height to grasp the object. This ensures that the gripper can securely hold the object.</li>
-                <li><strong>Close the Gripper Around the Object:</strong> After reaching the box, send a command to close the gripper. This action should securely hold the object in place.</li>
-                <li><strong>Lift the Object:</strong> The gripper should then move slightly upward to lift the box off the surface. This action ensures that the box is ready to be transported without dragging.</li>
-                <li><strong>Move the Object to the Stacking Position:</strong> Calculate the horizontal distance from the gripper to the stacking position. Normalize the direction and move the gripper incrementally until it aligns with the target stacking location.</li>
-                <li><strong>Lower the Object for Stacking:</strong> Once horizontally aligned with the stacking position, calculate the height difference between the current stack height and the object being placed. Lower the gripper incrementally until the object is in the correct stacking position.</li>
-                <li><strong>Release the Object into the Stack:</strong> Release the object at the target stacking position.</li>
-                <li><strong>Return to the Next Object:</strong> Move the gripper back to the next object in the list. Repeat the process for each object to complete the stack.</li>
-            </ul>
-        </div> <!-- End of What Needs to be Coded Section -->
-
-        <!-- Section: Understanding the Environment -->
-        <div class="module-section" id="understand-the-environment">
-            <h3>Understand the Environment</h3>
-            <p>You are provided with a robot environment (<code>env</code>), which holds the current state of the robot and provides functions to interact with it. Specifically, it has "getters" to retrieve information like the position of the ball and the gripper. The robotic environment comes <strong>pre-initialized</strong>. This means you can automatically use the built-in methods that come with the environment. For the Fetch Stack Robot
-                environment, these methods include:
-                <ul class="custom-list">
-                    <li><code>sim.data.get_site_xpos('object#')</code> → Returns the object' position.</li>
-                    <li><code>sim.data.get_site_xpos('robot0:grip')</code> → Returns the gripper’s position.</li>
-                    <li><code>step(x = increment)</code> → Moves the gripper based on the provided action (increment).</li>
+            <!-- Word Bank Section -->
+            <div class="word-bank" id="word-bank-fetch-stack" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
+                <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 10px 0;">
+                        <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔧 FetchPickAndPlaceEnv:</strong> The specific environment object for the task setup.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>📏 Distance Threshold:</strong> Maximum allowable distance between the gripper and the object.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔄 Step Size:</strong> Incremental movement of the gripper.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔐 Close Grip Action:</strong> Array representing the action to close the gripper.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔓 Open Grip Action:</strong> Array representing the action to open the gripper.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>💪 Lift Action:</strong> Array representing small upward movement to lift the gripper while holding an object.
+                    </li>
                 </ul>
-            </p>
-            <p>To access these methods, use <code><strong>env.</strong></code> followed by your desired method. For example,  if you would like to get the object position in the robotic environment, the correct thing to do would be:
-                <code>env.sim.data.get_site_xpos('object1')</code>
-             </p>
-        </div>
+            </div>
 
-        <!-- Section: Define Constants And Action Parameters -->
-        <div class="module-section" id="define-constants-and-action-parameters">
-            <h3>Define Constants And Action Parameters</h3>
-            <p>The coding environment will include such constants and parameters:
-                <ul class="custom-list">
-                    <li><code>distance_threshold = 0.02</code> → A defined threshold for the user.</li>
-                    <li><code>close_grip_action = np.array([0, 0, 0, -1])</code> → This value closes the gripper.</li>
-                    <li><code>open_grip_action = np.array([0, 0, 0, 1])</code> → This value opens the gripper.</li>
-                    <li><code>lift_action = np.array([0, 0, 0.1, 0])</code> → This value lifts the gripper.</li>
+            <!-- Section: What Needs to be Coded -->
+            <div class="module-section" id="code-fetch-stack">
+                <h3>What Needs to be Coded</h3>
+                <ul>
+                    <li><strong>Open the Gripper:</strong> Start by ensuring the gripper is in the open position, allowing it to grab the box. This involves sending an action command to the robot to spread the gripper fingers apart.</li>
+                    <li><strong>Move the Gripper Horizontally Towards the Object:</strong> The gripper should move in the horizontal plane (X and Y directions) until it aligns with the box. This requires calculating the horizontal distance between the gripper and the object and making small, incremental steps in that direction until the gripper is close enough.</li>
+                    <li><strong>Lower the Gripper to Grasp the Object:</strong> Once horizontally aligned, the gripper needs to move downward (in the Z direction) until it is at the correct height to grasp the object. This ensures that the gripper can securely hold the object.</li>
+                    <li><strong>Close the Gripper Around the Object:</strong> After reaching the box, send a command to close the gripper. This action should securely hold the object in place.</li>
+                    <li><strong>Lift the Object:</strong> The gripper should then move slightly upward to lift the box off the surface. This action ensures that the box is ready to be transported without dragging.</li>
+                    <li><strong>Move the Object to the Stacking Position:</strong> Calculate the horizontal distance from the gripper to the stacking position. Normalize the direction and move the gripper incrementally until it aligns with the target stacking location.</li>
+                    <li><strong>Lower the Object for Stacking:</strong> Once horizontally aligned with the stacking position, calculate the height difference between the current stack height and the object being placed. Lower the gripper incrementally until the object is in the correct stacking position.</li>
+                    <li><strong>Release the Object into the Stack:</strong> Release the object at the target stacking position.</li>
+                    <li><strong>Return to the Next Object:</strong> Move the gripper back to the next object in the list. Repeat the process for each object to complete the stack.</li>
                 </ul>
-            </p>
-        </div>
+            </div> <!-- End of What Needs to be Coded Section -->
 
-        <!-- Section: Find Direction -->
-        <div class="module-section" id="find-direction">
-            <h3>Calculate the direction from gripper to targeted object.</h3>
-            <p>Acknowledge the object's position and the gripper's position.</p>
-            <p>After finding the direction values, it needs to be normalized with the robotic environment. This will be given during the coding practice.</p>
-            <p><code>direction_normalized = direction / (np.linalg.norm(direction[:2]) + 1e-8)</code> → This shows the normalized direction values in the x and y plane.</p>
-        </div>
+            <!-- Section: Understanding the Environment -->
+            <div class="module-section" id="understand-the-environment">
+                <h3>Understand the Environment</h3>
+                <p>You are provided with a robot environment (<code>env</code>), which holds the current state of the robot and provides functions to interact with it. Specifically, it has "getters" to retrieve information like the position of the ball and the gripper. The robotic environment comes <strong>pre-initialized</strong>. This means you can automatically use the built-in methods that come with the environment. For the Fetch Stack Robot
+                    environment, these methods include:
+                    <ul class="custom-list">
+                        <li><code>sim.data.get_site_xpos('object#')</code> → Returns the object' position.</li>
+                        <li><code>sim.data.get_site_xpos('robot0:grip')</code> → Returns the gripper’s position.</li>
+                        <li><code>step(x = increment)</code> → Moves the gripper based on the provided action (increment).</li>
+                    </ul>
+                </p>
+                <p>To access these methods, use <code><strong>env.</strong></code> followed by your desired method. For example,  if you would like to get the object position in the robotic environment, the correct thing to do would be:
+                    <code>env.sim.data.get_site_xpos('object1')</code>
+                </p>
+            </div>
 
-        <!-- Section: Approach Target -->
-        <div class="module-section" id="approach-target">
-            <h3>Using the normalized direction values, start moving the gripper to the target.</h3>
-            <p>Disregard z coordinates and focus on aligning the gripper with the target.</p>
-            <p><code>while np.linalg.norm(box1_position[:2] - gripper_position[:2]) > distance_threshold:</code></p>
-            <p>As each step is simulated, the gripper will be vertically aligned with the target.</p>
-        </div>
+            <!-- Section: Define Constants And Action Parameters -->
+            <div class="module-section" id="define-constants-and-action-parameters">
+                <h3>Define Constants And Action Parameters</h3>
+                <p>The coding environment will include such constants and parameters:
+                    <ul class="custom-list">
+                        <li><code>distance_threshold = 0.02</code> → A defined threshold for the user.</li>
+                        <li><code>close_grip_action = np.array([0, 0, 0, -1])</code> → This value closes the gripper.</li>
+                        <li><code>open_grip_action = np.array([0, 0, 0, 1])</code> → This value opens the gripper.</li>
+                        <li><code>lift_action = np.array([0, 0, 0.1, 0])</code> → This value lifts the gripper.</li>
+                    </ul>
+                </p>
+            </div>
 
-         <!-- Section: Adjust Gripper -->
-         <div class="module-section" id="adjust-gripper">
-            <h3>Adjust gripper position to properly lower itself to grab the target</h3>
-            <p>Ensure the gripper position is at appropriate height to lower to the target position.</p>
-            <p>Once at appropriate height, the gripper should close onto the target and grasp the block.</p>>
-        </div>
+            <!-- Section: Find Direction -->
+            <div class="module-section" id="find-direction">
+                <h3>Calculate the direction from gripper to targeted object.</h3>
+                <p>Acknowledge the object's position and the gripper's position.</p>
+                <p>After finding the direction values, it needs to be normalized with the robotic environment. This will be given during the coding practice.</p>
+                <p><code>direction_normalized = direction / (np.linalg.norm(direction[:2]) + 1e-8)</code> → This shows the normalized direction values in the x and y plane.</p>
+            </div>
 
-        <!-- Section: Lifting The Object  -->
-        <div class="module-section" id="lifting-the-object">
-            <h3>Lifting the gripper with the block</h3>
-            <p>To ensure the block is still with the gripper and doesn't get out of reach, the z coordinate condition should be within range.</p>
-        </div>
+            <!-- Section: Approach Target -->
+            <div class="module-section" id="approach-target">
+                <h3>Using the normalized direction values, start moving the gripper to the target.</h3>
+                <p>Disregard z coordinates and focus on aligning the gripper with the target.</p>
+                <p><code>while np.linalg.norm(box1_position[:2] - gripper_position[:2]) > distance_threshold:</code></p>
+                <p>As each step is simulated, the gripper will be vertically aligned with the target.</p>
+            </div>
 
-         <!-- Section: The Outcome -->
-         <div class="module-section" id="the-outcome">
-            <h3>The Outcome</h3>
-            <p>Once the code finishes, there should be three blocks stacked on top of each other.</p>
-        </div>
+            <!-- Section: Adjust Gripper -->
+            <div class="module-section" id="adjust-gripper">
+                <h3>Adjust gripper position to properly lower itself to grab the target</h3>
+                <p>Ensure the gripper position is at appropriate height to lower to the target position.</p>
+                <p>Once at appropriate height, the gripper should close onto the target and grasp the block.</p>>
+            </div>
 
-        <!-- Section: Key Takeaways -->
-        <div class="module-section" id="key-takeaways">
-            <h3>Key Takeaways</h3>
-            <ul class="custom-list">
-                <li>📍 Use the visualization to visualize where the gripper and blocks are.</li>
-                <li>📐 Calculate the direction and normalize to move the gripper to the target.</li>
-                <li>🔄 Use a `while` loop to keep moving the gripper until it's close to its target.</li>
-                <li>🏆 Repeat the process for each block. Success!</li>
-            </ul>
-        </div>
+            <!-- Section: Lifting The Object  -->
+            <div class="module-section" id="lifting-the-object">
+                <h3>Lifting the gripper with the block</h3>
+                <p>To ensure the block is still with the gripper and doesn't get out of reach, the z coordinate condition should be within range.</p>
+            </div>
 
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_eight_given') }}" class="secondary-button">Back: Environment</a>
-            <a href="{{ url_for('module_eight_download') }}" class="secondary-button">Next: Modulde 9</a>
-        </div>
+            <!-- Section: The Outcome -->
+            <div class="module-section" id="the-outcome">
+                <h3>The Outcome</h3>
+                <p>Once the code finishes, there should be three blocks stacked on top of each other.</p>
+            </div>
 
+            <!-- Section: Key Takeaways -->
+            <div class="module-section" id="key-takeaways">
+                <h3>Key Takeaways</h3>
+                <ul class="custom-list">
+                    <li>📍 Use the visualization to visualize where the gripper and blocks are.</li>
+                    <li>📐 Calculate the direction and normalize to move the gripper to the target.</li>
+                    <li>🔄 Use a `while` loop to keep moving the gripper until it's close to its target.</li>
+                    <li>🏆 Repeat the process for each block. Success!</li>
+                </ul>
+            </div>
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_eight_given') }}" class="secondary-button">Back: Environment</a>
+                <a href="{{ url_for('course8quiz8') }}" class="secondary-button">Next: Quiz</a>
+            </div>
+        </div>
     </div> <!-- End of course-main-content -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSwitch = document.getElementById("toggle-explainer");
+            const notificationBubble = document.getElementById("notification");
+    
+            // If either element isn't found, stop the script
+            if (!toggleSwitch || !notificationBubble) {
+                console.warn("Explainer toggle not initialized: elements not found.");
+                return;
+            }
+    
+            setTimeout(() => {
+                notificationBubble.classList.add("fade-out");
+            }, 1000);
+    
+            toggleSwitch.addEventListener("change", function () {
+                if (this.checked) {
+                    notificationBubble.textContent = "Toggle Me Off";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.add("highlight-explain");
+                    });
+                } else {
+                    notificationBubble.textContent = "Toggle Me To Explain Text";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.remove("highlight-explain");
+                    });
+                }
+            });
+        });
+    </script>
+
 </div> <!-- End of course-container -->
 {% endblock %}

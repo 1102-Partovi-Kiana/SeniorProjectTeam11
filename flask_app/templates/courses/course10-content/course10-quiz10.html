@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Quiz 8 - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_ten') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_about') }}" class="course-link">About</a>
+                <ul class="sub-list">
+                    <li><a href="#print-statement">Fetch Robot with Sensors</a></li>
+                    <li><a href="#video">Fetch Sensors Robot Simulation Video</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Fetch Sensors Robot</a></li>
+                    <li><a href="#video-two">Real Fetch Sensors Robot Video</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-organize-with-sensors">Word Bank</a></li>
+                    <li><a href="#given-fetch-organize-with-sensors">What is Given</a></li>
+                    <li><a href="#retrieve-fetch-organize-with-sensors">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-fetch-organize-with-sensors">Word Bank</a></li>
+                    <li><a href="#code-fetch-organize-with-sensors">What Needs to Be Coded</a></li>
+                </ul>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('course10quiz10') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_link') }}" class="course-link">Time to Code</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_ten_certificate_organize_sensors') }}" class="course-link">Certificate</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Quiz 10</h1>
+            <p class="page-description">Test Your Knowledge</p>
+        </header>
+        <!-- Quiz Section -->
+        <div class="module-section" id="quiz-10">
+            <h3>Quiz: Fetch Sensors </h3>
+
+            <script>
+                const quiz_id = "course10_quiz10";
+            </script>
+
+            <div id="quiz-container">
+                <!-- This will be dynamically populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_ten_code') }}" class="secondary-button">Back: Coding Logic</a>
+            <a href="{{ url_for('module_ten_download') }}" class="secondary-button">Next: Cheat Sheet</a>
+        </div>
+        
+    </div> <!-- End of course-main-content -->
+
+</div> <!-- End of course-container -->
+{% endblock %}

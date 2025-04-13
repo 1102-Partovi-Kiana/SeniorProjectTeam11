@@ -66,9 +66,9 @@
                             </ul>
                         </div>
                        
-                        <button class="tab-button" id="dark-mode-pop-up-window" data-tippy-content="Switch the Pop Up Window to Dark Mode">
+                        <!-- <button class="tab-button" id="dark-mode-pop-up-window" data-tippy-content="Switch the Pop Up Window to Dark Mode">
                             <i class="fas fa-adjust"></i> 
-                        </button>
+                        </button> -->
 
                         <button class="tab-button" id="review-course-content" data-tippy-content="Review Course Content">
                             <i class="fas fa-book"></i> 
@@ -393,6 +393,14 @@ for _ in range(150):
             </div>
         </div>
     </div>
+
+    <div id="core-certificate-popup" class="core-cert-popup core-cert-popup-hidden">
+        <button class="core-cert-close" id="core-cert-close-button">&times;</button>
+        <h2 class="core-cert-title">SUCCESS</h2>
+        <p class="core-cert-message">YAY GOOD JOB!</p>
+        <a href="{{ url_for('module_ten_certificate_organize_sensors') }}" class="core-cert-button" target="_blank">Get My Certificate</a>
+    </div>
+
 </section>
 
 <!-- CodeMirror and Script Initialization -->
@@ -472,6 +480,7 @@ for _ in range(150):
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
 <script>
     let currentTheme = "monokai"; 
@@ -739,17 +748,18 @@ closePopup.addEventListener('click', () => {
     }, 600); // Match the transition duration
 });
 
-// Minimize the popup (to the bottom half)
 minimizePopup.addEventListener('click', () => {
-    popupWindow.classList.add('minimized');
-    popupWindow.classList.remove('maximized');
-    minimizePopup.style.display = 'none';
-    maximizePopup.style.display = 'inline-block';
+        popupWindow.style.height = 'auto';
+        popupWindow.style.bottom = '0';
 
-    // Ensure it stays at the bottom and reduces height
-    popupWindow.style.height = '50%'; // Reduce height to half
-    popupWindow.style.bottom = '0'; // Stay anchored at the bottom
-    popupWindow.style.transform = 'translateY(0)'; // No upward movement
+        requestAnimationFrame(() => {
+            popupWindow.style.transform = 'translateY(50%)';
+        });
+
+        popupWindow.classList.add('minimized');
+        popupWindow.classList.remove('maximized');
+        minimizePopup.style.display = 'none';
+        maximizePopup.style.display = 'inline-block';
 });
 
 // Maximize the popup (to the full height)
@@ -926,6 +936,19 @@ document.getElementById('run-code').addEventListener('click', async function () 
             secondaryOutputCard.classList.add('success');
             secondaryOutputCard.innerHTML = `<p>Your code ran successfully 😊</p>`;
             outputBox.innerHTML += `<p>${data.message}</p>`;
+
+            const certPopup = document.getElementById('core-certificate-popup');
+                if (certPopup) {
+                    certPopup.classList.remove('core-cert-popup-hidden');
+                    certPopup.classList.add('core-cert-popup-visible');
+
+                    confetti({
+                        particleCount: 150,
+                        spread: 100,
+                        origin: { y: 0.6 }
+                    });
+
+                }
 
             // If there were previous error attempts, then assume the user fixed the errors.
             // In that case, we clear/hide error-specific UI elements while keeping the success message.
@@ -1478,38 +1501,6 @@ document.getElementById('clear-hints-history').addEventListener('click', () => {
     });
 
     document.getElementById("syntax-highlight").addEventListener("click", toggleSyntaxHighlighting);
-
-   // Add event listener to the dark mode toggle button
-document.getElementById("dark-mode-pop-up-window").addEventListener("click", () => {
-    // Select the popup window element
-    const popupWindow = document.getElementById("popup-window");
-
-    // Toggle the "dark-mode" class on the popup window
-    popupWindow.classList.toggle("dark-mode");
-
-    // Check if the popup window is now in dark mode
-    const isDarkMode = popupWindow.classList.contains("dark-mode");
-
-    // Update the button's tooltip and icon
-    const button = document.getElementById("dark-mode-pop-up-window");
-
-    // Update tooltip using Tippy.js (if applicable)
-    if (button._tippy) {
-        button._tippy.setContent(
-            isDarkMode
-                ? "Switch the Pop-Up Window to Light Mode"
-                : "Switch the Pop-Up Window to Dark Mode"
-        );
-    }
-
-    // Update the button's icon (sun for light mode, moon for dark mode)
-    button.innerHTML = isDarkMode
-        ? '<i class="fas fa-sun"></i>' // Sun icon for light mode
-        : '<i class="fas fa-moon"></i>'; // Moon icon for dark mode
-
-    // Optional feedback for the user
-    alert(isDarkMode ? "Dark Mode Enabled for the Pop-Up Window!" : "Light Mode Enabled for the Pop-Up Window!");
-});
 
 </script>
 {% endblock %}

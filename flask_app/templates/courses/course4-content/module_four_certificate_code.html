@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Certificate - CORE</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_naming_conventions') }}" class="course-link">Naming Conventions</a>
+                <ul class="sub-list">
+                    <li><a href="#why-it-matters">Why They Matter</a></li>
+                    <li><a href="#best-practices">Best Practices</a></li>
+                    <li><a href="#common-naming-mistakes">Common Naming Mistakes</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_comments') }}" class="course-link">Commenting</a>
+                <ul class="sub-list">
+                    <li><a href="#why-comments-matter">Why Comments Matters</a></li>
+                    <li><a href="#focus-on-the-why">Focus on the "Why"</a></li>
+                    <li><a href="#clear">Being Clear and Concise</a></li>
+                    <li><a href="#single-line">Single-Line Comments</a></li>
+                    <li><a href="#block-commenting">Block Comments</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_indentation') }}" class="course-link">Indentation</a>
+                <ul class="sub-list">
+                    <li><a href="#why-indenting-matters">Indent Properly</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_variables') }}" class="course-link">Variables</a>
+                <ul class="sub-list">
+                    <li><a href="#what-are-variables">What are Variables</a></li>
+                    <li><a href="#naming-variables">How to Name Variables</a></li>
+                    <li><a href="#initializing-variables">Initializing Variables</a></li>
+                    <li><a href="#variable-types">Variable Types</a></li>
+                    <li><a href="#using-constants">The Use of Constants</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_control_flow') }}" class="course-link">Control Flow</a>
+                <ul class="sub-list">
+                    <li><a href="#conditional-statements">Conditional Statements</a></li>
+                    <li><a href="#loops">Loops</a></li>
+                    <li><a href="#break-and-continue">Break and Continue</a></li>
+                    <li><a href="#nested-control-flow">Nested Control Flow</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_loops') }}" class="course-link">Loops</a>
+                <ul class="sub-list">
+                    <li><a href="#for-loops">For Loops</a></li>
+                    <li><a href="#while-loops">While Loops</a></li>
+                    <li><a href="#do-while-loops">Do-While Loops</a></li>
+                    <li><a href="#best-practices">Best Practices</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_functions') }}" class="course-link">Functions</a>
+                <ul class="sub-list">
+                    <li><a href="#what-are-they">What are Functions</a></li>
+                    <li><a href="#function-syntax">Function Syntax</a></li>
+                    <li><a href="#function-parameters">Function Parameters</a></li>
+                    <li><a href="#return-values">Return Values</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_debugging') }}" class="course-link">Debugging Techniques</a>
+                <ul class="sub-list">
+                    <li><a href="#print-statements">Print Statements</a></li>
+                    <li><a href="#debugger-tools">Debugging Tools</a></li>
+                    <li><a href="#rubber-duck-debugging">Rubber Duck Debugging</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course4quiz4') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_four_certificate_code') }}" class="course-link">Certificate</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <script>
+        function updateCertificatePreview() {
+            document.getElementById("certificatePreview").src = "/view_certificate?" + new Date().getTime();
+        }
+
+        window.onload = updateCertificatePreview;
+    </script>
+
+
+    <div class="course-main-content">
+
+        <!-- Certificate Section -->
+        <div class="module-section" id="certificate" style="display: flex; flex-direction: column; align-items: center;">
+            
+            <!-- Certificate Preview -->
+            <img id="certificatePreview" src="" alt="Certificate Preview"
+                style="width: 80%; max-width: 800px; border: 1px solid black; margin-bottom: 20px; border-radius: 8px;">
+
+            <div style="display: flex; gap: 10px;">
+                  <button class="download-button" onclick="updateCertificatePreview()">
+                    <i class="fas fa-sync-alt"></i> Refresh Preview
+                  </button>
+                  <a href="/download_certificate">
+                    <button class="download-button">
+                      <i class="fas fa-download"></i> Download Certificate
+                    </button>
+                  </a>
+                  
+            </div>
+        </div>
+        
+       <!-- Navigation Buttons -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_four_download') }}" class="secondary-button">Back: Cheat Sheet</a>
+        </div>
+        
+    </div> <!-- End of course-main-content -->
+    
+</div> <!-- End of course-container -->
+    
+{% endblock %}

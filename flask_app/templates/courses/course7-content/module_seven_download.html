@@ -50,11 +50,17 @@
                     <li><a href="#key-takeaways">Key Takeaways</a></li>
                 </ul>
             </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course7quiz7') }}" class="course-link">Quiz</a>
+            </li>
             <li class="course-item active">
                 <a href="{{ url_for ('module_seven_download') }}" class="course-link">Cheat Sheet</a>
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_seven_link') }}" class="course-link">Time to Code</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_seven_certificate_pick_and_place') }}" class="course-link">Certificate</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
@@ -88,7 +94,7 @@
         <!-- Next Button -->
 
         <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_seven_code') }}" class="secondary-button">Back: Coding Logic</a>
+            <a href="{{ url_for('course7quiz7') }}" class="secondary-button">Back: Quiz</a>
             <a href="{{ url_for('module_seven_link') }}" class="secondary-button">Next: Time to Code</a>
         </div>
 

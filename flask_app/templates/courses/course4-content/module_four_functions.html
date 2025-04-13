@@ -86,73 +86,90 @@
                 </ul>
             </li>
             <li class="course-item">
+                <a href="{{ url_for ('course4quiz4') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
                 <a href="{{ url_for ('module_four_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_certificate_code') }}" class="course-link">Certificate</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Functions</h1>
-            <p class="page-description">Learn how to utilize functions to make your code modular.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Functions</h1>
+                <p class="page-description">Learn how to utilize functions to make your code modular.</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
-        </div>
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
 
-            <!-- Section 1: What are Functions? -->
-        <div class="module-section" id="definition">
-            <h3>What are Functions?</h3>
-            <p>A function is a reusable block of code designed to perform a specific task. They follow the DRY principle: Don't Repeat Yourself. Use functions to avoid duplicating code</p>
-            <p>Functions are used to:</p>
-            <ul>
-                <li>Encapsulate logic into reusable components.</li>
-                <li>Reduce code duplication.</li>
-                <li>Make programs easier to debug.</li>
-                <li>Make programs easier to maintain.</li>
-            </ul>
-        </div>
+                <!-- Section 1: What are Functions? -->
+            <div class="module-section" id="definition">
+                <h3>What are Functions?</h3>
+                <p>A function is a reusable block of code designed to perform a specific task. They follow the DRY principle: Don't Repeat Yourself. Use functions to avoid duplicating code</p>
+                <p>Functions are used to:</p>
+                <ul>
+                    <li>Encapsulate logic into reusable components.</li>
+                    <li>Reduce code duplication.</li>
+                    <li>Make programs easier to debug.</li>
+                    <li>Make programs easier to maintain.</li>
+                </ul>
+            </div>
 
-        <!-- Section 3: Function Syntax -->
-        <div class="module-section" id="syntax">
-            <h3>Function Syntax</h3>
-            <p>In Python, a function is defined using the <code>def</code> keyword:</p>
-            <pre><code># Example of a simple function
-def print_hello():
-print("Hello, world!")</code></pre>
-            <p>To call the function, simply use its name followed by parentheses:</p>
-            <pre><code>print_hello()  # Outputs: Hello, world!</code></pre>
-        </div>
+            <!-- Section 3: Function Syntax -->
+            <div class="module-section" id="syntax">
+                <h3>Function Syntax</h3>
+                <p>In Python, a function is defined using the <code>def</code> keyword:</p>
+                <pre><code># Example of a simple function
+    def print_hello():
+    print("Hello, world!")</code></pre>
+                <p>To call the function, simply use its name followed by parentheses:</p>
+                <pre><code>print_hello()  # Outputs: Hello, world!</code></pre>
+            </div>
 
-        <!-- Section 4: Function Parameters -->
-        <div class="module-section" id="parameters">
-            <h3>Function Parameters</h3>
-            <p>Functions can accept parameters. Parameters are specified in parentheses during function definition:</p>
-            <pre><code># Function with parameters
-def print_name(name):
-print(f"Hello, {name}!")</code></pre>
-            <p>When calling the function, provide the proper arguments for the parameters:</p>
-            <pre><code>print_name("Bob")  # Outputs: Hello, Bob!</code></pre>
-        </div>
+            <!-- Section 4: Function Parameters -->
+            <div class="module-section" id="parameters">
+                <h3>Function Parameters</h3>
+                <p>Functions can accept parameters. Parameters are specified in parentheses during function definition:</p>
+                <pre><code># Function with parameters
+    def print_name(name):
+    print(f"Hello, {name}!")</code></pre>
+                <p>When calling the function, provide the proper arguments for the parameters:</p>
+                <pre><code>print_name("Bob")  # Outputs: Hello, Bob!</code></pre>
+            </div>
 
-        <!-- Section 5: Return Values -->
-        <div class="module-section" id="return-values">
-            <h3>Return Values</h3>
-            <p>Functions can return values using the <code>return</code> statement, allowing you to get and use the result:</p>
-            <pre><code># Function with a return value
-def add_numbers(a, b):
-    return a + b
+            <!-- Section 5: Return Values -->
+            <div class="module-section" id="return-values">
+                <h3>Return Values</h3>
+                <p>Functions can return values using the <code>return</code> statement, allowing you to get and use the result:</p>
+                <pre><code># Function with a return value
+    def add_numbers(a, b):
+        return a + b
 
-result = add_numbers(4, 2)
-print(result)  # Outputs: 6</code></pre>
-        </div>
+    result = add_numbers(4, 2)
+    print(result)  # Outputs: 6</code></pre>
+            </div>
 
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_four_loops') }}" class="secondary-button">Back: Loops</a> 
-            <a href="{{ url_for('module_four_debugging') }}" class="secondary-button">Next: Debugging Techniques</a>
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_four_loops') }}" class="secondary-button">Back: Loops</a> 
+                <a href="{{ url_for('module_four_debugging') }}" class="secondary-button">Next: Debugging Techniques</a>
+            </div>
         </div>
         
     </div> <!-- End of course-main-content -->

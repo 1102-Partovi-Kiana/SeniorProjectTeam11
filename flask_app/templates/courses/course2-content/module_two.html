@@ -17,7 +17,7 @@
                 <a href="#objectives" class="course-link">Objectives</a>
             </li>
             <li class="course-item"> 
-                <a href="#introduction-of-mobile-robotics" class="course-link">Introduction of Mobile Robotics</a>
+                <a href="{{ url_for ('intro_of_mobile_robots') }}" class="course-link">Introduction of Mobile Robotics</a>
                 <ul class="sub-list">
                     <li><a href="#agent">Agent</a></li>
                     <li><a href="#autonomy">Autonomy</a></li>
@@ -25,14 +25,14 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#industrial-robots" class="course-link">Industrial Robots</a>
+                <a href="{{ url_for ('industrial_robots') }}" class="course-link">Industrial Robots</a>
                 <ul class="sub-list">
                     <li><a href="#robotic-arms">Robotic Arms</a></li>
                     <li><a href="#robotic-arm-configurations">Types of Robotic Arm Configurations</a></li>
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#service-robots" class="course-link">Service Robots</a>
+                <a href="{{ url_for ('service_robots') }}" class="course-link">Service Robots</a>
                 <ul class="sub-list">
                     <li><a href="#healthcare-robots">Healthcare Robots</a></li>
                     <li><a href="#hospitality-robots">Hospitality Robots</a></li>
@@ -40,7 +40,7 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#mobile-robots" class="course-link">Mobile Robots</a>
+                <a href="{{ url_for ('mobile_robots') }}" class="course-link">Mobile Robots</a>
                 <ul class="sub-list">
                     <li><a href="#wheeled-robots">Wheeled Robots</a></li>
                     <li><a href="#legged-robots">Legged Robots</a></li>
@@ -49,7 +49,7 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#humanoid-robots" class="course-link">Humanoid Robots</a>
+                <a href="{{ url_for ('humanoid_robots') }}" class="course-link">Humanoid Robots</a>
                 <ul class="sub-list">
                     <li><a href="#applications-in-research">Applications in Research</a></li>
                     <li><a href="#entertainment-robots">Entertainment Robots</a></li>
@@ -57,7 +57,7 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#agricultural-robots" class="course-link">Agricultural Robots</a>
+                <a href="{{ url_for ('agricultural_robots') }}" class="course-link">Agricultural Robots</a>
                 <ul class="sub-list">
                     <li><a href="#crop-monitoring">Crop Monitoring</a></li>
                     <li><a href="#harvesting">Harvesting</a></li>
@@ -66,7 +66,7 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#medical-robots" class="course-link">Medical Robots</a>
+                <a href="{{ url_for ('medical_robots') }}" class="course-link">Medical Robots</a>
                 <ul class="sub-list">
                     <li><a href="#surgical-robots">Surgical Robots</a></li>
                     <li><a href="#rehabilitation-robots">Rehabilitation Robots</a></li>
@@ -75,56 +75,10 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#exploration-robots" class="course-link">Exploration Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#planetary-rovers">Planetary Rovers</a></li>
-                    <li><a href="#underwater-exploration-robots">Underwater Exploration Robots</a></li>
-                </ul>
+                <a href="{{ url_for ('course2quiz2') }}" class="course-link">Quiz</a>
             </li>
             <li class="course-item">
-                <a href="#military-defense-robots" class="course-link">Military and Defense Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#unmanned-aerial-vehicles">Unmanned Aerial Vehicles</a></li>
-                    <li><a href="#bomb-disposal-robots">Bomb Disposal Robots</a></li>
-                    <li><a href="#reconnaissance-robots">Reconnaissance Robots</a></li>
-                </ul>
-            </li>
-            <li class="course-item">
-                <a href="#educational-robots" class="course-link">Educational Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#programmable-robotics-education">Programmable Robotics for Education</a></li>
-                </ul>
-            </li>
-            <li class="course-item">
-                <a href="#entertainment-robots" class="course-link">Entertainment Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#robotic-companions">Robotic Companions</a></li>
-                    <li><a href="#interactive-toys">Interactive Toys</a></li>
-                    <li><a href="#robot-performers">Robot Performers</a></li>
-                </ul>
-            </li>
-            <li class="course-item">
-                <a href="#collaborative-robots-cobots" class="course-link">Collaborative Robots (Cobots)</a>
-                <ul class="sub-list">
-                    <li><a href="#social-robots">Social Robots</a></li>
-                    <li><a href="#therapy">Therapy</a></li>
-                    <li><a href="#companionship">Companionship</a></li>
-                    <li><a href="#social-interaction">Social Interaction</a></li>
-                </ul>
-            </li>
-            <li class="course-item">
-                <a href="#exoskeleton-robots" class="course-link">Exoskeleton Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#rehabilitation">Rehabilitation</a></li>
-                    <li><a href="#assistive-devices">Assistive Devices</a></li>
-                    <li><a href="#industrial-settings">Industrial Settings</a></li>
-                </ul>
-            </li>
-            <li class="course-item">
-                <a href="#bio-inspired-robots" class="course-link">Bio-inspired Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#swarm-robots">Swarm Robots</a></li>
-                </ul>
+                <a href="{{ url_for ('module_two_certificate') }}" class="course-link">Certificate</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
@@ -143,7 +97,7 @@
                             <img src="/static/img/mobile.png" alt="Introduction of Mobile Robotics">
                         </div>
                         <h4>Introduction of Mobile Robotics</h4>
-                        <p>Learn the basics of mobile robotics and its core concepts.</p>
+                        <p>Explore the basics and scope of mobile robotics.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -152,7 +106,7 @@
                             <img src="/static/img/industry.png" alt="Industrial Robots">
                         </div>
                         <h4>Industrial Robots</h4>
-                        <p></p>
+                        <p>Used in factories for tasks like assembly and welding.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -161,7 +115,7 @@
                             <img src="/static/img/service.png" alt="Service Robots">
                         </div>
                         <h4>Service Robots</h4>
-                        <p></p>
+                        <p>Learn the prime assitance of tasks.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -170,7 +124,7 @@
                             <img src="/static/img/wheel.png" alt="Mobile Robots">
                         </div>
                         <h4>Mobile Robots</h4>
-                        <p></p>
+                        <p>Robots that move through various environments.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -179,88 +133,25 @@
                             <img src="/static/img/dancing.png" alt="Humanoid Robots">
                         </div>
                         <h4>Humanoid Robots</h4>
-                        <p></p>
+                        <p>Robots designed to mimic human form and behavior.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="objective-card">
                         <div class="icon">
-                            <img src="/static/img/puzzle.png" alt="Agricultural Robots">
+                            <img src="/static/img/ag.png" alt="Agricultural Robots">
                         </div>
                         <h4>Agricultural Robots</h4>
-                        <p></p>
+                        <p>Learn how agricultural robots work.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="objective-card">
                         <div class="icon">
-                            <img src="/static/img/coding.png" alt="Medical Robots">
+                            <img src="/static/img/md.png" alt="Medical Robots">
                         </div>
                         <h4>Medical Robots</h4>
-                        <p></p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/people.png" alt="Exploration Robots">
-                        </div>
-                        <h4>Exploration Robots</h4>
-                        <p></p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/future.png" alt="Military and Defense Robots">
-                        </div>
-                        <h4>Military and Defense Robots</h4>
-                        <p></p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/future.png" alt="Educational Robots">
-                        </div>
-                        <h4>Educational Robots</h4>
-                        <p></p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/future.png" alt="Entertainment Robots">
-                        </div>
-                        <h4>Entertainment Robots</h4>
-                        <p></p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/future.png" alt="Collaborative Robots (Cobots)">
-                        </div>
-                        <h4>Collaborative Robots (Cobots)</h4>
-                        <p></p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/future.png" alt="Exoskeleton Robots">
-                        </div>
-                        <h4>Exoskeleton Robots</h4>
-                        <p></p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/future.png" alt="Bio-inspired Robots">
-                        </div>
-                        <h4>Bio-inspired Robots</h4>
-                        <p>.</p>
+                        <p>Discover the impact of medical robots.</p>
                     </div>
                 </div>
             </div> <!-- End of row -->            

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>About the Fetch Reach Robot - CORE</title>
+<title>Time to Code the Fetch Reach Robot - CORE</title>
 {% endblock %}
 
 {% block body %}
@@ -34,8 +34,17 @@
                         <li><a href="#code-fetch-stack">What Needs to Be Coded</a></li>
                     </ul>
                 </li>
+                <li class="course-item">
+                    <a href="{{ url_for ('course8quiz8') }}" class="course-link">Quiz</a>
+                </li>
+                <li class="course-item">
+                    <a href="{{ url_for ('module_eight_download') }}" class="course-link">Cheat Sheet</a>
+                </li>
                 <li class="course-item active">
                     <a href="{{ url_for ('module_eight_link') }}" class="course-link">Time to Code</a>
+                </li>
+                <li class="course-item">
+                    <a href="{{ url_for ('module_eight_certificate_stack') }}" class="course-link">Certificate</a>
                 </li>
             </ul>
         </div> <!-- End of course-sidebar -->
@@ -55,16 +64,28 @@
         <!-- Robotic Environment Section -->
         <div class="module-section" id="robotic-environment">
             <h3>Interactive Simulation</h3>
-            <p>Below is the robotic environment where you can code and simulate the Fetch-Reach Robot:</p>
-            <a href="{{ url_for('RenderFetchStackEnv') }}" class="primary-button">
-                Open Coding Environment
-            </a>
-
+            <p>Below is the robotic environment where you can <strong>code</strong> and <strong>simulate</strong> the <strong>Fetch-Stack Robot</strong>:</p>
+          
+            <div style="text-align: center; margin-top: 20px;">
+                <div style="position: relative; display: inline-block;">
+                    <div style="background: #f0f0f0; color: #333; padding: 8px 14px; border-radius: 12px; font-weight: bold; font-family: 'Poppins', sans-serif; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                        CLICK ME to code!
+                    </div>
+                    <div style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid #f0f0f0;"></div>
+                </div>
+                <br>
+                <a href="{{ url_for('RenderFetchStackEnv') }}" style="display: inline-block;">
+                    <img src="{{ url_for('static', filename='img/clearrobot.gif') }}" 
+                         alt="Chatbot Logo" 
+                         style="background-color: transparent; display: block; margin: 0 auto; width: 100px; height: auto; cursor: pointer;">
+                </a>
+            </div>
         </div>
 
         <!-- Next Button -->
         <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_six_code') }}" class="secondary-button">Back: Coding Logic</a>
+            <a href="{{ url_for('module_eight_download') }}" class="secondary-button">Back: Cheat Sheet</a>
+            <a href="{{ url_for('module_eight_certificate_stack') }}" class="secondary-button">Next: Certificate</a>
         </div>
 
     </div> <!-- End of course-main-content -->

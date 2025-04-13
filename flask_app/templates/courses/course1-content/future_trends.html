@@ -215,18 +215,102 @@
                     <li><a href="#hri">Human-Robot Interaction (HRI)</a></li>
                 </ul>
             </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course1quiz1_2') }}" class="course-link">Quiz 2</a>
+            </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Future Trends</h1>
-            <p class="page-description">As robotics continues to evolve, new trends and advancements are shaping the future of this field. Understanding these emerging trends is crucial for staying up-to-date and harnessing the potential of future robotic technologies.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Future Trends</h1>
+                <p class="page-description">As robotics continues to evolve, new trends and advancements are shaping the future of this field. Understanding these emerging trends is crucial for staying up-to-date and harnessing the potential of future robotic technologies.</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
+
+            <!-- Section 1: AI -->
+            <div class="module-section" id="AI">
+                <h3>Artificial Intelligence (AI) in Robotics</h3>
+                <p>Artificial intelligence (AI) has become a driving force in robotics, enabling robots to exhibit intelligent behaviors and perform complex tasks. AI algorithms, such as machine learning and deep learning, empower robots to perceive, reason, and make decisions based on data. By leveraging AI, robots can adapt to changing environments, learn from experience, and interact with humans more effectively.</p>
+                <!-- Examples - AI -->
+                <div class="subsection">
+                    <h4>Artificial intelligence in robotics involves various techniques and applications:</h4>
+                    <ul>
+                        <li><strong>Perception:&nbsp;</strong>AI algorithms enable robots to sense and interpret their surroundings through vision, speech recognition, and sensor data processing.</li>
+                        <li><strong>Planning and Decision-making:&nbsp;</strong>Robots equipped with AI can analyze information, evaluate different courses of action, and make intelligent decisions to achieve specific goals.</li>
+                        <li><strong>Learning and Adaptation:&nbsp;</strong>Machine learning algorithms enable robots to learn from data, improve their performance over time, and adapt to new situations.</li>
+                        <li><strong>Natural Language Processing:&nbsp;</strong>AI facilitates human-robot interaction by enabling robots to understand and respond to human speech and commands.</li>
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 2: Soft Robotics-->
+            <div class="module-section" id="soft-robotics">
+                <h3>Soft Robotics</h3>
+                <p>Soft robotics is an emerging field that focuses on the development of robots made from compliant and flexible materials. Unlike traditional rigid robots, soft robots mimic the deformability and adaptability of living organisms, allowing them to interact with objects and environments more safely and effectively.</p>
+                <!-- Examples - Soft Robotics -->
+                <div class="subsection">
+                    <h4>Key features and applications of soft robotics include:</h4>
+                    <ul>
+                        <li><strong>Compliance and Flexibility:&nbsp;</strong>Soft robots are constructed using flexible materials, such as elastomers and soft polymers, which enable them to deform and change shape.</li>
+                        <li><strong>Safe Human Interaction:&nbsp;</strong>Soft robots are inherently safe for close human interaction, making them suitable for applications in healthcare, rehabilitation, and social assistance.</li>
+                        <li><strong>Delicate Object Manipulation:&nbsp;</strong>The compliant nature of soft robots allows them to handle fragile and delicate objects with precision and gentleness.</li>
+                        <li><strong>Morphological Adaptation:&nbsp;</strong>Soft robots can alter their shape and morphology to navigate complex and unpredictable environments, such as tight spaces or uneven terrains.</li>
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 3: Swarm Robotics-->
+            <div class="module-section" id="swarm-robotics">
+                <h3>Swarm Robotics</h3>
+                <p>Swarm robotics focuses on the coordination and cooperation of multiple robots, known as swarm robots, to accomplish complex tasks. Inspired by the collective behavior of social insects, swarm robotics emphasizes decentralized control and self-organization. By working together as a cohesive group, swarm robots can tackle challenges that would be difficult or impossible for individual robots.</p>
+                <!-- Examples - Swarm Robotics -->
+                <div class="subsection">
+                    <h4>Key characteristics and applications of swarm robotics include:</h4>
+                    <ul>
+                        <li><strong>Decentralized Control:&nbsp;</strong>Swarm robots operate based on simple rules and local interactions, with no centralized control or global coordination.</li>
+                        <li><strong>Emergent Behavior:&nbsp;</strong>Through local interactions, swarm robots exhibit emergent behavior, where the collective actions of the swarm result in intelligent and adaptive behaviors.</li>
+                        <li><strong>Robustness and Redundancy:&nbsp;</strong>Swarm robotics offers robustness and fault tolerance, as the loss of individual robots does not significantly impact the overall performance of the swarm.</li>
+                        <li><strong>Distributed Tasks:&nbsp;</strong>Swarm robots can be deployed in large numbers to perform tasks such as environmental monitoring, search and rescue, and distributed sensing.</li>
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 4: HRI -->
+            <div class="module-section" id="hri">
+                <h3>Human-Robot Interaction (HRI) </h3>
+                <p>Human-robot interaction (HRI) focuses on designing robots that can interact and collaborate seamlessly with humans. HRI encompasses various aspects, including understanding human emotions, natural language processing, and intuitive interfaces. The goal is to create robots that are easy to communicate with, understand human intentions, and adapt to individual preferences.</p>
+                <!-- Examples - HRI -->
+                <div class="subsection">
+                    <h4>Key aspects and technologies related to human-robot interaction include:</h4>
+                    <ul>
+                        <li><strong>Natural Language Processing:&nbsp;</strong>HRI aims to develop robots that can understand and respond to human speech, enabling intuitive communication between humans and robots.</li>
+                        <li><strong>Gesture and Facial Recognition:&nbsp;</strong>Robots equipped with computer vision systems can recognize human gestures and facial expressions, enhancing communication and interaction.</li>
+                        <li><strong>Social and Emotional Interaction:&nbsp;</strong>HRI explores the development of robots capable of recognizing and responding to human emotions, fostering more natural and engaging interactions.</li>
+                        <li><strong>Intuitive Interfaces: &nbsp;</strong>User-friendly interfaces, such as touch screens or voice commands, enable humans to interact with robots in an intuitive and accessible manner.</li>
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('implications') }}" class="secondary-button">Back: Implications</a>
+                <a href="{{ url_for('course1quiz1_2') }}" class="secondary-button">Next: Quiz 2</a>
+            </div>
         </div>
 
         <!-- Section 1: AI -->

@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Agricultural Robots - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item"> 
+                <a href="{{ url_for ('intro_of_mobile_robots') }}" class="course-link">Introduction of Mobile Robotics</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('industrial_robots') }}" class="course-link">Industrial Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('service_robots') }}" class="course-link">Service Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('mobile_robots') }}" class="course-link">Mobile Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('humanoid_robots') }}" class="course-link">Humanoid Robots</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('agricultural_robots') }}" class="course-link">Agricultural Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#agricultural-robots">Agricultural Robots</a></li>
+                    <li><a href="#apps-of-agricultural-robots">Applications of Agricultural Robots</a></li>
+                    <li><a href="#seeding">Seeding</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('medical_robots') }}" class="course-link">Medical Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course2quiz2') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_two_certificate') }}" class="course-link">Certificate</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Agricultural Robots</h1>
+                <p class="page-description"> Discover how robots are used to optimize tasks of farming.</p>
+            </header>
+
+            <!-- Page Divider -->
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
+            
+            <!-- Section 1: Agricultural Robots -->
+            <div class="module-section" id="agricultural-robots">
+                <h3>Agricultural Robots</h3>
+                <p>Agricultural robots have emerged as a transformative technology in modern farming practices. The development of agricultural robots can be traced back to the late 20th century, with early applications in crop monitoring and mechanized harvesting. Over the years, advancements in robotics, sensing technologies, and artificial intelligence have revolutionized the agricultural industry, enabling efficient and sustainable farming practices. A well known example of robots used in agriculture is Eli Whitney’s cotton gin. This machine separated cottonseed from cotton fibers quickly, creating up to fifty pounds of cleaned cotton a day, work equivalent to hundreds of hours if done manually. </p>
+                <div style="text-align: center;">
+                    <img src="{{ url_for('static', filename='img/eli.png') }}" alt="Eli Whitney’s cotton gin" style="max-width: 100%; height: auto;">
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 3: Applications of Agricultural Robots -->
+            <div class="category-section" id="apps-of-agricultural-robots">
+                <h2 class="category-title">Applications of Agricultural Robots</h2>
+                <div class="module-section">
+                    <h3>Crop Monitoring</h3>
+                    <p>Crop monitoring involves the use of agricultural robots to gather real-time data about crop health, growth, and environmental conditions. This data helps farmers make informed decisions regarding irrigation, fertilization, and pest management. Crop monitoring robots are equipped with sensors, such as multispectral or hyperspectral cameras and LiDAR, to capture data about crop health, moisture levels, nutrient deficiencies, and weed infestations. These robots often utilize autonomous navigation systems to cover large agricultural areas efficiently. </p>
+                    <p>Crop monitoring can find applications in various tasks, including:</p>
+                    <ul>
+                        <li><strong><em>Disease and Pest Detection:</em>&nbsp;</strong>Robots equipped with imaging sensors can identify early signs of crop diseases and pest infestations, allowing farmers to take timely preventive measures.
+                            Example: Blue River Technology's See & Spray robot, which uses computer vision to detect and selectively apply herbicides to weeds, minimizing chemical usage.
+                            </li>
+                        <li><strong><em>Yield Estimation:</em>&nbsp;</strong>Agricultural robots can collect data on crop density, plant height, and canopy cover to estimate yield potential, helping farmers optimize harvest planning and resource allocation.
+                            Example: Raptor Maps' drone-based thermal imaging system, which provides insights into crop health and predicts yield variations in large-scale farming operations.
+                            </li>
+                        <div class="robot-images" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                            <img src="{{ url_for('static', filename='img/blueriver.png') }}" alt="Blue Rivers See and Spray robot" style="width: 30%;">
+                            <img src="{{ url_for('static', filename='img/thermal.png') }}" alt="Raptor Maps’ thermal imaging system" style="width: 30%;">
+                        </div> 
+                    </ul>
+                </div>
+                <div class="module-section">
+                    <h3>Harvesting</h3>
+                    <p>Harvesting robots automate the labor-intensive process of harvesting crops, reducing the dependency on manual labor and improving efficiency. They have witnessed significant advancements, driven by the need to address labor shortages and improve productivity in the agricultural sector. Early developments focused on specialized harvesting robots for specific crops, such as strawberries and tomatoes. Harvesting robots are designed with dexterous manipulators and computer vision systems to identify ripe crops, perform precise cutting or picking motions, and gently handle delicate produce. They often employ machine learning algorithms to adapt to different crop varieties and environmental conditions.</p>
+                    <p>These robots can be found in various agricultural settings such as:</p>
+                    <ul>
+                        <li><strong><em>Fruit Picking:</em>&nbsp;</strong>Robots capable of identifying and picking ripe fruits, such as apples or oranges, with minimal damage to the crop. Example: FFRobotics' apple harvesting robot, which uses advanced vision systems and robotic arms to selectively harvest apples based on their ripeness.</li>
+                        <li><strong><em>Lettuce Thinning:</em>&nbsp;</strong>Robots designed to thin out lettuce plants by selectively removing excess seedlings, ensuring optimal spacing for growth. Example: Vision Robotics' lettuce thinning robot, which utilizes computer vision and mechanical tools to identify and remove unwanted lettuce plants in large-scale operations.</li>
+                    </ul>
+                    <div style="text-align: center;">
+                        <img src="{{ url_for('static', filename='img/apple.png') }}" alt="Apple Harvesting Robot from FFRobotics" style="max-width: 100%; height: auto;">
+                    </div>
+                </div> 
+
+                <div class="module-section">
+                    <h3>Seeding</h3>
+                    <p>Seeding robots automate the process of sowing seeds, providing precise and efficient seed placement in agricultural fields. These robots have evolved from traditional seed drills to autonomous systems capable of handling a wide range of crop varieties and planting patterns. Seeding robots feature precision seed placement mechanisms, integrated seed and fertilizer dispensers, and navigation systems to ensure accurate and uniform seed distribution. They can adapt to various soil types and planting configurations.</p>
+                    <p>Seeding robots can be found in:</p>
+                    <ul>
+                        <li><strong>Row Crop Planting:</strong> Robots designed to sow seeds in neat rows, optimizing plant spacing and facilitating uniform growth.
+                            Example: Dot Technology Corp's autonomous platform, which can perform precise row planting for crops like corn and soybeans.
+                            </li>
+                        <li><strong>Nursery Planting:</strong> Robots specialized in transplanting seedlings into nursery trays or pots with high precision and efficiency.
+                            Example: Harvest Automation's nursery robot, which automates the transplanting of potted plants in greenhouses, nurseries, and horticultural operations.
+                            </li>
+                    </ul>
+                    <div class="robot-images" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                        <img src="{{ url_for('static', filename='img/nur.png') }}" alt="Harvest Automation’s Nursery Robot" style="width: 30%;">
+                        <img src="{{ url_for('static', filename='img/dot.png') }}" alt="Dot Technology Corp's Autonomous Platform" style="width: 30%;">
+                    </div> 
+                </div> 
+
+                <div class="module-section">
+                    <h3>Precision farming</h3>
+                    <p>Precision farming involves the use of agricultural robots and advanced technologies to optimize resource management, reduce environmental impact, and improve overall farm productivity. These robot farming techniques emerged from the integration of robotics, GPS technology, remote sensing, and data analytics, revolutionizing farming practices worldwide. Precision farming robots are equipped with various sensors, such as GPS receivers, soil moisture sensors, and weather stations, to collect real-time data. They utilize advanced analytics and automation algorithms to optimize input usage, irrigation scheduling, and crop treatment.</p>
+                    <p>Precision farming robots are deployed in diverse agricultural activities, including:</p>
+                    <ul>
+                        <li><strong>Variable Rate Application:</strong> Robots capable of adjusting the application of fertilizers, pesticides, and water based on site-specific crop requirements.
+                            Example: John Deere's intelligent sprayers, which use sensor data and mapping technology to precisely target areas in need of treatment while minimizing chemical usage.                        
+                            </li>
+                        <li><strong>Autonomous Irrigation:</strong> Robots that autonomously monitor soil moisture levels and apply water as needed, ensuring efficient irrigation practices.
+                            Example: Taranis' autonomous irrigation system, which integrates sensor data, weather forecasts, and plant water needs to optimize irrigation scheduling in large-scale operations.                        
+                            </li>
+                    </ul>
+                </div> 
+            </div> <!-- End of module-section  -->
+
+            <div class="reference-section">
+                <h6>References</h6>
+                <p>
+                    <a href="https://www.researchgate.net/figure/Multi-robot-arms-used-for-increasing-efficiency-a-dual-robot-arm-for-pears-and-apples_fig1_382638356" target="_blank">https://www.researchgate.net/figure/Multi-robot-arms-used-for-increasing-efficiency-a-dual-robot-arm-for-pears-and-apples_fig1_382638356</a>
+                    <a href="https://www.fastcompany.com/2681422/robots-can-now-tend-your-garden-for-you" target="_blank">https://www.fastcompany.com/2681422/robots-can-now-tend-your-garden-for-you</a>
+                    <a href="https://www.dtnpf.com/agriculture/web/ag/news/article/2020/12/01/technology-autonomy-dot" target="_blank">https://www.dtnpf.com/agriculture/web/ag/news/article/2020/12/01/technology-autonomy-dot</a>
+                </p>
+            </div>
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('humanoid_robots') }}" class="secondary-button">Back: Humanoid Robots</a>
+                <a href="{{ url_for('medical_robots') }}" class="secondary-button">Next: Medical Robots</a>
+            </div>
+        </div>
+        
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

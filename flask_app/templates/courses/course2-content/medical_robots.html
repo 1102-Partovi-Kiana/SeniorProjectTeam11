@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Medical Robots - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item"> 
+                <a href="{{ url_for ('intro_of_mobile_robots') }}" class="course-link">Introduction of Mobile Robotics</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('industrial_robots') }}" class="course-link">Industrial Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('service_robots') }}" class="course-link">Service Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('mobile_robots') }}" class="course-link">Mobile Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('humanoid_robots') }}" class="course-link">Humanoid Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('agricultural_robots') }}" class="course-link">Agricultural Robots</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('medical_robots') }}" class="course-link">Medical Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#medical-robots">Medical Robots</a></li>
+                    <li><a href="#apps-of-medical-robots">Applications of Medical Robots</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course2quiz2') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_two_certificate') }}" class="course-link">Certificate</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Medical Robots</h1>
+                <p class="page-description"> Explore the different types of Medical Robots.</p>
+            </header>
+
+            <!-- Page Divider -->
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
+            
+            <!-- Section 1: Medical Robots -->
+            <div class="module-section" id="medical-robots">
+                <h3>Medical Robots</h3>
+                <p>Medical robots are those robotic systems used in medical procedures and settings. These systems have shown rapid growth over the decades, driven by technological improvements and advances in medical imaging. Medical robots have had a great impact on surgeries, both radiosurgery and tissue manipulation. These surgical systems have been beneficial as they reduce patient trauma and faster recovery times. They offer precision and dexterity, enabling precise movements and delicate procedures. With advanced imaging and guidance systems, they enhance visualization and assist in surgical planning and prioritize patient safety through built-in safety features.  However, the long term effects are still under investigation, as medical robots are a new concept. The  use of robotics in a medical setting emerged in the late 1980’s with the Robodoc (Integrated Medical Systems) used for prosthetic hip replacement. The system was composed of a robotic manipulator equipped with a milling device as its end effector that carved the shape of the cavity in the patients femur autonomously. On the other hand, in neurosurgery, the Unimation Puma 200 was introduced for brain biopsy during the 1990s. The applications of medical robotics are diverse and continue to expand. Surgical robots are used in procedures such as prostatectomy, cardiac surgery, and gynecological surgery. Rehabilitation robots aid in stroke rehabilitation, spinal cord injury recovery, and the treatment of musculoskeletal disorders. Robot prosthetics improve the lives of amputees by restoring mobility and enabling them to perform delicate tasks. Robotic exoskeletons find applications in rehabilitation, military assistance, and industrial settings.</p>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 3: Applications of Medical Robots -->
+            <div class="category-section" id="apps-of-medical-robots">
+                <h2 class="category-title">Applications of Medical Robots</h2>
+                <div class="module-section">
+                    <h3>Surgical Robots</h3>
+                    <ul>
+                        <li>Surgical robots are sophisticated robotic systems designed to assist surgeons in performing precise and minimally invasive procedures with improved dexterity and visualization. These machines are required to work within specific constraints in order to ensure the safety of the patient; for these surgical systems should have tactile feedback, three-dimensional vision for precise hand-eye coordination and at least six degrees of freedom for full dexterity. The field of surgical robotics has witnessed significant progress since the introduction of the da Vinci Surgical System in the early 2000s. The da Vinci System employs a master-slave configuration, where the surgeon operates from a console, manipulating robotic arms equipped with specialized surgical instruments. Surgical robots typically comprise articulated robotic arms, end-effectors, and a control system. They incorporate advanced imaging technologies, such as stereoscopic cameras or fluorescence imaging, to provide surgeons with a magnified, high-resolution view of the surgical site. </li>
+                        <div style="text-align: center;">
+                            <img src="{{ url_for('static', filename='img/vinci.png') }}" alt="Da Vinci Surgical Systems" style="max-width: 100%; height: auto;">
+                        </div>
+                        <li>In addition to minimally invasive surgeries with the da Vinci Surgical Systems, surgery robots can perform microsurgeries. Robots aid in performing delicate microsurgeries, such as ophthalmic procedures and nerve repair, where high precision and stability are critical. These robots enable tremor-free movements and micron-level accuracy.</li>
+                        <li>Example: Microsure's MUSA robot enhances precision and stability for microvascular procedures like lymphatic surgery and super-microsurgery.</li>
+                        <div style="text-align: center;">
+                            <img src="{{ url_for('static', filename='img/musa.png') }}" alt="MUSA Robot for Microsurgeries" style="max-width: 100%; height: auto;">
+                        </div>
+                </div>
+                <div class="module-section">
+                    <h3>Rehabilitation Robots</h3>
+                    <p>Rehabilitation robots are advanced robotic systems designed to assist individuals in regaining mobility, strength, and function during the recovery process after an injury or medical condition. Rehabilitation robots have evolved from simple assistive devices to complex systems that integrate robotics, sensing technologies, and artificial intelligence to provide personalized and intensive rehabilitation programs. Rehabilitation robots incorporate sensor technologies, such as inertial measurement units and force sensors, to monitor and analyze patient movements, muscle activity, and force exertion. These robots utilize actuators, such as pneumatic or electric motors, to provide assistive or resistive forces during therapy sessions. Advanced control algorithms, including impedance control or adaptive learning, enable real-time adjustment of therapy parameters based on patient-specific needs.</p>
+                    <p>Rehabilitation robots are employed in various rehabilitation settings, including:</p>
+                    <ul>
+                        <li><strong><em>Upper Limb Rehabilitation:</em>&nbsp;</strong>Robots assist patients in regaining arm and hand functionality by providing support and guidance for repetitive exercises. These robots enable adjustable assistance levels and customizable therapy programs.
+                            Example: Kinova's JACO robotic arm that facilitates upper limb rehabilitation for individuals with conditions like stroke or spinal cord injury.
+                            </li>
+                        <li><strong><em>Gait Training:</em>&nbsp;</strong>Robots aid individuals with walking impairments in regaining mobility and improving their gait patterns through repetitive and intensive training. These robots offer body-weight support, adjustable walking speeds, and real-time feedback.
+                            Example: Hocoma's Lokomat system combines a robotic exoskeleton and a treadmill to provide intensive gait training for individuals with neurological disorders.
+                            </li>
+                    </ul>
+                    <div class="robot-images" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                        <img src="{{ url_for('static', filename='img/kinova.png') }}" alt="Kinova’s Robotic Arm" style="width: 30%;">
+                        <img src="{{ url_for('static', filename='img/mat.png') }}" alt="Lokomat for Mobility Rehabilitation" style="width: 30%;">
+                    </div> 
+                </div> 
+
+                <div class="module-section">
+                    <h3>Robot Prosthetics</h3>
+                    <p>Robot prosthetics, also known as bionic prostheses, are advanced artificial limbs that mimic the functionality and appearance of natural limbs. Robot prosthetics are typically composed of lightweight materials, sensors, actuators, and advanced control systems. They incorporate myoelectric or neural interfaces that enable users to control the prosthetic limb using their residual muscle signals or neural impulses. One of the earliest written references to prosthetic limbs is by Ambroise Paré during the 1570s; he was a military surgeon that had amputated many soldiers arms or legs. He decided to design dn build artificial limbs to help the men injured, as he found that many of them preferred taking their own lives than living without a limb. </p>
+                    <p>Robot prosthetics find applications in various amputation levels, including: </p>
+                    <ul>
+                        <li><strong>Upper Limb Prosthetics:</strong> Robotic arms and hands restore upper limb functionality, allowing users to perform complex grasping and manipulation tasks. These prosthetics offer multiple degrees of freedom, tactile feedback, and intuitive control interfaces.
+                            Example: the VINCENTevolution 3, a modular prosthetic hand with advanced grip patterns and individual finger control.
+                            </li>
+                        <div style="text-align: center;">
+                            <img src="{{ url_for('static', filename='img/vinc.png') }}" alt="VINCENTevolution 3" style="max-width: 100%; height: auto;">
+                        </div>
+                        <li><strong>Lower Limb Prosthetics:</strong> Robotic legs and feet enable individuals with lower limb amputations to regain mobility, walk with a more natural gait, and navigate different terrains. These prosthetics incorporate advanced walking algorithms, shock absorption mechanisms, and energy return capabilities.
+                            Example: The Utah bionic leg by University of Utah's Bionic Engineering Lab. Designed for above-knee amputees, the Utah Bionic Leg combines powered knee and ankle joints with advanced AI. 
+                            </li>
+                        <div style="text-align: center;">
+                            <img src="{{ url_for('static', filename='img/lower.png') }}" alt="Utah Bionic Leg" style="max-width: 100%; height: auto;">
+                        </div>
+                    </ul>
+                </div> 
+
+                <div class="module-section">
+                    <h3>Robotic Exoskeletons</h3>
+                    <p>Robotic exoskeletons are wearable robotic devices that provide physical assistance and support to individuals with mobility impairments, enhancing their strength, endurance, and mobility. Robotic exoskeletons have evolved from rigid and bulky structures to lightweight, flexible systems with advanced actuation and sensing capabilities, enabling natural movements and reducing user fatigue. Robotic exoskeletons consist of rigid or soft wearable frames, actuators, sensors, and control systems. They are designed to augment human movements and provide assistive forces or resistive torques as required. These exoskeletons often incorporate algorithms for gait detection, motion intention recognition, and adaptive control.</p>
+                    <p>Robotic exoskeletons find applications in various domains, including:</p>
+                    <ul>
+                        <li><strong><em>Rehabilitation:</em>&nbsp;</strong>Exoskeletons support gait training and assist individuals with mobility impairments in regaining walking abilities and muscle strength.
+                            Example: Ekso Bionics' EksoNR, a robotic exoskeleton for neurorehabilitation that enables intensive gait training and helps individuals recovering from stroke or spinal cord injury.                        
+                            </li>
+                        <li><strong><em>Industrial and Military:</em>&nbsp;</strong>Exoskeletons assist workers in physically demanding tasks by reducing fatigue and the risk of musculoskeletal injuries. They also find applications in military contexts for load-carrying and soldier assistance. These exoskeletons provide load support, ergonomic design, and intuitive control interfaces.
+                            Example: Sarcos Robotics' Guardian XO full-body exoskeleton, which amplifies the wearer's strength and endurance for industrial and defense applications.                        
+                            </li>
+                    </ul>
+                    <div class="robot-images" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                        <img src="{{ url_for('static', filename='img/ekso.png') }}" alt="Ekso Bionics’ Exoskeleton " style="width: 30%;">
+                        <img src="{{ url_for('static', filename='img/sarco.png') }}" alt="Sarco Robotics Exoskeleton" style="width: 30%;">
+                    </div> 
+                </div> 
+            </div> <!-- End of module-section -->
+
+            <div class="reference-section">
+                <h6>References</h6>
+                <p>
+                    <a href="https://www.unitymedcenter.com/hospital/davinci-surgical-system.html" target="_blank">https://www.unitymedcenter.com/hospital/davinci-surgical-system.html</a>
+                    <a href="https://www.businesswire.com/news/home/20190607005175/en/Microsure’s-MUSA-Microsurgery-Robot-Receives-CE-mark" target="_blank">https://www.businesswire.com/news/home/20190607005175/en/Microsure’s-MUSA-Microsurgery-Robot-Receives-CE-mark</a>
+                    <a href="https://www.touchstonerehabilitation.com/kinova-jaco-assistive-robot" target="_blank">https://www.touchstonerehabilitation.com/kinova-jaco-assistive-robot</a>
+                    <a href="https://www.researchgate.net/figure/A-Brain-to-muscle-normalized-connectivity-strength-and-muscle-to-brain-normalized_fig4_376312628" target="_blank">https://www.researchgate.net/figure/A-Brain-to-muscle-normalized-connectivity-strength-and-muscle-to-brain-normalized_fig4_376312628</a>
+                    <a href="https://jaspert-kuhlmann.de/unsere-leistungen/orthopaedietechnik/armprothetik/" target="_blank">https://jaspert-kuhlmann.de/unsere-leistungen/orthopaedietechnik/armprothetik/</a>
+                    <a href="https://www.mech.utah.edu/utah-bionic-leg-in-science-robotics/" target="_blank">https://www.mech.utah.edu/utah-bionic-leg-in-science-robotics/</a>
+                </p>
+            </div>
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('agricultural_robots') }}" class="secondary-button">Back: Agricultural Robots</a>
+                <a href="{{ url_for('course2quiz2') }}" class="secondary-button">Next: Quiz</a>
+            </div>
+        </div>
+        
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

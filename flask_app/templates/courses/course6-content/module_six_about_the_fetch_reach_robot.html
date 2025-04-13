@@ -51,16 +51,22 @@
                 </ul>
             </li>
             <li class="course-item">
+                <a href="{{ url_for ('course6quiz6') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
                 <a href="{{ url_for ('module_six_download') }}" class="course-link">Cheat Sheet</a>
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_six_link') }}" class="course-link">Time to Code</a>
             </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_six_certificate_reach') }}" class="course-link">Certificate</a>
+            </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
-    <div class="robotics-content">
-        <div class="course-main-content">
+    <div class="course-main-content">
+        <div class="robotics-content">
             <!-- Page Header -->
             <header class="page-header">
                 <div class="toggle-container">
@@ -175,14 +181,20 @@
                 <a href="{{ url_for('module_six') }}" class="secondary-button">Back: Learning Objectives</a>
                 <a href="{{ url_for('module_six_given') }}" class="secondary-button">Next: Robot Environment</a>
             </div>
+        </div>
+    </div> <!-- End of course-main-content -->
 
-        </div> <!-- End of course-main-content -->
-    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const toggleSwitch = document.getElementById("toggle-explainer");
             const notificationBubble = document.getElementById("notification");
+    
+            // If either element isn't found, stop the script
+            if (!toggleSwitch || !notificationBubble) {
+                console.warn("Explainer toggle not initialized: elements not found.");
+                return;
+            }
     
             setTimeout(() => {
                 notificationBubble.classList.add("fade-out");
@@ -191,12 +203,19 @@
             toggleSwitch.addEventListener("change", function () {
                 if (this.checked) {
                     notificationBubble.textContent = "Toggle Me Off";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.add("highlight-explain");
+                    });
                 } else {
                     notificationBubble.textContent = "Toggle Me To Explain Text";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.remove("highlight-explain");
+                    });
                 }
             });
         });
     </script>
+    
     
 
 </div> <!-- End of course-container -->

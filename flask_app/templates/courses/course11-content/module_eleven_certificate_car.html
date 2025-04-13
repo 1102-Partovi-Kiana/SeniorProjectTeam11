@@ -5,6 +5,65 @@
 {% endblock %}
 
 {% block body %}
+
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="{{ url_for ('module_eleven') }}" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_about') }}" class="course-link">About</a>
+                <ul class="sub-list">
+                    <li><a href="#about-car">Autonomous Car Robot</a></li>
+                    <li><a href="#sim-v-real">Simulation vs. Real Car</a></li>
+                    <li><a href="#gallery">Autonomous Car Gallery</a></li>
+                    <li><a href="#real-world">Real-World Applicability</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_given') }}" class="course-link">Environment</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-car">Word Bank</a></li>
+                    <li><a href="#given-car">What is Given</a></li>
+                    <li><a href="#retrieve-car">What needs to be Retrieved</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_code') }}" class="course-link">Coding Logic</a>
+                <ul class="sub-list">
+                    <li><a href="#word-bank-car">Word Bank</a></li>
+                    <li><a href="#understand-the-environment">Understand the Environment</a></li>
+                    <li><a href="#initialize-the-action">Initialize the Action</a></li>
+                    <li><a href="#retrieve-sensor-values">Retrieve Sensor Values</a></li>
+                    <li><a href="#determine-movement">Determine Movement</a></li>
+                    <li><a href="#prepare-actions">Prepare Actions</a></li>
+                    <li><a href="#apply-actions">Apply Actions</a></li>
+                    <li><a href="#small-delay">Add a Delay</a></li>
+                    <li><a href="#while-loop">Embedding a While Loop</a></li>
+                    <li><a href="#key-takeaways">Key Takeaways</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course11quiz11') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_eleven_link') }}" class="course-link">Time to Code</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_eleven_certificate_car') }}" class="course-link">Certificate</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
     <script>
         function updateCertificatePreview() {
             document.getElementById("certificatePreview").src = "/view_certificate?" + new Date().getTime();
@@ -12,16 +71,37 @@
 
         window.onload = updateCertificatePreview;
     </script>
-<body>
-    <h1>Download Your Certificate</h1>
 
-    <!-- Certificate Preview -->
-    <img id="certificatePreview" src="" alt="Certificate Preview" style="display: flex; align-items: center; justify-content: center; width: 50%; border: 1px solid black; margin-bottom: 20px;">
 
-    <br>
-    <button onclick="updateCertificatePreview()">Refresh Preview</button>
-    <a href="/download_certificate">
-        <button>Download Certificate</button>
-    </a>
-</body>
+    <div class="course-main-content">
+
+        <!-- Certificate Section -->
+        <div class="module-section" id="certificate" style="display: flex; flex-direction: column; align-items: center;">
+            
+            <!-- Certificate Preview -->
+            <img id="certificatePreview" src="" alt="Certificate Preview"
+                style="width: 80%; max-width: 800px; border: 1px solid black; margin-bottom: 20px; border-radius: 8px;">
+
+            <div style="display: flex; gap: 10px;">
+                  <button class="download-button" onclick="updateCertificatePreview()">
+                    <i class="fas fa-sync-alt"></i> Refresh Preview
+                  </button>
+                  <a href="/download_certificate">
+                    <button class="download-button">
+                      <i class="fas fa-download"></i> Download Certificate
+                    </button>
+                  </a>
+                  
+            </div>
+        </div>
+        
+       <!-- Navigation Buttons -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('module_eleven_link') }}" class="secondary-button">Back: Time to Code</a>
+        </div>
+        
+    </div> <!-- End of course-main-content -->
+    
+</div> <!-- End of course-container -->
+    
 {% endblock %}

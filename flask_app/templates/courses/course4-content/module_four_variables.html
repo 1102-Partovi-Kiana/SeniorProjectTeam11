@@ -86,84 +86,101 @@
                 </ul>
             </li>
             <li class="course-item">
+                <a href="{{ url_for ('course4quiz4') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
                 <a href="{{ url_for ('module_four_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_certificate_code') }}" class="course-link">Certificate</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Variables</h1>
-            <p class="page-description">Learn the purpose and use of variables.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Variables</h1>
+                <p class="page-description">Learn the purpose and use of variables.</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
-        </div>
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
 
-        <!-- Section 1: What Are Variables? -->
-        <div class="module-section">
-            <h3>1. What Are Variables?</h3>
-            <p>Variables store data that can be used and changed throughout your program.</p>
-            <pre><code># Example
-album_name = "1989"
-release_year = 2014
-    </code></pre>
-        </div>
+            <!-- Section 1: What Are Variables? -->
+            <div class="module-section">
+                <h3>1. What Are Variables?</h3>
+                <p>Variables store data that can be used and changed throughout your program.</p>
+                <pre><code># Example
+    album_name = "1989"
+    release_year = 2014
+        </code></pre>
+            </div>
 
-        <!-- Section 2: Naming Variables -->
-        <div class="module-section">
-            <h3>2. Naming Variables</h3>
-            <p>Choose descriptive names that reflect the purpose of the variable. Follow consistent naming conventions, like <strong>snake_case</strong> in Python.</p>
-            <pre><code># Good
-total_tracks = 13
-favorite_song = "Blank Space"
+            <!-- Section 2: Naming Variables -->
+            <div class="module-section">
+                <h3>2. Naming Variables</h3>
+                <p>Choose descriptive names that reflect the purpose of the variable. Follow consistent naming conventions, like <strong>snake_case</strong> in Python.</p>
+                <pre><code># Good
+    total_tracks = 13
+    favorite_song = "Blank Space"
 
-# Bad
-x = 13
-favS = "Blank Space"
-    </code></pre>
-        </div>
+    # Bad
+    x = 13
+    favS = "Blank Space"
+        </code></pre>
+            </div>
 
-        <!-- Section 3: Variable Initialization -->
-        <div class="module-section">
-            <h3>3. Initializing Variables</h3>
-            <p>Always initialize variables before using them. This way your code won't reference undefined values.</p>
-            <pre><code># Good
-album_title = "Red"
+            <!-- Section 3: Variable Initialization -->
+            <div class="module-section">
+                <h3>3. Initializing Variables</h3>
+                <p>Always initialize variables before using them. This way your code won't reference undefined values.</p>
+                <pre><code># Good
+    album_title = "Red"
 
-# Bad
-print(album_title)  # Error: album_title is not defined
-    </code></pre>
-        </div>
+    # Bad
+    print(album_title)  # Error: album_title is not defined
+        </code></pre>
+            </div>
 
-        <!-- Section 4: Variable Types -->
-        <div class="module-section">
-            <h3>4. Variable Types</h3>
-            <p>Python variables can hold different data types, such as strings, integers, lists, and more. Python allows dynamic typing, meaning you don't need to specify the exact data type you want to use explicitly.</p>
-            <pre><code># Example
-artist = "Taylor Swift"  # String
-release_year = 2020  # Integer
-track_list = ["Willow", "Cardigan", "Evermore"]  # List
-is_pop_genre = True  # Boolean
-    </code></pre>
-        </div>
+            <!-- Section 4: Variable Types -->
+            <div class="module-section">
+                <h3>4. Variable Types</h3>
+                <p>Python variables can hold different data types, such as strings, integers, lists, and more. Python allows dynamic typing, meaning you don't need to specify the exact data type you want to use explicitly.</p>
+                <pre><code># Example
+    artist = "Taylor Swift"  # String
+    release_year = 2020  # Integer
+    track_list = ["Willow", "Cardigan", "Evermore"]  # List
+    is_pop_genre = True  # Boolean
+        </code></pre>
+            </div>
 
-        <!-- Section 5: Use Constants for Fixed Values -->
-        <div class="module-section">
-            <h3>5. Use Constants for Fixed Values</h3>
-            <p>For values that don’t change, use <strong>UPPERCASE</strong> names for constants.</p>
-            <pre><code># Example
-MAX_TRACKS = 20
-DEFAULT_GENRE = "Pop"
-    </code></pre>
-        </div>
+            <!-- Section 5: Use Constants for Fixed Values -->
+            <div class="module-section">
+                <h3>5. Use Constants for Fixed Values</h3>
+                <p>For values that don’t change, use <strong>UPPERCASE</strong> names for constants.</p>
+                <pre><code># Example
+    MAX_TRACKS = 20
+    DEFAULT_GENRE = "Pop"
+        </code></pre>
+            </div>
 
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_four_indentation') }}" class="secondary-button">Back: Indentation</a> 
-            <a href="{{ url_for('module_four_control_flow') }}" class="secondary-button">Next: Control Flow</a>
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_four_indentation') }}" class="secondary-button">Back: Indentation</a> 
+                <a href="{{ url_for('module_four_control_flow') }}" class="secondary-button">Next: Control Flow</a>
+            </div>
         </div>
 
     </div> <!-- End of course-main-content -->

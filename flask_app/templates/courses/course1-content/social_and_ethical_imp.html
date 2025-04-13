@@ -215,65 +215,79 @@
                     <li><a href="#hri">Human-Robot Interaction (HRI)</a></li>
                 </ul>
             </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course1quiz1_2') }}" class="course-link">Quiz 2</a>
+            </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Social and Ethical Implications</h1>
-            <p class="page-description">The rapid advancement of robotics has not only revolutionized various industries but also brought forth significant social, ethical, and economic implications.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Social and Ethical Implications</h1>
+                <p class="page-description">The rapid advancement of robotics has not only revolutionized various industries but also brought forth significant social, ethical, and economic implications.</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
-        </div>
-
-        <!-- Section 1: Privacy -->
-        <div class="module-section" id="privacy">
-            <h3>Privacy</h3>
-            <p>With the increasing presence of robots and AI systems in our environments, privacy concerns arise. Robots equipped with cameras, sensors, and data storage capabilities raise questions about surveillance, data collection, and information security. Maintaining individuals' privacy rights and ensuring responsible data handling become paramount. Striking a balance between the benefits of robotic technologies and privacy protection is essential.</p>
-            <!-- Examples - Privacy -->
-            <div class="subsection">
-                <h4>Examples of Possible Consequences</h4>
-                <ul>
-                    <li><strong>Unauthorized data collection:&nbsp;</strong> Robots collect personal information without explicit consent, leading to potential privacy breaches and misuse of data.</li>
-                    <li><strong>Surveillance concerns:&nbsp;</strong> Surveillance robots monitoring public spaces or workplaces, raising questions about individuals' right to privacy and the potential for abuse or misuse of surveillance data.</li>
-                </ul>
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
             </div>
-        </div> <!-- End of module-section -->
 
-         <!-- Section 2: Job Displacement-->
-         <div class="module-section" id="job-displacement">
-            <h3>Job Displacement</h3>
-            <p>As robots become more capable and automated systems advance, there is a legitimate concern about job displacement. Some tasks traditionally performed by humans are now being automated, leading to potential unemployment and economic disruption. Ensuring a smooth transition and creating opportunities for upskilling and reskilling of the workforce become critical considerations.</p>
-            <!-- Examples - Job Displacement-->
-            <div class="subsection">
-                <h4>Examples of Possible Consequences:</h4>
-                <ul>
-                    <li><strong>Job loss:&nbsp;</strong>Automation of repetitive or routine tasks leading to reduced employment opportunities in certain industries, potentially impacting livelihoods and economic stability.</li>
-                    <li><strong>Skills gap:&nbsp;</strong>Rapid advancements in robotics requiring workers to acquire new skills or risk being left behind, exacerbating inequalities and creating a divide between those who can adapt and those who cannot.</li>
-                </ul>
+            <!-- Section 1: Privacy -->
+            <div class="module-section" id="privacy">
+                <h3>Privacy</h3>
+                <p>With the increasing presence of robots and AI systems in our environments, privacy concerns arise. Robots equipped with cameras, sensors, and data storage capabilities raise questions about surveillance, data collection, and information security. Maintaining individuals' privacy rights and ensuring responsible data handling become paramount. Striking a balance between the benefits of robotic technologies and privacy protection is essential.</p>
+                <!-- Examples - Privacy -->
+                <div class="subsection">
+                    <h4>Examples of Possible Consequences</h4>
+                    <ul>
+                        <li><strong>Unauthorized data collection:&nbsp;</strong> Robots collect personal information without explicit consent, leading to potential privacy breaches and misuse of data.</li>
+                        <li><strong>Surveillance concerns:&nbsp;</strong> Surveillance robots monitoring public spaces or workplaces, raising questions about individuals' right to privacy and the potential for abuse or misuse of surveillance data.</li>
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 2: Job Displacement-->
+            <div class="module-section" id="job-displacement">
+                <h3>Job Displacement</h3>
+                <p>As robots become more capable and automated systems advance, there is a legitimate concern about job displacement. Some tasks traditionally performed by humans are now being automated, leading to potential unemployment and economic disruption. Ensuring a smooth transition and creating opportunities for upskilling and reskilling of the workforce become critical considerations.</p>
+                <!-- Examples - Job Displacement-->
+                <div class="subsection">
+                    <h4>Examples of Possible Consequences:</h4>
+                    <ul>
+                        <li><strong>Job loss:&nbsp;</strong>Automation of repetitive or routine tasks leading to reduced employment opportunities in certain industries, potentially impacting livelihoods and economic stability.</li>
+                        <li><strong>Skills gap:&nbsp;</strong>Rapid advancements in robotics requiring workers to acquire new skills or risk being left behind, exacerbating inequalities and creating a divide between those who can adapt and those who cannot.</li>
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 3: Human-Robot Interaction -->
+            <div class="module-section" id="human-robot-interaction">
+                <h3>Human-Robot Interaction</h3>
+                <p>The increasing integration of robots into various domains necessitates effective human-robot interaction. Robots are being designed to collaborate with humans in workplaces, provide healthcare assistance, or serve as companions. Ethical considerations arise in designing robots that respect human autonomy, ensure safety, and promote user trust. Understanding social cues, emotions, and ethical decision-making become key challenges.</p>
+                <!-- Examples - Human-Robot Interaction-->
+                <div class="subsection">
+                    <h4>Examples of Possible Consequences:</h4>
+                    <ul>
+                        <li><strong>Ethical dilemmas:&nbsp;</strong>Robots making autonomous decisions that may have ethical implications, such as in healthcare settings, where a robot may have to prioritize patient well-being over privacy concerns.</li>
+                        <li><strong>Emotional impact:&nbsp;</strong>Human-like social robots creating emotional bonds with individuals, leading to complex ethical questions regarding responsibility, attachment, and potential emotional manipulation.</li>
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Next Button -->
+            <div class="next-button text-right mt-4">
+                <a href="{{ url_for('futuretrends') }}" class="secondary-button">Next: Future Trends</a>
             </div>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 3: Human-Robot Interaction -->
-        <div class="module-section" id="human-robot-interaction">
-            <h3>Human-Robot Interaction</h3>
-            <p>The increasing integration of robots into various domains necessitates effective human-robot interaction. Robots are being designed to collaborate with humans in workplaces, provide healthcare assistance, or serve as companions. Ethical considerations arise in designing robots that respect human autonomy, ensure safety, and promote user trust. Understanding social cues, emotions, and ethical decision-making become key challenges.</p>
-            <!-- Examples - Human-Robot Interaction-->
-            <div class="subsection">
-                <h4>Examples of Possible Consequences:</h4>
-                <ul>
-                    <li><strong>Ethical dilemmas:&nbsp;</strong>Robots making autonomous decisions that may have ethical implications, such as in healthcare settings, where a robot may have to prioritize patient well-being over privacy concerns.</li>
-                    <li><strong>Emotional impact:&nbsp;</strong>Human-like social robots creating emotional bonds with individuals, leading to complex ethical questions regarding responsibility, attachment, and potential emotional manipulation.</li>
-                </ul>
-            </div>
-        </div> <!-- End of module-section -->
-
-        <!-- Next Button -->
-        <div class="next-button text-right mt-4">
-            <a href="{{ url_for('futuretrends') }}" class="secondary-button">Next: Future Trends</a>
         </div>
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->

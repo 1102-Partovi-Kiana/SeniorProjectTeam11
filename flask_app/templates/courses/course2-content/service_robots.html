@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Service Robots - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item"> 
+                <a href="{{ url_for ('intro_of_mobile_robots') }}" class="course-link">Introduction of Mobile Robotics</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('industrial_robots') }}" class="course-link">Industrial Robots</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('service_robots') }}" class="course-link">Service Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#service-robots">Service Robots</a></li>
+                    <li><a href="#intelligence-levels">Intelligence Levels</a></li>
+                    <li><a href="#applications">Applications of Service Robots</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('mobile_robots') }}" class="course-link">Mobile Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('humanoid_robots') }}" class="course-link">Humanoid Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('agricultural_robots') }}" class="course-link">Agricultural Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('medical_robots') }}" class="course-link">Medical Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course2quiz2') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_two_certificate') }}" class="course-link">Certificate</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Service Robots</h1>
+                <p class="page-description"> Learn the foundation of Service Robots.</p>
+            </header>
+
+            <!-- Page Divider -->
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
+            
+            <!-- Section 1: Service Robots -->
+            <div class="module-section" id="service-robots">
+                <h3>Service Robots</h3>
+                <p>Service robots are designed to assist humans in service-oriented tasks and can be classified into two categories: professional use and personal use. Professional use robots can complete tasks like rescue and security, defense, inspection, maintenance, construction, customer service, medical procedures, etc. On the other hand, personal robotic systems can perform domestic tasks, provide transportation, assistance, security and entertainment. These robots can completely replace a human worker in an environment, operate closely to humans in order to increase productivity or operate on the human body. Moreover, it can be used on many operation areas like education, healthcare, recreation and smart cities. For example, in healthcare, these robots can handle routine logistical tasks like disinfecting rooms, helping transport patients or medical equipment. In education, they can be used to teach difficult subjects through interaction or serve as a tutor or peer in a monitored environment.  In leisure and recreation operation areas they can be used for customer focused experiences, tour guides, shopping assistants and at exhibitions and events.</p>
+                <p>Nonetheless, there is a caveat for service robots, especially those that resemble humans or have characteristics similar to those of living creatures and is that they fall under the notion of uncanny valley. Occasionally, robots with these characteristics tend to give consumers feelings of discomfort. This can be caused by the robot's physical appearance, lack of interpersonal skills or even if the robot's interaction resembles too much of that of a human.</p>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 2: Service Robots Intelligence -->
+            <div class="module-section" id="intelligence-levels">
+                <h3>Intelligence Levels</h3>
+                <!-- Examples - Robotic Arms -->
+                <div class="subsection">
+                    <h4>Different Intelligence Levels - Service robots can be equipped with different levels of intelligence:</h4>
+                    <ul>
+                        <li><strong><em>Mechanical:</em>&nbsp;</strong>Related to standardized and transactional tasks, like a room service robot that brings towels to a room.</li>
+                        <li><strong><em>Analytical:</em>&nbsp;</strong>Based on systematic and rule-based learning from big data. For example, chatbots can find an appropriate answer to a question retrieved from past data.</li>
+                        <li><strong><em>Intuitive:</em>&nbsp;</strong>Provides personalized services by processing holistic and contextual thinking, examples are autonomous robots.</li>
+                        <li><strong><em>Mechanical:</em>&nbsp;</strong>The controller is the main processor and acts as the brain of the robot, it receives commands from a program.</li>
+                        <li><strong><em>Empathetic:</em>&nbsp;</strong>Considered the highest level of intelligence, enables service robots to deliver socially and emotionally interactive services.</li> 
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 3: Applications of Service Robots -->
+            <div class="category-section" id="applications">
+                <h2 class="category-title">Applications of Service Robots</h2>
+                <div class="module-section">
+                    <h3>Healthcare Robots</h3>
+                    <p>Robots in healthcare are built to assist healthcare professionals in their daily tasks, as well as help patients both physically and mentally. These robots can be found in homes, senior centers, hospitals, schools, and many other places. These types of robots are also known as ‘Care Robots’; Pepper and Nao from Softbank Robotics are social robots with potential applications in healthcare. Both Pepper and Nao are humanoid robots with two RGB cameras, sensors, a microphone and various degrees of freedom. Pepper has been deployed successfully as a teaching assistant for children, as a companion for elderly people, and as a coach to guide elderly people with psychiatric disorders through rehabilitation and recreational activities. While Nao was used in a short study as a
+                        teaching assistant for children with autism. The robot was programmed for a number of teaching and therapeutic behaviors, such as singing, exercise, explaining, and playing with
+                        children.
+                        </p>
+                    <div style="text-align: center;">
+                        <img src="{{ url_for('static', filename='img/rinh.png') }}" alt="Left - Pepper, Right - Nao" style="max-width: 100%; height: auto;">
+                    </div>
+                    <p>In addition to Pepper and Nao, there are several other examples of healthcare service robots that are revolutionizing the healthcare industry like PARO Therapeutic Robot. PARO is a therapeutic robot designed to provide companionship and emotional support to patients, particularly those suffering from dementia or other cognitive disorders. Resembling a baby harp seal, PARO responds to touch and sound, mimics realistic movements, and has sensors to recognize and respond to human interaction. It can provide comfort, reduce stress, and improve the overall well-being of patients. PARO has been successfully used in nursing homes, hospitals, and therapy sessions.</p>
+                    <div style="text-align: center;">
+                        <img src="{{ url_for('static', filename='img/seal.png') }}" alt="Seals" style="max-width: 100%; height: auto;">
+                    </div>
+                    <p>Another example is Robotic Surgical Systems. These surgical systems are advanced robotic platforms used by surgeons to perform minimally invasive surgeries with enhanced precision, flexibility, and control. The da Vinci Surgical System is a well-known example of such a system. It consists of robotic arms with surgical instruments and a high-definition 3D camera. This will be touched on in detail later on. </p>
+                </div>
+
+                <div class="module-section">
+                    <h3>Hospitality Robots</h3>
+                    <p>Hospitality robots are designed to assist and interact with guests in hospitality settings. They aim to provide efficient and personalized services, improving customer satisfaction and operational efficiency. These robots can navigate through indoor environments autonomously, interact with guests through voice recognition or touchscreens, and carry out specific tasks assigned to them, unlike service kiosks and preprogrammed tablets. These machines can be found in hotels, restaurants, and other hospitality establishments. They can perform tasks such as greeting guests, providing information, delivering items, and even assisting with room service. One example of a hospitality robot is "Botlr" by Savioke used in Aloft Hotels. Botlr is a mobile delivery robot that can autonomously navigate hotel corridors, ride elevators, and deliver items to guests' rooms. It can carry luggage, towels, snacks, and other amenities, reducing the workload of hotel staff and ensuring quick and efficient service. Botlr uses sensors and mapping technology to navigate safely and efficiently, making it a valuable addition to the hospitality industry.</p>
+                    <div style="text-align: center;">
+                        <img src="{{ url_for('static', filename='img/rooms.png') }}" alt="Room Service Robot" style="max-width: 100%; height: auto;">
+                    </div>
+                    <p>Another example is Yobot, the robotic hotel concierge that manages luggage storage. In collaboration with MFG automation, they adapted a robotic manipulator to help visitors with their  luggage. Guests enter their room number on a touchscreen and size, place their luggage in a container, enter their pin number and last name and Yobot does the rest.</p>
+                    <div style="text-align: center;">
+                        <img src="{{ url_for('static', filename='img/yobot.png') }}" alt="Yobot" style="max-width: 100%; height: auto;">
+                    </div>
+                </div> 
+
+                <div class="module-section">
+                    <h3>Cleaning Robots</h3>
+                    <p>Cleaning robots, also known as robotic vacuum cleaners or floor scrubbers designed to automate cleaning tasks and maintain cleanliness in various environments. They can navigate around obstacles, detect dirt and debris, and efficiently clean floors without human intervention. Cleaning robots are equipped with sensors, brushes, suction mechanisms, and navigation systems to efficiently clean floors and other surfaces. They can operate autonomously or be controlled remotely, reducing the need for manual cleaning and improving productivity. These cleaning machines are for commercial, industrial, personal and research purposes. The first robotic cleaner was developed in 1996 by ElectroLux and it was called Trilobite, named after the extinct arthropods that walked on the oceans floor, a precursor to the current cleaning robots. </p>
+                    <p>One popular example of a cleaning robot is the Roomba robot vacuum cleaner by iRobot. Roomba uses intelligent navigation algorithms and sensors to move around a room, detect and avoid obstacles, and clean various floor surfaces. It can adapt to different floor types, reach under furniture, and automatically return to its charging dock when the battery is low. </p>
+                    <div class="robot-images" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                        <img src="{{ url_for('static', filename='img/roomba.png') }}" alt="Roomba" style="width: 30%;">
+                        <img src="{{ url_for('static', filename='img/roomba2.png') }}" alt="Roomba" style="width: 30%;">
+                    </div> 
+                </div> 
+            </div> <!-- End of module-section -->
+
+            <div class="reference-section">
+                <h6>References</h6>
+                <p>
+                    <a href="https://www.researchgate.net/figure/Left-The-Pepper-robot-from-SoftBank-Robotics-used-in-a-previous-study-of-phrasing-in_fig1_339773792" target="_blank">https://www.researchgate.net/figure/Left-The-Pepper-robot-from-SoftBank-Robotics-used-in-a-previous-study-of-phrasing-in_fig1_339773792</a>
+                    <a href="https://hivelife.com/paro/" target="_blank">https://hivelife.com/paro/</a>
+                    <a href="https://atlantichotelsgroup.com/meet-boltr-your-friendly-hotel-delivery-bot/" target="_blank">https://atlantichotelsgroup.com/meet-boltr-your-friendly-hotel-delivery-bot/</a>
+                    <a href="https://www.wired.co.uk/article/a-butler-bot-for-your-trolley-bags" target="_blank">https://www.wired.co.uk/article/a-butler-bot-for-your-trolley-bags</a>
+                    <a href="https://en.wikipedia.org/wiki/Electrolux_Trilobite" target="_blank">https://en.wikipedia.org/wiki/Electrolux_Trilobite</a>
+                    <a href="https://www.zdnet.com/home-and-office/irobot-drops-its-first-ever-combo-mop-and-vacuum-robot-the-roomba-combo-j7/" target="_blank">https://www.zdnet.com/home-and-office/irobot-drops-its-first-ever-combo-mop-and-vacuum-robot-the-roomba-combo-j7/</a>
+                </p>
+            </div>
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('industrial_robots') }}" class="secondary-button">Back: Industrial Robots</a>
+                <a href="{{ url_for('mobile_robots') }}" class="secondary-button">Next: Mobile Robots</a>
+            </div>
+        </div>
+        
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

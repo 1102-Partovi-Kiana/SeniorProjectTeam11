@@ -51,106 +51,155 @@
                 </ul>
             </li>
             <li class="course-item">
+                <a href="{{ url_for ('course7quiz7') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
                 <a href="{{ url_for ('module_seven_download') }}" class="course-link">Cheat Sheet</a>
             </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_seven_link') }}" class="course-link">Time to Code</a>
             </li>
+             <li class="course-item">
+                <a href="{{ url_for ('module_seven_certificate_pick_and_place') }}" class="course-link">Certificate</a>
+            </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Robot Environment</h1>
-            <p class="page-description">Understand the components of the robot's environment and how to interact with them.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Robot Environment</h1>
+                <p class="page-description">Understand the components of the robot's environment and how to interact with them.</p>
+            </header>
 
-        <!-- Word Bank Section -->
-        <div class="word-bank" id="word-bank-fetch-pick-and-place" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
-            <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin: 10px 0;">
-                    <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔧 FetchPickAndPlaceEnv:</strong> The specific environment object for the task setup.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>📏 Distance Threshold:</strong> Maximum allowable distance between pieces in the environment.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔄 Step Size:</strong> Incremental movement of the gripper.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔐 Close Grip Action:</strong> Array representing the action to close the gripper.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>🔓 Open Grip Action:</strong> Array representing the action to open the gripper.
-                </li>
-                <li style="margin: 10px 0;">
-                    <strong>💪 Lift Action:</strong> Array representing small upward movement to lift the gripper while holding an object.
-                </li>
-            </ul>
-        </div>
+            <!-- Word Bank Section -->
+            <div class="word-bank" id="word-bank-fetch-pick-and-place" style="background-color: #f9f9ff; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="font-size: 1.8rem; color: #333; text-align: center;">📚 Word Bank</h3>
+                <p style="font-size: 1rem; color: #555; text-align: center;">Key terms for this module:</p>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 10px 0;">
+                        <strong>📦 Environment (env):</strong> The virtual space where the robot operates.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔧 FetchPickAndPlaceEnv:</strong> The specific environment object for the task setup.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>📏 Distance Threshold:</strong> Maximum allowable distance between pieces in the environment.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔄 Step Size:</strong> Incremental movement of the gripper.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔐 Close Grip Action:</strong> Array representing the action to close the gripper.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>🔓 Open Grip Action:</strong> Array representing the action to open the gripper.
+                    </li>
+                    <li style="margin: 10px 0;">
+                        <strong>💪 Lift Action:</strong> Array representing small upward movement to lift the gripper while holding an object.
+                    </li>
+                </ul>
+            </div>
 
-        <div class="divider">
-            <span class="divider-text">Let’s Look At Fetch Pick & Place Labeled</span>
-        </div>
+            <div class="divider">
+                <span class="divider-text">Let’s Look At Fetch Pick & Place Labeled</span>
+            </div>
 
-        <div class="module-section" id="sim">
-            <h3>Fetch Pick and Place Robot Simulation</h3>
-            <img src="{{ url_for('static', filename='img/FPP.png') }}" alt="Fetch Pick and Place Robot" class="robot-image">
-            <br>
-            <p>Here is a simulation of the Fetch Pick and Place robot that you will be interacting with and programming derived from MuJoCo and OpenAI Gym.</p>
-            <p><strong>The Task of the Fetch Pick and Place Robot</strong>: Fetch Pick and Place has to pick up a box from a table using its end-effector(gripper) and move it to a desired goal above the table.</p>
-        </div>
+            <div class="module-section" id="sim">
+                <h3>Fetch Pick and Place Robot Simulation</h3>
+                <img src="{{ url_for('static', filename='img/FPP.png') }}" alt="Fetch Pick and Place Robot" class="robot-image">
+                <br>
+                <p>Here is a simulation of the Fetch Pick and Place robot that you will be interacting with and programming derived from MuJoCo and OpenAI Gym.</p>
+                <p><strong>The Task of the Fetch Pick and Place Robot</strong>: Fetch Pick and Place has to pick up a box from a table using its end-effector(gripper) and move it to a desired goal above the table.</p>
+            </div>
 
-        <div class="divider">
-            <span class="divider-text">Let’s Look At What Is Given To Us</span>
-        </div>
+            <div class="divider">
+                <span class="divider-text">Let’s Look At What Is Given To Us</span>
+            </div>
 
-        <!-- Section 1: What is Given -->
-        <div class="module-section" id="given-fetch-pick-and-place">
-            <h3>What is Given</h3>
-            <ul>
-                <li>
-                    <strong>global env:</strong> This represents the robot's environment, which contains the robot's current state and methods for interacting with it. The environment has various “getters” and “setters.”
-                    <br><small><strong>Note:</strong> You as the coder will not need to worry about this. This is because this is part of the task setup. It allows you to be able to use env. and the methods that go along with it.</small>
-                </li>
-                <li>
-                    <strong>env = FetchPickAndPlaceEnv():</strong> The environment object that is initialized and is part of the task setup.
-                    <br><small><strong>Note:</strong> You as the coder will not need to worry about this. This is because this is part of the task setup. It allows you to be able to use env. and the methods that go along with it.</small>
-                </li>
-                <li><strong>distance_threshold:</strong> The distance value that will be used to determine when the gripper is "close enough" to the object.</li>
-                <li><strong>step_size:</strong> The size of each movement step that the gripper will make towards the object.</li>
-                <li><strong>close_grip_action:</strong> Array representing the action to close the gripper.</li>
-                <li><strong>open_grip_action:</strong> Array representing the action to open the gripper.</li>
-                <li><strong>lift_action:</strong> Array representing small upward movement to lift the gripper while holding an object.</li>
-            </ul>
-        </div> <!-- End of What is Given Section -->
+            <!-- Section 1: What is Given -->
+            <div class="module-section" id="given-fetch-pick-and-place">
+                <h3>What is Given</h3>
+                <ul>
+                    <li>
+                        <strong>global env:</strong> This represents the robot's environment, which contains the robot's current state and methods for interacting with it. The environment has various “getters” and “setters.”
+                        <br><small><strong>Note:</strong> You as the coder will not need to worry about this. This is because this is part of the task setup. It allows you to be able to use env. and the methods that go along with it.</small>
+                    </li>
+                    <li>
+                        <strong>env = FetchPickAndPlaceEnv():</strong> The environment object that is initialized and is part of the task setup.
+                        <br><small><strong>Note:</strong> You as the coder will not need to worry about this. This is because this is part of the task setup. It allows you to be able to use env. and the methods that go along with it.</small>
+                    </li>
+                    <li><strong>distance_threshold:</strong> The distance value that will be used to determine when the gripper is "close enough" to the object.</li>
+                    <li><strong>step_size:</strong> The size of each movement step that the gripper will make towards the object.</li>
+                    <li><strong>close_grip_action:</strong> Array representing the action to close the gripper.</li>
+                    <li><strong>open_grip_action:</strong> Array representing the action to open the gripper.</li>
+                    <li><strong>lift_action:</strong> Array representing small upward movement to lift the gripper while holding an object.</li>
+                </ul>
+            </div> <!-- End of What is Given Section -->
 
-        <div class="divider">
-            <span class="divider-text">Let’s Look At What Needs To Be Retrieved</span>
-        </div>
+            <div class="divider">
+                <span class="divider-text">Let’s Look At What Needs To Be Retrieved</span>
+            </div>
 
-        <!-- Section 2: What Needs to be Retrieved -->
-        <div class="module-section" id="retrieve-fetch-pick-and-place">
-            <h3>What Needs to be Retrieved</h3>
-            <ul>
-                <li><strong>ball_position:</strong> This value represents the current position of the ball in the environment. The student will retrieve this by calling a method or function from the global variable “env.”</li>
-                <li><strong>gripper_position:</strong> This value represents the current position of the robot's gripper. It’s essential for calculating the direction and updating the gripper’s position after each movement. It will be retrieved by calling a method or function from the global variable “env.”</li>
-                <li><strong>object_position:</strong> This value represents the current position of the box. It’s essential for calculating the direction after each movement. It will be retrieved by calling a method or function from the global variable “env.”</li>
-                <li><strong>direction:</strong> The direction from the gripper to the ball and the direction from the gripper to the box, calculated by subtracting the gripper's position from the ball's position or box’s position. This will be used to calculate how the gripper should move to reach the ball or box.</li>
-            </ul>
-        </div> <!-- End of What Needs to be Retrieved Section -->
+            <!-- Section 2: What Needs to be Retrieved -->
+            <div class="module-section" id="retrieve-fetch-pick-and-place">
+                <h3>What Needs to be Retrieved</h3>
+                <ul>
+                    <li><strong>ball_position:</strong> This value represents the current position of the ball in the environment. The student will retrieve this by calling a method or function from the global variable “env.”</li>
+                    <li><strong>gripper_position:</strong> This value represents the current position of the robot's gripper. It’s essential for calculating the direction and updating the gripper’s position after each movement. It will be retrieved by calling a method or function from the global variable “env.”</li>
+                    <li><strong>object_position:</strong> This value represents the current position of the box. It’s essential for calculating the direction after each movement. It will be retrieved by calling a method or function from the global variable “env.”</li>
+                    <li><strong>direction:</strong> The direction from the gripper to the ball and the direction from the gripper to the box, calculated by subtracting the gripper's position from the ball's position or box’s position. This will be used to calculate how the gripper should move to reach the ball or box.</li>
+                </ul>
+            </div> <!-- End of What Needs to be Retrieved Section -->
 
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_seven_about_the_fetch_pick_and_place_robot') }}" class="secondary-button">Back: About</a>
-            <a href="{{ url_for('module_seven_code') }}" class="secondary-button">Next: Coding Logic</a>
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_seven_about_the_fetch_pick_and_place_robot') }}" class="secondary-button">Back: About</a>
+                <a href="{{ url_for('module_seven_code') }}" class="secondary-button">Next: Coding Logic</a>
+            </div>
         </div>
     </div> <!-- End of course-main-content -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleSwitch = document.getElementById("toggle-explainer");
+            const notificationBubble = document.getElementById("notification");
+    
+            // If either element isn't found, stop the script
+            if (!toggleSwitch || !notificationBubble) {
+                console.warn("Explainer toggle not initialized: elements not found.");
+                return;
+            }
+    
+            setTimeout(() => {
+                notificationBubble.classList.add("fade-out");
+            }, 1000);
+    
+            toggleSwitch.addEventListener("change", function () {
+                if (this.checked) {
+                    notificationBubble.textContent = "Toggle Me Off";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.add("highlight-explain");
+                    });
+                } else {
+                    notificationBubble.textContent = "Toggle Me To Explain Text";
+                    document.querySelectorAll(".explainable").forEach(el => {
+                        el.classList.remove("highlight-explain");
+                    });
+                }
+            });
+        });
+    </script>
+
 </div> <!-- End of course-container -->
 {% endblock %}

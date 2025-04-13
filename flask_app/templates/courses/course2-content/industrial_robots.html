@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>Introduction to Robotics Programming Content - CORE</title>
+<title>Industrial Robtos- CORE</title>
 {% endblock %}
 
 {% block body %}
@@ -17,172 +17,158 @@
                 <a href="#objectives" class="course-link">Objectives</a>
             </li>
             <li class="course-item"> 
-                <a href="#introduction-of-mobile-robotics" class="course-link">Introduction of Mobile Robotics</a>
-                <ul class="sub-list">
-                    <li><a href="#agent">Agent</a></li>
-                    <li><a href="#autonomy">Autonomy</a></li>
-                    <li><a href="#shakey">First Mobile Robot</a></li>
-                </ul>
+                <a href="{{ url_for ('intro_of_mobile_robots') }}" class="course-link">Introduction of Mobile Robotics</a>
             </li>
             <li class="course-item active">
-                <a href="#industrial-robots" class="course-link">Industrial Robots</a>
+                <a href="{{ url_for ('industrial_robots') }}" class="course-link">Industrial Robots</a>
                 <ul class="sub-list">
+                    <li><a href="#unimite">Unimite - The First Industrial Robot</a></li>
                     <li><a href="#robotic-arms">Robotic Arms</a></li>
                     <li><a href="#robotic-arm-configurations">Types of Robotic Arm Configurations</a></li>
                 </ul>
             </li>
             <li class="course-item">
-                <a href="#service-robots" class="course-link">Service Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#healthcare-robots">Healthcare Robots</a></li>
-                    <li><a href="#hospitality-robots">Hospitality Robots</a></li>
-                    <li><a href="#cleaning-robots">Cleaning Robots</a></li>
-                </ul>
+                <a href="{{ url_for ('service_robots') }}" class="course-link">Service Robots</a>
             </li>
             <li class="course-item">
-                <a href="#mobile-robots" class="course-link">Mobile Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#wheeled-robots">Wheeled Robots</a></li>
-                    <li><a href="#legged-robots">Legged Robots</a></li>
-                    <li><a href="#aerial-drones">Aerial Drones</a></li>
-                    <li><a href="#underwater-robots">Underwater Robots</a></li>
-                </ul>
+                <a href="{{ url_for ('mobile_robots') }}" class="course-link">Mobile Robots</a>
             </li>
             <li class="course-item">
-                <a href="#humanoid-robots" class="course-link">Humanoid Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#applications-in-research">Applications in Research</a></li>
-                    <li><a href="#entertainment-robots">Entertainment Robots</a></li>
-                    <li><a href="#human-robot-interaction">Human-Robot Interaction</a></li>
-                </ul>
+                <a href="{{ url_for ('humanoid_robots') }}" class="course-link">Humanoid Robots</a>
             </li>
             <li class="course-item">
-                <a href="#agricultural-robots" class="course-link">Agricultural Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#crop-monitoring">Crop Monitoring</a></li>
-                    <li><a href="#harvesting">Harvesting</a></li>
-                    <li><a href="#seeding">Seeding</a></li>
-                    <li><a href="#precision-farming">Precision Farming</a></li>
-                </ul>
+                <a href="{{ url_for ('agricultural_robots') }}" class="course-link">Agricultural Robots</a>
             </li>
             <li class="course-item">
-                <a href="#medical-robots" class="course-link">Medical Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#surgical-robots">Surgical Robots</a></li>
-                    <li><a href="#rehabilitation-robots">Rehabilitation Robots</a></li>
-                    <li><a href="#robot-prosthetics">Robot Prosthetics</a></li>
-                    <li><a href="#robotic-exoskeletons">Robotic Exoskeletons</a></li>
-                </ul>
+                <a href="{{ url_for ('medical_robots') }}" class="course-link">Medical Robots</a>
             </li>
             <li class="course-item">
-                <a href="#exploration-robots" class="course-link">Exploration Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#planetary-rovers">Planetary Rovers</a></li>
-                    <li><a href="#underwater-exploration-robots">Underwater Exploration Robots</a></li>
-                </ul>
+                <a href="{{ url_for ('course2quiz2') }}" class="course-link">Quiz</a>
             </li>
             <li class="course-item">
-                <a href="#military-defense-robots" class="course-link">Military and Defense Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#unmanned-aerial-vehicles">Unmanned Aerial Vehicles</a></li>
-                    <li><a href="#bomb-disposal-robots">Bomb Disposal Robots</a></li>
-                    <li><a href="#reconnaissance-robots">Reconnaissance Robots</a></li>
-                </ul>
-            </li>
-            <li class="course-item">
-                <a href="#educational-robots" class="course-link">Educational Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#programmable-robotics-education">Programmable Robotics for Education</a></li>
-                </ul>
-            </li>
-            <li class="course-item">
-                <a href="#entertainment-robots" class="course-link">Entertainment Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#robotic-companions">Robotic Companions</a></li>
-                    <li><a href="#interactive-toys">Interactive Toys</a></li>
-                    <li><a href="#robot-performers">Robot Performers</a></li>
-                </ul>
-            </li>
-            <li class="course-item">
-                <a href="#collaborative-robots-cobots" class="course-link">Collaborative Robots (Cobots)</a>
-                <ul class="sub-list">
-                    <li><a href="#social-robots">Social Robots</a></li>
-                    <li><a href="#therapy">Therapy</a></li>
-                    <li><a href="#companionship">Companionship</a></li>
-                    <li><a href="#social-interaction">Social Interaction</a></li>
-                </ul>
-            </li>
-            <li class="course-item">
-                <a href="#exoskeleton-robots" class="course-link">Exoskeleton Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#rehabilitation">Rehabilitation</a></li>
-                    <li><a href="#assistive-devices">Assistive Devices</a></li>
-                    <li><a href="#industrial-settings">Industrial Settings</a></li>
-                </ul>
-            </li>
-            <li class="course-item">
-                <a href="#bio-inspired-robots" class="course-link">Bio-inspired Robots</a>
-                <ul class="sub-list">
-                    <li><a href="#swarm-robots">Swarm Robots</a></li>
-                </ul>
+                <a href="{{ url_for ('module_two_certificate') }}" class="course-link">Certificate</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Industrial Robots</h1>
-            <p class="page-description">Industrial robotics are the foundation and the largest commercial application of robotics technology today. The goal of industrial robotics is to improve productivity, quality, precision and adaptability with minimal costs.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Industrial Robots</h1>
+                <p class="page-description">Industrial robotics are the foundation and the largest commercial application of robotics technology today. The goal of industrial robotics is to improve productivity, quality, precision and adaptability with minimal costs.</p>
+            </header>
 
-        <!-- Page Divider -->
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
+            <!-- Page Divider -->
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
+            
+            <!-- Section 1: Unimate -->
+            <div class="module-section" id="unimate">
+                <h3>Unimate - The First Industrial Robot</h3>
+                <p>The first instance of an industrial robot dates back to 1954, on a filed patent by George Devol on the programmed article transfer. He and Joseph Engelberger partnered up and founded Unimation, the first robot company that put a robot into service. The Unimate was used in 1961 at General Motors for extracting parts from a die-casting machine. The Unimate was an electronically controlled hydraulic heavy-lifting arm with six axes of motion, capable of lifting objects and moving them precisely in a 3D space. The Unimate had a tool at the end of the arm known as the end-effector that it used to perform tasks such as welding or painting. Another breakthrough emerged in 1969 with the Stanford Arm built by the mechanical engineering student working at the Stanford Artificial Intelligence Laboratory, Victor Sheinman. The Stanford Arm was the first all-electric robotic manipulator.</p>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 2: Robotic Arms -->
+            <div class="module-section" id="robotic-arms">
+                <h3>Robotic arms</h3>
+                <p>Robotic arms are also known as robot manipulators, they are programmed and built to execute similar functions to a human arm. They are used to automate execution of repetitive tasks that may require precision or immense strength. They help with safety, as robotic arms are employed in hazardous areas that pose a risk to humans. Manipulators are connected by joints allowing rotational or linear motion. These robotic arms have end effectors at the end designed to perform tasks with great accuracy, depending on their application, tasks include gripping, spinning, welding, painting, etc. These robotic manipulators can be autonomous or controlled manually and can be mobile or fixed to a specific location. The robotic arm was modeled and built in reference to a human arm.</p>
+                <!-- Examples - Robotic Arms -->
+                <div class="subsection">
+                    <h4>Key Components:</h4>
+                    <ul>
+                        <li><strong><em>Controllers:</em>&nbsp;</strong>The controller is the main processor and acts as the brain of the robot, it receives commands from a program.</li>
+                        <li><strong>The arm has four major components:</strong></li>
+                            <ul>
+                                <li><strong><em>Shoulder Joint:</em>&nbsp;</strong> This is the highest load bearing point in the arm and has three degrees of freedom: pitch, yaw and roll. The shoulder has the widest range of motion in the human body, and it is the foundation of most modern robotic arms.</li>
+                                <li><strong><em>Elbow Joint:</em>&nbsp;</strong> Many mechanical elbow joints have been used in robotic arm manufacture. The elbow joint provides extension, retraction, reach around and angular orientation of the wrist and hand.</li>
+                                <li><strong><em>Wrist Joint:</em>&nbsp;</strong> The wrist is a crucial component of even the earliest prototypes, it's the end-effector terminus and it allows the arm to be manipulated in a three-dimensional space.</li>
+                                <li><strong><em>Hand:</em>&nbsp;</strong> This component defines the purpose and capacity of the robotic arm. The hand is a tool for multitasking capable of diverse tasks, it is also the research topic of many higher education institutions. 
+                                </li>
+                            </ul>
+                        <li><strong>Robotic arms are also composed of drives and sensors.</strong></li>
+                            <ul>
+                                <li><strong><em>Drives:</em>&nbsp;</strong> These are the motors that provide movement for every part of the robot. They are located in between the joints and regular rotation and linear movement. These move independently from each other at varying speeds and directions.</li>
+                                <li><strong><em>Sensors:</em>&nbsp;</strong> They allow manipulators to react to their environment.</li>
+                            </ul>
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 3: Types of Robotic Arm Configurations -->
+            <div class="module-section" id="robotic-arm-configurations">
+                <h3>Types of Robotic Arm Configurations</h3>
+                <p> <em>Cartesian Robot</em> - Also known as the gantry robot, is named after the cartesian
+                    coordinate system. These robots include three articulating joints programmed to
+                    move linearly using the X, Y and Z coordinates. These robots are typically used for
+                    <strong>picking and placing</strong> items on converter belts.</p>
+                <div style="text-align: center;">
+                    <img src="{{ url_for('static', filename='img/cartesian.png') }}" alt="Cartesian Robot" style="max-width: 100%; height: auto;">
+                </div>
+                <p><em>Articulated Robot Arm</em> - These are the most common mechanical robot arms seen
+                    in the workplace. These robots are used for welding, material handling, pick-and-
+                    place tasks, dispensing and much more. They resemble human arms because of
+                    their multiple axes and degrees of freedom. Because of this, they are among the
+                    most adaptable, flexible and space saving robotic manipulators, however, they are
+                    by nature dangerous and must be equipped with necessary safety features.</p>
+                <div style="text-align: center;">
+                    <img src="{{ url_for('static', filename='img/rev.png') }}" alt="Articulated Robot Arm" style="max-width: 100%; height: auto;">
+                </div>
+                <p><em>Cylindrical Robot Arm</em> - This robot has at least one rotary <strong>joint</strong> at its base allowing
+                    it a rotational motion along its axis. Its axis constitutes a cylindrical coordinate
+                    system (up, down and around). This robotic arm is valuable in industries that
+                    produce tubes and cylindrical components. Other uses include die casting and spot
+                    welding.</p>
+                <div style="text-align: center;">
+                    <img src="{{ url_for('static', filename='img/cylin.png') }}" alt="Cylindrical Robot Arm" style="max-width: 100%; height: auto;">
+                </div>
+                <p><em>SCARA Robots</em> - SCARA is an acronym for <strong>Selective Compliance Assembly Robot
+                    Arm</strong>. These robots work on a <strong>three-dimensional axis (X,Y and Z )</strong> and rotary
+                    motion, in other words, it combines cartesian and cylindrical movements. SCARA
+                    robots are used in <strong>biomedical applications, assembly and pelletising</strong>.</p>
+                <div style="text-align: center;">
+                    <img src="{{ url_for('static', filename='img/scara.png') }}" alt="Scara Robot Arm" style="max-width: 100%; height: auto;">
+                </div>
+                <p><em>Polar Robot</em> - Also known as the <strong>spherical robot</strong>. It consists of an <strong>arm</strong> with <strong>two
+                    rotary joints</strong> and <strong>one linear joint</strong> connected to the <strong>base</strong> with a <strong>twisting joint</strong>. The
+                    axes work together to form a polar coordinate. These are used for <strong>injection molding,
+                    welding and material handling.</strong></p>
+                <div style="text-align: center;">
+                    <img src="{{ url_for('static', filename='img/polar.png') }}" alt="Polar Robot Arm" style="max-width: 100%; height: auto;">
+                </div>
+                <p><em>Delta Robot</em> - <strong>Delta Robots</strong>, or <strong>parallel robots</strong>, possess three arms connected to a
+                    single base, which is mounted above the workspace. Delta Robots work in a dome-
+                    shape and can move both delicately and precisely at high speeds due to each joint
+                    of the end effector being directly controlled by all three arms.</p>
+                <div style="text-align: center;">
+                    <img src="{{ url_for('static', filename='img/delta.png') }}" alt="Delta Robot Arm" style="max-width: 100%; height: auto;">
+                </div>
+                <div class="reference-section">
+                    <h6>References</h6>
+                    <p>
+                        <a href="https://kawasakirobotics.com/asia-oceania/blog/1804-03/" target="_blank">https://kawasakirobotics.com/asia-oceania/blog/1804-03/</a>
+                        <a href="https://processsolutions.com/what-are-the-different-types-of-industrial-robots-and-their-applications/" target="_blank">https://processsolutions.com/what-are-the-different-types-of-industrial-robots-and-their-applications/</a>
+                    </p>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('intro_of_mobile_robots') }}" class="secondary-button">Back: Introduction to Mobile Robotics</a>
+                <a href="{{ url_for('service_robots') }}" class="secondary-button">Next: Service Robots</a>
+            </div>
         </div>
         
-        <!-- Section 1: Unimate -->
-        <div class="module-section" id="agent">
-            <h3>Unimate - The First Industrial Robot</h3>
-            <p>The first instance of an industrial robot dates back to 1954, on a filed patent by George Devol on the programmed article transfer. He and Joseph Engelberger partnered up and founded Unimation, the first robot company that put a robot into service. The Unimate was used in 1961 at General Motors for extracting parts from a die-casting machine. The Unimate was an electronically controlled hydraulic heavy-lifting arm with six axes of motion, capable of lifting objects and moving them precisely in a 3D space. The Unimate had a tool at the end of the arm known as the end-effector that it used to perform tasks such as welding or painting. Another breakthrough emerged in 1969 with the Stanford Arm built by the mechanical engineering student working at the Stanford Artificial Intelligence Laboratory, Victor Sheinman. The Stanford Arm was the first all-electric robotic manipulator.</p>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 2: Robotic Arms -->
-        <div class="module-section" id="autonomy">
-            <h3>Robotic arms</h3>
-            <p>Robotic arms are also known as robot manipulators, they are programmed and built to execute similar functions to a human arm. They are used to automate execution of repetitive tasks that may require precision or immense strength. They help with safety, as robotic arms are employed in hazardous areas that pose a risk to humans. Manipulators are connected by joints allowing rotational or linear motion. These robotic arms have end effectors at the end designed to perform tasks with great accuracy, depending on their application, tasks include gripping, spinning, welding, painting, etc. These robotic manipulators can be autonomous or controlled manually and can be mobile or fixed to a specific location. The robotic arm was modeled and built in reference to a human arm.</p>
-            <!-- Examples - Robotic Arms -->
-            <div class="subsection">
-                <h4>Key Components:</h4>
-                <ul>
-                    <li><strong><em>Controllers:</em>&nbsp;</strong>The controller is the main processor and acts as the brain of the robot, it receives commands from a program.</li>
-                    <li><strong>The arm has four major components:</strong></li>
-                        <ul>
-                            <li><strong><em>Shoulder Joint:</em>&nbsp;</strong> This is the highest load bearing point in the arm and has three degrees of freedom: pitch, yaw and roll. The shoulder has the widest range of motion in the human body, and it is the foundation of most modern robotic arms.</li>
-                            <li><strong><em>Elbow Joint:</em>&nbsp;</strong> Many mechanical elbow joints have been used in robotic arm manufacture. The elbow joint provides extension, retraction, reach around and angular orientation of the wrist and hand.</li>
-                            <li><strong><em>Wrist Joint:</em>&nbsp;</strong> The wrist is a crucial component of even the earliest prototypes, it's the end-effector terminus and it allows the arm to be manipulated in a three-dimensional space.</li>
-                            <li><strong><em>Hand:</em>&nbsp;</strong> This component defines the purpose and capacity of the robotic arm. The hand is a tool for multitasking capable of diverse tasks, it is also the research topic of many higher education institutions. 
-                            </li>
-                        </ul>
-                    <li><strong>Robotic arms are also composed of drives and sensors.</strong></li>
-                        <ul>
-                            <li><strong><em>Drives:</em>&nbsp;</strong> These are the motors that provide movement for every part of the robot. They are located in between the joints and regular rotation and linear movement. These move independently from each other at varying speeds and directions.</li>
-                            <li><strong><em>Sensors:</em>&nbsp;</strong> They allow manipulators to react to their environment.</li>
-                        </ul>
-                </ul>
-            </div>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 3: The First Mobile Robot -->
-        <div class="module-section" id="shakey">
-            <h3>Shakey - The First Mobile Robot</h3>
-            <p>The first mobile robot that reasoned its actions, Shakey, was developed at Stanford Research Institute in the 1970’s. This robot paved the way for the evolution of artificial intelligence. Shakey did simple searches and was the reason the A* search algorithm was created. </p>
-        </div> <!-- End of module-section -->
-
-        <!-- Next Button -->
-        <div class="next-button text-right mt-4">
-            <a href="{{ url_for('history') }}" class="secondary-button">Next: History of Robotics</a>
-        </div>
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->
 {% endblock %}

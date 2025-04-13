@@ -86,50 +86,67 @@
                 </ul>
             </li>
             <li class="course-item">
+                <a href="{{ url_for ('course4quiz4') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
                 <a href="{{ url_for ('module_four_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_four_certificate_code') }}" class="course-link">Certificate</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Debugging Techniques</h1>
-            <p class="page-description">Learn essential techniques to identify and resolve errors in your code.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Debugging Techniques</h1>
+                <p class="page-description">Learn essential techniques to identify and resolve errors in your code.</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
-        </div>
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
 
-        <!-- Section 1: Print Statements -->
-        <div class="module-section" id="print-statements">
-            <h3>1. Print Statements</h3>
-            <p><strong>Print statements</strong> are a common debugging method.</p>
-            <p>How To: Insert print statements to check where and what is happening in your code.</p>
-            <pre><code>print(f"Variable x: {x}, Step: {step}")</code></pre>
-            <p>Use this method for quick debugging, but remember to remove print statements after debugging to keep your code clean.</p>
-        </div>
+            <!-- Section 1: Print Statements -->
+            <div class="module-section" id="print-statements">
+                <h3>1. Print Statements</h3>
+                <p><strong>Print statements</strong> are a common debugging method.</p>
+                <p>How To: Insert print statements to check where and what is happening in your code.</p>
+                <pre><code>print(f"Variable x: {x}, Step: {step}")</code></pre>
+                <p>Use this method for quick debugging, but remember to remove print statements after debugging to keep your code clean.</p>
+            </div>
 
-        <!-- Section 2: Debugger Tools -->
-        <div class="module-section" id="debugger-tools">
-            <h3>2. Debugger Tools</h3>
-            <p>Debugger tools allow you to pause program execution, inspect variables, and step through your code to find the problem area. Python provides the <code>pdb</code> module for this purpose:</p>
-            <pre><code>import pdb
-pdb.set_trace()  # Insert this where you want to pause execution</code></pre>
-            <p>Many IDEs, such as VSCode, have built-in debuggers for helpful debugging.</p>
-        </div>
+            <!-- Section 2: Debugger Tools -->
+            <div class="module-section" id="debugger-tools">
+                <h3>2. Debugger Tools</h3>
+                <p>Debugger tools allow you to pause program execution, inspect variables, and step through your code to find the problem area. Python provides the <code>pdb</code> module for this purpose:</p>
+                <pre><code>import pdb
+    pdb.set_trace()  # Insert this where you want to pause execution</code></pre>
+                <p>Many IDEs, such as VSCode, have built-in debuggers for helpful debugging.</p>
+            </div>
 
-        <!-- Section 3: Rubber Duck Debugging -->
-        <div class="module-section" id="rubber-duck">
-            <h3>3. Rubber Duck Debugging</h3>
-            <p>This technique involves explaining your code, line by line, to an inanimate object (like a rubber duck). This can help you clarify your thought process and identify errors.</p>
-        </div>
+            <!-- Section 3: Rubber Duck Debugging -->
+            <div class="module-section" id="rubber-duck">
+                <h3>3. Rubber Duck Debugging</h3>
+                <p>This technique involves explaining your code, line by line, to an inanimate object (like a rubber duck). This can help you clarify your thought process and identify errors.</p>
+            </div>
 
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_four_functions') }}" class="secondary-button">Back: Functions</a> 
-            <a href="{{ url_for('module_four_download') }}" class="secondary-button">Next: Cheat Sheet</a>
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_four_functions') }}" class="secondary-button">Back: Functions</a> 
+                <a href="{{ url_for('course4quiz4') }}" class="secondary-button">Next: Quiz</a>
+            </div>
         </div>
 
     </div> <!-- End of course-main-content -->
