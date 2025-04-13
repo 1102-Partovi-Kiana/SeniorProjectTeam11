@@ -998,13 +998,21 @@ c/* -------------------HOMEPAGE------------------- */
 .navbar {
     background: #333;
     height: 80px; /* Reduced height */
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1rem;
     margin: 0;
-    padding: 10px 0;
+    padding: 10px 0px;
     position: relative;
+}
+
+.navbar .container{
+    height: 100%;
+    width: 100%;
+    max-width: none;
+    margin: 0px;
 }
 
 .navbar-container {
@@ -1129,6 +1137,7 @@ c/* -------------------HOMEPAGE------------------- */
     justify-content: center;
     align-items: center;
     font-size: 1rem;
+    padding: 0px 40px;
 }
 
 /* Dashboard-Specific Styles */
