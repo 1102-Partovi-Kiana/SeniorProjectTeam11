@@ -56,11 +56,11 @@
             <li class="course-item">
                 <a href="{{ url_for ('module_seven_download') }}" class="course-link">Cheat Sheet</a>
             </li>
-            <li class="course-item">
-                <a href="{{ url_for ('module_seven_certificate_pick_and_place') }}" class="course-link">Certificate</a>
-            </li>
             <li class="course-item active">
                 <a href="{{ url_for ('module_seven_link') }}" class="course-link">Time to Code</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_seven_certificate_pick_and_place') }}" class="course-link">Certificate</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
@@ -100,7 +100,8 @@
 
         <!-- Next Button -->
         <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_seven_certificate_pick_and_place') }}" class="secondary-button">Back: Certificate</a>
+            <a href="{{ url_for('module_seven_download') }}" class="secondary-button">Back: Cheat Sheet</a>
+            <a href="{{ url_for('module_seven_certificate_pick_and_place') }}" class="secondary-button">Next: Certificate</a>
         </div>
 
     </div> <!-- End of course-main-content -->

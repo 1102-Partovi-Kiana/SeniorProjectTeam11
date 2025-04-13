@@ -371,6 +371,14 @@ for _ in range(num_steps):
             </div>
         </div>
     </div>
+
+    <div id="core-certificate-popup" class="core-cert-popup core-cert-popup-hidden">
+        <button class="core-cert-close" id="core-cert-close-button">&times;</button>
+        <h2 class="core-cert-title">SUCCESS</h2>
+        <p class="core-cert-message">YAY GOOD JOB!</p>
+        <a href="{{ url_for('module_seven_certificate_pick_and_place') }}" class="core-cert-button" target="_blank">Get My Certificate</a>
+    </div>
+
 </section>
 
 <!-- CodeMirror and Script Initialization -->
@@ -450,6 +458,7 @@ for _ in range(num_steps):
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
 <script>
     let currentTheme = "monokai"; 
@@ -866,6 +875,19 @@ for _ in range(num_steps):
                 secondaryOutputCard.classList.add('success');
                 secondaryOutputCard.innerHTML = `<p>Your code ran successfully 😊</p>`;
                 outputBox.innerHTML += `<p>${data.message}</p>`;
+
+                const certPopup = document.getElementById('core-certificate-popup');
+                if (certPopup) {
+                    certPopup.classList.remove('core-cert-popup-hidden');
+                    certPopup.classList.add('core-cert-popup-visible');
+
+                    confetti({
+                        particleCount: 150,
+                        spread: 100,
+                        origin: { y: 0.6 }
+                    });
+
+                }
 
                 if (errorAttempts > 0) {
                     outputBox.innerHTML = '';

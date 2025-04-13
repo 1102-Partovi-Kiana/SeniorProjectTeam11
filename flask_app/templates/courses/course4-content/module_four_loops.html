@@ -98,83 +98,94 @@
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Loops</h1>
-            <p class="page-description">Grasp the depth of how loops work.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Loops</h1>
+                <p class="page-description">Grasp the depth of how loops work.</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
-        </div>
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
 
-        <!-- Section 1: For Loops -->
-        <div class="module-section" id="for-loops">
-            <h3>1. For Loops</h3>
-            <p><strong>For loops</strong> are ideal when you know when you know the number of iterations you want to complete in advance. They are commonly used to iterate over collections/sequences.</p>
-            <pre><code># Example: Iterate through a list of favorite albums
-albums = ["1989", "Folklore", "Lover"]
-for album in albums:
-    print(f"Album: {album}")
-    </code></pre>
-            <p>This loop will print each album in the list.</p>
-        </div>
+            <!-- Section 1: For Loops -->
+            <div class="module-section" id="for-loops">
+                <h3>1. For Loops</h3>
+                <p><strong>For loops</strong> are ideal when you know when you know the number of iterations you want to complete in advance. They are commonly used to iterate over collections/sequences.</p>
+                <pre><code># Example: Iterate through a list of favorite albums
+    albums = ["1989", "Folklore", "Lover"]
+    for album in albums:
+        print(f"Album: {album}")
+        </code></pre>
+                <p>This loop will print each album in the list.</p>
+            </div>
 
-        <!-- Section 2: While Loops -->
-        <div class="module-section" id="while-loops">
-            <h3>2. While Loops</h3>
-            <p><strong>While loops</strong> are best suited for scenarios where the number of iterations depends on a condition that changes dynamically. They allow for more flexibility but require careful attention to ensure the condition eventually becomes false to avoid infinite loops.</p>
-            <pre><code># Example: Count down from 10
-count = 10
-while count > 0:
-    print(f"Countdown: {count}")
-    count -= 1
-            </code></pre>
-            <p>This loop will print a countdown until the value of <code>count</code> reaches 0.</p>
-        </div>
+            <!-- Section 2: While Loops -->
+            <div class="module-section" id="while-loops">
+                <h3>2. While Loops</h3>
+                <p><strong>While loops</strong> are best suited for scenarios where the number of iterations depends on a condition that changes dynamically. They allow for more flexibility but require careful attention to ensure the condition eventually becomes false to avoid infinite loops.</p>
+                <pre><code># Example: Count down from 10
+    count = 10
+    while count > 0:
+        print(f"Countdown: {count}")
+        count -= 1
+                </code></pre>
+                <p>This loop will print a countdown until the value of <code>count</code> reaches 0.</p>
+            </div>
 
-        <!-- Section 3: Do-While Loops -->
-        <div class="module-section" id="do-while-loops">
-            <h3>6. Do-While Loops</h3>
-            <p><strong>Do-while loops</strong> guarantee that the loop body executes at least once, as the condition is checked after the loop executes. They are useful in cases where the initial execution of the loop body is necessary, such as displaying a menu repeatedly until the user chooses to exit.</p>
-            <pre><code># Python doesn't have a native do-while loop, but it can be simulated:
-condition = False
+            <!-- Section 3: Do-While Loops -->
+            <div class="module-section" id="do-while-loops">
+                <h3>6. Do-While Loops</h3>
+                <p><strong>Do-while loops</strong> guarantee that the loop body executes at least once, as the condition is checked after the loop executes. They are useful in cases where the initial execution of the loop body is necessary, such as displaying a menu repeatedly until the user chooses to exit.</p>
+                <pre><code># Python doesn't have a native do-while loop, but it can be simulated:
+    condition = False
 
-while True:
-    print("\nMenu:")
-    print("1. Option 1")
-    print("2. Option 2")
-    print("3. Exit")
-    
-    choice = input("Enter your choice (1-3): ")
-    
-    if choice == "1":
-        print("You chose Option 1.")
-    elif choice == "2":
-        print("You chose Option 2.")
-    elif choice == "3":
-        print("Exiting the menu. Goodbye!")
-        break
-    else:
-        print("Invalid choice. Please try again.")
-                
-            </code></pre>
-            <p>This loop simulates a do-while structure by displaying a menu that runs at least once.</p>
-        </div>
+    while True:
+        print("\nMenu:")
+        print("1. Option 1")
+        print("2. Option 2")
+        print("3. Exit")
+        
+        choice = input("Enter your choice (1-3): ")
+        
+        if choice == "1":
+            print("You chose Option 1.")
+        elif choice == "2":
+            print("You chose Option 2.")
+        elif choice == "3":
+            print("Exiting the menu. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+                    
+                </code></pre>
+                <p>This loop simulates a do-while structure by displaying a menu that runs at least once.</p>
+            </div>
 
-        <!-- Section 4: Loops Best Practices -->
-        <div class="module-section" id="best-practices">
-            <h3>5. Best Practices</h3>
-            <ul>
-                <li>Use descriptive variable names in your loops to make your code easier to follow along with.</li>
-                <li>Make sure there's a clear exit condition to avoid infinite loops.</li>
-            </ul>
-        </div>
+            <!-- Section 4: Loops Best Practices -->
+            <div class="module-section" id="best-practices">
+                <h3>5. Best Practices</h3>
+                <ul>
+                    <li>Use descriptive variable names in your loops to make your code easier to follow along with.</li>
+                    <li>Make sure there's a clear exit condition to avoid infinite loops.</li>
+                </ul>
+            </div>
 
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_four_control_flow') }}" class="secondary-button">Back: Control Flow</a> 
-            <a href="{{ url_for('module_four_functions') }}" class="secondary-button">Next: Functions</a>
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_four_control_flow') }}" class="secondary-button">Back: Control Flow</a> 
+                <a href="{{ url_for('module_four_functions') }}" class="secondary-button">Next: Functions</a>
+            </div>
         </div>
         
     </div> <!-- End of course-main-content -->

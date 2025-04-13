@@ -182,83 +182,94 @@
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Robot Anatomy</h1>
-            <p class="page-description">To comprehend the inner workings of a robot, it is essential to understand its anatomy. This section dives into the basic components of a robot, including actuators, sensors, controllers, and end effectors. By exploring these elements, we can gain insights into how robots interact with their environment and perform tasks effectively. There are four basic components to a robot:</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Robot Anatomy</h1>
+                <p class="page-description">To comprehend the inner workings of a robot, it is essential to understand its anatomy. This section dives into the basic components of a robot, including actuators, sensors, controllers, and end effectors. By exploring these elements, we can gain insights into how robots interact with their environment and perform tasks effectively. There are four basic components to a robot:</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
-        </div>
-
-        <!-- Section 1: Actuators  -->
-        <div class="module-section" id="actuators">
-            <h3>Actuators</h3>
-            <p>Actuators are the components responsible for converting electrical energy into mechanical motion, enabling robots to move and perform tasks. They generate force, torque, or linear motion and are categorized into various types, including electric motors, hydraulic actuators, and pneumatic actuators. Actuators provide the necessary power and motion required for the robot to manipulate objects, navigate its environment, and perform specific actions.</p>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 2: Sensors -->
-        <div class="module-section" id="sensors">
-            <h3>Sensors</h3>
-            <p>Sensors are vital components that enable robots to perceive and understand their surroundings. They collect data from the environment or the robot itself and provide information such as position, orientation, distance, temperature, and more. Sensors can include cameras, proximity sensors, force sensors, temperature sensors, and many others. By gathering data from sensors, robots can make informed decisions, adapt to changes, and interact intelligently with their environment.</p>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 3: Exploration -->
-        <div class="module-section" id="controllers">
-            <h3>Controllers</h3>
-            <p>Robots have become invaluable tools for exploring challenging and hazardous environments, both on Earth and in space. Mars rovers, for example, collect data and samples, providing insights into planetary geology and the potential for extraterrestrial life. Autonomous underwater and aerial robots explore underwater ecosystems and remote environments, enabling scientific research and environmental monitoring.</p>
-              <!-- Applications - Exploration -->
-              <div class="subsection">
-                <h4>Applications</h4>
-                <ul>
-                    <li>Planetary exploration</li>
-                    <li>Underwater exploration</li>
-                    <li>Remote sensing and monitoring</li>
-                    <li>Search and rescue operations</li>
-                    <li>Hazardous environment exploration</li>
-                </ul>
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
             </div>
-        </div> <!-- End of module-section -->
 
-        <!-- Section 4: Agriculture -->
-        <div class="module-section" id="agriculture">
-            <h3>Agriculture</h3>
-            <p>Robotics has the potential to revolutionize agriculture by increasing efficiency, sustainability, and productivity. Agricultural robots, known as agribots, perform tasks such as planting, harvesting, monitoring crop health, and precision spraying. They can operate autonomously, optimizing resource utilization and reducing environmental impact. Robotics in agriculture enable precision farming techniques, improving crop yields and reducing labor-intensive processes.</p>
-               <!-- Applications - Agriculture -->
-               <div class="subsection">
-                <h4>Applications</h4>
-                <ul>
-                    <li>Planting and seeding</li>
-                    <li>Crop monitoring and management</li>
-                    <li>Harvesting and sorting</li>
-                    <li>Precision spraying and irrigation</li>
-                    <li>Greenhouse automation</li>
-                </ul>
-            </div>
-        </div> <!-- End of module-section -->
+            <!-- Section 1: Actuators  -->
+            <div class="module-section" id="actuators">
+                <h3>Actuators</h3>
+                <p>Actuators are the components responsible for converting electrical energy into mechanical motion, enabling robots to move and perform tasks. They generate force, torque, or linear motion and are categorized into various types, including electric motors, hydraulic actuators, and pneumatic actuators. Actuators provide the necessary power and motion required for the robot to manipulate objects, navigate its environment, and perform specific actions.</p>
+            </div> <!-- End of module-section -->
 
-        <!-- Section 5: Entertainment -->
-        <div class="module-section" id="entertainment">
-            <h3>Entertainment</h3>
-            <p>Robotic technologies have found their place in the entertainment industry, captivating audiences, and providing engaging experiences. Robots, such as animatronics and humanoid robots, are used in theme parks, museums, and interactive exhibits. They entertain, educate, and create immersive experiences for visitors, blurring the boundaries between technology and entertainment.</p>
-                <!-- Applications - Entertainment -->
+            <!-- Section 2: Sensors -->
+            <div class="module-section" id="sensors">
+                <h3>Sensors</h3>
+                <p>Sensors are vital components that enable robots to perceive and understand their surroundings. They collect data from the environment or the robot itself and provide information such as position, orientation, distance, temperature, and more. Sensors can include cameras, proximity sensors, force sensors, temperature sensors, and many others. By gathering data from sensors, robots can make informed decisions, adapt to changes, and interact intelligently with their environment.</p>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 3: Exploration -->
+            <div class="module-section" id="controllers">
+                <h3>Controllers</h3>
+                <p>Robots have become invaluable tools for exploring challenging and hazardous environments, both on Earth and in space. Mars rovers, for example, collect data and samples, providing insights into planetary geology and the potential for extraterrestrial life. Autonomous underwater and aerial robots explore underwater ecosystems and remote environments, enabling scientific research and environmental monitoring.</p>
+                <!-- Applications - Exploration -->
                 <div class="subsection">
                     <h4>Applications</h4>
                     <ul>
-                        <li>Animatronics in theme parks</li>
-                        <li>Humanoid robots in interactive exhibits</li>
-                        <li>Robotic characters in movies and shows</li>
-                        <li>Virtual reality and augmented reality experiences</li>
-                        <li>Gaming and robotic competitions</li>
+                        <li>Planetary exploration</li>
+                        <li>Underwater exploration</li>
+                        <li>Remote sensing and monitoring</li>
+                        <li>Search and rescue operations</li>
+                        <li>Hazardous environment exploration</li>
                     </ul>
                 </div>
-        </div> <!-- End of module-section -->
-        
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('course1quiz1') }}" class="secondary-button">Back: Quiz 1</a>
-            <a href="{{ url_for('challenges') }}" class="secondary-button">Next: Challenges in Robotics</a>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 4: Agriculture -->
+            <div class="module-section" id="agriculture">
+                <h3>Agriculture</h3>
+                <p>Robotics has the potential to revolutionize agriculture by increasing efficiency, sustainability, and productivity. Agricultural robots, known as agribots, perform tasks such as planting, harvesting, monitoring crop health, and precision spraying. They can operate autonomously, optimizing resource utilization and reducing environmental impact. Robotics in agriculture enable precision farming techniques, improving crop yields and reducing labor-intensive processes.</p>
+                <!-- Applications - Agriculture -->
+                <div class="subsection">
+                    <h4>Applications</h4>
+                    <ul>
+                        <li>Planting and seeding</li>
+                        <li>Crop monitoring and management</li>
+                        <li>Harvesting and sorting</li>
+                        <li>Precision spraying and irrigation</li>
+                        <li>Greenhouse automation</li>
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 5: Entertainment -->
+            <div class="module-section" id="entertainment">
+                <h3>Entertainment</h3>
+                <p>Robotic technologies have found their place in the entertainment industry, captivating audiences, and providing engaging experiences. Robots, such as animatronics and humanoid robots, are used in theme parks, museums, and interactive exhibits. They entertain, educate, and create immersive experiences for visitors, blurring the boundaries between technology and entertainment.</p>
+                    <!-- Applications - Entertainment -->
+                    <div class="subsection">
+                        <h4>Applications</h4>
+                        <ul>
+                            <li>Animatronics in theme parks</li>
+                            <li>Humanoid robots in interactive exhibits</li>
+                            <li>Robotic characters in movies and shows</li>
+                            <li>Virtual reality and augmented reality experiences</li>
+                            <li>Gaming and robotic competitions</li>
+                        </ul>
+                    </div>
+            </div> <!-- End of module-section -->
+            
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('course1quiz1') }}" class="secondary-button">Back: Quiz 1</a>
+                <a href="{{ url_for('challenges') }}" class="secondary-button">Next: Challenges in Robotics</a>
+            </div>
         </div>
 
     </div> <!-- End of course-main-content -->

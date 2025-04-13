@@ -55,11 +55,11 @@
             <li class="course-item">
                 <a href="{{ url_for ('module_eleven_download') }}" class="course-link">Cheat Sheet</a>
             </li>
-            <li class="course-item active">
-                <a href="{{ url_for ('module_eleven_certificate_car') }}" class="course-link">Certificate</a>
-            </li>
             <li class="course-item">
                 <a href="{{ url_for ('module_eleven_link') }}" class="course-link">Time to Code</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_eleven_certificate_car') }}" class="course-link">Certificate</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
@@ -97,8 +97,7 @@
         
        <!-- Navigation Buttons -->
         <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_eleven_download') }}" class="secondary-button">Back: Cheat Sheet</a>
-            <a href="{{ url_for('module_eleven_link') }}" class="secondary-button">Next: Time to Code</a>
+            <a href="{{ url_for('module_eleven_link') }}" class="secondary-button">Back: Time to Code</a>
         </div>
         
     </div> <!-- End of course-main-content -->

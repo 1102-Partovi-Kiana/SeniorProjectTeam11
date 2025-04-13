@@ -33,6 +33,7 @@ import io
 from reportlab.pdfgen import canvas
 from quiz.course1_quiz1 import quiz_data as quiz
 from quiz.course1_quiz1_2 import quiz_data as quiz
+from quiz.course2_quiz2 import quiz_data as quiz
 from quiz.course3_quiz3 import quiz_data as quiz
 from quiz.course4_quiz4 import quiz_data as quiz
 from quiz.course6_quiz6 import quiz_data as quiz
@@ -2414,6 +2415,26 @@ def intro_of_mobile_robots():
 def industrial_robots():
     return render_template('courses/course2-content/industrial_robots.html')
 
+@app.route('/module2/introduction/service-robots')
+def service_robots():
+    return render_template('courses/course2-content/service_robots.html')
+
+@app.route('/module2/introduction/mobile-robots')
+def mobile_robots():
+    return render_template('courses/course2-content/mobile_robots.html')
+
+@app.route('/module2/introduction/humanoid-robots')
+def humanoid_robots():
+    return render_template('courses/course2-content/humanoid_robots.html')
+
+@app.route('/module2/introduction/agricultural-robots')
+def agricultural_robots():
+    return render_template('courses/course2-content/agricultural_robots.html')
+
+@app.route('/module2/introduction/medical-robots')
+def medical_robots():
+    return render_template('courses/course2-content/medical_robots.html')
+
 @app.route('/module3/introduction')
 def module_three():
     return render_template('courses/course3-content/module_three.html') 
@@ -2798,7 +2819,7 @@ def generate_frames():
                 if isinstance(env, gym.Env) and env.spec.id == "CarRacing-v3" and getattr(env, "render_mode", None) == "rgb_array":
                     frame = env.render()
                 else:
-                    frame = env.render(mode='rgb_array', width=1440, height=1080)
+                    frame = env.render(mode='rgb_array', width=1440, height=1510)
                 if frame is not None:
                     _, buffer = cv2.imencode('.jpg', frame)
                     frame = buffer.tobytes()
@@ -3155,6 +3176,23 @@ def course1quiz1_2():
         module_completed = {}
     return render_template('courses/course1-content/course1-quiz1_2.html', module_completed=module_completed)
 
+@app.route('/module2/types-of-robots/course2-quiz-2')
+def course2quiz2():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    subsection_number = 1.9
+    if role == ROLE_STUDENT:
+        module_completed = update_and_get_module_completion(user_id, subsection_number)
+    else:
+        module_completed = {}
+    return render_template('courses/course2-content/course2-quiz2.html', module_completed=module_completed)
+
 @app.route('/module3/meet-the-robots/course3-quiz-3')
 def course3quiz3():
     user = session.get('user')
@@ -3291,35 +3329,39 @@ def course11quiz11():
         module_completed = {}
     return render_template('courses/course11-content/course11-quiz11.html', module_completed=module_completed)
 
-@app.route("/certificate")
+@app.route("/certificate/module2")
+def module_two_certificate():
+    return render_template('courses/course2-content/module_two_certificate.html') 
+
+@app.route("/certificate/module3")
 def module_three_certificate_meet():
     return render_template('courses/course3-content/module_three_certificate_meet.html') 
 
-@app.route("/certificate")
+@app.route("/certificate/module4")
 def module_four_certificate_code():
     return render_template('courses/course4-content/module_four_certificate_code.html') 
 
-@app.route("/certificate")
+@app.route("/certificate/module6")
 def module_six_certificate_reach():
     return render_template('courses/course6-content/module_six_certificate_reach.html') 
 
-@app.route("/certificate")
+@app.route("/certificate/module7")
 def module_seven_certificate_pick_and_place():
     return render_template('courses/course7-content/module_seven_certificate_pick_and_place.html') 
 
-@app.route("/certificate")
+@app.route("/certificate/module8")
 def module_eight_certificate_stack():
     return render_template('courses/course8-content/module_eight_certificate_stack.html') 
 
-@app.route("/certificate")
+@app.route("/certificate/module9")
 def module_nine_certificate_organize():
     return render_template('courses/course9-content/module_nine_certificate_organize.html') 
 
-@app.route("/certificate")
+@app.route("/certificate/module10")
 def module_ten_certificate_organize_sensors():
     return render_template('courses/course10-content/module_ten_certificate_organize_sensors.html') 
 
-@app.route("/certificate")
+@app.route("/certificate/module11")
 def module_eleven_certificate_car():
     return render_template('courses/course11-content/module_eleven_certificate_car.html') 
 

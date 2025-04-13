@@ -98,42 +98,53 @@
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Indentation</h1>
-            <p class="page-description">Learn proper indenting practice to further enhance the readability of your code.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Indentation</h1>
+                <p class="page-description">Learn proper indenting practice to further enhance the readability of your code.</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
-        </div>
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
 
-         <!-- Section 1: Importance of Indentation -->
-        <div class="module-section">
-            <h3>Why Indentation Matters</h3>
-            <p>Indentation improves the visual structure of the code, showing the relationship between different blocks like loops, conditions, or functions. </p>
-            <p>Most languages recommend a consistent use of spaces (usually 4 per level) or tabs, but mixing both is discouraged.</p>
-            <p>Proper indentation ensures the code is readable and less prone to logical errors caused by misaligned blocks.</p>
-            <pre><code># Good
-def check_album_year(album, year):
-if album == "1989" and year == 2014:
+            <!-- Section 1: Importance of Indentation -->
+            <div class="module-section">
+                <h3>Why Indentation Matters</h3>
+                <p>Indentation improves the visual structure of the code, showing the relationship between different blocks like loops, conditions, or functions. </p>
+                <p>Most languages recommend a consistent use of spaces (usually 4 per level) or tabs, but mixing both is discouraged.</p>
+                <p>Proper indentation ensures the code is readable and less prone to logical errors caused by misaligned blocks.</p>
+                <pre><code># Good
+    def check_album_year(album, year):
+    if album == "1989" and year == 2014:
+        return "Correct Match"
+    return "No Match"
+
+    # Bad
+    def check_album_year(album, year):
+    if album == "1989" and year == 2014:
     return "Correct Match"
-return "No Match"
+    return "No Match"
+        </code></pre>
+            </div>
 
-# Bad
-def check_album_year(album, year):
-if album == "1989" and year == 2014:
-return "Correct Match"
-return "No Match"
-    </code></pre>
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_four_comments') }}" class="secondary-button">Back: Commenting</a> 
+                <a href="{{ url_for('module_four_variables') }}" class="secondary-button">Next: Variables</a>
+            </div>
         </div>
-
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_four_comments') }}" class="secondary-button">Back: Commenting</a> 
-            <a href="{{ url_for('module_four_variables') }}" class="secondary-button">Next: Variables</a>
-        </div>
-        
+            
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->
 {% endblock %}

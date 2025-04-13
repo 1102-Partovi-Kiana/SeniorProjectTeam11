@@ -393,6 +393,14 @@ for _ in range(150):
             </div>
         </div>
     </div>
+
+    <div id="core-certificate-popup" class="core-cert-popup core-cert-popup-hidden">
+        <button class="core-cert-close" id="core-cert-close-button">&times;</button>
+        <h2 class="core-cert-title">SUCCESS</h2>
+        <p class="core-cert-message">YAY GOOD JOB!</p>
+        <a href="{{ url_for('module_ten_certificate_organize_sensors') }}" class="core-cert-button" target="_blank">Get My Certificate</a>
+    </div>
+
 </section>
 
 <!-- CodeMirror and Script Initialization -->
@@ -472,6 +480,7 @@ for _ in range(150):
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
 <script>
     let currentTheme = "monokai"; 
@@ -927,6 +936,19 @@ document.getElementById('run-code').addEventListener('click', async function () 
             secondaryOutputCard.classList.add('success');
             secondaryOutputCard.innerHTML = `<p>Your code ran successfully 😊</p>`;
             outputBox.innerHTML += `<p>${data.message}</p>`;
+
+            const certPopup = document.getElementById('core-certificate-popup');
+                if (certPopup) {
+                    certPopup.classList.remove('core-cert-popup-hidden');
+                    certPopup.classList.add('core-cert-popup-visible');
+
+                    confetti({
+                        particleCount: 150,
+                        spread: 100,
+                        origin: { y: 0.6 }
+                    });
+
+                }
 
             // If there were previous error attempts, then assume the user fixed the errors.
             // In that case, we clear/hide error-specific UI elements while keeping the success message.
@@ -1511,6 +1533,24 @@ document.getElementById("dark-mode-pop-up-window").addEventListener("click", () 
     // Optional feedback for the user
     alert(isDarkMode ? "Dark Mode Enabled for the Pop-Up Window!" : "Light Mode Enabled for the Pop-Up Window!");
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const coreCertCloseButton = document.getElementById('core-cert-close-button');
+    const coreCertPopup = document.getElementById('core-certificate-popup');
+
+    if (coreCertCloseButton && coreCertPopup) {
+        coreCertCloseButton.addEventListener('click', function () {
+            // Debug logging to confirm the click is detected:
+            console.log("Close button clicked.");
+            coreCertPopup.classList.add('core-cert-popup-hidden');
+            coreCertPopup.classList.remove('core-cert-popup-visible');
+        });
+    } else {
+        console.error("Popup or close button element not found.");
+    }
+});
+
+
 
 </script>
 {% endblock %}

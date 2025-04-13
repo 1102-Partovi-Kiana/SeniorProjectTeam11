@@ -182,63 +182,74 @@
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Types of Robots</h1>
-            <p class="page-description">Robots are versatile machines that come in various forms and serve a wide range of purposes. Understanding the different categories of robots based on their structure, mobility, and applications is essential for gaining insights into their capabilities and potential uses. The four primary categories of robots: industrial robots, humanoid robots, mobile robots, and collaborative robots.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Types of Robots</h1>
+                <p class="page-description">Robots are versatile machines that come in various forms and serve a wide range of purposes. Understanding the different categories of robots based on their structure, mobility, and applications is essential for gaining insights into their capabilities and potential uses. The four primary categories of robots: industrial robots, humanoid robots, mobile robots, and collaborative robots.</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
-        </div>
-
-        <!-- Section 1: Industrial Robots  -->
-        <div class="module-section" id="industrial">
-            <h3>Industrial Robots</h3>
-            <p>Industrial robots are designed to perform repetitive tasks in manufacturing and industrial environments. They are typically large, stationary machines with multiple axes of motion and are often used in assembly lines, material handling, welding, and painting. Industrial robots are known for their precision, speed, and reliability, and they have significantly increased productivity in industries worldwide.</p>
-             <!-- Key Characteristics -->
-            <div class="subsection">
-                <h4>Key Characteristics</h4>
-                <ul>
-                    <li>Stationary and fixed in place.</li>
-                    <li>Equipped with multiple axes of motion for precise movements.</li>
-                    <li>Often used for repetitive tasks in manufacturing and assembly processes.</li>
-                </ul>
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
             </div>
-            
-            <!-- Common Applications -->
-            <div class="subsection">
-                <h4>Common Applications</h4>
-                <ul>
-                    <li>Welding</li>
-                    <li>Painting</li>
-                    <li>Material handling</li>
-                </ul>
+
+            <!-- Section 1: Industrial Robots  -->
+            <div class="module-section" id="industrial">
+                <h3>Industrial Robots</h3>
+                <p>Industrial robots are designed to perform repetitive tasks in manufacturing and industrial environments. They are typically large, stationary machines with multiple axes of motion and are often used in assembly lines, material handling, welding, and painting. Industrial robots are known for their precision, speed, and reliability, and they have significantly increased productivity in industries worldwide.</p>
+                <!-- Key Characteristics -->
+                <div class="subsection">
+                    <h4>Key Characteristics</h4>
+                    <ul>
+                        <li>Stationary and fixed in place.</li>
+                        <li>Equipped with multiple axes of motion for precise movements.</li>
+                        <li>Often used for repetitive tasks in manufacturing and assembly processes.</li>
+                    </ul>
+                </div>
+                
+                <!-- Common Applications -->
+                <div class="subsection">
+                    <h4>Common Applications</h4>
+                    <ul>
+                        <li>Welding</li>
+                        <li>Painting</li>
+                        <li>Material handling</li>
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 2: Humanoid Robots -->
+            <div class="module-section" id="humanoid">
+                <h3>Humanoid Robots</h3>
+                <p>Humanoid robots are designed to resemble humans in their appearance and movement. They are typically equipped with a human-like body structure, including a head, torso, arms, and legs. Humanoid robots aim to interact and communicate with humans, mimicking human actions and expressions.</p>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 3: Mobile Robots -->
+            <div class="module-section" id="mobile">
+                <h3>Mobile Robots</h3>
+                <p>Mobile robots are designed to navigate and operate in various environments autonomously or with minimal human intervention. They can move from one place to another and perform tasks while on the move. Mobile robots can have different forms, such as wheeled robots, legged robots, or drones, depending on the terrain and tasks they are designed for.</p>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 4: Collaborative Robots -->
+            <div class="module-section" id="collaborative-robots">
+                <h3>Collaborative Robots</h3>
+                <p>Collaborative robots, also known as cobots, are designed to work alongside humans in a shared workspace safely. Unlike traditional industrial robots that are isolated in cages, cobots are equipped with advanced sensors and control systems to detect and respond to human presence. They are designed to assist humans in tasks that require cooperation, such as assembly, inspection, and packaging. Cobots have opened up new possibilities for human-robot collaboration and are being increasingly used in industries to enhance productivity and safety.</p>
+            </div> <!-- End of module-section -->
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('history') }}" class="secondary-button">Back: History of Robotics</a>
+                <a href="{{ url_for('importanceandapp') }}" class="secondary-button">Next: Importance and Applications of Robotics</a>
             </div>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 2: Humanoid Robots -->
-        <div class="module-section" id="humanoid">
-            <h3>Humanoid Robots</h3>
-            <p>Humanoid robots are designed to resemble humans in their appearance and movement. They are typically equipped with a human-like body structure, including a head, torso, arms, and legs. Humanoid robots aim to interact and communicate with humans, mimicking human actions and expressions.</p>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 3: Mobile Robots -->
-        <div class="module-section" id="mobile">
-            <h3>Mobile Robots</h3>
-            <p>Mobile robots are designed to navigate and operate in various environments autonomously or with minimal human intervention. They can move from one place to another and perform tasks while on the move. Mobile robots can have different forms, such as wheeled robots, legged robots, or drones, depending on the terrain and tasks they are designed for.</p>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 4: Collaborative Robots -->
-        <div class="module-section" id="collaborative-robots">
-            <h3>Collaborative Robots</h3>
-            <p>Collaborative robots, also known as cobots, are designed to work alongside humans in a shared workspace safely. Unlike traditional industrial robots that are isolated in cages, cobots are equipped with advanced sensors and control systems to detect and respond to human presence. They are designed to assist humans in tasks that require cooperation, such as assembly, inspection, and packaging. Cobots have opened up new possibilities for human-robot collaboration and are being increasingly used in industries to enhance productivity and safety.</p>
-        </div> <!-- End of module-section -->
-
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('history') }}" class="secondary-button">Back: History of Robotics</a>
-            <a href="{{ url_for('importanceandapp') }}" class="secondary-button">Next: Importance and Applications of Robotics</a>
         </div>
   
     </div> <!-- End of course-main-content -->

@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Mobile Robots - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item"> 
+                <a href="{{ url_for ('intro_of_mobile_robots') }}" class="course-link">Introduction of Mobile Robotics</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('industrial_robots') }}" class="course-link">Industrial Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('service_robots') }}" class="course-link">Service Robots</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('mobile_robots') }}" class="course-link">Mobile Robots</a>
+                <ul class="sub-list">
+                    <li><a href="#mobile-robots">Mobile Robots</a></li>
+                    <li><a href="#types-of-mobile-robots">Types of Mobile Robotics</a></li>
+                </ul>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('humanoid_robots') }}" class="course-link">Humanoid Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('agricultural_robots') }}" class="course-link">Agricultural Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('medical_robots') }}" class="course-link">Medical Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course2quiz2') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_two_certificate') }}" class="course-link">Certificate</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Mobile Robots</h1>
+                <p class="page-description">Explore robots capable of autonomous movement.</p>
+            </header>
+
+            <!-- Page Divider -->
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
+            
+            <!-- Section 1: Mobile Robots -->
+            <div class="module-section" id="mobile-robots">
+                <h3>Mobile Robots</h3>
+                <p>Mobile robots are essentially computers equipped with sensors that enable them to perceive the world around them. They can analyze sensory inputs such as vision, touch, or sound to gather information about their surroundings. These robots use this information to make decisions and perform specific tasks. Autonomous mobile robots (AMRs) take this concept further by being intelligent agents capable of performing complex tasks. They possess the ability to identify features, detect patterns from previous experiences, and reason their actions. This autonomy allows them to operate without constant human intervention or control.</p>
+                <div class="subsection">
+                    <h4>Some key details for AMRs to work are: </h4>
+                    <ul>
+                        <li><strong><em>Sensing:</em>&nbsp;</strong>Autonomous mobile robots use sensors, such as cameras, lidar, and ultrasonic sensors, to gather information about their environment.</li>
+                        <li><strong><em>Perception:</em>&nbsp;</strong>The collected sensor data is processed using computer vision techniques to extract meaningful information, enabling the robot to identify objects, map the environment, and understand its location.</li>
+                        <li><strong><em>Localization:</em>&nbsp;</strong>The robot determines its precise position within the environment and builds an accurate map.</li>
+                        <li><strong><em>Path Planning:</em>&nbsp;</strong>Using path planning algorithms, the robot generates collision-free paths from its current location to a target, considering the map and obstacles.</li>
+                        <li><strong><em>Decision Making:</em>&nbsp;</strong>Autonomous robots use various algorithms, such as rule-based systems or machine learning, to make informed decisions based on their perception and goals.</li> 
+                        <li><strong><em>Control and Actuation:</em>&nbsp;</strong>The control system translates decisions into actions and commands actuators (e.gmotors) to drive the robot's movement and interactions.</li>
+                        <li><strong><em>Learning and Adaption:</em>&nbsp;</strong>Autonomous robots can learn from experience using techniques like reinforcement learning, enabling them to improve their decision-making processes and adapt to different situations.</li> 
+                    </ul>
+                </div>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 3: Types of Mobile Robots -->
+            <div class="category-section" id="types-of-mobile-robots">
+                <h2 class="category-title">Types of Mobile Robots</h2>
+                <div class="module-section">
+                    <h3>Wheeled robots </h3>
+                    <p>Wheeled robots are a fundamental type of mobile robots that utilize wheels for locomotion and navigation. They have played a significant role in various industries, including manufacturing, logistics, and research. These robots can be autonomous or semi-autonomous robots equipped with wheels that enable them to move and traverse their environment. Wheeled robots have a rich history dating back to the early days of robotics. One notable milestone is the development of Shakey, a wheeled robot introduced in the 1970s at Stanford Research Institute. Shakey showcased the ability to reason, plan, and navigate within dynamic environments, laying the foundation for advancements in mobile robotics.</p>
+                    <p>Examples:</p>
+                    <p>TurtleBot 3 is a popular and functional wheeled robot widely used for education, research, and prototyping purposes. It combines a compact design with powerful capabilities, making it an ideal platform for learning and experimentation. TurtleBot 3 utilizes differential drive wheels and incorporates various sensors such as cameras and lidar, enabling it to perceive its surroundings, create maps, and navigate autonomously. It supports the ROS (Robot Operating System) framework, providing a robust foundation for developing sophisticated applications.</p>
+                    <div style="text-align: center;">
+                        <img src="{{ url_for('static', filename='img/tb.png') }}" alt="TurtleBot 3" style="max-width: 100%; height: auto;">
+                    </div>
+                    <p>Mobile Industrial Robots, commonly known as MiR, are a series of wheeled robots specifically designed for autonomous material transportation in industrial settings. These robots excel in logistics and factory automation, streamlining internal material flow and optimizing efficiency. They integrate seamlessly into existing workflows and can be programmed to perform tasks such as transporting goods between workstations or delivering components to assembly lines.</p>
+                    <div style="text-align: center;">
+                        <img src="{{ url_for('static', filename='img/mir.png') }}" alt="Mobile Industrial Robot" style="max-width: 100%; height: auto;">
+                    </div>
+                </div>
+
+                <div class="module-section">
+                    <h3>Aerial Drones</h3>
+                    <p>Aerial drones, also known as unmanned aerial vehicles (UAVs), are autonomous or remotely controlled aircraft that can fly without an onboard human pilot. They are equipped with various sensors, cameras, and communication systems to perform tasks such as aerial photography, surveillance, delivery, mapping, etc. The concept of aerial drones’ dates back to the early 20th century but advancements have been made in recent decades. The first widely known drone was the Radioplane OQ-2, developed by the United States during World War II for target practice. Early drones were primarily used for military purposes, however, with advances in technology and miniaturization these vehicles became more accessible and used for recreational and commercial purposes. </p>
+                    <p>Some examples of relevant drones are:</p>
+                    <ul>
+                        <li><strong><em>Predator and Reaper :</em>&nbsp;</strong>These UAVs were created by the military and have been used for surveillance and airstrikes. </li>
+                        <li><strong><em>DJI Phantom :</em>&nbsp;</strong>These became popular drones and consumers used them for aerial photography and videography.</li>
+                        <li><strong><em>DJI Tello and DJI Tello EDU drones :</em>&nbsp;</strong>These drones created by Ryze robotics are used for entertainment, recreational and educational purposes as they allow you to take high quality images and program them using python, scratch or swift. </li>
+                    </ul>
+                    <div class="robot-images" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                        <img src="{{ url_for('static', filename='img/djitello.png') }}" alt="Left - DJI Tello drone" style="width: 30%;">
+                        <img src="{{ url_for('static', filename='img/djipha.png') }}" alt="Right - DJI phantom drone" style="width: 30%;">
+                    </div> 
+                    <p>Aerial drones have various applications and can be used in numerous industries. Mapping and surveying is a common one, drones are used to generate detailed maps used for urban planning and environmental monitoring. Similarly, these can be used for search and rescue by equipping the drones with thermal cameras or assessing disaster areas. Additionally, these can be used for agriculture for crop monitoring and spraying pesticides. Lastly, these unmanned aerial vehicles can be used in infrastructure for more efficient bridge and powerline inspections.</p>
+                </div> 
+
+                <div class="module-section">
+                    <h3>Underwater Robots</h3>
+                    <p>Underwater robots are robotic vehicles created to navigate and perform tasks underwater. The development of underwater robots can be traced back to the 1950s and 1960s when the first remotely operated vehicles were created for oceanographic research and military applications. The use of underwater robots expanded over the years with advancements in technology, particularly in the areas of materials, sensors, and propulsion systems. These robots are extremely useful for deep sea exploration, as the ocean can be a harsh, corrosive environment with crushing levels of pressure. </p>
+                    <p>Some notable examples of underwater robots include:</p>
+                    <ul>
+                        <li><strong>Remotely Operated Vehicles (ROVs)</strong> like ROV Jason and ROV Hercules. Both these robots are used for deep-sea exploration, scientific research and underwater inspections.</li>
+                        <li><strong>Autonomous underwater vehicles (AUVs)</strong> like the REMUS and Glider. These untethered robots operate independently. They collect data for oceanographic research, marine biology and underwater mapping. </li>
+                    </ul>
+                    <div class="robot-images" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                        <img src="{{ url_for('static', filename='img/rov.png') }}" alt="ROV Hercules" style="width: 30%;">
+                        <img src="{{ url_for('static', filename='img/auv.png') }}" alt="AUV Hercules, AUV Glider" style="width: 30%;">
+                    </div> 
+                    <p>Underwater robots are employed in marine research and exploration by enabling the study of deep-sea ecosystems, geological formations and marine life. Moreover, they aid the documentation of submerged archeological sites, pipeline inspections, maintenance, subsea equipment installation and inspect underwater structures like dams, bridges and offshore platforms. </p>
+                    <p>There are some characteristics that ROVs and AUVs should have:</p>
+                    <ul>
+                        <li><strong>Reactivity:</strong>These vehicles should react in a timely manner to changes in the environment.</li>
+                        <li><strong>Robustness:</strong>These vehicles should handle the harsh and dark environment that the underwater holds. Also, their system should handle unexpected events, either external or internal. </li>
+                        <li><strong>:</strong>These vehicles should react in a timely manner to changes in the environment.</li>
+                        <li><strong>Robustness:</strong>These vehicles should handle the harsh and dark environment that the underwater holds. Also, their system should handle unexpected events, either external or internal. </li>
+                    </ul>
+                </div> 
+            </div> <!-- End of module-section -->
+
+            <div class="reference-section">
+                <h6>References</h6>
+                <p>
+                    <a href="https://www.researchgate.net/figure/Left-The-Pepper-robot-from-SoftBank-Robotics-used-in-a-previous-study-of-phrasing-in_fig1_339773792" target="_blank">https://www.researchgate.net/figure/Left-The-Pepper-robot-from-SoftBank-Robotics-used-in-a-previous-study-of-phrasing-in_fig1_339773792</a>
+                    <a href="https://hivelife.com/paro/" target="_blank">https://hivelife.com/paro/</a>
+                    <a href="https://atlantichotelsgroup.com/meet-boltr-your-friendly-hotel-delivery-bot/" target="_blank">https://atlantichotelsgroup.com/meet-boltr-your-friendly-hotel-delivery-bot/</a>
+                    <a href="https://www.wired.co.uk/article/a-butler-bot-for-your-trolley-bags" target="_blank">https://www.wired.co.uk/article/a-butler-bot-for-your-trolley-bags</a>
+                    <a href="https://en.wikipedia.org/wiki/Electrolux_Trilobite" target="_blank">https://en.wikipedia.org/wiki/Electrolux_Trilobite</a>
+                    <a href="https://www.zdnet.com/home-and-office/irobot-drops-its-first-ever-combo-mop-and-vacuum-robot-the-roomba-combo-j7/" target="_blank">https://www.zdnet.com/home-and-office/irobot-drops-its-first-ever-combo-mop-and-vacuum-robot-the-roomba-combo-j7/</a>
+                </p>
+            </div>
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('service_robots') }}" class="secondary-button">Back: Service Robots</a>
+                <a href="{{ url_for('humanoid_robots') }}" class="secondary-button">Next: Humanoid Robots</a>
+            </div>
+        </div>
+        
+    </div> <!-- End of course-main-content -->
+</div> <!-- End of course-container -->
+{% endblock %}

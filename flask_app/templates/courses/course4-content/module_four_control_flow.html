@@ -98,89 +98,100 @@
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Control Flow</h1>
-            <p class="page-description">Understand how to guide your program's behavior with tools like conditionals, loops, and other control structures</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Control Flow</h1>
+                <p class="page-description">Understand how to guide your program's behavior with tools like conditionals, loops, and other control structures</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
-        </div>
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
 
-        <!-- Section 1: Conditional Statements -->
-        <div class="module-section" id="conditionals">
-            <h3>1. Conditional Statements</h3>
-            <p>Conditional statements allow your program to make decisions based on conditions.</p>
-            <pre><code># Example: Deciding which album to recommend with if-else statements
-favorite_genre = "pop"
+            <!-- Section 1: Conditional Statements -->
+            <div class="module-section" id="conditionals">
+                <h3>1. Conditional Statements</h3>
+                <p>Conditional statements allow your program to make decisions based on conditions.</p>
+                <pre><code># Example: Deciding which album to recommend with if-else statements
+    favorite_genre = "pop"
 
-if favorite_genre == "pop":
-    print("You might like Taylor Swift's '1989'")
-elif favorite_genre == "rock":
-    print("Check out 'Bohemian Rhapsody' by Queen")
-else:
-    print("Explore some new genres!")</code></pre>
-        </div>
-
-        <!-- Section 2: Loops -->
-        <div class="module-section" id="loops">
-            <h3>2. Loops</h3>
-            <p>Loops are used to repeat actions, either a specific number of times or until a condition is met. They follow the DRY principle: Don't Repeat Yourself. Use loops to avoid duplicating code.</p>
-            <pre><code># Example: Print top 3 albums
-top_albums = ["1989", "Fearless", "Folklore"]
-
-for album in top_albums:
-    print(album)
-
-# Example: Countdown to a concert
-countdown = 5
-while countdown > 0:
-    print(f"{countdown} days left!")
-    countdown -= 1</code></pre>
-        </div>
-
-        <!-- Section 3: Break and Continue -->
-        <div class="module-section" id="break-continue">
-            <h3>3. Break and Continue</h3>
-            <p>Use <code>break</code> to exit a loop early or <code>continue</code> to skip the current iteration.</p>
-            <pre><code># Example: Stop when finding the favorite album
-albums = ["Red", "1989", "Midnights", "Folklore"]
-
-for album in albums:
-    if album == "1989":
-        print("Found the favorite album!")
-        break
-
-# Example: Skip specific albums
-for album in albums:
-    if album == "Midnights":
-        continue
-    print(album)</code></pre>
-        </div>
-
-        <!-- Section 4: Nested Control Flow -->
-        <div class="module-section" id="nested">
-            <h3>4. Nested Control Flow</h3>
-            <p>Control flow statements can be nested to handle more complex logic.</p>
-            <pre><code># Example: Checking album ratings
-album_ratings = {
-    "1989": 9,
-    "Fearless": 8,
-    "Reputation": 7,
-}
-
-for album, rating in album_ratings.items():
-    if rating > 8:
-        print(f"{album} is highly rated!")
+    if favorite_genre == "pop":
+        print("You might like Taylor Swift's '1989'")
+    elif favorite_genre == "rock":
+        print("Check out 'Bohemian Rhapsody' by Queen")
     else:
-        print(f"{album} has a decent rating.")</code></pre>
-        </div>
+        print("Explore some new genres!")</code></pre>
+            </div>
 
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_four_variables') }}" class="secondary-button">Back: Variables</a> 
-            <a href="{{ url_for('module_four_loops') }}" class="secondary-button">Next: Loops</a>
+            <!-- Section 2: Loops -->
+            <div class="module-section" id="loops">
+                <h3>2. Loops</h3>
+                <p>Loops are used to repeat actions, either a specific number of times or until a condition is met. They follow the DRY principle: Don't Repeat Yourself. Use loops to avoid duplicating code.</p>
+                <pre><code># Example: Print top 3 albums
+    top_albums = ["1989", "Fearless", "Folklore"]
+
+    for album in top_albums:
+        print(album)
+
+    # Example: Countdown to a concert
+    countdown = 5
+    while countdown > 0:
+        print(f"{countdown} days left!")
+        countdown -= 1</code></pre>
+            </div>
+
+            <!-- Section 3: Break and Continue -->
+            <div class="module-section" id="break-continue">
+                <h3>3. Break and Continue</h3>
+                <p>Use <code>break</code> to exit a loop early or <code>continue</code> to skip the current iteration.</p>
+                <pre><code># Example: Stop when finding the favorite album
+    albums = ["Red", "1989", "Midnights", "Folklore"]
+
+    for album in albums:
+        if album == "1989":
+            print("Found the favorite album!")
+            break
+
+    # Example: Skip specific albums
+    for album in albums:
+        if album == "Midnights":
+            continue
+        print(album)</code></pre>
+            </div>
+
+            <!-- Section 4: Nested Control Flow -->
+            <div class="module-section" id="nested">
+                <h3>4. Nested Control Flow</h3>
+                <p>Control flow statements can be nested to handle more complex logic.</p>
+                <pre><code># Example: Checking album ratings
+    album_ratings = {
+        "1989": 9,
+        "Fearless": 8,
+        "Reputation": 7,
+    }
+
+    for album, rating in album_ratings.items():
+        if rating > 8:
+            print(f"{album} is highly rated!")
+        else:
+            print(f"{album} has a decent rating.")</code></pre>
+            </div>
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_four_variables') }}" class="secondary-button">Back: Variables</a> 
+                <a href="{{ url_for('module_four_loops') }}" class="secondary-button">Next: Loops</a>
+            </div>
         </div>
 
     </div> <!-- End of course-main-content -->

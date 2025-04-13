@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Quiz 2 - CORE</title>
+{% endblock %}
+
+{% block body %}
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item"> 
+                <a href="{{ url_for ('intro_of_mobile_robots') }}" class="course-link">Introduction of Mobile Robotics</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('industrial_robots') }}" class="course-link">Industrial Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('service_robots') }}" class="course-link">Service Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('mobile_robots') }}" class="course-link">Mobile Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('humanoid_robots') }}" class="course-link">Humanoid Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('agricultural_robots') }}" class="course-link">Agricultural Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('medical_robots') }}" class="course-link">Medical Robots</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('course2quiz2') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_two_certificate') }}" class="course-link">Certificate</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+
+    <div class="course-main-content">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1 class="page-title">Quiz 2</h1>
+            <p class="page-description">Test Your Knowledge</p>
+        </header>
+        <!-- Quiz Section -->
+        <div class="module-section" id="quiz-2">
+            <h3>Quiz</h3>
+
+            <script>
+                const quiz_id = "course2_quiz2";
+            </script>
+
+            <div id="quiz-container">
+                <!-- This will be dynamically populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Next Button -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('medical_robots') }}" class="secondary-button">Back: Medical Robots</a>
+            <a href="{{ url_for('module_two_certificate') }}" class="secondary-button">Next: Certificate</a>
+        </div>
+        
+    </div> <!-- End of course-main-content -->
+
+</div> <!-- End of course-container -->
+{% endblock %}

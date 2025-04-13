@@ -98,95 +98,106 @@
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Comments</h1>
-            <p class="page-description">Learn proper commenting to enhance the readability of your code.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Comments</h1>
+                <p class="page-description">Learn proper commenting to enhance the readability of your code.</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
-        </div>
-
-        <!-- Section 1: Why Comments Matter -->
-        <div class="module-section" id="importance-of-comments">
-            <h3>Why Comments Matter</h3>
-            <p>Comments provide clarity about why certain pieces of code exist or how they function, especially for complex logic. They make code easier for other developers to grasp and your future self.</p>
-            <p>Good commenting:</p>
-            <ul>
-                <li>Focuses on explaining the intent of the code rather than the obvious details.</li>
-                <li>Makes code easier to follow in the future.</li>
-            </ul>
-        </div>
-
-        <!-- Section 2: Best Practices -->
-        <div class="category-section" id="comment-best-practices">
-            <h2 class="category-title">Best Practices</h2>
-
-            <div class="module-section">
-                <h3>1. Focus on the "Why"</h3>
-                <pre><code># Good
-# Calculate the average to monitor trends in growth.
-average_height = sum(heights) / len(heights)
-
-# Bad
-# Calculate the average height.
-average_height = sum(heights) / len(heights)
-                </code></pre>
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
             </div>
 
-            <div class="module-section">
-                <h3>2. Be Clear and Concise, Avoid Over-Commenting</h3>
-                <pre><code># Good
-# Calculate total price including tax.
-total_price = price * 1.09
-
-# Bad
-# This code here multiplies the price by 1.09 to account for tax and calculates the total price.
-total_price = price * 1.09
-    </code></pre>
-            </div>
-        </div> <!-- End of Best Practices Section -->
-
-        <!-- Section 3: Types of Comments -->
-        <div class="category-section" id="types-of-comments">
-            <h2 class="category-title">Types of Comments</h2>
-
-            <div class="module-section">
-                <h3>Single-Line Comments</h3>
-                <p>Use single-line comments for brief notes.</p>
-                <pre><code># List Taylor Swift's top 3 albums
-top_albums = ["1989", "Fearless", "Folklore"]
-    </code></pre>
+            <!-- Section 1: Why Comments Matter -->
+            <div class="module-section" id="importance-of-comments">
+                <h3>Why Comments Matter</h3>
+                <p>Comments provide clarity about why certain pieces of code exist or how they function, especially for complex logic. They make code easier for other developers to grasp and your future self.</p>
+                <p>Good commenting:</p>
+                <ul>
+                    <li>Focuses on explaining the intent of the code rather than the obvious details.</li>
+                    <li>Makes code easier to follow in the future.</li>
+                </ul>
             </div>
 
-            <div class="module-section">
-                <h3>Block Comments</h3>
-                <p> Use block comments for detailed explanations.</p>
-                <pre><code>"""
-Print numbers 1 to 100.
-For multiples of 3, print "Fizz" instead of the number.
-For multiples of 5, print "Buzz" instead.
-For multiples of both 3 and 5, print "FizzBuzz".
-"""
-def fizz_buzz():
-    for i in range(1, 101):
-        if i % 3 == 0 and i % 5 == 0:
-            print("FizzBuzz")
-        elif i % 3 == 0:
-            print("Fizz")
-        elif i % 5 == 0:
-            print("Buzz")
-        else:
-            print(i)
-    </code></pre>
-            </div>
-        </div> <!-- End of Types of Comments Section -->
+            <!-- Section 2: Best Practices -->
+            <div class="category-section" id="comment-best-practices">
+                <h2 class="category-title">Best Practices</h2>
 
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_four_naming_conventions') }}" class="secondary-button">Back: Naming Conventions</a> 
-            <a href="{{ url_for('module_four_indentation') }}" class="secondary-button">Next: Indentation</a>
+                <div class="module-section">
+                    <h3>1. Focus on the "Why"</h3>
+                    <pre><code># Good
+    # Calculate the average to monitor trends in growth.
+    average_height = sum(heights) / len(heights)
+
+    # Bad
+    # Calculate the average height.
+    average_height = sum(heights) / len(heights)
+                    </code></pre>
+                </div>
+
+                <div class="module-section">
+                    <h3>2. Be Clear and Concise, Avoid Over-Commenting</h3>
+                    <pre><code># Good
+    # Calculate total price including tax.
+    total_price = price * 1.09
+
+    # Bad
+    # This code here multiplies the price by 1.09 to account for tax and calculates the total price.
+    total_price = price * 1.09
+        </code></pre>
+                </div>
+            </div> <!-- End of Best Practices Section -->
+
+            <!-- Section 3: Types of Comments -->
+            <div class="category-section" id="types-of-comments">
+                <h2 class="category-title">Types of Comments</h2>
+
+                <div class="module-section">
+                    <h3>Single-Line Comments</h3>
+                    <p>Use single-line comments for brief notes.</p>
+                    <pre><code># List Taylor Swift's top 3 albums
+    top_albums = ["1989", "Fearless", "Folklore"]
+        </code></pre>
+                </div>
+
+                <div class="module-section">
+                    <h3>Block Comments</h3>
+                    <p> Use block comments for detailed explanations.</p>
+                    <pre><code>"""
+    Print numbers 1 to 100.
+    For multiples of 3, print "Fizz" instead of the number.
+    For multiples of 5, print "Buzz" instead.
+    For multiples of both 3 and 5, print "FizzBuzz".
+    """
+    def fizz_buzz():
+        for i in range(1, 101):
+            if i % 3 == 0 and i % 5 == 0:
+                print("FizzBuzz")
+            elif i % 3 == 0:
+                print("Fizz")
+            elif i % 5 == 0:
+                print("Buzz")
+            else:
+                print(i)
+        </code></pre>
+                </div>
+            </div> <!-- End of Types of Comments Section -->
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_four_naming_conventions') }}" class="secondary-button">Back: Naming Conventions</a> 
+                <a href="{{ url_for('module_four_indentation') }}" class="secondary-button">Next: Indentation</a>
+            </div>
         </div>
         
     </div> <!-- End of course-main-content -->

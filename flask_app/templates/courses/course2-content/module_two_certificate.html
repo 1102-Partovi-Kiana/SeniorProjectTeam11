@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Certificate - CORE</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="course-container">
+    <!-- Sidebar for module navigation -->
+    <div class="course-sidebar">
+        <div class="course-sidebar-header">
+            <i class="fas fa-list"></i>
+            <span>Contents</span>
+        </div>
+        <ul class="course-list">
+            <li class="course-item"> 
+                <a href="#objectives" class="course-link">Objectives</a>
+            </li>
+            <li class="course-item"> 
+                <a href="{{ url_for ('intro_of_mobile_robots') }}" class="course-link">Introduction of Mobile Robotics</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('industrial_robots') }}" class="course-link">Industrial Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('service_robots') }}" class="course-link">Service Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('mobile_robots') }}" class="course-link">Mobile Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('humanoid_robots') }}" class="course-link">Humanoid Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('agricultural_robots') }}" class="course-link">Agricultural Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('medical_robots') }}" class="course-link">Medical Robots</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('course2quiz2') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item active">
+                <a href="{{ url_for ('module_two_certificate') }}" class="course-link">Certificate</a>
+            </li>
+        </ul>
+    </div> <!-- End of course-sidebar -->
+     
+
+    <script>
+        function updateCertificatePreview() {
+            document.getElementById("certificatePreview").src = "/view_certificate?" + new Date().getTime();
+        }
+
+        window.onload = updateCertificatePreview;
+    </script>
+
+
+    <div class="course-main-content">
+
+        <!-- Certificate Section -->
+        <div class="module-section" id="certificate" style="display: flex; flex-direction: column; align-items: center;">
+            
+            <!-- Certificate Preview -->
+            <img id="certificatePreview" src="" alt="Certificate Preview"
+                style="width: 80%; max-width: 800px; border: 1px solid black; margin-bottom: 20px; border-radius: 8px;">
+
+            <div style="display: flex; gap: 10px;">
+                  <button class="download-button" onclick="updateCertificatePreview()">
+                    <i class="fas fa-sync-alt"></i> Refresh Preview
+                  </button>
+                  <a href="/download_certificate">
+                    <button class="download-button">
+                      <i class="fas fa-download"></i> Download Certificate
+                    </button>
+                  </a>
+                  
+            </div>
+        </div>
+        
+       <!-- Navigation Buttons -->
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('course2quiz2') }}" class="secondary-button">Back: Quiz</a>
+        </div>
+        
+    </div> <!-- End of course-main-content -->
+    
+</div> <!-- End of course-container -->
+    
+{% endblock %}

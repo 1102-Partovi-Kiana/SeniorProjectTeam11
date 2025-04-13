@@ -5743,32 +5743,34 @@ code {
 
 .core-cert-popup {
     position: fixed;
-    top: 30%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #3db47f;
     color: white;
-    padding: 50px 60px; 
+    padding: 50px 60px;
     border-radius: 18px;
     text-align: center;
     z-index: 5000;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); 
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
     animation: coreCertSlideUp 0.4s ease;
     max-width: 480px;
     width: 90%;
+    word-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .core-cert-title {
-    margin: 0 0 20px;
-    font-size: 36px; 
+    margin: 0 0 8px;
+    font-size: 36px;
     font-weight: 700;
     letter-spacing: 1.2px;
-    margin-bottom: 8px; 
 }
 
 .core-cert-message {
-    margin: 0;
-    font-size: 22px; 
+    margin: 0 0 20px;
+    font-size: 22px;
     font-weight: 500;
 }
 
@@ -5777,11 +5779,12 @@ code {
     text-decoration: none;
     color: white;
     border: 2px solid white;
-    padding: 14px 32px; 
+    padding: 14px 32px;
     font-size: 18px;
     font-weight: 600;
     border-radius: 8px;
     transition: all 0.3s ease;
+    margin-top: 10px;
 }
 
 .core-cert-button:hover {
@@ -5795,7 +5798,7 @@ code {
     right: 18px;
     background: none;
     border: none;
-    font-size: 28px; 
+    font-size: 28px;
     color: white;
     cursor: pointer;
     z-index: 2;
@@ -5812,10 +5815,11 @@ code {
 @keyframes coreCertSlideUp {
     from {
         opacity: 0;
-        transform: translate(-50%, 20%);
+        transform: translate(-50%, -40%) scale(0.95);
     }
     to {
         opacity: 1;
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%) scale(1);
     }
 }
+

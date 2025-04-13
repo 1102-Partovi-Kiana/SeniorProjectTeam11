@@ -98,82 +98,93 @@
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Naming Conventions</h1>
-            <p class="page-description">Learn the importance of having proper naming conventions to enhance your coding skills.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Naming Conventions</h1>
+                <p class="page-description">Learn the importance of having proper naming conventions to enhance your coding skills.</p>
+            </header>
 
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
-        </div>
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
+            </div>
 
-        <!-- Section 1: Importance of Naming Conventions -->
-        <div class="module-section" id="why-it-matters">
-            <h3>Why Naming Conventions Matter</h3>
-            <p>Naming conventions make your code easier to read and understand, especially when working in teams.</p>
-            <p>Good naming practices:</p>
-            <ul>
-                <li>Provide clear context for variables and functions.</li>
-                <li>Reduce the need for additional comments.</li>
-                <li>Make code self-explanatory.</li>
-            </ul>
-        </div> <!-- End of Importance Section -->
+            <!-- Section 1: Importance of Naming Conventions -->
+            <div class="module-section" id="why-it-matters">
+                <h3>Why Naming Conventions Matter</h3>
+                <p>Naming conventions make your code easier to read and understand, especially when working in teams.</p>
+                <p>Good naming practices:</p>
+                <ul>
+                    <li>Provide clear context for variables and functions.</li>
+                    <li>Reduce the need for additional comments.</li>
+                    <li>Make code self-explanatory.</li>
+                </ul>
+            </div> <!-- End of Importance Section -->
 
-        <!-- Section 2: Best Practices -->
-        <div class="module-section" id="best-practices">
-            <h3>Best Practices for Naming Conventions</h3>
-            <p>Adopt these naming strategies:</p>
-            <ul>
-                <li><strong>Variables:</strong> Use <em>camelCase</em> and keep names descriptive. Avoid single letter variable names (except for loop counters like <code>i</code> or <code>j</code>).
-                    <pre><code># Good
-userHeight = 25
+            <!-- Section 2: Best Practices -->
+            <div class="module-section" id="best-practices">
+                <h3>Best Practices for Naming Conventions</h3>
+                <p>Adopt these naming strategies:</p>
+                <ul>
+                    <li><strong>Variables:</strong> Use <em>camelCase</em> and keep names descriptive. Avoid single letter variable names (except for loop counters like <code>i</code> or <code>j</code>).
+                        <pre><code># Good
+    userHeight = 25
 
-# Bad
-he = 25</code></pre>
-                </li>
-                <li><strong>Functions:</strong> Use <em>snake_case</em>, starting with verbs to indicate actions.
-                    <pre><code># Good
-def fetch_user_data(user_id):
-    ...
+    # Bad
+    he = 25</code></pre>
+                    </li>
+                    <li><strong>Functions:</strong> Use <em>snake_case</em>, starting with verbs to indicate actions.
+                        <pre><code># Good
+    def fetch_user_data(user_id):
+        ...
 
-# Bad
-def getData(uid):
-    ...
-    </code></pre>
-                </li>
-                <li><strong>Constants:</strong> Use <em>UPPERCASE_WITH_UNDERSCORES</em> for values that remain unchanged.
-                    <pre><code># Good
-PI = 3.14159
+    # Bad
+    def getData(uid):
+        ...
+        </code></pre>
+                    </li>
+                    <li><strong>Constants:</strong> Use <em>UPPERCASE_WITH_UNDERSCORES</em> for values that remain unchanged.
+                        <pre><code># Good
+    PI = 3.14159
 
-# Bad
-Pi = 3.14159</code></pre>
-                </li>
-                <li><strong>Avoid Ambiguity:</strong> Avoid abbreviations or unclear terms that could confuse other developers.
-                    <pre><code># Good
-total_pounds_of_rice = 30
+    # Bad
+    Pi = 3.14159</code></pre>
+                    </li>
+                    <li><strong>Avoid Ambiguity:</strong> Avoid abbreviations or unclear terms that could confuse other developers.
+                        <pre><code># Good
+    total_pounds_of_rice = 30
 
-# Bad
-rice = 30</code></pre>
-                </li>
-            </ul>
-        </div> <!-- End of Best Practices Section -->
+    # Bad
+    rice = 30</code></pre>
+                    </li>
+                </ul>
+            </div> <!-- End of Best Practices Section -->
 
-        <!-- Section 3: Common Naming Mistakes -->
-        <div class="module-section" id="common-naming-mistakes">
-            <h3>Common Naming Mistakes</h3>
-            <p>Avoid these common pitfalls:</p>
-            <ul>
-                <li><strong>Overuse of Generic Names:</strong> Names like <code>number</code or><code>data</code> or <code>value</code> are too vague.</li>
-                <li><strong>Inconsistent Casing:</strong> Mixing styles like <code>camelCase</code> and <code>snake_case</code> within the same codebase can cause confusion.</li>
-                <li><strong>Too Long or Too Short:</strong> Finding a balance is key. Avoid names that are excessively verbose.</li>
-            </ul>
-        </div> <!-- End of Common Naming Mistakes Section -->
+            <!-- Section 3: Common Naming Mistakes -->
+            <div class="module-section" id="common-naming-mistakes">
+                <h3>Common Naming Mistakes</h3>
+                <p>Avoid these common pitfalls:</p>
+                <ul>
+                    <li><strong>Overuse of Generic Names:</strong> Names like <code>number</code or><code>data</code> or <code>value</code> are too vague.</li>
+                    <li><strong>Inconsistent Casing:</strong> Mixing styles like <code>camelCase</code> and <code>snake_case</code> within the same codebase can cause confusion.</li>
+                    <li><strong>Too Long or Too Short:</strong> Finding a balance is key. Avoid names that are excessively verbose.</li>
+                </ul>
+            </div> <!-- End of Common Naming Mistakes Section -->
 
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_four') }}" class="secondary-button">Back: Learning Objectives</a> 
-            <a href="{{ url_for('module_four_comments') }}" class="secondary-button">Next: Commenting</a>
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_four') }}" class="secondary-button">Back: Learning Objectives</a> 
+                <a href="{{ url_for('module_four_comments') }}" class="secondary-button">Next: Commenting</a>
+            </div>
         </div>
 
     </div> <!-- End of course-main-content -->

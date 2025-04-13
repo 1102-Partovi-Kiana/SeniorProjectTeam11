@@ -376,6 +376,7 @@ while True:
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
 <script>
     let currentTheme = "monokai"; 
@@ -771,6 +772,7 @@ while True:
                     updateAdditionalTab([]);
                 }
             } else {
+            
                 secondaryOutputCard.classList.add('success');
                 secondaryOutputCard.innerHTML = `<p>Your code ran successfully 😊</p>`;
                 outputBox.innerHTML += `<p>${data.message}</p>`;
@@ -779,6 +781,13 @@ while True:
                 if (certPopup) {
                     certPopup.classList.remove('core-cert-popup-hidden');
                     certPopup.classList.add('core-cert-popup-visible');
+
+                    confetti({
+                        particleCount: 150,
+                        spread: 100,
+                        origin: { y: 0.6 }
+                    });
+
                 }
 
                 if (errorAttempts > 0) {
@@ -1328,6 +1337,7 @@ while True:
 
         alert(isDarkMode ? "Dark Mode Enabled for the Pop-Up Window!" : "Light Mode Enabled for the Pop-Up Window!");
     });
+
 
 </script>
 {% endblock %}

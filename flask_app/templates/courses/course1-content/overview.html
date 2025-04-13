@@ -182,78 +182,68 @@
     </div> <!-- End of course-sidebar -->
 
     <div class="course-main-content">
-        <!-- Page Header -->
-        <header class="page-header">
-            <h1 class="page-title">Introduction to Robotics Programming</h1>
-            <p class="page-description">Discover the foundations of robotics as a field of study, including its definition, core principles, and the exciting goals driving innovation. Explore real-world applications and how robotics is transforming industries across the globe.</p>
-        </header>
+        <div class="robotics-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div class="toggle-container">
+                    <label class="toggle-switch bounce-on-load">
+                        <div class="notification-bubble" id="notification">Toggle me to explain text</div>
+                        <input type="checkbox" id="toggle-explainer">
+                        <span class="slider">
+                            <i class="fas fa-highlighter"></i>
+                        </span>
+                    </label>
+                </div>
+                <h1 class="page-title">Introduction to Robotics Programming</h1>
+                <p class="page-description">Discover the foundations of robotics as a field of study, including its definition, core principles, and the exciting goals driving innovation. Explore real-world applications and how robotics is transforming industries across the globe.</p>
+            </header>
 
-        <!-- Page Divider -->
-        <div class="divider">
-            <span class="divider-text">Let's Dive In</span>
-        </div>
-
-        <!-- Video Section -->
-        <div class="course-video-section">
-            <h1 class="video-title">A Glimpse into the World of Robotics</h1>
-            <div class="course-video-container">
-                <button class="btn_ripple" id="playButton">
-                    <i class="fa fa-play"></i>
-                </button>
-                <video controls id="videoPlayer" class="course-video">
-                    <source src="{{ url_for('static', filename='videos/IntroVid.mov') }}" type="video/mp4">
-                    Your browser does not support the video.
-                </video>
-                <div class="reference-section">
-                    <h3>Reference</h3>
-                    <p>
-                        The Wall Street Journal. (2017, December 5). <em>The Robot Revolution: The New Age of Manufacturing | Moving Upstream</em> [Video]. YouTube. <a href="https://www.youtube.com/watch?v=HX6M4QunVmA&t=1s" target="_blank">https://www.youtube.com/watch?v=HX6M4QunVmA&t=1s</a>
-                    </p>
-                </div>                
+            <!-- Page Divider -->
+            <div class="divider">
+                <span class="divider-text">Let's Dive In</span>
             </div>
-        </div> <!-- End of course-video-section -->
-        
-        <!-- Section 1: What is a robot? -->
-        <div class="module-section" id="what-is-robot">
-            <h3>What is a robot?</h3>
-            <p>Robot: An embodied agent that can be programmed to carry out a complex series of actions. A robot is an <strong>autonomous</strong> or partially autonomous machine capable of <strong>sensing its environment</strong> and <strong>making decisions based on computations</strong>. There are a variety of robots with unique qualities and capabilities.</p>
-            <p>To compute, this involves everything from small electronic circuits to multicore processors or even a cluster of networked computers. In action, robots vary the most, as some robots can move around, manipulate objects, perform specific tasks, while others can do many things.</p>
-        </div> <!-- End of module-section -->
 
-        <div class="module-section" id="what-is-robot">
-            <h3>Robots Typically Do 3 Things</h3>
-            <div class="cards-container">
-                <div class="card" id="sense-card">
-                    <h4>Sense</h4>
-                    <p>Robots gather information from their surroundings using sensors.</p>
+            <!-- Video Section -->
+            <div class="course-video-section">
+                <h1 class="video-title">A Glimpse into the World of Robotics</h1>
+                <div class="course-video-container">
+                    <video controls id="videoPlayer" class="course-video">
+                        <source src="{{ url_for('static', filename='videos/IntroVid.mov') }}" type="video/mp4">
+                        Your browser does not support the video.
+                    </video>
+                    <div class="reference-section">
+                        <h3>Reference</h3>
+                        <p>
+                            The Wall Street Journal. (2017, December 5). <em>The Robot Revolution: The New Age of Manufacturing | Moving Upstream</em> [Video]. YouTube. <a href="https://www.youtube.com/watch?v=HX6M4QunVmA&t=1s" target="_blank">https://www.youtube.com/watch?v=HX6M4QunVmA&t=1s</a>
+                        </p>
+                    </div>                
                 </div>
-                <div class="card" id="think-card">
-                    <h4>Think</h4>
-                    <p>Robots process data and make decisions based on programming or AI algorithms.</p>
-                </div>
-                <div class="card" id="act-card">
-                    <h4>Act</h4>
-                    <p>Robots perform actions using actuators like motors, arms, or wheels.</p>
-                </div>
+            </div> <!-- End of course-video-section -->
+            
+            <!-- Section 1: What is a robot? -->
+            <div class="module-section" id="what-is-robot">
+                <h3>What is a robot?</h3>
+                <p>Robot: An embodied agent that can be programmed to carry out a complex series of actions. A robot is an <strong>autonomous</strong> or partially autonomous machine capable of <strong>sensing its environment</strong> and <strong>making decisions based on computations</strong>. There are a variety of robots with unique qualities and capabilities.</p>
+                <p>To compute, this involves everything from small electronic circuits to multicore processors or even a cluster of networked computers. In action, robots vary the most, as some robots can move around, manipulate objects, perform specific tasks, while others can do many things.</p>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 2: Robotics as a field of study -->
+            <div class="module-section" id="intro-field-robotics">
+                <h3>Robotics as a Field of Study</h3>
+                <p>Robotics is a young and continuously growing interdisciplinary field. It involves the development and construction of systems that combine electrical and mechanical components with a computer for calculations. This includes the creation of machines that assist humans with repetitive, precise, or dangerous tasks. Robotics includes core disciplines such as electrical engineering, mechanical engineering, and computer science, but also intertwines with artificial intelligence, computer vision, applied mathematics, etc.</p>
+            </div> <!-- End of module-section -->
+
+            <!-- Section 3: Goals and Applications -->
+            <div class="module-section" id="goals-applications">
+                <h3>Goals and Applications</h3>
+                <p>Robotics can be organized based on their applications. As mentioned above, robots are useful for completing tasks that require a lot of precision, repetitive and monotonous work. Robots can be found in manufacturing industries for welding, material handling, painting, assembling, picking, packing, and palletizing, etc. Similarly, robots can be found in agriculture for repetitive tasks like seeding, harvesting, weed control, optimal soil detection. Another common place to see robots in action is in healthcare, helping doctors with performing surgical procedures and providing therapy for patients. On the other hand, robots have revolutionized exploration, as robots can explore places where humans cannot get to easily, like the depths of the ocean or outer space. Moreover, other sectors where robots are useful are entertainment, customer service, food preparation, security, etc.</p>
+            </div> <!-- End of module-section -->
+
+            <!-- Next Button -->
+            <div class="navigation-buttons mt-4">
+                <a href="{{ url_for('module_intro') }}" class="secondary-button">Back: Objectives</a> 
+                <a href="{{ url_for('history') }}" class="secondary-button">Next: History of Robotics</a>
             </div>
-        </div>
-
-        <!-- Section 2: Robotics as a field of study -->
-        <div class="module-section" id="intro-field-robotics">
-            <h3>Robotics as a Field of Study</h3>
-            <p>Robotics is a young and continuously growing interdisciplinary field. It involves the development and construction of systems that combine electrical and mechanical components with a computer for calculations. This includes the creation of machines that assist humans with repetitive, precise, or dangerous tasks. Robotics includes core disciplines such as electrical engineering, mechanical engineering, and computer science, but also intertwines with artificial intelligence, computer vision, applied mathematics, etc.</p>
-        </div> <!-- End of module-section -->
-
-        <!-- Section 3: Goals and Applications -->
-        <div class="module-section" id="goals-applications">
-            <h3>Goals and Applications</h3>
-            <p>Robotics can be organized based on their applications. As mentioned above, robots are useful for completing tasks that require a lot of precision, repetitive and monotonous work. Robots can be found in manufacturing industries for welding, material handling, painting, assembling, picking, packing, and palletizing, etc. Similarly, robots can be found in agriculture for repetitive tasks like seeding, harvesting, weed control, optimal soil detection. Another common place to see robots in action is in healthcare, helping doctors with performing surgical procedures and providing therapy for patients. On the other hand, robots have revolutionized exploration, as robots can explore places where humans cannot get to easily, like the depths of the ocean or outer space. Moreover, other sectors where robots are useful are entertainment, customer service, food preparation, security, etc.</p>
-        </div> <!-- End of module-section -->
-
-        <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('module_intro') }}" class="secondary-button">Back: Objectives</a> 
-            <a href="{{ url_for('history') }}" class="secondary-button">Next: History of Robotics</a>
         </div>
 
     </div> <!-- End of course-main-content -->
