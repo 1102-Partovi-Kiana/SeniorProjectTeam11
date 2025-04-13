@@ -66,9 +66,9 @@
                             </ul>
                         </div>
                        
-                        <button class="tab-button" id="dark-mode-pop-up-window" data-tippy-content="Switch the Pop Up Window to Dark Mode">
+                        <!-- <button class="tab-button" id="dark-mode-pop-up-window" data-tippy-content="Switch the Pop Up Window to Dark Mode">
                             <i class="fas fa-adjust"></i> 
-                        </button>
+                        </button> -->
 
                         <button class="tab-button" id="review-course-content" data-tippy-content="Review Course Content">
                             <i class="fas fa-book"></i> 
@@ -1501,56 +1501,6 @@ document.getElementById('clear-hints-history').addEventListener('click', () => {
     });
 
     document.getElementById("syntax-highlight").addEventListener("click", toggleSyntaxHighlighting);
-
-   // Add event listener to the dark mode toggle button
-document.getElementById("dark-mode-pop-up-window").addEventListener("click", () => {
-    // Select the popup window element
-    const popupWindow = document.getElementById("popup-window");
-
-    // Toggle the "dark-mode" class on the popup window
-    popupWindow.classList.toggle("dark-mode");
-
-    // Check if the popup window is now in dark mode
-    const isDarkMode = popupWindow.classList.contains("dark-mode");
-
-    // Update the button's tooltip and icon
-    const button = document.getElementById("dark-mode-pop-up-window");
-
-    // Update tooltip using Tippy.js (if applicable)
-    if (button._tippy) {
-        button._tippy.setContent(
-            isDarkMode
-                ? "Switch the Pop-Up Window to Light Mode"
-                : "Switch the Pop-Up Window to Dark Mode"
-        );
-    }
-
-    // Update the button's icon (sun for light mode, moon for dark mode)
-    button.innerHTML = isDarkMode
-        ? '<i class="fas fa-sun"></i>' // Sun icon for light mode
-        : '<i class="fas fa-moon"></i>'; // Moon icon for dark mode
-
-    // Optional feedback for the user
-    alert(isDarkMode ? "Dark Mode Enabled for the Pop-Up Window!" : "Light Mode Enabled for the Pop-Up Window!");
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-    const coreCertCloseButton = document.getElementById('core-cert-close-button');
-    const coreCertPopup = document.getElementById('core-certificate-popup');
-
-    if (coreCertCloseButton && coreCertPopup) {
-        coreCertCloseButton.addEventListener('click', function () {
-            // Debug logging to confirm the click is detected:
-            console.log("Close button clicked.");
-            coreCertPopup.classList.add('core-cert-popup-hidden');
-            coreCertPopup.classList.remove('core-cert-popup-visible');
-        });
-    } else {
-        console.error("Popup or close button element not found.");
-    }
-});
-
-
 
 </script>
 {% endblock %}

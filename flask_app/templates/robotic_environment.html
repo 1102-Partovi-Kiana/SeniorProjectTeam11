@@ -66,9 +66,9 @@
                             </ul>
                         </div>
                        
-                        <button class="tab-button" id="dark-mode-pop-up-window" data-tippy-content="Switch the Pop Up Window to Dark Mode">
+                        <!-- <button class="tab-button" id="dark-mode-pop-up-window" data-tippy-content="Switch the Pop Up Window to Dark Mode">
                             <i class="fas fa-adjust"></i> 
-                        </button>
+                        </button> -->
 
                         <button class="tab-button" id="review-course-content" data-tippy-content="Review Course Content">
                             <i class="fas fa-book"></i> 
@@ -1321,25 +1321,6 @@ while ____________________ > distance_threshold:
     });
 
     document.getElementById("syntax-highlight").addEventListener("click", toggleSyntaxHighlighting);
-
-    document.getElementById("dark-mode-pop-up-window").addEventListener("click", () => {
-        const popupWindow = document.getElementById("popup-window");
-        popupWindow.classList.toggle("dark-mode");
-        const isDarkMode = popupWindow.classList.contains("dark-mode");
-        const button = document.getElementById("dark-mode-pop-up-window");
-
-        if (button._tippy) {
-            button._tippy.setContent(
-                isDarkMode
-                    ? "Switch the Pop-Up Window to Light Mode"
-                    : "Switch the Pop-Up Window to Dark Mode"
-            );
-        }
-
-        button.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; 
-
-        alert(isDarkMode ? "Dark Mode Enabled for the Pop-Up Window!" : "Light Mode Enabled for the Pop-Up Window!");
-    });
 
 </script>
 {% endblock %}
