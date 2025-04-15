@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Instructor - Classes</title>
+{% endblock %}
+
+{% block body %}
+{% include "alert/full.html" %}
+    <div class="sidebar-wrapper">
+        <div class="sidebar-header">
+            <img src="/static/img/profile_pic.png" alt="Profile Picture" class="profile-image">
+            <span class="sidebar-name">{{ user['username'] }}</span>
+            <button class="collapse-btn" onclick="toggleSidebar()">
+                <svg class="sidebar-arrow-icon"><use xlink:href="/static/img/sidebar-icons.svg#arrow-icon" fill="currentColor"></use></svg>
+            </button>
+        </div>
+        <a href="{{ url_for('RenderInstructorDashboard') }}" class="sidebar-item">
+            <ul>
+                <li>
+                    <svg class="sidebar-home-icon"><use xlink:href="/static/img/sidebar-icons.svg#home-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">HOME</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderCourses') }}" class="sidebar-item">
+            <ul>
+                <li>
+                    <svg class="sidebar-course-icon"><use xlink:href="/static/img/sidebar-icons.svg#course-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">COURSES</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderInstructorClasses') }}" class="sidebar-item">
+            <ul>
+                <li>
+                    <svg class="sidebar-class-icon"><use xlink:href="/static/img/sidebar-icons.svg#class-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">CLASSES</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderInstructorGradebook') }} " class="sidebar-item active">
+            <ul>
+                <li>
+                    <svg class="sidebar-gradebook-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#gradebook-icon" fill="none"></use></svg>
+                    <span class="home-text">GRADEBOOK</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderPlayground') }}" class="sidebar-item">
+            <ul>
+                <li>
+                    <svg class="sidebar-playground-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#playground-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">PLAYGROUND</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderLogout') }}" class="sidebar-item">
+            <ul>
+                <li>
+                    <svg class="sidebar-logout-icon"><use xlink:href="/static/img/sidebar-icons.svg#logout-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">LOG OUT</span>
+                </li>   
+            </ul>
+        </a>
+    </div>
+
+    <!-- New Dashboard UI -->
+    <div class="dashboard-container">
+        <div class = "dashboard-content user-list">
+            <div class = "user-list-section-one">
+                <!-- Header Reused From dashboard_classes-->
+                <div class="dashboard-classes-header">
+                    <h1>Gradebook</h1>
+                    <div class="button-container-classes">
+                        <select id="class-select" onchange="loadClassStudents(this.value)">
+                            <option value="" selected disabled>Select a Class</option>
+                            {% for class in classes %}
+                                <option value="{{ class.class_id }}">
+                                    {{ class.class_course_code }} - {{ class.class_section_number }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <!-- Grey Line -->
+                <hr class="grey-line">
+                <!-- Header Reused From dashboard_classes-->
+                <div class="user-list-container">
+                    <div class="gradebook-list">
+                        <table class="user-list-table">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Status</th>
+                                    <th>Grade</th>
+                                    <th>Time Spent</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-table-body">
+                                <tr>
+                                    <td colspan="5">Please select a class to view students</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

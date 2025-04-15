@@ -965,6 +965,60 @@ html, body {
     overflow-x: hidden;
 }
 
+.gradebook-list {
+    height: 100%;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.gradebook-list td{
+    border-right: 1px solid rgb(0,0,0);
+}
+
+.gradebook-list tbody tr:nth-child(odd) {
+    background-color: rgb(226, 226, 226);
+}
+
+.gradebook-list tbody tr:nth-child(even){
+    background-color: rgb(240, 240, 240);
+}
+
+.gradebook-list th:first-child,
+.gradebook-list td:first-child {
+    width: 20%;
+    padding: 10px;
+}
+
+.gradebook-list th:nth-child(2),
+.gradebook-list td:nth-child(2) {
+    width: 20%;
+    padding: 10px;
+    text-align: center;
+}
+
+.gradebook-list th:nth-child(3),
+.gradebook-list td:nth-child(3) {
+    width: 20%;
+    padding: 10px;
+}
+
+.gradebook-list th:nth-child(4),
+.gradebook-list td:nth-child(4) {
+    width: 20%;
+    padding: 10px;
+    border-right: 1px solid rgb(0, 0, 0);
+}
+
+.gradebook-list th:nth-child(5),
+.gradebook-list td:nth-child(5) {
+    width: 20%;
+    padding: 10px;
+    border-right: none;
+    text-align: center;
+}
+
 #assignments-section {
     padding: 30px 40px;
     overflow: auto;
@@ -1177,52 +1231,57 @@ html, body {
     text-decoration: underline;
 }
 
-/* Circular Progress Bar */
+/* Circular Progress Bar - Responsive */
 .dashboard-progress-container {
-    width: 140px;
-    height: 140px;
     position: relative;
+    width: 100%;
+    max-width: 140px; /* Maximum size */
+    aspect-ratio: 1/1; /* Maintain perfect circle */
+    flex-shrink: 1;
+    margin: 0 auto;
 }
 
 .dashboard-progress-circle {
-    width: 140px;
-    height: 140px;
+    width: 100%;
+    height: 100%;
     transform: rotate(-90deg);
 }
 
 .progress-bg {
     fill: none;
     stroke: #e0e0e0;
-    stroke-width: 5;
+    stroke-width: clamp(3px, 1vw, 5px); /* Responsive stroke */
 }
 
 .progress {
     fill: none;
     stroke: #45247A;
-    stroke-width: 5;
-    stroke-dasharray: 376.99; 
+    stroke-width: clamp(3px, 1vw, 5px); /* Responsive stroke */
+    stroke-dasharray: 376.99;
+    stroke-dashoffset: calc(376.99 - (376.99 * var(--progress, 0.75))); /* Dynamic progress */
 }
 
 .progress-text {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); 
+    transform: translate(-50%, -50%);
     text-align: center;
+    width: 80%; /* Prevent text overflow */
 }
 
 .number {
-    font-size: 32px;
+    font-size: clamp(18px, 4vw, 32px); /* Responsive font */
     font-weight: bold;
     color: #45247A;
     margin: 0;
 }
 
 .date {
-    font-size: 10px;
+    font-size: clamp(8px, 2vw, 10px); /* Responsive font */
     color: #777;
     margin: 0;
-}
+}   
 
 .dashboard-card-text h3 {
     display: flex;
@@ -1789,9 +1848,14 @@ h3 svg {
     font-style: italic; /* Optional: Italicize the module name */
 }
 
+#name-search,
+#email-search,
 #students-search,
 #instructor-search,
-#class-search {
+#class-search,
+#status-search,
+#grade-search,
+#time-search {
   width: 100%;
   white-space: nowrap;
   overflow: hidden;

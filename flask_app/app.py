@@ -2362,7 +2362,7 @@ def RenderClassDetails():
         })
 
     return render_template(
-        'dashboard/dashboard_class_details.html',
+        'dashboard/instructor/dashboard_class_details.html',
         is_dashboard=True,
         is_instructor_dashboard=True,
         students=students
@@ -2418,7 +2418,7 @@ def RenderStudentDashboard():
 
     assignments = db.session.query(StudentAssignedCourses).filter(StudentAssignedCourses.user_id == user_id).all()
 
-    return render_template('dashboard/dashboard_student.html', is_dashboard=True, is_student_dashboard=True, user=user, assignments=assignments, in_class=in_class)
+    return render_template('dashboard/student/dashboard_student.html', is_dashboard=True, is_student_dashboard=True, user=user, assignments=assignments, in_class=in_class)
 
 @app.route('/dashboard/student-view/grades', methods=['GET', 'POST'])
 def RenderStudentDashboardGrades():
@@ -2499,7 +2499,7 @@ def RenderStudentDashboardGrades():
                 })
 
     return render_template(
-        'dashboard/dashboard_student_grades.html',
+        'dashboard/student/dashboard_student_grades.html',
         is_dashboard=True,
         is_student_dashboard=True,
         user=user,
@@ -2530,19 +2530,30 @@ def RenderInstructorDashboard():
         for enrollment in enrollments:
             student_ids.append(enrollment.user_id)
     unique_student_ids = list(set(student_ids))
+
     if unique_student_ids:
-        overall_avg_grade = db.session.query(
-        func.avg(StudentGrades.percentage_grade)
+        subquery = db.session.query(
+            StudentGrades.student_id,
+            StudentGrades.course_subsection_id,
+            func.max(StudentGrades.percentage_grade).label('max_grade')
         ).filter(
             StudentGrades.student_id.in_(unique_student_ids)
-        ).scalar()
+        ).group_by(
+            StudentGrades.student_id,
+            StudentGrades.course_subsection_id
+        ).subquery()
+
+        overall_avg_grade = db.session.query(
+            func.avg(subquery.c.max_grade)
+        ).scalar() or 0.0
+
     else:
         overall_avg_grade = 0.0
 
     class_stats = {
         "class_count": class_count,
         "unique_student_count": len(unique_student_ids),
-        "overall_avg_grade": overall_avg_grade,
+        "overall_avg_grade": round(overall_avg_grade, 2) if overall_avg_grade else 0.0,
     }
 
     page_contexts = [
@@ -2601,7 +2612,7 @@ def RenderInstructorDashboard():
 
         graph_image = base64.b64encode(buf.read()).decode('utf-8')
 
-    return render_template('dashboard/dashboard_instructor.html', 
+    return render_template('dashboard/instructor/dashboard_instructor.html', 
                            is_dashboard=True, 
                            is_instructor_dashboard=True, 
                            classes=user_classes, 
@@ -2666,7 +2677,7 @@ def RenderInstructorClasses():
     
     session.pop('class_code', None)
 
-    return render_template('dashboard/dashboard_classes.html', 
+    return render_template('dashboard/instructor/dashboard_classes.html', 
                            is_dashboard=True, 
                            is_instructor_dashboard=True, 
                            classes=user_classes, 
@@ -2811,6 +2822,95 @@ def AssignStudentToCourse():
             flash('No new assignments were made. All students were already assigned to the selected courses.', 'popup')
 
         return redirect(url_for('RenderInstructorClasses'))
+    
+@app.route('/dashboard/instructor-view/gradebook')
+def RenderInstructorGradebook():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+    
+    if role != ROLE_INSTRUCTOR:
+        flash('You must be an instructor to access this page.')
+        return redirect(url_for('RenderStudentDashboard'))
+    
+    classes = get_classes(user_id)
+    selected_class_id = request.args.get('class_id')
+    
+    # Get students for selected class
+    students = []
+    if selected_class_id:
+        students = db.session.query(
+            User.user_id,
+            User.first_name,
+            User.last_name,
+            Enrollment.enrollment_date,
+            StudentGrades.percentage_grade
+        ).join(
+            Enrollment, User.user_id == Enrollment.user_id
+        ).outerjoin(
+            StudentGrades, (StudentGrades.student_id == User.user_id) & 
+                          (StudentGrades.class_id == Enrollment.class_id)
+        ).filter(
+            Enrollment.class_id == selected_class_id
+        ).all()
+    
+    return render_template('dashboard/instructor/dashboard_gradebook.html', 
+                         is_dashboard=True, 
+                         is_instructor_dashboard=True, 
+                         user=user,
+                         classes=classes,
+                         students=students,
+                         selected_class_id=selected_class_id)
+
+@app.route('/api/class/<int:class_id>/students')
+def get_class_students(class_id):
+    if not session.get('user') or session['user']['role_id'] != ROLE_INSTRUCTOR:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    # First get the highest grade per student per subsection
+    highest_grades_subq = db.session.query(
+        StudentGrades.student_id,
+        StudentGrades.course_subsection_id,
+        func.max(StudentGrades.percentage_grade).label('max_grade')
+    ).join(
+        Enrollment, StudentGrades.student_id == Enrollment.user_id
+    ).filter(
+        Enrollment.class_id == class_id
+    ).group_by(
+        StudentGrades.student_id,
+        StudentGrades.course_subsection_id
+    ).subquery()
+
+    # Then calculate the average of these highest grades per student
+    students = db.session.query(
+        User.user_id,
+        User.first_name,
+        User.last_name,
+        func.coalesce(func.avg(highest_grades_subq.c.max_grade), 0).label('avg_grade')
+    ).join(
+        Enrollment, User.user_id == Enrollment.user_id
+    ).outerjoin(
+        highest_grades_subq, highest_grades_subq.c.student_id == User.user_id
+    ).filter(
+        Enrollment.class_id == class_id
+    ).group_by(
+        User.user_id,
+        User.first_name,
+        User.last_name
+    ).all()
+
+    return jsonify({
+        'students': [{
+            'user_id': s.user_id,
+            'first_name': s.first_name,
+            'last_name': s.last_name,
+            'grade': f"{s.avg_grade:.1f}%" if s.avg_grade else "N/A"
+        } for s in students]
+    })
 
 @app.route('/logout', methods=['GET'])
 def RenderLogout():
@@ -2865,31 +2965,6 @@ def RenderCourses():
 @app.route('/playground')
 def RenderPlayground():
     return render_template('playground.html')
-
-@app.route('/module1/introduction')
-def module_intro():
-    user = session.get('user')
-    if not user:
-        flash('You must be logged in to access this page.')
-        return redirect(url_for('RenderLogin'))
-
-    user_id = user['user_id']
-    role = user['role_id']
-
-    module_completed = {}
-
-    if role == ROLE_STUDENT:
-        subsection = StudentAssignedCourseSubsections.query.filter_by(course_subsection_number = 1.11, user_id=user_id).first()
-        if subsection:
-            subsection.completion_status = True
-            db.session.commit()
-
-    subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
-
-    for subsection in subsections:
-        module_completed[subsection.course_subsection_number] = subsection.completion_status
-
-    return render_template('courses/course1-content/module_intro.html', module_completed=module_completed, is_course_page=True)
 
 @app.route('/module1/introduction/overview')
 def overview():
@@ -3000,14 +3075,16 @@ def course1quiz1():
         is_course_page=True
     )
 
-@app.route('/get-scores')
+@app.route('/get-scores', methods=['GET'])
 def get_scores():
     user = session.get('user')
     if not user:
         return jsonify({'error': 'Unauthorized'}), 401
 
     user_id = user['user_id']
-    subsection_number = 1.9
+    subsection_number = request.args.get('subsection_number', type=float)
+    if not subsection_number:
+        return jsonify({'error': 'subsection_number is required'}), 400
 
     subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
     if not subsection:
@@ -3050,6 +3127,7 @@ def submit_quiz():
     subsection_number = data.get('subsection_number')
 
     subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+    print(subsection)
     if not subsection:
         return jsonify({"error": "Subsection not found"}), 404
 
@@ -3170,15 +3248,36 @@ def futuretrends():
 
 @app.route('/module1/start-page')
 def course1_card():
-    return render_template('courses/course1-content/course1_card.html') 
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    module_completed = {}
+
+    if role == ROLE_STUDENT:
+        subsection = StudentAssignedCourseSubsections.query.filter_by(course_subsection_number = 1.11, user_id=user_id).first()
+        if subsection:
+            subsection.completion_status = True
+            db.session.commit()
+
+    subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+    for subsection in subsections:
+        module_completed[subsection.course_subsection_number] = subsection.completion_status
+
+    return render_template('courses/course1-content/module_one.html', module_completed=module_completed, is_course_page=True)
 
 @app.route('/module2/start-page-2')
 def course2_card():
-    return render_template('courses/course2-content/course2_card.html') 
+    return render_template('courses/course2-content/module_two.html') 
 
 @app.route('/module3/start-page-3')
 def course3_card():
-    return render_template('courses/course3-content/course3_card.html') 
+    return render_template('courses/course3-content/module_three.html') 
 
 @app.route('/module4/start-page-4')
 def course4_card():
@@ -3958,13 +4057,37 @@ def course1quiz1_2():
 
     user_id = user['user_id']
     role = user['role_id']
+    subsection_number = 1.91
+    passing_score = 70.0
 
-    subsection_number = 1.9
+    subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+
+    highest_score = (
+        db.session.query(db.func.max(StudentGrades.percentage_grade))
+        .filter_by(student_id=user_id, course_subsection_id=subsection.course_subsection_id)
+        .scalar()
+    )
+
+    if highest_score is None:
+        highest_score = 0.0 
+
     if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
+        if highest_score >= passing_score:
+            module_completed = update_and_get_module_completion(user_id, subsection_number)
+        else:
+            module_completed = {}
+            subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+            for subsection in subsections:
+                module_completed[subsection.course_subsection_number] = subsection.completion_status
     else:
         module_completed = {}
-    return render_template('courses/course1-content/course1-quiz1_2.html', module_completed=module_completed)
+
+    return render_template(
+        'courses/course1-content/course1-quiz1_2.html',
+        module_completed=module_completed,
+        is_course_page=True
+    )
 
 @app.route('/module2/types-of-robots/course2-quiz-2')
 def course2quiz2():
@@ -4232,6 +4355,54 @@ def download_certificate():
         download_name="certificate.pdf"
     )
 
+@app.route("/dashboard")
+def RenderHomeDashboard():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+
+    if role == ROLE_STUDENT:
+        return redirect(url_for('RenderStudentDashboard'))
+    elif role == ROLE_INSTRUCTOR:
+        return redirect(url_for('RenderInstructorDashboard'))
+    elif role == ROLE_ADMIN:
+        return redirect(url_for('RenderAdminDashboard'))
+    
+    return render_template('account/login.html', is_homepage=True)
+
+@app.route('/dashboard/instructor-view/student-code-log/student-id-<int:student_id>')
+def RenderStudentCodeLogs(student_id):
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.', 'popup')
+        return redirect(url_for('RenderHomepage'))
+
+    user_id = user['user_id'] 
+    role = user['role_id']
+    
+    if role != ROLE_INSTRUCTOR:
+        flash('You must be an instructor to access this page.', 'popup')
+        return redirect(url_for('RenderStudentDashboard'))
+    
+    code_logs = db.session.query(
+        UserCodeLogs.user_log_id,
+        UserCodeLogs.code,
+        UserCodeLogs.error,
+        UserCodeLogs.hints,
+        UserCodeLogs.page_context,
+        UserCodeLogs.static_issues,
+        UserCodeLogs.created_at
+    ).filter(
+        UserCodeLogs.user_id == student_id
+    ).order_by(
+        UserCodeLogs.created_at.desc()
+    ).all()
+
+    return render_template('dashboard/instructor/dashboard_code_logs.html', code_logs=code_logs)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)

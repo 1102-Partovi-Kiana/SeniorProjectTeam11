@@ -101,7 +101,20 @@ $(document).ready(function () {
     
         $("#progress").html("");
     
+        const subsectionNumber = $("#quiz-container").data("subsection");
+
         // Send score to backend
+        $.ajax({
+            url: `/get-scores?subsection_number=${subsectionNumber}`,
+            method: "GET",
+            success: function(response) {
+                console.log("Scores:", response);
+            },
+            error: function(error) {
+                console.error("Error fetching scores:", error);
+            }
+        });
+
         $.ajax({
             url: "/submit-quiz",
             method: "POST",
@@ -109,7 +122,7 @@ $(document).ready(function () {
             data: JSON.stringify({
                 score: score,
                 total_questions: 10,
-                subsection_number: 1.9
+                subsection_number: subsectionNumber
             }),
             success: function (response) {
                 console.log("Quiz results saved:", response);
@@ -138,7 +151,8 @@ $(document).ready(function () {
     
 
     function renderStartScreen() {
-        fetch('/get-scores')
+        const subsectionNumber = $("#quiz-container").data("subsection");
+        fetch(`/get-scores?subsection_number=${subsectionNumber}`)
             .then(response => response.json())
             .then(data => {
                 const hasPassingScore = (data.recent_score >= data.passing_score) || (data.highest_score >= data.passing_score);

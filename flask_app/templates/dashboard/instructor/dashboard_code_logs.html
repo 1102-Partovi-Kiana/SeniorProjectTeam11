@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Code Logs</title>
+    <style>
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 4px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h2>Recent Code Submissions</h2>
+
+    {% if code_logs %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Page Context</th>
+                <th>Code</th>
+                <th>Error</th>
+                <th>Hints</th>
+                <th>Static Issues</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in code_logs %}
+            <tr>
+                <td>{{ log.created_at }}</td>
+                <td>{{ log.page_context }}</td>
+                <td><pre>{{ log.code }}</pre></td>
+                <td>
+                    {{ log.error if log.error else "None" }}
+                </td>
+                <td>
+                    {% if log.hints and log.hints|length > 0 %}
+                        <ul>
+                        {% for hint in log.hints %}
+                            <li>{{ hint }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <span style="color: gray;">None</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if log.static_issues and log.static_issues|length > 0 %}
+                        <ul>
+                        {% for issue in log.static_issues %}
+                            <li>
+                                {% if issue.line is defined %}Line {{ issue.line }}: {% endif %}{{ issue.message }}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <span style="color: gray;">None</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No code submissions found</p>
+    {% endif %}
+
+    <p><a href="{{ url_for('RenderInstructorGradebook') }}">Back to Gradebook</a></p>
+</body>
+</html>

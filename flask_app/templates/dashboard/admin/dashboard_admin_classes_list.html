@@ -71,8 +71,8 @@
                             <thead>
                                 <tr>
                                     <th>Class</th>
-                                    <th>Number of Students</th>
                                     <th>Instructor Name</th>
+                                    <th>Number of Students</th>
                                     <th>Edit</th>
                                 </tr>
                             </thead>
@@ -82,10 +82,10 @@
                                         <input type="text" id="class-search" placeholder="Search by Class" oninput="filterTableClasses()">
                                     </td>
                                     <td>
-                                        <input type="text" id="students-search" placeholder="Search by Students" oninput="filterTableClasses()">
+                                        <input type="text" id="instructor-search" placeholder="Search by Instructor" oninput="filterTableClasses()">
                                     </td>
                                     <td>
-                                        <input type="text" id="instructor-search" placeholder="Search by Instructor" oninput="filterTableClasses()">
+                                        <input type="text" id="students-search" placeholder="Search by Students" oninput="filterTableClasses()">
                                     </td>
                                     <td>
                                     </td>
@@ -94,8 +94,8 @@
                                     {% for cls in class_data %}
                                         <tr>
                                             <td>{{ cls.course_info }}</td>
-                                            <td>{{ cls.student_count }}</td>
                                             <td>{{ cls.instructor_name }}</td>
+                                            <td>{{ cls.student_count }}</td>
                                             <td>
                                                 <!-- Edit Button -->
                                                 <form method="POST" action="{{ url_for('RenderAdminUserList') }}">

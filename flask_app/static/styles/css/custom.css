@@ -1443,6 +1443,10 @@ c/* -------------------HOMEPAGE------------------- */
     margin-right: 10px;
 }
 
+.footer-container.coursepage {
+    display: none !important;
+}
+
 
 
 
@@ -3972,7 +3976,7 @@ code {
 .course-container {
     display: flex;
     overflow: hidden;
-    max-height: calc(100% - 120px);
+    max-height: calc(100% - 80px);
 }
 
 .course-sidebar {

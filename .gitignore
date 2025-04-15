@@ -1,1 +1,4 @@
-venv/venv38/
+
+__pycache__/
+.pytest_cache/
+MUJOCO_LOG.TXT

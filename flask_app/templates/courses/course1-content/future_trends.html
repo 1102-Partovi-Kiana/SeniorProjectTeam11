@@ -15,7 +15,7 @@
         <ul class="course-list">
             <li class="course-item"> 
                 {% if module_completed[1.11] %}
-                <a href="{{ url_for('module_intro') }}" class="course-link">
+                <a href="{{ url_for('course1_card') }}" class="course-link">
                     Objectives
                     <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
                 </a>
@@ -305,12 +305,6 @@
                     </ul>
                 </div>
             </div> <!-- End of module-section -->
-
-            <!-- Next Button -->
-            <div class="navigation-buttons mt-4">
-                <a href="{{ url_for('implications') }}" class="secondary-button">Back: Implications</a>
-                <a href="{{ url_for('course1quiz1_2') }}" class="secondary-button">Next: Quiz 2</a>
-            </div>
         </div>
 
         <!-- Section 1: AI -->
@@ -376,10 +370,11 @@
                 </ul>
             </div>
         </div> <!-- End of module-section -->
-
+        
         <!-- Next Button -->
-        <div class="next-button text-right mt-4">
-            <a href="{{ url_for('RenderStudentDashboard') }}" class="secondary-button">Exit Course</a>
+        <div class="navigation-buttons mt-4">
+            <a href="{{ url_for('implications') }}" class="secondary-button">Back: Implications</a>
+            <a href="{{ url_for('course1quiz1_2') }}" class="secondary-button">Next: Quiz 2</a>
         </div>
     </div> <!-- End of course-main-content -->
 </div> <!-- End of course-container -->

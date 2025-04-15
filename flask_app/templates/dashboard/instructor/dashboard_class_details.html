@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Instructor - Classes</title>
+{% endblock %}
+
+{% block body %}
+{% include "alert/full.html" %}
+    <div class="sidebar-wrapper">
+        <div class="sidebar-header">
+            <img src="/static/img/profile_pic.png" alt="Profile Picture" class="profile-image">
+            <span class="sidebar-name">{{ user['username'] }}</span>
+            <button class="collapse-btn" onclick="toggleSidebar()">
+                <svg class="sidebar-arrow-icon"><use xlink:href="/static/img/sidebar-icons.svg#arrow-icon" fill="currentColor"></use></svg>
+            </button>
+        </div>
+        <a href="{{ url_for('RenderInstructorDashboard') }}" class="sidebar-item">
+            <ul>
+                <li>
+                    <svg class="sidebar-home-icon"><use xlink:href="/static/img/sidebar-icons.svg#home-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">HOME</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderCourses') }}" class="sidebar-item">
+            <ul>
+                <li>
+                    <svg class="sidebar-course-icon"><use xlink:href="/static/img/sidebar-icons.svg#course-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">COURSES</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderInstructorClasses') }}" class="sidebar-item active">
+            <ul>
+                <li>
+                    <svg class="sidebar-class-icon"><use xlink:href="/static/img/sidebar-icons.svg#class-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">CLASSES</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderInstructorGradebook') }} " class="sidebar-item">
+            <ul>
+                <li>
+                    <svg class="sidebar-gradebook-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#gradebook-icon" fill="none"></use></svg>
+                    <span class="home-text">GRADEBOOK</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderPlayground') }}" class="sidebar-item">
+            <ul>
+                <li>
+                    <svg class="sidebar-playground-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#playground-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">PLAYGROUND</span>
+                </li>   
+            </ul>
+        </a>
+        <a href="{{ url_for('RenderLogout') }}" class="sidebar-item">
+            <ul>
+                <li>
+                    <svg class="sidebar-logout-icon"><use xlink:href="/static/img/sidebar-icons.svg#logout-icon" fill="currentColor"></use></svg>
+                    <span class="home-text">LOG OUT</span>
+                </li>   
+            </ul>
+        </a>
+    </div>
+    <div class="dashboard-container">
+        <div class="dashboard-classes-header-v2">
+            <h1>
+                <span class="class-prefix">Class:</span>
+                <span class="class-details">CS101 - 1001</span>
+            </h1>
+            <div class="class-details-buttons-container">
+                <button class="students-btn active" data-target="students-section">Students</button>
+                <button class="assignments-btn" data-target="assignments-section">Assignments</button>
+                <button class="reports-btn" data-target="reports-section">Reports</button>
+                <button class="class-settings-btn" data-target="class-settings-section">
+                    <span>Class Settings </span>
+                    <svg class="gear-icon"><use xlink:href="/static/img/sidebar-icons.svg#gear-icon" fill="currentColor"></use></svg>
+                </button>
+            </div>
+        </div>
+        <div id="students-section" class="student-list-v2 class-details-section active">
+            <table class="student-list-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if students %}
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.first_name }} {{ student.last_name }}</td>
+                            <td>{{ student.email }}</td>
+                            <td>
+                                <a href="{{ url_for('RenderClassDetails') }}">
+                                    <svg class="edit-icon"><use xlink:href="/static/img/sidebar-icons.svg#edit-icon"></use></svg>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="3">No students enrolled in this class.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div id="assignments-section" class="class-details-section">
+            <div class=assignments-header>
+                My Active Assignments
+                My Inactive Assignments
+            </div>
+            <div class="assignments-table-container">
+                <div class="assignments-table-row">
+                    <table class="assignment-table">
+                        <thead>
+                            <tr>
+                                <th>Introduction to Robotics</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div>Assigned to <strong>2</strong> of <strong>24</strong> students</div>
+                                    <div><strong>2</strong> of <strong>2</strong> complete</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div>Due Date: 2/17/2025</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="assignment-table">
+                        <thead>
+                            <tr><th>Assignment 3</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Content 3</td></tr>
+                        </tbody>
+                    </table>
+                    <table class="assignment-table">
+                        <thead>
+                            <tr><th>Assignment 3</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Content 3</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="assignments-table-row">
+                    <table class="assignment-table">
+                        <thead>
+                            <tr><th>Assignment 4</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Content 4</td></tr>
+                        </tbody>
+                    </table>
+                    <table class="assignment-table">
+                        <thead>
+                            <tr><th>Assignment 5</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Content 5</td></tr>
+                        </tbody>
+                    </table>
+                    <table class="assignment-table">
+                        <thead>
+                            <tr><th>Assignment 6</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Content 6</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="reports-section" class="class-details-section">Reports Content</div>
+        <div id="class-settings-section" class="class-details-section">Class Settings Content</div>
+    </div>
+    {% endblock %}

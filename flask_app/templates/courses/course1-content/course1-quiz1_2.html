@@ -15,7 +15,7 @@
         <ul class="course-list">
             <li class="course-item"> 
                 {% if module_completed[1.11] %}
-                <a href="{{ url_for('module_intro') }}" class="course-link">
+                <a href="{{ url_for('course1_card') }}" class="course-link">
                     Objectives
                     <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
                 </a>
@@ -176,10 +176,14 @@
                 </ul>
             </li>
             <li class="course-item active">
-                <a href="{{ url_for ('course1quiz1_2') }}" class="course-link">Quiz 2</a>
-            </li>
-            <li class="course-item">
-                <a href="{{ url_for ('module_one_certificate_intro') }}" class="course-link">Certificate</a>
+                {% if module_completed[1.91]%}
+                <a href="{{ url_for('course1quiz1_2') }}" class="course-link">
+                    Quiz 2
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">Quiz 2</a>
+                {% endif %}
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
@@ -198,15 +202,14 @@
                 const quiz_id = "course1_quiz1_2";  
             </script>
 
-            <div id="quiz-container">
+            <div id="quiz-container" data-subsection="1.91">
                 <!-- This will be dynamically populated by JavaScript -->
             </div>
         </div>
         
         <!-- Next Button -->
         <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('futuretrends') }}" class="secondary-button">Back: Future Trends</a>
-            <a href="{{ url_for('module_one_certificate_intro') }}" class="secondary-button">Next: Certificate</a>
+            <a href="{{ url_for('RenderHomeDashboard') }}" class="secondary-button" id="next-section" style="display: none;">Complete Course</a>
         </div>
         
     </div> <!-- End of course-main-content -->
