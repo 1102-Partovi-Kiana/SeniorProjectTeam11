@@ -208,9 +208,12 @@
         </div>
         
         <!-- Next Button -->
-        <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('RenderHomeDashboard') }}" class="secondary-button" id="next-section" style="display: none;">Complete Course</a>
-        </div>
+        <form method="POST" action="{{ url_for('mark_course_completed', course_id=21) }}" style="display: inline;">
+            <button type="submit" class="secondary-button mt-4" id="next-section">
+                Complete Course
+            </button>
+        </form>
+        
         
     </div> <!-- End of course-main-content -->
 

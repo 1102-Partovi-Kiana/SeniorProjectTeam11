@@ -54,9 +54,11 @@ class StudentAssignedCourses(db.Model):
     user = db.relationship('User', backref=db.backref('assigned_courses', lazy=True))
     course = db.relationship('Courses', backref=db.backref('assigned_students', lazy=True))
 
+    is_completed = db.Column(db.Boolean, default=False)
+    completed_at = db.Column(db.DateTime)
 
 class Courses(db.Model):
-    _tablename__ = 'courses'
+    __tablename__ = 'courses'
 
     course_id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(100))

@@ -82,6 +82,11 @@
        <!-- Navigation Buttons -->
         <div class="navigation-buttons mt-4">
             <a href="{{ url_for('course2quiz2') }}" class="secondary-button">Back: Quiz</a>
+            <form method="POST" action="{{ url_for('mark_course_completed', course_id=22) }}" style="display: inline;">
+                <button type="submit" class="secondary-button" id="next-section">
+                    Complete Course
+                </button>
+            </form>
         </div>
         
     </div> <!-- End of course-main-content -->

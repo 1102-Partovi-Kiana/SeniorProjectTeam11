@@ -73,6 +73,11 @@
        <!-- Navigation Buttons -->
         <div class="navigation-buttons mt-4">
             <a href="{{ url_for('module_three_download') }}" class="secondary-button">Back: Cheat Sheet</a>
+            <form method="POST" action="{{ url_for('mark_course_completed', course_id=23) }}" style="display: inline;">
+                <button type="submit" class="secondary-button" id="next-section">
+                    Complete Course
+                </button>
+            </form>
         </div>
         
     </div> <!-- End of course-main-content -->
