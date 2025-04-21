@@ -3397,6 +3397,31 @@ ul.hintbox {
 
 /* -------------------COURSESPAGE- COURSE CATALOG------------------- */
 
+/* Style for disabled links */
+.disabled-link {
+    pointer-events: none; /* Prevent clicking */
+    color: #999;          /* Gray out the text */
+    text-decoration: none; /* Remove underline */
+}
+.disabled-link:hover {
+    color: #999; /* Keep the same gray color on hover */
+}
+
+.mark-complete-button:hover {
+    background-color: #218838;
+}
+
+.mark-complete-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-left: 10px;
+}
+
 .greeting {
     width: 100%;
     text-align: center;
@@ -3462,6 +3487,38 @@ ul.hintbox {
 .module-card h2 a {
     color: #1d4ed8;
     text-decoration: none;
+    font-weight: 600;
+    line-height: 1.3;
+    display: block;
+    min-height: 130px;
+}
+
+.module-card p {
+    color: #4b5563;
+    font-size: 0.95em;
+    line-height: 1.6;
+    margin: 10px 20px;
+    height: auto;
+}
+
+.module-card1 {
+    background-color: #ffffff;
+    width: 280px;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin: 10px;
+    overflow: hidden; 
+    height: auto; 
+}
+
+.module-card1 h2 a {
+    color: #1d4ed8;
+    text-decoration: none;
     font-size: 1.2em;
     font-weight: 600;
     line-height: 1.3;
@@ -3470,7 +3527,7 @@ ul.hintbox {
     min-height: 130px;
 }
 
-.module-card p {
+.module-card1 p {
     color: #4b5563;
     font-size: 0.95em;
     line-height: 1.6;

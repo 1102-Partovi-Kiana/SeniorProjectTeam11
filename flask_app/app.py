@@ -3227,6 +3227,124 @@ def submit_quiz():
         "passing_score": passing_score
     })
 
+COURSE_PREREQUISITES = {
+    22: [21],    # Course 2 requires Course 1
+    23: [22],    # Course 3 requires Course 2
+    24: [23],    # Course 4 requires Course 3
+    25: [],
+    26: [],
+    27: [],
+    28: [],
+    29: [],
+    30: [],
+    31: [],
+    32: [],
+    33: [],
+    34: [],
+    35: [],
+    36: [],
+    37: [],
+}
+
+@app.route('/dashboard/student-view/roadmap')
+def RenderStudentRoadmap():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+
+    user_id = user['user_id']
+    role = user['role_id']
+    
+    if role != ROLE_STUDENT:
+        flash('You must be a student to access this page.', 'popup')
+        return redirect(url_for('RenderStudentDashboard'))
+
+    # Get only courses assigned to this student, ordered by section number
+    student_courses = (
+        db.session.query(Courses, StudentAssignedCourses)
+        .join(StudentAssignedCourses, Courses.course_id == StudentAssignedCourses.course_id)
+        .filter(StudentAssignedCourses.user_id == user_id)
+        .order_by(Courses.section_number)
+        .all()
+    )
+
+    # If no courses are assigned, return empty roadmap
+    if not student_courses:
+        return render_template(
+            'dashboard/student/dashboard_roadmap.html',
+            roadmap=[],
+            user=user,
+            complete_percentage=0,
+            courses=[]
+        )
+
+    # Create lookup of completed courses - now using completion_status
+    completed_courses = {
+        sc.course_id: sc.completion_status 
+        for c, sc in student_courses 
+        if sc.completion_status
+    }
+
+    if len(student_courses) > 0:
+        progress_percentage = int((len(completed_courses) / len(student_courses)) * 100)
+    else:
+        progress_percentage = 0
+
+    roadmap = []
+    for course, student_course in student_courses:
+        # Determine status - now using completion_status
+        status = "completed" if student_course.completion_status else "in-progress"
+        
+        # Check prerequisites - only consider assigned courses
+        prereq_met = True
+        if course.course_id in COURSE_PREREQUISITES:
+            prereq_met = all(
+                completed_courses.get(prereq_id, False)
+                for prereq_id in COURSE_PREREQUISITES[course.course_id]
+            )
+        elif course.section_number > 1:  # Linear fallback
+            prev_course = next(
+                (c for c, sc in student_courses if c.section_number == course.section_number - 1),
+                None
+            )
+            if prev_course:
+                prereq_met = completed_courses.get(prev_course.course_id, False)
+
+        # First course should always be unlocked
+        unlocked = (course.section_number == 1) or prereq_met
+        
+        roadmap.append({
+            'course_id': course.course_id,
+            'course_name': course.course_name,
+            'section_number': course.section_number,
+            'status': status,
+            'prereq_met': prereq_met,
+            'locked': not unlocked,
+            'certificate': course.certificate,
+            'course_desc': course.course_desc,
+            'level': course.level,
+            'length': course.length,
+            'complete_endpoint': url_for('CompleteCourse')  # Add this for form action
+        })
+    
+    return render_template(
+        'dashboard/student/dashboard_roadmap.html',
+        roadmap=roadmap,
+        user=user,
+        progress_percentage=progress_percentage,
+        complete_percentage=_calculate_completion_percentage(user_id),
+        courses=[c for c, sc in student_courses]
+    )
+
+def _calculate_completion_percentage(user_id):
+    """Calculate completion based on courses (not subsections)"""
+    total_courses = StudentAssignedCourses.query.filter_by(user_id=user_id).count()
+    completed_courses = StudentAssignedCourses.query.filter_by(
+        user_id=user_id,
+        completion_status=True  # Changed from is_completed
+    ).count()
+    return round((completed_courses / total_courses) * 100) if total_courses > 0 else 0
 
 @app.route('/module1/introduction/robot-anatomy')
 def robotanatomy():
