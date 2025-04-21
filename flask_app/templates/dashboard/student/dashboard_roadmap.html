@@ -23,16 +23,18 @@
     </form>
 </div>
 
-<!-- Progress Bar -->
-<div class="progress-container">
-    <div class="progress-header">
-        <h3>Your Overall Progress</h3>
-        <span class="progress-percentage">{{ progress_percentage }}% Complete</span>
-    </div>
-    <div class="progress-bar">
-        <div class="progress-fill" style="width: {{ progress_percentage }}%"></div>
+<div class="progress-wrapper">
+    <div class="progress-container">
+        <div class="progress-header">
+            <h3>Your Overall Progress</h3>
+            <span class="progress-percentage">{{ progress_percentage }}% Complete</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ progress_percentage }}%"></div>
+        </div>
     </div>
 </div>
+
 
 <div class="course-catalog-container">
     <div class="modules-overview roadmap-view">
@@ -319,11 +321,20 @@
 }
 
 /* Progress Bar Styles */
-.progress-container {
-    margin: 0 20px;
+.progress-wrapper {
+    margin: 0 auto;
     padding: 15px;
-    background: #f8f9fa;
+    background: #e8f5fe;
     border-radius: 8px;
+    width: 100%;
+}
+
+.progress-container {
+    margin: 0 auto;
+    padding: 15px;
+    background: #e8f5fe;
+    border-radius: 8px;
+    width: 1000px;
 }
 
 .progress-header {
@@ -372,7 +383,7 @@
                 rgba(255,255,255,0.4) 50%, 
                 rgba(255,255,255,0.2) 100%);
     background-size: 200% 100%;
-    animation: shimmer 2s infinite;
+    animation: shimmer 4s infinite;
 }
 
 @keyframes shimmer {
