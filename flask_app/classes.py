@@ -49,6 +49,7 @@ class StudentAssignedCourses(db.Model):
 
     student_assigned_courses_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     course_id = db.Column(db.Integer, db.ForeignKey('courses.course_id'), nullable=False)
+    completion_status = db.Column(db.Boolean, default=False) 
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
 
     user = db.relationship('User', backref=db.backref('assigned_courses', lazy=True))
@@ -118,3 +119,24 @@ class UserCodeLogs(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     
     user = db.relationship('User', backref='logs')
+
+class UserTimeLogs(db.Model):
+    __tablename__ = 'user_time_logs'
+    
+    time_log_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    page_context = db.Column(db.String(1000))
+    start_time = db.Column(db.DateTime)
+    end_time = db.Column(db.DateTime)
+    duration = db.Column(db.Float)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    
+    user = db.relationship('User', backref=db.backref('time_logs', lazy=True))
+
+class UserPoints(db.Model):
+    __tablename__ = 'user_points'
+    
+    user_points_id = db.Column(db.Integer, primary_key=True)
+    num_points = db.Column(db.Float, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    
+    user = db.relationship('User', backref=db.backref('points', lazy=True))

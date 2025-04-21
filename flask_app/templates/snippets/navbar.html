@@ -42,36 +42,34 @@
                     </li>
                     {% elif is_student_dashboard %}
                     <li class="nav-item custom-nav-item">
-                        <a class="nav-link custom-nav-link" href="#" data-bs-toggle="modal" data-bs-target="#joinClassModal">Join a Class</a>
+                        <button class="join-class-modal join-class-button">Join a Class</button>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Courses</a>
+                    <li class="nav-item-icon">
+                        <svg class="navbar-bell-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#bell-icon" fill="currentColor"></use></svg>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('RenderStudentDashboardGrades') }}">My Grades</a>
+                    <li class="nav-item-icon">
+                        <svg class="navbar-envelope-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#envelope-icon" fill="currentColor"></use></svg>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-uppercase" href="{{ url_for('RenderPlayground') }}">Playground</a>
+                    <li class="nav-item-icon">
+                        <svg class="navbar-user-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#three-dots-icon" fill="currentColor"></use></svg>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('RenderLogout') }}">Logout</a>
-                    </li>
-                    <div class="modal fade custom-modal" id="joinClassModal" tabindex="-1" aria-labelledby="joinClassModal" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content custom-modal-content">
-                                <div class="modal-header custom-modal-header">
-                                    <h5 class="modal-title" id="joinClassModalLabel">Join a Class</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body custom-modal-body">
-                                    <form method="POST" action="{{ url_for('RenderStudentDashboard') }}">
-                                        <div class="mb-3">
-                                            <label for="classCourseKey" class="form-label">Course Key</label>
-                                            <input type="text" class="form-control" id="classCourseCode" name="classCourseCode" placeholder="Enter course key">
-                                        </div>
-                                        <button type="submit" class="btn custom-modal-btn">Join</button>
-                                    </form>
-                                </div>
+                    <div id="joinClassModal" class="modal instructor_dashboard">
+                        <div class="modal-content instructor_dashboard">
+                            <span class="close-modal">&times;</span>
+                            <div class="modal-header instructor_dashboard">
+                                <h2>Join a Class</h2>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST" action="{{ url_for('RenderStudentDashboard') }}">
+                                    <div class="form-field-group">
+                                        <label for="classCourseKey">Course Key:</label>
+                                        <input type="text" id="classCourseCode" name="classCourseCode" placeholder="Enter course key" required>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="create-class-button">Join Class</button>
+                                        <button type="button" class="cancel-button">Cancel</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -90,7 +88,7 @@
                         <a class="nav-link" href="{{ url_for('RenderCourses') }}">My Classes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('RenderInstructorDashboard') }}">Feedback</a>
+                        <a class="nav-link" href="{{ url_for('RenderHomepage') }}">Feedback</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-uppercase" href="{{ url_for('RenderPlayground') }}">Playground</a>

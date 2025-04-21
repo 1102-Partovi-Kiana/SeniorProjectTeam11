@@ -92,7 +92,7 @@ function loadClassStudents(classId) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    const classSelect = document.getElementById('class-select');
+    const classSelect = document.getElementById('class-select-students');
     classSelect.addEventListener('change', function() {
         loadClassStudents(this.value);
     });
@@ -104,4 +104,57 @@ document.addEventListener('DOMContentLoaded', function() {
         classSelect.value = initialClassId;
         loadClassStudents(initialClassId);
     }
+});
+
+function loadLeaderboard(classId) {
+    const tbody = document.getElementById('leaderboard-body');
+    
+    if (!classId) {
+        tbody.innerHTML = '<tr><td colspan="3">Please select a class</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = '<tr><td colspan="3" class="loading">Loading leaderboard...</td></tr>';
+
+    fetch(`/api/leaderboard?class_id=${classId}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to load leaderboard');
+            return response.json();
+        })
+        .then(data => {
+            if (data.leaderboard.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3">No students in this class</td></tr>';
+                return;
+            }
+
+            // Generate leaderboard rows with ranking
+            const leaderboardRows = data.leaderboard.map((student, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${student.first_name} ${student.last_name}</td>
+                    <td>${student.total_points}</td>
+                </tr>
+            `).join('');
+
+            tbody.innerHTML = leaderboardRows;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            tbody.innerHTML = '<tr><td colspan="3">Error loading leaderboard</td></tr>';
+        });
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const classSelect = document.getElementById('class-select-leaderboard');
+    
+    // Set default to first available class
+    if (classSelect.options.length > 1) { // Skip the "Select a Class" option
+        classSelect.value = classSelect.options[1].value;
+        loadLeaderboard(classSelect.value);
+    }
+
+    classSelect.addEventListener('change', function() {
+        loadLeaderboard(this.value);
+    });
 });

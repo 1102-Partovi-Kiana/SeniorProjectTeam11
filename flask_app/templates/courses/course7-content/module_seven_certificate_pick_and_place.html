@@ -100,6 +100,11 @@
        <!-- Navigation Buttons -->
         <div class="navigation-buttons mt-4">
             <a href="{{ url_for('module_seven_link') }}" class="secondary-button">Back: Time to Code</a>
+            <form method="POST" action="{{ url_for('CompleteCourse') }}">
+                <input type="hidden" name="course_id" value="30">
+                <input type="hidden" name="completed" value="true">
+                <button type="submit" class="secondary-button">Complete Course</button>
+            </form>
         </div>
         
     </div> <!-- End of course-main-content -->

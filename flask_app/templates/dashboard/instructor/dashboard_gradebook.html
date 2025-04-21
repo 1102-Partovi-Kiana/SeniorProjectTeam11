@@ -72,7 +72,7 @@
                 <div class="dashboard-classes-header">
                     <h1>Gradebook</h1>
                     <div class="button-container-classes">
-                        <select id="class-select" onchange="loadClassStudents(this.value)">
+                        <select id="class-select-students" onchange="loadClassStudents(this.value)">
                             <option value="" selected disabled>Select a Class</option>
                             {% for class in classes %}
                                 <option value="{{ class.class_id }}">

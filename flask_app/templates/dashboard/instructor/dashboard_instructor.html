@@ -102,17 +102,6 @@
                             <p class="dashboard-user-count"> {{ class_stats.unique_student_count }} </p>
                             <a href="#" class="dashboard-redirect-link">View More</a>
                         </div>
-                        <div class="dashboard-progress-container">
-                            <svg class="dashboard-progress-circle" viewBox="0 0 100 100">
-                                <!-- Circles now use viewBox coordinates -->
-                                <circle class="progress-bg" cx="50" cy="50" r="45"></circle>
-                                <circle class="progress" cx="50" cy="50" r="45"></circle>
-                            </svg>
-                            <div class="progress-text">
-                                <p class="number">+2</p>
-                                <p class="date">3/31</p>
-                            </div>
-                        </div>
                     </div>
                 </div>     
             </div>                 
@@ -128,17 +117,6 @@
                             <p class="dashboard-user-count"> {{ class_stats.class_count }} </p>
                             <a href="#" class="dashboard-redirect-link">View More</a>
                         </div>
-                        <div class="dashboard-progress-container">
-                            <svg class="dashboard-progress-circle" viewBox="0 0 100 100">
-                                <!-- Circles now use viewBox coordinates -->
-                                <circle class="progress-bg" cx="50" cy="50" r="45"></circle>
-                                <circle class="progress" cx="50" cy="50" r="45"></circle>
-                            </svg>
-                            <div class="progress-text">
-                                <p class="number">+2</p>
-                                <p class="date">3/31</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -153,8 +131,6 @@
                             <p class="dashboard-user-count"> {{ class_stats.overall_avg_grade}}%</p>
                             <a href="#" class="dashboard-redirect-link">View More</a>
                         </div>
-                        <div class="dashboard-progress-container">
-                        </div>
                     </div>
                 </div>
             </div>
@@ -168,8 +144,44 @@
                 </div>
             </div>
             <div class="section-five"> 
-                <div class="dashboard-card five">
-                    <div class="dashboard-card-content five">
+                <div class="dashboard-card five leaderboard">
+                    <div class="dashboard-card-content five leaderboard">
+                        <div class="dashboard-content user-list">
+                            <div class="user-list-section-one">
+                                <div class="dashboard-classes-header">
+                                    <h1>Leaderboard</h1>
+                                    <div class="button-container-classes">
+                                        <select id="class-select-leaderboard" onchange="loadLeaderboard(this.value)">
+                                            <option value="" selected disabled>Select a Class</option>
+                                            {% for class in classes %}
+                                                <option value="{{ class.class_id }}">
+                                                    {{ class.class_course_code }} - {{ class.class_section_number }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr class="grey-line">
+                                <div class="user-list-container">
+                                    <div class="gradebook-list">
+                                        <table class="user-list-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Rank</th>
+                                                    <th>Student Name</th>
+                                                    <th>Points</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="leaderboard-body">
+                                                <tr>
+                                                    <td colspan="3">Please select a class to view leaderboard</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

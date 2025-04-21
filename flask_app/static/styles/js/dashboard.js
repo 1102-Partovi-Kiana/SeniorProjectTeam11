@@ -113,6 +113,15 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const joinClassButton = document.querySelector(".join-class-modal");
+    if (joinClassButton) {
+        joinClassButton.addEventListener("click", function(event) {
+            event.preventDefault();
+            const modal = document.getElementById("joinClassModal");
+            modal.style.display = "block";
+        });
+    }
+
     // For Create Class Code Modal
     const createClassCodeButton = document.querySelector(".create-class-code-modal");
     if (createClassCodeButton) {
@@ -145,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Close modals (works for both create and edit modals)
-    const closeModals = document.querySelectorAll(".close-modal, .cancel-button");
+    const closeModals = document.querySelectorAll(".close-modal, .cancel-button, .ok-button");
     closeModals.forEach(closeButton => {
         closeButton.addEventListener("click", function () {
             const modal = closeButton.closest('.modal');
@@ -234,4 +243,27 @@ document.addEventListener("DOMContentLoaded", function () {
             hideConfirmationModal(userId);
         }
     });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Check if completion modal exists on the page
+    const completionModal = document.getElementById('courseCompletionModal');
+    
+    if (completionModal) {
+        // Show the modal
+        completionModal.style.display = 'block';
+        
+        // Close modal when clicking the X button
+        const closeButton = completionModal.querySelector('.close-modal');
+        closeButton.addEventListener('click', function() {
+            completionModal.style.display = 'none';
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === completionModal) {
+                completionModal.style.display = 'none';
+            }
+        });
+    }
 });

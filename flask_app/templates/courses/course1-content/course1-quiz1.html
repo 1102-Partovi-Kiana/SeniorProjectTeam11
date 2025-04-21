@@ -216,7 +216,14 @@
                 </ul>
             </li>
             <li class="course-item">
-                <a href="{{ url_for ('course1quiz1_2') }}" class="course-link">Quiz 2</a>
+                {% if module_completed[1.91]%}
+                <a href="{{ url_for('course1quiz1_2') }}" class="course-link">
+                    Quiz 2
+                    <svg class="checkmark-icon"><use xlink:href="/static/img/sidebar-icons.svg#checkmark-icon"></use></svg>
+                </a>
+                {% else %}
+                <a class="course-link disabled">Quiz 2</a>
+                {% endif %}
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
@@ -245,7 +252,7 @@
         
         <!-- Next Button -->
         <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('importanceandapp') }}" class="secondary-button">Previous: Importance and Applications of Robotics</a>
+            <a href="{{ url_for('importanceandapp') }}" class="secondary-button">Back: Importance and Applications of Robotics</a>
             <a href="{{ url_for('robotanatomy') }}" class="secondary-button" id="next-section" style="display: none;">Next: Robot Anatomy</a>
         </div>
         

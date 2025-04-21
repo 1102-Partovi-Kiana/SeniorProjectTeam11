@@ -15,8 +15,8 @@ def main():
     #insert_admin_user(connection)
     #insert_student_user(connection, data)
     #insert_classes(connection, data)
-    #insert_course_subsection(connection, data)
-    enroll_students_in_class(connection, start_user_id=94, number_of_students=29, class_id=44)
+    insert_course_subsection(connection, data)
+    #enroll_students_in_class(connection, start_user_id=94, number_of_students=29, class_id=44)
 
     connection.close()
 
@@ -139,4 +139,53 @@ if __name__ == "__main__":
         ("DemoTwentyEight", "Demo", "TwentyEight", "demotwentyeight@gmail.com", "testPassword!1", 2),
         ("DemoTwentyNine", "Demo", "TwentyNine", "demotwentynine@gmail.com", "testPassword!1", 2),
         ("DemoThirty", "Demo", "Thirty", "demothirty@gmail.com", "testPassword!1", 2)
+
+        (6.11, "Objectives"),
+        (6.12, "About"),
+        (6.13, "Environment"),
+        (6.14, "Coding Logic"),
+        (6.9, "C6 Quiz One"),  # Following your pattern of x.9 for quizzes
+        (6.15, "Cheat Sheet"),
+        (6.16, "Time to Code"),
+        (6.17, "Certificate"),
+        (7.11, "Objectives"),
+        (7.12, "About"), 
+        (7.13, "Environment"),
+        (7.14, "Coding Logic"),
+        (7.9, "C7 Quiz One"),  # Following your x.9 quiz pattern
+        (7.15, "Cheat Sheet"),
+        (7.16, "Time to Code"), 
+        (7.17, "Certificate"),
+        (8.11, "Objectives"),
+        (8.12, "About"),
+        (8.13, "Environment"),
+        (8.14, "Coding Logic"),
+        (8.9, "C8 Quiz One"),  # Consistent x.9 quiz pattern
+        (8.15, "Cheat Sheet"),
+        (8.16, "Time to Code"),
+        (8.17, "Certificate"),
+        (9.11, "Objectives"),
+        (9.12, "About"),
+        (9.13, "Environment"),
+        (9.14, "Coding Logic"),
+        (9.9, "C9 Quiz One"),  # Consistent x.9 quiz pattern
+        (9.15, "Cheat Sheet"),
+        (9.16, "Time to Code"),
+        (9.17, "Certificate"),
+        (10.11, "Objectives"),
+        (10.12, "About"),
+        (10.13, "Environment"),
+        (10.14, "Coding Logic"),
+        (10.9, "C10 Quiz One"),  # Consistent x.9 quiz pattern
+        (10.15, "Cheat Sheet"),
+        (10.16, "Time to Code"),
+        (10.17, "Certificate"),
+        (11.11, "Objectives"),
+        (11.12, "About"),
+        (11.13, "Environment"),
+        (11.14, "Coding Logic"),
+        (11.9, "C11 Quiz One"),  # Consistent x.9 quiz pattern
+        (11.15, "Cheat Sheet"),
+        (11.16, "Time to Code"),
+        (11.17, "Certificate")
 '''

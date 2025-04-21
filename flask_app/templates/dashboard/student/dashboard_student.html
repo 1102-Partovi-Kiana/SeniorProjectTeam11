@@ -81,6 +81,26 @@
             </ul>
         </a>
     </div>
+
+    {% if course_completed_info %}
+        <div id="courseCompletionModal" class="modal student_dashboard">
+            <div class="modal-content course_complete">
+                <span class="close-modal">&times;</span>
+                <div class="modal-header student_dashboard">
+                    <h2>Course Completed</h2>
+                </div>
+                <div class="modal-body">
+                    <p>You've successfully completed: <strong>{{ course_completed_info.course_name }}</strong></p>
+                    <p>You have earned <strong>1000pts</strong> (Only Attainable Once)</p>
+                    <div class="modal-footer">
+                        <button type="button" class="ok-button">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
     <div class="dashboard-start">
         <section class = "dashboard-welcome"> 
             <h1>Home</h1>

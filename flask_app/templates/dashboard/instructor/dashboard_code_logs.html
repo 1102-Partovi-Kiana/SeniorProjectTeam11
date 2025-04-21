@@ -7,6 +7,7 @@
             border: 1px solid black;
             border-collapse: collapse;
             width: 100%;
+            table-layout: fixed; /* This ensures columns respect the width settings */
         }
 
         th, td {
@@ -23,11 +24,30 @@
             margin: 0;
             white-space: pre-wrap;
         }
+
+        /* Set specific widths for columns */
+        td:nth-child(1) { width: 10%; } /* Date */
+        td:nth-child(2) { width: 10%; } /* Page Context */
+        td:nth-child(3) { width: 50%; } /* Code */
+        
+        /* Error, Hints, Static Issues columns with overflow */
+        td:nth-child(4), 
+        td:nth-child(5), 
+        td:nth-child(6) {
+            width: 500px;
+        }
+
+        /* Optional: Add horizontal scroll container for the whole table */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
     </style>
 </head>
 <body>
     <h2>Recent Code Submissions</h2>
 
+    <div class="table-container">  <!-- Added container for horizontal scrolling -->
     {% if code_logs %}
     <table>
         <thead>
@@ -46,33 +66,30 @@
                 <td>{{ log.created_at }}</td>
                 <td>{{ log.page_context }}</td>
                 <td><pre>{{ log.code }}</pre></td>
+                <td>{{ log.error if log.error else "None" }}</td>
                 <td>
-                    {{ log.error if log.error else "None" }}
-                </td>
-                <td>
-                    {% if log.hints and log.hints|length > 0 %}
-                        <ul>
-                        {% for hint in log.hints %}
-                            <li>{{ hint }}</li>
-                        {% endfor %}
-                        </ul>
+                    {% if log.hints and log.hints not in ["None", "null", "[]", ""] %}
+                      {{ log.hints | replace("[", "") | replace("]", "") | replace('"', '') }}
                     {% else %}
-                        <span style="color: gray;">None</span>
+                      <span style="color: gray;">None</span>
                     {% endif %}
-                </td>
+                  </td>
                 <td>
-                    {% if log.static_issues and log.static_issues|length > 0 %}
-                        <ul>
-                        {% for issue in log.static_issues %}
-                            <li>
-                                {% if issue.line is defined %}Line {{ issue.line }}: {% endif %}{{ issue.message }}
-                            </li>
-                        {% endfor %}
-                        </ul>
+                    {% if log.static_issues and log.static_issues not in ["None", "null", "[]", ""] -%}
+                      <div style="white-space: pre-line;">{{- log.static_issues
+                          |replace("[", "")
+                          |replace("]", "")
+                          |replace("{", "")
+                          |replace("}", "\n")
+                          |replace('"message":', '• Message: ')
+                          |replace('"line":', 'Line ')
+                          |replace(',', '\n')
+                          |replace('"', '') -}}
+                      </div>
                     {% else %}
-                        <span style="color: gray;">None</span>
+                      <span style="color: gray;">None</span>
                     {% endif %}
-                </td>
+                  </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -80,7 +97,23 @@
     {% else %}
         <p>No code submissions found</p>
     {% endif %}
-
+    </div>
+    <div style="margin-top: 20px; padding: 10px; background-color: #f5f5f5; border-top: 1px solid #ddd;">
+        <h3>Summary Totals</h3>
+        <p>Total Submissions: {{ totals.submissions }}</p>
+        <p>Successful Submissions: {{ totals.successes }}</p>
+        <p>Total Errors: {{ totals.errors }}</p>
+        <p>Total Hints Given: {{ totals.hints }}</p>
+        <p>Total Static Issues Found: {{ totals.static_issues }}</p>
+        <p>Success Rate: {{ (totals.successes / totals.submissions * 100) | round(1) if totals.submissions > 0 else 0 }}%</p>
+        
+        <h3>Time Spent by Page</h3>
+        <ul>
+            {% for context, duration in page_durations.items() %}
+                <li>{{ page_contexts.get(context, context) }}: {{ (duration / 60) | round(1) }} minutes</li>
+            {% endfor %}
+        </ul>
+    </div>
     <p><a href="{{ url_for('RenderInstructorGradebook') }}">Back to Gradebook</a></p>
 </body>
 </html>

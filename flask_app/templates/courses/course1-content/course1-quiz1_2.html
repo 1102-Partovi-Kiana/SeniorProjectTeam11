@@ -205,11 +205,21 @@
             <div id="quiz-container" data-subsection="1.91">
                 <!-- This will be dynamically populated by JavaScript -->
             </div>
+            <div id="progress" class="text-center mt-3">
+                <!-- Progress will be displayed here -->
+            </div>
         </div>
         
         <!-- Next Button -->
         <div class="navigation-buttons mt-4">
-            <a href="{{ url_for('RenderHomeDashboard') }}" class="secondary-button" id="next-section" style="display: none;">Complete Course</a>
+            <a href="{{ url_for('futuretrends') }}" class="secondary-button">Back: Future Trends</a>
+            <form method="POST" action="{{ url_for('CompleteCourse') }}">
+                <input type="hidden" name="course_id" value="21">
+                <input type="hidden" name="completed" value="true">
+                <button type="submit" class="secondary-button" id="next-section" style="display: none;">
+                    Complete Course
+                </button>
+            </form>
         </div>
         
     </div> <!-- End of course-main-content -->

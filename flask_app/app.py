@@ -2370,6 +2370,9 @@ def RenderClassDetails():
 
 @app.route('/dashboard/student-view', methods=['GET', 'POST'])
 def RenderStudentDashboard():
+    course_id = request.args.get('course_id')
+    completed = request.args.get('completed')
+
     user = session.get('user')
     if not user:
         flash('You must be logged in to access this page.')
@@ -2412,13 +2415,23 @@ def RenderStudentDashboard():
         else: 
             flash('Invalid Course Code', 'popup')
             return redirect(url_for('RenderStudentDashboard'))
+        
+    course_completed_info = None
+    if completed and course_id:
+        course = Courses.query.get(course_id)
+        if course:
+            course_completed_info = {
+                'course_name': course.course_name,
+                'completed': True
+            }
 
     existing_enrollment = Enrollment.query.filter_by(user_id=user_id).first()
     in_class = existing_enrollment is not None
 
     assignments = db.session.query(StudentAssignedCourses).filter(StudentAssignedCourses.user_id == user_id).all()
 
-    return render_template('dashboard/student/dashboard_student.html', is_dashboard=True, is_student_dashboard=True, user=user, assignments=assignments, in_class=in_class)
+    return render_template('dashboard/student/dashboard_student.html', is_dashboard=True, is_student_dashboard=True, user=user, assignments=assignments, in_class=in_class,
+                           course_completed_info=course_completed_info)
 
 @app.route('/dashboard/student-view/grades', methods=['GET', 'POST'])
 def RenderStudentDashboardGrades():
@@ -2561,7 +2574,7 @@ def RenderInstructorDashboard():
     "Pick and Place",
     "Fetch Stack",
     "Fetch Organize",
-    "Fetch Organize w/ Sensor",
+    "Fetch Sensors",
     "Car"
     ]
 
@@ -2576,8 +2589,12 @@ def RenderInstructorDashboard():
         func.count(UserCodeLogs.user_log_id)).filter(
             UserCodeLogs.page_context == context,
             UserCodeLogs.error.is_(None),
+            UserCodeLogs.hints.is_(None),
+            UserCodeLogs.static_issues.is_(None),
             UserCodeLogs.user_id.in_(unique_student_ids)
         ).scalar() or 0
+
+        
 
         average_attempts = total_attempts / completion_count if completion_count > 0 else 0
 
@@ -2593,24 +2610,36 @@ def RenderInstructorDashboard():
         plt.figure(figsize=(10, 5), facecolor='#f8f9fa')
         plt.subplots_adjust(bottom=0.3)
 
-        bars = plt.bar(contexts, average_attempts)
+        # Set y-axis limits (minimum 0, maximum at least 10 or 20% above max value)
+        max_attempts = max(average_attempts) if average_attempts else 0
+        y_max = max(10, max_attempts * 1.2)  # At least 10, or 20% above max value
+
+        bars = plt.bar(contexts, average_attempts, zorder=3)
         plt.title('Average Attempts per Robotic Environment')
         plt.xlabel('Robotic Environment')
         plt.ylabel('Average Number of Attempts Taken')
-        plt.xticks(rotation=45, ha='right') 
+        plt.xticks(rotation=45, ha='right')
 
+        # Set axis limits
+        plt.ylim(0, y_max)
+
+        # Add value labels on top of each bar
         for bar in bars:
             height = bar.get_height()
             plt.text(bar.get_x() + bar.get_width()/2., height,
                     f'{height:.1f}',
                     ha='center', va='bottom')
 
+        # Add grid lines for better readability
+        plt.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)
+
         buf = io.BytesIO()
-        plt.savefig(buf, format='png')
+        plt.savefig(buf, format='png', dpi=100, bbox_inches='tight')
         buf.seek(0)
         plt.close()
 
         graph_image = base64.b64encode(buf.read()).decode('utf-8')
+
 
     return render_template('dashboard/instructor/dashboard_instructor.html', 
                            is_dashboard=True, 
@@ -2912,6 +2941,37 @@ def get_class_students(class_id):
         } for s in students]
     })
 
+@app.route('/api/leaderboard')
+def get_leaderboard():
+    class_id = request.args.get('class_id')
+    
+    # Get all enrollments for this class
+    enrollments = Enrollment.query.filter_by(class_id=class_id).all()
+    
+    leaderboard = []
+    for enrollment in enrollments:
+        # Get user points (assuming you have a UserPoints model)
+        total_points = db.session.query(
+            func.sum(UserPoints.num_points)
+        ).filter_by(user_id=enrollment.user_id).scalar() or 0
+        
+        # Get user details
+        user = User.query.get(enrollment.user_id)
+        
+        leaderboard.append({
+            'user_id': user.user_id,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'total_points': total_points
+        })
+    
+    # Sort by points (descending)
+    leaderboard.sort(key=lambda x: x['total_points'], reverse=True)
+    
+    return jsonify({
+        'leaderboard': leaderboard
+    })
+
 @app.route('/logout', methods=['GET'])
 def RenderLogout():
     session.clear()
@@ -2931,7 +2991,9 @@ def RenderCourses():
     is_student = role == ROLE_STUDENT
 
     if is_student:
-        assigned_courses = StudentAssignedCourses.query.filter_by(user_id=user_id).all()
+        assigned_courses = StudentAssignedCourses.query.filter_by(user_id=user_id)\
+        .order_by(StudentAssignedCourses.course_id)\
+        .all()
         courses = []
         for assignment in assigned_courses:
             courses.append(assignment.course)
@@ -3119,15 +3181,16 @@ def submit_quiz():
     if not user:
         return jsonify({"error": "Unauthorized"}), 403
 
+    role = user['role_id']
+
     data = request.json
     student_id = user['user_id']
     score = data.get('score', 0)
     total_questions = data.get('total_questions', 1)
-    percentage_grade = (score / total_questions) * 100  # Convert score to percentage
+    percentage_grade = round((score / total_questions) * 100, 2)  # Convert score to percentage
     subsection_number = data.get('subsection_number')
 
     subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
-    print(subsection)
     if not subsection:
         return jsonify({"error": "Subsection not found"}), 404
 
@@ -3152,6 +3215,10 @@ def submit_quiz():
         .scalar()
 
     passing_score = 70.0
+
+    if role == ROLE_STUDENT:
+        if highest_score >= passing_score:
+            update_and_get_module_completion(student_id, subsection_number)
 
     return jsonify({
         "message": "Quiz results saved successfully!",
@@ -3623,11 +3690,50 @@ def RenderPrivacyPolicy():
 # Darren's Code
 @app.route('/Fetch-Reach-Robot')
 def RenderFetchReachRobotSimulation():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+    
+    user_id = user['user_id']
+
+    time_log = UserTimeLogs(
+        page_context="Fetch Reach",
+        start_time=datetime.utcnow(),
+        end_time=None,
+        duration=None,
+        user_id=user_id
+    )
+    db.session.add(time_log)
+    db.session.commit()
+    db.session.refresh(time_log)  # This gets the ID for the newly created record
+
     global env
     close_current_env()
     time.sleep(.1)
     env = ReachEnv()
-    return render_template('robotic_environment.html')
+    return render_template('robotic_environment.html', time_log_id=time_log.time_log_id)
+
+@app.route('/update-time-log', methods=['POST'])
+def update_time_log():
+    data = request.get_json()
+    
+    if not data or 'time_log_id' not in data:
+        return jsonify({'error': 'Invalid data'}), 400
+    
+    time_log = UserTimeLogs.query.get(data['time_log_id'])
+    if not time_log:
+        return jsonify({'error': 'Time log not found'}), 404
+    
+    if 'end_time' in data:
+        iso_string = data['end_time'].replace('Z', '+00:00')
+        time_log.end_time = datetime.fromisoformat(iso_string)
+    if 'duration' in data:
+        time_log.duration = data['duration']
+    
+    db.session.commit()
+    
+    return jsonify({'success': True})
 
 @app.route('/PickAndPlacePage')
 def RenderPickAndPlaceEnv():
@@ -4011,15 +4117,22 @@ def next_question(quiz_id):
         if q not in used_questions
     ]
 
-    if not available_questions:
-        if current_difficulty == "hard":
-            current_difficulty = "medium"
-        elif current_difficulty == "medium":
-            current_difficulty = "easy"
+    if current_difficulty in quiz["questions"]:
         available_questions = [
             q for q in quiz["questions"][current_difficulty]
             if q not in used_questions
         ]
+    
+    if not available_questions:
+        for next_difficulty in ["easy", "medium", "hard"]:
+            if next_difficulty != current_difficulty and next_difficulty in quiz["questions"]:
+                available_questions = [
+                    q for q in quiz["questions"][next_difficulty]
+                    if q not in used_questions
+                ]
+                if available_questions:
+                    current_difficulty = next_difficulty
+                    break
 
     if not available_questions:
         return jsonify({
@@ -4098,13 +4211,37 @@ def course2quiz2():
 
     user_id = user['user_id']
     role = user['role_id']
+    subsection_number = 2.9
+    passing_score = 70.0
 
-    subsection_number = 1.9
+    subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+
+    highest_score = (
+        db.session.query(db.func.max(StudentGrades.percentage_grade))
+        .filter_by(student_id=user_id, course_subsection_id=subsection.course_subsection_id)
+        .scalar()
+    )
+
+    if highest_score is None:
+        highest_score = 0.0 
+
     if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
+        if highest_score >= passing_score:
+            module_completed = update_and_get_module_completion(user_id, subsection_number)
+        else:
+            module_completed = {}
+            subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+            for subsection in subsections:
+                module_completed[subsection.course_subsection_number] = subsection.completion_status
     else:
         module_completed = {}
-    return render_template('courses/course2-content/course2-quiz2.html', module_completed=module_completed)
+
+    return render_template(
+        'courses/course2-content/course2-quiz2.html',
+        module_completed=module_completed,
+        is_course_page=True
+    )
 
 @app.route('/module3/meet-the-robots/course3-quiz-3')
 def course3quiz3():
@@ -4115,13 +4252,37 @@ def course3quiz3():
 
     user_id = user['user_id']
     role = user['role_id']
+    subsection_number = 3.9
+    passing_score = 70.0
 
-    subsection_number = 1.9
+    subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+
+    highest_score = (
+        db.session.query(db.func.max(StudentGrades.percentage_grade))
+        .filter_by(student_id=user_id, course_subsection_id=subsection.course_subsection_id)
+        .scalar()
+    )
+
+    if highest_score is None:
+        highest_score = 0.0 
+
     if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
+        if highest_score >= passing_score:
+            module_completed = update_and_get_module_completion(user_id, subsection_number)
+        else:
+            module_completed = {}
+            subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+            for subsection in subsections:
+                module_completed[subsection.course_subsection_number] = subsection.completion_status
     else:
         module_completed = {}
-    return render_template('courses/course3-content/course3-quiz3.html', module_completed=module_completed)
+
+    return render_template(
+        'courses/course3-content/course3-quiz3.html',
+        module_completed=module_completed,
+        is_course_page=True
+    )
 
 @app.route('/module4/coding-practices/course4-quiz-4')
 def course4quiz4():
@@ -4132,13 +4293,37 @@ def course4quiz4():
 
     user_id = user['user_id']
     role = user['role_id']
+    subsection_number = 4.9
+    passing_score = 70.0
 
-    subsection_number = 1.9
+    subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+
+    highest_score = (
+        db.session.query(db.func.max(StudentGrades.percentage_grade))
+        .filter_by(student_id=user_id, course_subsection_id=subsection.course_subsection_id)
+        .scalar()
+    )
+
+    if highest_score is None:
+        highest_score = 0.0 
+
     if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
+        if highest_score >= passing_score:
+            module_completed = update_and_get_module_completion(user_id, subsection_number)
+        else:
+            module_completed = {}
+            subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+            for subsection in subsections:
+                module_completed[subsection.course_subsection_number] = subsection.completion_status
     else:
         module_completed = {}
-    return render_template('courses/course4-content/course4-quiz4.html', module_completed=module_completed)
+
+    return render_template(
+        'courses/course4-content/course4-quiz4.html',
+        module_completed=module_completed,
+        is_course_page=True
+    )
 
 @app.route('/module6/fetch-organize/course6-quiz-6')
 def course6quiz6():
@@ -4149,15 +4334,39 @@ def course6quiz6():
 
     user_id = user['user_id']
     role = user['role_id']
+    subsection_number = 6.9
+    passing_score = 70.0
 
-    subsection_number = 1.9
+    subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+
+    highest_score = (
+        db.session.query(db.func.max(StudentGrades.percentage_grade))
+        .filter_by(student_id=user_id, course_subsection_id=subsection.course_subsection_id)
+        .scalar()
+    )
+
+    if highest_score is None:
+        highest_score = 0.0 
+
     if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
+        if highest_score >= passing_score:
+            module_completed = update_and_get_module_completion(user_id, subsection_number)
+        else:
+            module_completed = {}
+            subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+            for subsection in subsections:
+                module_completed[subsection.course_subsection_number] = subsection.completion_status
     else:
         module_completed = {}
-    return render_template('courses/course6-content/course6-quiz6.html', module_completed=module_completed)
 
-@app.route('/module7/fetch-stack/course7-quiz-7')
+    return render_template(
+        'courses/course6-content/course6-quiz6.html',
+        module_completed=module_completed,
+        is_course_page=True
+    )
+
+@app.route('/module7/fetch-pick-and-place/course7-quiz-7')
 def course7quiz7():
     user = session.get('user')
     if not user:
@@ -4166,13 +4375,37 @@ def course7quiz7():
 
     user_id = user['user_id']
     role = user['role_id']
+    subsection_number = 7.9
+    passing_score = 70.0
 
-    subsection_number = 1.9
+    subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+
+    highest_score = (
+        db.session.query(db.func.max(StudentGrades.percentage_grade))
+        .filter_by(student_id=user_id, course_subsection_id=subsection.course_subsection_id)
+        .scalar()
+    )
+
+    if highest_score is None:
+        highest_score = 0.0 
+
     if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
+        if highest_score >= passing_score:
+            module_completed = update_and_get_module_completion(user_id, subsection_number)
+        else:
+            module_completed = {}
+            subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+            for subsection in subsections:
+                module_completed[subsection.course_subsection_number] = subsection.completion_status
     else:
         module_completed = {}
-    return render_template('courses/course7-content/course7-quiz7.html', module_completed=module_completed)
+
+    return render_template(
+        'courses/course7-content/course7-quiz7.html',
+        module_completed=module_completed,
+        is_course_page=True
+    )
 
 @app.route('/module8/fetch-stack/course8-quiz-8')
 def course8quiz8():
@@ -4183,13 +4416,37 @@ def course8quiz8():
 
     user_id = user['user_id']
     role = user['role_id']
+    subsection_number = 8.9
+    passing_score = 70.0
 
-    subsection_number = 1.9
+    subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+
+    highest_score = (
+        db.session.query(db.func.max(StudentGrades.percentage_grade))
+        .filter_by(student_id=user_id, course_subsection_id=subsection.course_subsection_id)
+        .scalar()
+    )
+
+    if highest_score is None:
+        highest_score = 0.0 
+
     if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
+        if highest_score >= passing_score:
+            module_completed = update_and_get_module_completion(user_id, subsection_number)
+        else:
+            module_completed = {}
+            subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+            for subsection in subsections:
+                module_completed[subsection.course_subsection_number] = subsection.completion_status
     else:
         module_completed = {}
-    return render_template('courses/course8-content/course8-quiz8.html', module_completed=module_completed)
+
+    return render_template(
+        'courses/course8-content/course8-quiz8.html',
+        module_completed=module_completed,
+        is_course_page=True
+    )
 
 @app.route('/module9/fetch-organize/course9-quiz-9')
 def course9quiz9():
@@ -4200,13 +4457,37 @@ def course9quiz9():
 
     user_id = user['user_id']
     role = user['role_id']
+    subsection_number = 9.9
+    passing_score = 70.0
 
-    subsection_number = 1.9
+    subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+
+    highest_score = (
+        db.session.query(db.func.max(StudentGrades.percentage_grade))
+        .filter_by(student_id=user_id, course_subsection_id=subsection.course_subsection_id)
+        .scalar()
+    )
+
+    if highest_score is None:
+        highest_score = 0.0 
+
     if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
+        if highest_score >= passing_score:
+            module_completed = update_and_get_module_completion(user_id, subsection_number)
+        else:
+            module_completed = {}
+            subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+            for subsection in subsections:
+                module_completed[subsection.course_subsection_number] = subsection.completion_status
     else:
         module_completed = {}
-    return render_template('courses/course9-content/course9-quiz9.html', module_completed=module_completed)
+
+    return render_template(
+        'courses/course9-content/course9-quiz9.html',
+        module_completed=module_completed,
+        is_course_page=True
+    )
 
 @app.route('/module10/fetch-sensors/course10-quiz-10')
 def course10quiz10():
@@ -4217,13 +4498,37 @@ def course10quiz10():
 
     user_id = user['user_id']
     role = user['role_id']
+    subsection_number = 10.9
+    passing_score = 70.0
 
-    subsection_number = 1.9
+    subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+
+    highest_score = (
+        db.session.query(db.func.max(StudentGrades.percentage_grade))
+        .filter_by(student_id=user_id, course_subsection_id=subsection.course_subsection_id)
+        .scalar()
+    )
+
+    if highest_score is None:
+        highest_score = 0.0 
+
     if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
+        if highest_score >= passing_score:
+            module_completed = update_and_get_module_completion(user_id, subsection_number)
+        else:
+            module_completed = {}
+            subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+            for subsection in subsections:
+                module_completed[subsection.course_subsection_number] = subsection.completion_status
     else:
         module_completed = {}
-    return render_template('courses/course10-content/course10-quiz10.html', module_completed=module_completed)
+
+    return render_template(
+        'courses/course10-content/course10-quiz10.html',
+        module_completed=module_completed,
+        is_course_page=True
+    )
 
 @app.route('/module11/autonomous-car/course11-quiz-11')
 def course11quiz11():
@@ -4234,13 +4539,37 @@ def course11quiz11():
 
     user_id = user['user_id']
     role = user['role_id']
+    subsection_number = 11.9
+    passing_score = 70.0
 
-    subsection_number = 1.9
+    subsection = CourseSubsections.query.filter_by(course_subsection_number=subsection_number).first()
+
+    highest_score = (
+        db.session.query(db.func.max(StudentGrades.percentage_grade))
+        .filter_by(student_id=user_id, course_subsection_id=subsection.course_subsection_id)
+        .scalar()
+    )
+
+    if highest_score is None:
+        highest_score = 0.0 
+
     if role == ROLE_STUDENT:
-        module_completed = update_and_get_module_completion(user_id, subsection_number)
+        if highest_score >= passing_score:
+            module_completed = update_and_get_module_completion(user_id, subsection_number)
+        else:
+            module_completed = {}
+            subsections = StudentAssignedCourseSubsections.query.filter_by(user_id=user_id).all()
+
+            for subsection in subsections:
+                module_completed[subsection.course_subsection_number] = subsection.completion_status
     else:
         module_completed = {}
-    return render_template('courses/course11-content/course11-quiz11.html', module_completed=module_completed)
+
+    return render_template(
+        'courses/course11-content/course11-quiz11.html',
+        module_completed=module_completed,
+        is_course_page=True
+    )
 
 @app.route("/certificate/module2")
 def module_two_certificate():
@@ -4355,8 +4684,11 @@ def download_certificate():
         download_name="certificate.pdf"
     )
 
-@app.route("/dashboard")
-def RenderHomeDashboard():
+@app.route("/dashboard", methods=['POST'])
+def CompleteCourse():
+    course_id = request.form.get('course_id')
+    completed = request.form.get('completed') == 'true'
+
     user = session.get('user')
     if not user:
         flash('You must be logged in to access this page.')
@@ -4365,8 +4697,34 @@ def RenderHomeDashboard():
     user_id = user['user_id']
     role = user['role_id']
 
+    if course_id and completed:
+        assigned_course = StudentAssignedCourses.query.filter_by(
+            course_id=course_id,
+            user_id=user_id
+        ).first()
+        
+        if assigned_course:
+            if not assigned_course.completion_status:
+                assigned_course.completion_status = True
+                
+                points_record = UserPoints.query.filter_by(user_id=user_id).first()
+                if points_record:
+                    points_record.num_points += 1000.0
+                    flash('1000 points added to your total!', 'popup')
+                else:
+                    points_record = UserPoints(num_points=1000.0, user_id=user_id)
+                    db.session.add(points_record)
+                    flash('1000 points awarded!', 'popup')
+                
+                db.session.commit()
+            else:
+                flash('Course was already completed - no points awarded.', 'popup')
+        else:
+            if role == ROLE_STUDENT:
+                flash('Course assignment not found.', 'popup')
+
     if role == ROLE_STUDENT:
-        return redirect(url_for('RenderStudentDashboard'))
+        return redirect(url_for('RenderStudentDashboard', course_id=course_id, completed=completed))
     elif role == ROLE_INSTRUCTOR:
         return redirect(url_for('RenderInstructorDashboard'))
     elif role == ROLE_ADMIN:
@@ -4388,7 +4746,31 @@ def RenderStudentCodeLogs(student_id):
         flash('You must be an instructor to access this page.', 'popup')
         return redirect(url_for('RenderStudentDashboard'))
     
-    code_logs = db.session.query(
+    # Initialize totals
+    totals = {
+        'submissions': 0,
+        'errors': 0,
+        'hints': 0,
+        'static_issues': 0,
+        'successes': 0
+    }
+
+    # Query the time logs and calculate durations per page context
+    time_logs = db.session.query(
+        UserTimeLogs.page_context,
+        func.sum(UserTimeLogs.duration).label('total_duration')
+    ).filter(
+        UserTimeLogs.user_id == student_id,
+        UserTimeLogs.duration.isnot(None)  # Only include logs with duration
+    ).group_by(
+        UserTimeLogs.page_context
+    ).all()
+
+    # Convert to dictionary for easy lookup
+    page_durations = {log.page_context: log.total_duration for log in time_logs}
+
+    # Query the code logs
+    raw_logs = db.session.query(
         UserCodeLogs.user_log_id,
         UserCodeLogs.code,
         UserCodeLogs.error,
@@ -4402,7 +4784,90 @@ def RenderStudentCodeLogs(student_id):
         UserCodeLogs.created_at.desc()
     ).all()
 
-    return render_template('dashboard/instructor/dashboard_code_logs.html', code_logs=code_logs)
+    # Process logs and calculate totals
+    code_logs = []
+    for log in raw_logs:
+        totals['submissions'] += 1
+        
+        log_dict = {
+            'user_log_id': log.user_log_id,
+            'code': log.code,
+            'error': log.error,
+            'hints': log.hints,
+            'page_context': log.page_context,
+            'static_issues': log.static_issues,
+            'created_at': log.created_at,
+            'counts': {
+                'errors': 0,
+                'hints': 0,
+                'static_issues': 0,
+                'is_success': False,
+                'duration': page_durations.get(log.page_context, 0)  # Add duration for this page context
+            }
+        }
+
+        # Check if this is a success case
+        is_success = True
+        
+        # Check error
+        if log_dict['error'] and log_dict['error'] not in ["None", "null", ""]:
+            log_dict['counts']['errors'] = 1
+            totals['errors'] += 1
+            is_success = False
+
+        # Check hints
+        if log_dict['hints'] and log_dict['hints'] not in ["None", "null", "[]", ""]:
+            try:
+                hints_list = json.loads(log_dict['hints'])
+                hint_count = len(hints_list) if isinstance(hints_list, list) else 1
+                log_dict['counts']['hints'] = hint_count
+                totals['hints'] += hint_count
+                is_success = False
+            except json.JSONDecodeError:
+                if log_dict['hints']:
+                    log_dict['counts']['hints'] = 1
+                    totals['hints'] += 1
+                    is_success = False
+
+        # Check static issues
+        if log_dict['static_issues'] and log_dict['static_issues'] not in ["None", "null", "[]", ""]:
+            try:
+                issues_list = json.loads(log_dict['static_issues'])
+                issue_count = len(issues_list) if isinstance(issues_list, list) else 1
+                log_dict['counts']['static_issues'] = issue_count
+                totals['static_issues'] += issue_count
+                is_success = False
+            except json.JSONDecodeError:
+                if log_dict['static_issues']:
+                    log_dict['counts']['static_issues'] = 1
+                    totals['static_issues'] += 1
+                    is_success = False
+
+        # If all checks passed, count as success
+        if is_success:
+            totals['successes'] += 1
+            log_dict['counts']['is_success'] = True
+
+        code_logs.append(log_dict)
+
+    # Add total time spent to the template context
+    totals['total_time'] = sum(page_durations.values()) if page_durations else 0
+
+    # Map page contexts to friendly names
+    page_contexts = {
+        "/Fetch-Reach-Robot": "Fetch Reach",
+        "/PickAndPlacePage": "Fetch Pick and Place",
+        "/FetchStackPage": "Fetch Stack",
+        "/FetchOrganizePage": "Fetch Organize",
+        "/FetchOrganizeSensorsPage": "Fetch Sensors",
+        "/CarPage": "Car", 
+    }
+
+    return render_template('dashboard/instructor/dashboard_code_logs.html', 
+                         code_logs=code_logs,
+                         totals=totals,
+                         page_contexts=page_contexts,
+                         page_durations=page_durations)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)
