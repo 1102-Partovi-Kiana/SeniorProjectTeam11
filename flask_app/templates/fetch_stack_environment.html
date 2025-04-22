@@ -116,136 +116,207 @@
                     <textarea id="code-editor" rows="20" style="height: 100%;">
 # Fetch Stack Goal: Program the Fetch Robot to pick up three objects and stack them.
 
-
-# Constants and Action Definitions
+# Given: Threshold used to determine proximity between components
 distance_threshold = 0.01
-close_grip_action = np.array([0, 0, 0, -1])
-open_grip_action = np.array([0, 0, 0, 1])
-lift_action = np.array([0, 0, 0.1, 0])
 
+# Given: Define robot actions
+close_grip_action = np.array([0, 0, 0, -1])   # Close the gripper
+open_grip_action = np.array([0, 0, 0, 1])     # Open the gripper
+lift_action = np.array([0, 0, 0.1, 0])        # Lift upward
 
-# Get positions of objects
+# TODO: Get the position of the bottom box (stack target)
 box0_position = env.sim.data.get_site_xpos('object3')
-box1_position = env.sim.data.get_site_xpos('object1')
+
+# TODO: Open the gripper before approaching the next object
+env.step(open_grip_action)
+
+# Given: Move horizontally toward box1
+while True:
+    # TODO: Get box1 and gripper positions
+    box1_position = env.sim.data.get_site_xpos('object1')
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+
+    # TODO: Compute horizontal distance to box1 (XY-plane only)
+    horizontal_distance = np.linalg.norm(box1_position[:2] - gripper_position[:2])
+
+    # TODO: Check if gripper is close enough to box1
+    if horizontal_distance <= distance_threshold:
+        break
+
+    # TODO: Normalize direction and compute movement vector
+    direction = box1_position - gripper_position
+    direction_normalized = direction / (np.linalg.norm(direction[:2]) + 1e-8)
+
+    # TODO: Define horizontal movement action
+    horizontal_action = np.array([
+        direction_normalized[0] * 0.1,
+        direction_normalized[1] * 0.1,
+        0,
+        0
+    ])
+
+    # TODO: Step the environment with movement
+    env.step(horizontal_action)
+
+# Given: Move downward until aligned with box1
+while True:
+    # TODO: Update box1 and gripper positions
+    box1_position = env.sim.data.get_site_xpos('object1')
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+
+    # TODO: Compute vertical distance
+    vertical_distance = box1_position[2] - gripper_position[2]
+
+    # TODO: Check for proximity in Z direction
+    if abs(vertical_distance) <= distance_threshold:
+        break
+
+    # TODO: Define descend action
+    descend_action = np.array([0, 0, vertical_distance * 0.1, 0])
+    env.step(descend_action)
+
+# TODO: Close the gripper to pick up box1
+env.step(close_grip_action)
+
+# Given: Stabilize for 10 steps
+for _ in range(10):
+    env.step(np.array([0, 0, 0, 0]))
+
+# Given: Lift box1 before moving
+for _ in range(40):
+    # TODO: Update box1 and gripper positions
+    box1_position = env.sim.data.get_site_xpos('object1')
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+
+    # TODO: Lift and hold the grip closed
+    env.step(close_grip_action)
+    ascend_action = np.array([0, 0, .13, 0])
+    env.step(ascend_action)
+    env.step(close_grip_action)
+
+    # Given: Distance threshold to determine arrival at box0
+    box_to_box_threshold = 0.01
+
+    # TODO: Get updated XY positions
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')[:2]
+    box0_position = env.sim.data.get_site_xpos('object3')[:2]
+    
+    distance_to_box0 = np.linalg.norm(box0_position - gripper_position)
+
+# Given: Move toward box0 (stack target) while far away
+while distance_to_box0 > box_to_box_threshold:
+    # TODO: Compute direction and movement vector
+    direction_to_box0 = box0_position - gripper_position
+    direction_normalized = direction_to_box0 / (np.linalg.norm(direction_to_box0) + 1e-8)
+
+    # TODO: Define action to move toward stacking position
+    move_to_box_action = np.array([
+        direction_normalized[0] * 0.3,
+        direction_normalized[1] * 0.3,
+        0,
+        0
+    ])
+
+    # TODO: Move and hold grip closed
+    env.step(move_to_box_action)
+    env.step(close_grip_action)
+
+    # TODO: Update distance
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')[:2]
+    box0_position = env.sim.data.get_site_xpos('object3')[:2]
+    distance_to_box0 = np.linalg.norm(box0_position - gripper_position)
+
+# TODO: Release box1 onto box0
+env.step(open_grip_action)
+
+# Given: Stabilize
+for _ in range(10):
+    env.step(np.array([0, 0, 0, 0]))
+
+# TODO: Get position of the final box (box2)
 box2_position = env.sim.data.get_site_xpos('object2')
 
-
-# Open gripper to prepare for grasping
+# TODO: Open gripper before approaching next object
 env.step(open_grip_action)
 
-
-# Picking Up and Stacking Box 1 
-
-
-# Move gripper horizontally to align with box1 (IMPLEMENT THIS)
+# Given: Move horizontally toward box2
 while True:
+    # TODO: Get gripper position
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+    horizontal_distance = np.linalg.norm(box2_position[:2] - gripper_position[:2])
 
+    # TODO: Check if near box2
+    if horizontal_distance <= distance_threshold:
+        break
 
-    # TODO: Calculate horizontal distance to box1
-    
-    # TODO: Break if within distance_threshold
-    # TODO: Compute direction and normalize
-    # TODO: Define horizontal action and step
+    # TODO: Normalize direction and define movement
+    direction = box2_position - gripper_position
+    direction_normalized = direction / (np.linalg.norm(direction[:2]) + 1e-8)
+
+    horizontal_action = np.array([
+        direction_normalized[0] * 0.1,
+        direction_normalized[1] * 0.1,
+        0,
+        0
+    ])
     env.step(horizontal_action)
 
-
-# Move gripper down to pick up box1 (IMPLEMENT THIS)
+# Given: Move downward until aligned with box2
 while True:
-    # TODO: Compute vertical distance to box1
-    # TODO: Break if within distance_threshold
-    # TODO: Define descend action and step
+    gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+    vertical_distance = box2_position[2] - gripper_position[2]
+
+    # TODO: Stop when within distance threshold
+    if abs(vertical_distance) <= distance_threshold:
+        break
+
+    # TODO: Move downward
+    descend_action = np.array([0, 0, vertical_distance * 0.1, 0])
     env.step(descend_action)
 
-
-# Close the gripper to grasp the box
+# TODO: Grasp box2
 env.step(close_grip_action)
 
-
-# Stabilize
+# Given: Stabilize
 for _ in range(10):
     env.step(np.array([0, 0, 0, 0]))
 
-
-# Lift the box
+# Given: Lift the object
 for _ in range(40):
-    env.step(lift_action)
+    env.step(close_grip_action)
+    ascend_action = np.array([0, 0, 0.13, 0])
+    env.step(ascend_action)
 
+# TODO: Move to box1 (top of stack)
+box1_position = env.sim.data.get_site_xpos('object1')
+gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+distance_to_box1 = np.linalg.norm(box1_position[:2] - gripper_position[:2])
 
-# Move box1 over stacking location (IMPLEMENT THIS)
-while True:
-    # TODO: Compute movement logic to box0 position
-    # TODO: Define move action and step
+# Given: Move toward box1 while far away
+while distance_to_box1 > distance_threshold:
+    direction_to_box1 = box1_position - gripper_position
+    direction_normalized = direction_to_box1 / (np.linalg.norm(direction_to_box1) + 1e-8)
+
+    move_to_box_action = np.array([
+        direction_normalized[0] * 0.3,
+        direction_normalized[1] * 0.3,
+        0,
+        0
+    ])
     env.step(move_to_box_action)
+    env.step(close_grip_action)
 
-
-# Open gripper to release
-env.step(open_grip_action)
-
-
-# Stabilize
-for _ in range(10):
-    env.step(np.array([0, 0, 0, 0]))
-
-
-# Picking Up and Stacking Box 2 
-
-# Repeat similar process for box2
-
-
-# Open gripper to prepare for grasping box2
-env.step(open_grip_action)
-
-
-# Move gripper horizontally to align with box2 (IMPLEMENT THIS)
-while True:
+    # TODO: Update distance
     gripper_position = env.sim.data.get_site_xpos('robot0:grip')
+    distance_to_box1 = np.linalg.norm(box1_position[:2] - gripper_position[:2])
 
-
-    # TODO: Calculate horizontal distance to box2
-    # TODO: Break if within distance_threshold
-    # TODO: Compute direction and normalize
-    # TODO: Define horizontal action and step
-    env.step(horizontal_action)
-
-
-# Move gripper down to pick up box2 (IMPLEMENT THIS)
-while True:
-    # TODO: Compute vertical distance to box2
-    # TODO: Break if within distance_threshold
-    # TODO: Define descend action and step
-    env.step(descend_action)
-
-
-# Close the gripper to grasp the box
+# TODO: Release box2 onto box1
 env.step(close_grip_action)
 
-
-# Stabilize
+# Given: Final stabilization
 for _ in range(10):
     env.step(np.array([0, 0, 0, 0]))
-
-
-# Lift the box
-for _ in range(40):
-    env.step(lift_action)
-
-
-# Move box2 to stack on top of box1 (IMPLEMENT THIS)
-while True:
-    # TODO: Compute movement logic to stacked boxes
-    # TODO: Define move action and step
-    env.step(move_to_stack_action)
-
-
-# Open gripper to release
-env.step(open_grip_action)
-
-
-# Stabilize
-for _ in range(10):
-    env.step(np.array([0, 0, 0, 0]))
-                        
+         
                     </textarea>
                     <div class="row align-items-center">
                         <!-- Output Box -->

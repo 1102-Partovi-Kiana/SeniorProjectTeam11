@@ -1519,7 +1519,6 @@ def analyze_robotics_code(code, context="Car"):
         issues.extend(check_while_loop_normalized_comparison_fetch_reach(tree))
     elif context == "Fetch Pick and Place":
         issues.extend((tree))
-      
     elif context == "Fetch Organize":
         issues.extend(check_undefined_variables_fetch_organize(tree))
         issues.extend(check_site_xpos_object_name_usage_twice_fetch_organize(tree))
@@ -3741,7 +3740,7 @@ def module_eleven_link():
 
 @app.route('/embedded-course-content')
 def embedded_course_content():
-    return render_template('courses/course6-content/module_six_given.html')  # This page has NO navbar or footer
+    return render_template('courses/course10-content/module_ten_given.html')  # This page has NO navbar or footer
 
 @app.route('/embedded-course-content-organize')
 def embedded_course_content_organize():

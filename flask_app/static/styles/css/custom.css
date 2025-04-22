@@ -1,4 +1,4 @@
-c/* -------------------HOMEPAGE------------------- */
+/* -------------------HOMEPAGE------------------- */
 
 .cursive-live {
     font-family: 'Pacifico', cursive;
@@ -493,6 +493,7 @@ c/* -------------------HOMEPAGE------------------- */
     width: 100%; 
     height: 100px;
     overflow: hidden; 
+    padding: 10px;
 }
 
 .text-section {
@@ -595,6 +596,14 @@ c/* -------------------HOMEPAGE------------------- */
     margin-bottom: 15px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); 
 }
+
+.card-logo {
+    max-width: 80px;
+    max-height: 80px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
 
 .card-description {
     color: #e0e0e0; 
