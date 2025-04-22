@@ -48,6 +48,7 @@ from quiz.course8_quiz8 import quiz_data as quiz
 from quiz.course9_quiz9 import quiz_data as quiz
 from quiz.course10_quiz10 import quiz_data as quiz
 from quiz.course11_quiz11 import quiz_data as quiz
+from urllib.parse import quote, unquote
 
 app = Flask(__name__, static_folder='static')
 app.config.from_object(Config)
@@ -1908,31 +1909,61 @@ def RenderLogin():
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def RenderForgotPassword():
     if request.method == 'POST':
-        username = request.form.get('login_username')
+        username = request.form.get('username')
+        email = request.form.get('email')
+        
+        # Verify user exists and email matches
         success, user = get_user(username)
-        if (success):
-            print(f"Received username for password reset: {username}")
-            flash("An email been sent to your account.", "success")
+        if success and user.email.lower() == email.lower():  # Case-insensitive comparison
+            # Create reset link with encoded email
+            encoded_email = quote(email)  # URL-encode the email
+            password_reset_link = url_for('RenderResetPassword', email=encoded_email, _external=True)
+            
+            # Send email
             subject = "CORE - Reset Password"
-            email = "officialwarerecovery@gmail.com"
-            password_reset_link = "http://127.0.0.1:5000/reset-password"
-            #Instead of manually reading the file, we are taking advantage of Flask's Jinja2 templating
-            body = render_template("account/forgot_password.txt", username = username, password_reset_link = password_reset_link)
+            body = render_template("account/forgot_password.txt", 
+                                 username=username, 
+                                 password_reset_link=password_reset_link)
             send_email(subject, email, body)
+        
+        # Always show success to prevent email enumeration
+        flash("If an account exists with that username/email, we've sent a password reset link.", "success")
         return redirect(url_for('RenderForgotPassword'))
-    return render_template('account/forgot_password.html')
+    
+    return render_template('account/forgot_password.html', is_homepage=True)
 
-@app.route('/reset-password', methods=['GET', 'POST'])
-def RenderResetPassword():
-    if (request.method == 'POST'):
+@app.route('/reset-password/<email>', methods=['GET', 'POST'])
+def RenderResetPassword(email):
+    try:
+        # Decode the email address
+        email = unquote(email)
+        
+        # Basic validation - check if email exists in your system
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            flash("Invalid password reset link.", "error")
+            return redirect(url_for('RenderForgotPassword'))
+
+    except:
+        flash("Invalid password reset link.", "error")
+        return redirect(url_for('RenderForgotPassword'))
+
+    if request.method == 'POST':
         new_password = request.form.get('password')
-        confirm_password = request.form.get('confirmPassword')
-        if (new_password == confirm_password):
-            flash("Password has been reset successfully.", "success")
-        else:
+        confirm_password = request.form.get('confirm_password')
+        
+        if new_password != confirm_password:
             flash("Passwords do not match.", "error")
-        return redirect(url_for('reset_password'))
-    return render_template('account/reset_password.html')
+            return redirect(request.url)  # Stay on same page
+        
+        # Update the user's password
+        user.password = hash_password(new_password)
+        db.session.commit()
+        
+        flash("Password has been reset successfully.", "success")
+        return redirect(url_for('RenderLogin'))
+    
+    return render_template('account/reset_password.html', email=email, is_homepage=True)
 
 @app.route('/dashboard/admin-view/home', methods=['GET', 'POST'])
 def RenderAdminDashboard():
@@ -3022,6 +3053,9 @@ def RenderCourses():
         or query in course.length.lower()
     ]
 
+    if is_student:
+        return(redirect(url_for('RenderStudentRoadmap')))
+
     return render_template("courses.html", courses=filtered_course_catalog, query=query, user=user, complete_percentage=complete_percentage, is_student=is_student)
 
 @app.route('/playground')
@@ -3458,127 +3492,127 @@ def course1_card():
 
 @app.route('/module2/start-page-2')
 def course2_card():
-    return render_template('courses/course2-content/module_two.html') 
+    return render_template('courses/course2-content/module_two.html', is_course_page=True) 
 
 @app.route('/module3/start-page-3')
 def course3_card():
-    return render_template('courses/course3-content/module_three.html') 
+    return render_template('courses/course3-content/module_three.html', is_course_page=True) 
 
 @app.route('/module4/start-page-4')
 def course4_card():
-    return render_template('courses/course4-content/module_four.html') 
+    return render_template('courses/course4-content/module_four.html', is_course_page=True) 
 
 @app.route('/module6/start-page-6')
 def course6_card():
-    return render_template('courses/course6-content/module_six.html') 
+    return render_template('courses/course6-content/module_six.html', is_course_page=True) 
 
 @app.route('/module7/start-page-7')
 def course7_card():
-    return render_template('courses/course7-content/module_seven.html') 
+    return render_template('courses/course7-content/module_seven.html', is_course_page=True) 
 
 @app.route('/module8/start-page-8')
 def course8_card():
-    return render_template('courses/course8-content/module_eight.html') 
+    return render_template('courses/course8-content/module_eight.html', is_course_page=True) 
 
 @app.route('/module9/start-page-9')
 def course9_card():
-    return render_template('courses/course9-content/module_nine.html') 
+    return render_template('courses/course9-content/module_nine.html', is_course_page=True) 
 
 @app.route('/module10/start-page-10')
 def course10_card():
-    return render_template('courses/course10-content/module_ten.html') 
+    return render_template('courses/course10-content/module_ten.html', is_course_page=True) 
 
 @app.route('/module11/start-page-11')
 def course11_card():
-    return render_template('courses/course11-content/module_eleven.html') 
+    return render_template('courses/course11-content/module_eleven.html', is_course_page=True) 
 
 @app.route('/module2/introduction')
 def module_two():
-    return render_template('courses/course2-content/module_two.html') 
+    return render_template('courses/course2-content/module_two.html', is_course_page=True) 
 
 @app.route('/module2/introduction/introduction-of-mobile-robots')
 def intro_of_mobile_robots():
-    return render_template('courses/course2-content/intro_of_mobile_robots.html')
+    return render_template('courses/course2-content/intro_of_mobile_robots.html', is_course_page=True)
 
 @app.route('/module2/introduction/idustrial-robots')
 def industrial_robots():
-    return render_template('courses/course2-content/industrial_robots.html')
+    return render_template('courses/course2-content/industrial_robots.html', is_course_page=True)
 
 @app.route('/module2/introduction/service-robots')
 def service_robots():
-    return render_template('courses/course2-content/service_robots.html')
+    return render_template('courses/course2-content/service_robots.html', is_course_page=True)
 
 @app.route('/module2/introduction/mobile-robots')
 def mobile_robots():
-    return render_template('courses/course2-content/mobile_robots.html')
+    return render_template('courses/course2-content/mobile_robots.html', is_course_page=True)
 
 @app.route('/module2/introduction/humanoid-robots')
 def humanoid_robots():
-    return render_template('courses/course2-content/humanoid_robots.html')
+    return render_template('courses/course2-content/humanoid_robots.html', is_course_page=True)
 
 @app.route('/module2/introduction/agricultural-robots')
 def agricultural_robots():
-    return render_template('courses/course2-content/agricultural_robots.html')
+    return render_template('courses/course2-content/agricultural_robots.html', is_course_page=True)
 
 @app.route('/module2/introduction/medical-robots')
 def medical_robots():
-    return render_template('courses/course2-content/medical_robots.html')
+    return render_template('courses/course2-content/medical_robots.html', is_course_page=True)
 
 @app.route('/module3/introduction')
 def module_three():
-    return render_template('courses/course3-content/module_three.html') 
+    return render_template('courses/course3-content/module_three.html', is_course_page=True) 
 
 @app.route('/module3/fetch-reach')
 def module_three_fetch_reach():
-    return render_template('courses/course3-content/module_three_fetch_reach.html') 
+    return render_template('courses/course3-content/module_three_fetch_reach.html', is_course_page=True) 
 
 @app.route('/module3/autonomous-car')
 def module_three_car():
-    return render_template('courses/course3-content/module_three_car.html') 
+    return render_template('courses/course3-content/module_three_car.html', is_course_page=True) 
 
 @app.route('/module3/fetch-pick-and-place')
 def module_three_fetch_pick():
-    return render_template('courses/course3-content/module_three_fetch_pick.html') 
+    return render_template('courses/course3-content/module_three_fetch_pick.html', is_course_page=True) 
 
 @app.route('/module3/fetch-sensor')
 def module_three_fetch_sensor():
-    return render_template('courses/course3-content/module_three_fetch_sensor.html') 
+    return render_template('courses/course3-content/module_three_fetch_sensor.html', is_course_page=True) 
 
 @app.route('/module4/introduction')
 def module_four():
-    return render_template('courses/course4-content/module_four.html') 
+    return render_template('courses/course4-content/module_four.html', is_course_page=True) 
 
 @app.route('/module4/formatting/naming-conventions')
 def module_four_naming_conventions():
-    return render_template('courses/course4-content/module_four_naming_conventions.html') 
+    return render_template('courses/course4-content/module_four_naming_conventions.html', is_course_page=True) 
 
 @app.route('/module4/formatting/comments')
 def module_four_comments():
-    return render_template('courses/course4-content/module_four_comments.html') 
+    return render_template('courses/course4-content/module_four_comments.html', is_course_page=True) 
 
 @app.route('/module4/formatting/indentation')
 def module_four_indentation():
-    return render_template('courses/course4-content/module_four_indentation.html') 
+    return render_template('courses/course4-content/module_four_indentation.html', is_course_page=True) 
 
 @app.route('/module4/variables/variables')
 def module_four_variables():
-    return render_template('courses/course4-content/module_four_variables.html') 
+    return render_template('courses/course4-content/module_four_variables.html', is_course_page=True) 
 
 @app.route('/module4/controlflow/controlflow')
 def module_four_control_flow():
-    return render_template('courses/course4-content/module_four_control_flow.html') 
+    return render_template('courses/course4-content/module_four_control_flow.html', is_course_page=True) 
 
 @app.route('/module4/controlflow/loops')
 def module_four_loops():
-    return render_template('courses/course4-content/module_four_loops.html') 
+    return render_template('courses/course4-content/module_four_loops.html', is_course_page=True) 
 
 @app.route('/module4/controlflow/functions')
 def module_four_functions():
-    return render_template('courses/course4-content/module_four_functions.html') 
+    return render_template('courses/course4-content/module_four_functions.html', is_course_page=True) 
 
 @app.route('/module4/debugging/debugging')
 def module_four_debugging():
-    return render_template('courses/course4-content/module_four_debugging.html') 
+    return render_template('courses/course4-content/module_four_debugging.html', is_course_page=True) 
 
 DOWNLOAD_FOLDER = os.path.join(app.root_path, 'static', 'downloads')
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
@@ -3589,167 +3623,167 @@ def download_file(filename):
 
 @app.route('/module3/cheat-sheet/download')
 def module_three_download():
-    return render_template('courses/course3-content/module_three_download.html')
+    return render_template('courses/course3-content/module_three_download.html', is_course_page=True)
 
 @app.route('/module4/cheat-sheet/download')
 def module_four_download():
-    return render_template('courses/course4-content/module_four_download.html')
+    return render_template('courses/course4-content/module_four_download.html', is_course_page=True)
 
 @app.route('/module6/cheat-sheet/download')
 def module_six_download():
-    return render_template('courses/course6-content/module_six_download.html')
+    return render_template('courses/course6-content/module_six_download.html', is_course_page=True)
 
 @app.route('/module7/cheat-sheet/download')
 def module_seven_download():
-    return render_template('courses/course7-content/module_seven_download.html')
+    return render_template('courses/course7-content/module_seven_download.html', is_course_page=True)
 
 @app.route('/module8/cheat-sheet/download')
 def module_eight_download():
-    return render_template('courses/course8-content/module_eight_download.html')
+    return render_template('courses/course8-content/module_eight_download.html', is_course_page=True)
 
 @app.route('/module9/cheat-sheet/download')
 def module_nine_download():
-    return render_template('courses/course9-content/module_nine_download.html')
+    return render_template('courses/course9-content/module_nine_download.html', is_course_page=True)
 
 @app.route('/module10/cheat-sheet/download')
 def module_ten_download():
-    return render_template('courses/course10-content/module_ten_download.html')
+    return render_template('courses/course10-content/module_ten_download.html', is_course_page=True)
 
 @app.route('/module11/cheat-sheet/download')
 def module_eleven_download():
-    return render_template('courses/course11-content/module_eleven_download.html')
+    return render_template('courses/course11-content/module_eleven_download.html', is_course_page=True)
 
 @app.route('/module6/introduction')
 def module_six():
-    return render_template('courses/course6-content/module_six.html')
+    return render_template('courses/course6-content/module_six.html', is_course_page=True)
 
 @app.route('/module6/about-the-fetch-reach-robot')
 def module_six_about_the_fetch_reach_robot():
-    return render_template('courses/course6-content/module_six_about_the_fetch_reach_robot.html')
+    return render_template('courses/course6-content/module_six_about_the_fetch_reach_robot.html', is_course_page=True)
 
 @app.route('/module6/given')
 def module_six_given():
-    return render_template('courses/course6-content/module_six_given.html')
+    return render_template('courses/course6-content/module_six_given.html', is_course_page=True)
 
 @app.route('/module6/implementing-logic')
 def module_six_code():
-    return render_template('courses/course6-content/module_six_code.html')
+    return render_template('courses/course6-content/module_six_code.html', is_course_page=True)
 
 @app.route('/module6/link-to-environment')
 def module_six_link():
-    return render_template('courses/course6-content/module_six_link.html')
+    return render_template('courses/course6-content/module_six_link.html', is_course_page=True)
 
 @app.route('/module7/introduction')
 def module_seven():
-    return render_template('courses/course7-content/module_seven.html')
+    return render_template('courses/course7-content/module_seven.html', is_course_page=True)
 
 @app.route('/module7/about-the-fetch-pick-and-place-robot')
 def module_seven_about_the_fetch_pick_and_place_robot():
-    return render_template('courses/course7-content/module_seven_about_the_fetch_pick_and_place_robot.html')
+    return render_template('courses/course7-content/module_seven_about_the_fetch_pick_and_place_robot.html', is_course_page=True)
 
 @app.route('/module7/given')
 def module_seven_given():
-    return render_template('courses/course7-content/module_seven_given.html')
+    return render_template('courses/course7-content/module_seven_given.html', is_course_page=True)
 
 @app.route('/module7/implementing-logic')
 def module_seven_code():
-    return render_template('courses/course7-content/module_seven_code.html')
+    return render_template('courses/course7-content/module_seven_code.html', is_course_page=True)
 
 @app.route('/module7/link-to-environment')
 def module_seven_link():
-    return render_template('courses/course7-content/module_seven_link.html')
+    return render_template('courses/course7-content/module_seven_link.html', is_course_page=True)
 
 @app.route('/module8/introduction')
 def module_eight():
-    return render_template('courses/course8-content/module_eight.html')
+    return render_template('courses/course8-content/module_eight.html', is_course_page=True)
 
 @app.route('/module8/about-the-fetch-stack-robot')
 def module_eight_about():
-    return render_template('courses/course8-content/module_eight_about.html')
+    return render_template('courses/course8-content/module_eight_about.html', is_course_page=True)
 
 @app.route('/module8/given')
 def module_eight_given():
-    return render_template('courses/course8-content/module_eight_given.html')
+    return render_template('courses/course8-content/module_eight_given.html', is_course_page=True)
 
 @app.route('/module8/implementing-logic')
 def module_eight_code():
-    return render_template('courses/course8-content/module_eight_code.html')
+    return render_template('courses/course8-content/module_eight_code.html', is_course_page=True)
 
 @app.route('/module8/link-to-environment')
 def module_eight_link():
-    return render_template('courses/course8-content/module_eight_link.html')
+    return render_template('courses/course8-content/module_eight_link.html', is_course_page=True)
 
 @app.route('/module9/introduction')
 def module_nine():
-    return render_template('courses/course9-content/module_nine.html')
+    return render_template('courses/course9-content/module_nine.html', is_course_page=True)
 
 @app.route('/module9/about-the-fetch-organize-robot')
 def module_nine_about():
-    return render_template('courses/course9-content/module_nine_about.html')
+    return render_template('courses/course9-content/module_nine_about.html', is_course_page=True)
 
 @app.route('/module9/given')
 def module_nine_given():
-    return render_template('courses/course9-content/module_nine_given.html')
+    return render_template('courses/course9-content/module_nine_given.html', is_course_page=True)
 
 @app.route('/module9/implementing-logic')
 def module_nine_code():
-    return render_template('courses/course9-content/module_nine_code.html')
+    return render_template('courses/course9-content/module_nine_code.html', is_course_page=True)
 
 @app.route('/module9/link-to-environment')
 def module_nine_link():
-    return render_template('courses/course9-content/module_nine_link.html')
+    return render_template('courses/course9-content/module_nine_link.html', is_course_page=True)
 
 @app.route('/module10/introduction')
 def module_ten():
-    return render_template('courses/course10-content/module_ten.html')
+    return render_template('courses/course10-content/module_ten.html', is_course_page=True)
 
 @app.route('/module10/about')
 def module_ten_about():
-    return render_template('courses/course10-content/module_ten_about.html')
+    return render_template('courses/course10-content/module_ten_about.html', is_course_page=True)
 
 @app.route('/module10/given')
 def module_ten_given():
-    return render_template('courses/course10-content/module_ten_given.html')
+    return render_template('courses/course10-content/module_ten_given.html', is_course_page=True)
 
 @app.route('/module10/implementing-logic')
 def module_ten_code():
-    return render_template('courses/course10-content/module_ten_code.html')
+    return render_template('courses/course10-content/module_ten_code.html', is_course_page=True)
 
 @app.route('/module10/link-to-environment')
 def module_ten_link():
-    return render_template('courses/course10-content/module_ten_link.html')
+    return render_template('courses/course10-content/module_ten_link.html', is_course_page=True)
 
 @app.route('/module11/introduction')
 def module_eleven():
-    return render_template('courses/course11-content/module_eleven.html')
+    return render_template('courses/course11-content/module_eleven.html', is_course_page=True)
 
 @app.route('/module11/about')
 def module_eleven_about():
-    return render_template('courses/course11-content/module_eleven_about.html')
+    return render_template('courses/course11-content/module_eleven_about.html', is_course_page=True)
 
 @app.route('/module11/given')
 def module_eleven_given():
-    return render_template('courses/course11-content/module_eleven_given.html')
+    return render_template('courses/course11-content/module_eleven_given.html', is_course_page=True)
 
 @app.route('/module11/implementing-logic')
 def module_eleven_code():
-    return render_template('courses/course11-content/module_eleven_code.html')
+    return render_template('courses/course11-content/module_eleven_code.html', is_course_page=True)
 
 @app.route('/module11/link-to-environment')
 def module_eleven_link():
-    return render_template('courses/course11-content/module_eleven_link.html')
+    return render_template('courses/course11-content/module_eleven_link.html', is_course_page=True)
 
 @app.route('/embedded-course-content')
 def embedded_course_content():
-    return render_template('courses/course6-content/module_six_given.html')  # This page has NO navbar or footer
+    return render_template('courses/course6-content/module_six_given.html', is_course_page=True)  # This page has NO navbar or footer
 
 @app.route('/embedded-course-content-organize')
 def embedded_course_content_organize():
-     return render_template('courses/course9-content/module_nine_given.html')  
+     return render_template('courses/course9-content/module_nine_given.html', is_course_page=True)  
 
 @app.route('/embedded-course-content-car')
 def embedded_course_content_car():
-    return render_template('courses/course11-content/module_eleven_given.html')
+    return render_template('courses/course11-content/module_eleven_given.html', is_course_page=True)
 
 @app.route('/contact-us', methods=["GET", "POST"])
 def RenderContactUs():
