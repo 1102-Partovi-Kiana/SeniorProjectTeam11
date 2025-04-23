@@ -55,7 +55,13 @@ app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
 mail.init_app(app)
-app.secret_key = "aa1e747aed8d320e7905cab3a78ed6fefee64885cd4fbf3716a80eae03b15dc4"
+
+app.config.update(
+    SESSION_TYPE="redis",
+    SESSION_REDIS="redis://localhost:6379/0",
+    PERMANENT_SESSION_LIFETIME=timedelta(hours=1)
+)
+
 
 ROLE_INSTRUCTOR = 1
 ROLE_STUDENT = 2
@@ -4969,17 +4975,18 @@ def RenderStudentCodeLogs(student_id):
 
         # Check hints
         if log_dict['hints'] and log_dict['hints'] not in ["None", "null", "[]", ""]:
-            try:
-                hints_list = json.loads(log_dict['hints'])
-                hint_count = len(hints_list) if isinstance(hints_list, list) else 1
-                log_dict['counts']['hints'] = hint_count
-                totals['hints'] += hint_count
-                is_success = False
-            except json.JSONDecodeError:
-                if log_dict['hints']:
-                    log_dict['counts']['hints'] = 1
-                    totals['hints'] += 1
-                    is_success = False
+            if isinstance(log_dict['hints'], list):
+                hint_count = 1  # Treat the entire list as 1 hint
+            else:
+                try:
+                    hints_list = json.loads(log_dict['hints'])
+                    hint_count = 1 if hints_list else 0  # Still count as 1 if not empty
+                except json.JSONDecodeError:
+                    hint_count = 1 if log_dict['hints'] else 0
+            
+            log_dict['counts']['hints'] = hint_count
+            totals['hints'] += hint_count
+            is_success = False
 
         # Check static issues
         if log_dict['static_issues'] and log_dict['static_issues'] not in ["None", "null", "[]", ""]:
@@ -5022,5 +5029,5 @@ def RenderStudentCodeLogs(student_id):
                          page_durations=page_durations)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)
+    app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False, FLASK_DEBUG=0)
 

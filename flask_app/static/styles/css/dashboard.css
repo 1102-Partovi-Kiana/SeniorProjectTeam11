@@ -2166,3 +2166,11 @@ h3 svg {
 .navbar-nav {
     height: 60px !important;
 }
+
+.dashboard-content.user-list.leaderboard{
+    padding: 0px;
+}
+
+.user-list-section-one.leaderboard{
+    background-color: rgb(248, 249, 250) !important;
+}
