@@ -9,6 +9,8 @@ source_files = [
     "flask_app/organize.xml",
     "flask_app/reach.xml",
     "flask_app/pick_and_place.xml",
+    "flask_app/sensor_robot.xml",
+    "flask_app/shared.xml"
 ]
 
 
