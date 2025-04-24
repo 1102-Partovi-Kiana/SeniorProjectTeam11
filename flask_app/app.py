@@ -123,7 +123,9 @@ user_submitted_code = ""
 last_error = None
 static_issues = []
 junk_array = []
-api_key = "AIzaSyAfoQ856qhys1OONDyPMRR7LoArpKz2JSY"  
+api_key = "AIzaSyD9sgZ36638e7fsk5rK5j0uDNGl-zy6hUU " 
+#AIzaSyAfoQ856qhys1OONDyPMRR7LoArpKz2JSY
+
 
 @app.route('/chatbot-api-2', methods=['POST'])
 def ChatbotAPI2():
@@ -3928,7 +3930,7 @@ def module_eleven_link():
 
 @app.route('/embedded-course-content')
 def embedded_course_content():
-    return render_template('courses/course6-content/module_six_given.html', is_course_page=True)  # This page has NO navbar or footer
+    return render_template('courses/course10-content/module_ten_given.html', is_course_page=True)  # This page has NO navbar or footer
 
 @app.route('/embedded-course-content-organize')
 def embedded_course_content_organize():
@@ -3974,7 +3976,7 @@ def RenderAboutUs():
             "image": "img/kianapic.jpg",
             "linkedin": "https://www.linkedin.com/in/kianapartovi/",
             "email": "kianapartovi04@gmail.com",
-            "description": "Kiana is an upcoming junior at the University of Nevada, Reno where she actively engages in both her academic along with extracurricular pursuits. She plans to graduate with a degree in Computer Science and Engineering degree along with three minors in: Mathematics, Information Systems, and Business Administration. She is an active member of the Association for Computing Machinery, Girls Who Code, and TechWise, a Google-sponsored initiative. Kiana is now a three time intern at NASA working in software engineering and data science."
+            "description": "Kiana is an upcoming junior at the University of Nevada, Reno where she actively engages in both her academic along with extracurricular pursuits. She plans to graduate with a degree in Computer Science and Engineering degree along with three minors in: Mathematics, Information Systems, along with Business Administration. She is an active member of the Association for Computing Machinery, Girls Who Code, and TechWise, a Google-sponsored initiative. Kiana is now a three time intern at NASA working in software engineering and data science."
         },
         {
             "name": "Darren",
