@@ -55,7 +55,6 @@ app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
 mail.init_app(app)
-app.secret_key = "aa1e747aed8d320e7905cab3a78ed6fefee64885cd4fbf3716a80eae03b15dc4"
 
 app.config.update(
     SESSION_TYPE="redis",
