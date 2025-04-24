@@ -71,29 +71,57 @@
         <div class="dashboard-column one grades">
             <div class="dashboard-row one grades">
                 <div class="section-one grades">
-                    <div class="dashboard-card one grades"></div>
+                    <div class="dashboard-card one grades">
+                        <div class="dashboard-card-content">
+                            <div class="dashboard-card-text">
+                                <h3>
+                                    <svg class="instructor-dash-grades-icon"><use xlink:href="/static/img/sidebar-icons.svg#course-icon" fill="currentColor"></svg>
+                                    Courses Completed
+                                </h3>
+                                <p class="dashboard-user-count"> {{ dashboard_data.completed_courses }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="section-two grades">
-                    <div class="dashboard-card two grades"></div>
+                    <div class="dashboard-card two grades">
+                        <div class="dashboard-card-text">
+                            <h3>
+                                <svg class="instructor-dash-grades-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#hint-icon" fill="currentColor" color = #ffffff></use></svg>
+                                Hints Generated
+                            </h3>
+                            <p class="dashboard-user-count">{{ dashboard_data.hints }}</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="section-three grades">
-                    <div class="dashboard-card three grades"></div>
-                </div>
-                <div class="section-four grades">
-                    <div class="dashboard-card four grades"></div>
+                    <div class="dashboard-card three grades">
+                        <div class="dashboard-card-text">
+                            <h3>
+                                <svg class="instructor-dash-grades-icon"><use xlink:href="/static/img/svgs/sidebar-icons-two.svg#points-icon" fill="currentColor"></use></svg>
+                                Total Points Owned
+                            </h3>
+                            <p class="dashboard-user-count"> {{ dashboard_data.points }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="dashboard-row two grades">
+                <div class="section-four grades">
+                    <div class="dashboard-card four grades">
+                        <h3> Average Attempts per Robotic Environment</h3>
+                        <div class="graph-container grades">
+                            <img src="data:image/png;base64,{{ dashboard_data.attempts_graph }}" alt="Average Attempts Graph" class="responsive-graph grades">
+                        </div>
+                    </div>
+                </div>
                 <div class="section-five grades">
-                    <div class="dashboard-card five grades"></div>
-                </div>
-            </div>
-            <div class="dashboard-row three grades">
-                <div class="section-six grades">
-                    <div class="dashboard-card six grades"></div>
-                </div>
-                <div class="section-seven grades">
-                    <div class="dashboard-card seven grades"></div>
+                    <div class="dashboard-card five grades">
+                        <h3> Average Duration per Robotic Environment</h3>
+                        <div class="graph-container grades">
+                            <img src="data:image/png;base64,{{ dashboard_data.duration_graph }}" alt="Average Attempts Graph" class="responsive-graph grades">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

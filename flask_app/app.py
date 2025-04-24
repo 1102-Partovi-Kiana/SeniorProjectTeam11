@@ -55,6 +55,7 @@ app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
 mail.init_app(app)
+app.secret_key = "aa1e747aed8d320e7905cab3a78ed6fefee64885cd4fbf3716a80eae03b15dc4"
 
 app.config.update(
     SESSION_TYPE="redis",
@@ -1982,7 +1983,7 @@ def RenderAdminDashboard():
     
     if role != ROLE_ADMIN:
         flash('You have insufficient permissions to access this page.', 'popup')
-        return redirect(url_for('RenderHomepage'))
+        return redirect(url_for('RedirectUser'))
 
     role_name = Roles.query.filter_by(role_id=role).first().role_name
 
@@ -2138,7 +2139,7 @@ def RenderAdminUserList():
     
     if role != ROLE_ADMIN:
         flash('You have insufficient permissions to access this page.', 'popup')
-        return redirect(url_for('RenderHomepage'))
+        return redirect(url_for('RedirectUser'))
 
     role_name = Roles.query.filter_by(role_id=role).first().role_name
 
@@ -2245,7 +2246,7 @@ def RenderAdminClassesList():
     
     if role != ROLE_ADMIN:
         flash('You have insufficient permissions to access this page.', 'popup')
-        return redirect(url_for('RenderHomepage'))
+        return redirect(url_for('RedirectUser'))
 
     role_name = Roles.query.filter_by(role_id=role).first().role_name
 
@@ -2419,7 +2420,7 @@ def RenderStudentDashboard():
     
     if (role != ROLE_STUDENT):
         flash('You must be an student to access this page.', 'popup')
-        return redirect(url_for('RenderInstructorDashboard'))
+        return redirect(url_for('RedirectUser'))
     
     if request.method == 'POST':
         class_course_code = request.form['classCourseCode']
@@ -2481,7 +2482,7 @@ def RenderStudentDashboardGrades():
     
     if (role != ROLE_STUDENT):
         flash('You must be an student to access this page.', 'popup')
-        return redirect(url_for('RenderInstructorDashboard'))
+        return redirect(url_for('RedirectUser'))
     
     if request.method == 'POST':
         class_course_code = request.form['classCourseCode']
@@ -2547,6 +2548,153 @@ def RenderStudentDashboardGrades():
                     'course_module_name': course.course_name
                 })
 
+    # Get basic dashboard metrics
+    total_points = UserPoints.query.filter_by(user_id=user_id).with_entities(UserPoints.num_points).scalar() or 0
+    completed_count = StudentAssignedCourses.query.filter_by(user_id=user_id, completion_status=True).count()
+    total_hints = 0
+
+    logs_with_hints = UserCodeLogs.query\
+        .filter(UserCodeLogs.user_id == user_id)\
+        .filter(UserCodeLogs.hints.isnot(None))\
+        .filter(UserCodeLogs.hints.notin_(["None", "null", "[]", ""]))\
+        .all()
+    
+    for log in logs_with_hints:
+        if isinstance(log.hints, list):
+            total_hints += 1
+        else:
+            try:
+                hints_list = json.loads(log.hints)
+                total_hints += 1 if hints_list else 0
+            except json.JSONDecodeError:
+                total_hints += 1 if log.hints else 0
+
+    # Define common page contexts
+    page_contexts = [
+        "Fetch Reach",
+        "Pick and Place",
+        "Fetch Stack",
+        "Fetch Organize",
+        "Fetch Sensors",
+        "Car"
+    ]
+    
+    # Calculate attempts data
+    attempts_data = {}
+    for context in page_contexts:
+        total_attempts = db.session.query(func.count(UserCodeLogs.user_log_id)).filter(
+            UserCodeLogs.page_context == context,
+            UserCodeLogs.user_id == user_id 
+        ).scalar() or 0
+
+        completion_count = db.session.query(
+            func.count(UserCodeLogs.user_log_id)).filter(
+                UserCodeLogs.page_context == context,
+                UserCodeLogs.error.is_(None),
+                UserCodeLogs.hints.is_(None),
+                UserCodeLogs.static_issues.is_(None),
+                UserCodeLogs.user_id == user_id
+        ).scalar() or 0
+
+        average_attempts = total_attempts / completion_count if completion_count > 0 else 0
+
+        attempts_data[context] = {
+            'total_attempts': total_attempts,
+            'completion_count': completion_count,
+            'average_attempts': average_attempts
+        }
+
+    # Generate attempts graph
+    contexts = list(attempts_data.keys())
+    average_attempts = [attempts_data[context]['average_attempts'] for context in contexts]
+
+    plt.figure(figsize=(10, 5), facecolor='#f8f9fa')
+    plt.subplots_adjust(bottom=0.3)
+    
+    max_attempts = max(average_attempts) if average_attempts else 0
+    y_max = max(10, max_attempts * 1.2)  # At least 10, or 20% above max value
+
+    bars = plt.bar(contexts, average_attempts, zorder=3)
+    plt.title('Your Average Attempts per Robotic Environment')
+    plt.xlabel('Robotic Environment')
+    plt.ylabel('Average Number of Attempts Taken')
+    plt.xticks(rotation=45, ha='right')
+    plt.ylim(0, y_max)
+
+    # Add value labels on top of each bar
+    for bar in bars:
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2., height,
+                f'{height:.1f}',
+                ha='center', va='bottom')
+
+    plt.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)
+
+    # Save attempts graph to buffer
+    buf_attempts = io.BytesIO()
+    plt.savefig(buf_attempts, format='png', dpi=100, bbox_inches='tight')
+    buf_attempts.seek(0)
+    plt.close()
+
+    # Calculate duration data
+    duration_data = {}
+    for context in page_contexts:
+        time_logs = db.session.query(UserTimeLogs).filter(
+            UserTimeLogs.page_context == context,
+            UserTimeLogs.user_id == user_id,
+            UserTimeLogs.duration.isnot(None)
+        ).all()
+        
+        total_duration = sum(log.duration for log in time_logs) if time_logs else 0
+        average_duration = total_duration / len(time_logs) if time_logs else 0
+        
+        duration_data[context] = {
+            'total_duration': total_duration,
+            'average_duration': average_duration,
+            'attempt_count': len(time_logs)
+        }
+
+    # Generate duration graph
+    contexts_duration = list(duration_data.keys())
+    average_durations = [duration_data[context]['average_duration'] for context in contexts_duration]
+
+    plt.figure(figsize=(10, 5), facecolor='#f8f9fa')
+    plt.subplots_adjust(bottom=0.3)
+
+    max_duration = max(average_durations) if average_durations else 0
+    y_max_duration = max(10, max_duration * 1.2)  # At least 10, or 20% above max value
+
+    bars_duration = plt.bar(contexts_duration, average_durations, color='#2ca02c', zorder=3)
+    plt.title('Your Average Time Spent per Robotic Environment')
+    plt.xlabel('Robotic Environment')
+    plt.ylabel('Average Time Spent (s)')
+    plt.xticks(rotation=45, ha='right')
+    plt.ylim(0, y_max_duration)
+
+    # Add value labels on top of each bar
+    for bar in bars_duration:
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2., height,
+                f'{height:.1f}',
+                ha='center', va='bottom')
+
+    plt.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)
+
+    # Save duration graph to buffer
+    buf_duration = io.BytesIO()
+    plt.savefig(buf_duration, format='png', dpi=100, bbox_inches='tight')
+    buf_duration.seek(0)
+    plt.close()
+
+    # Prepare dashboard data
+    dashboard_data = {
+        'points': total_points,
+        'completed_courses': completed_count,
+        'hints': total_hints,
+        'attempts_graph': base64.b64encode(buf_attempts.read()).decode('utf-8'),
+        'duration_graph': base64.b64encode(buf_duration.read()).decode('utf-8')
+    }
+
     return render_template(
         'dashboard/student/dashboard_student_grades.html',
         is_dashboard=True,
@@ -2554,7 +2702,8 @@ def RenderStudentDashboardGrades():
         user=user,
         in_class=in_class,
         assignments=assignments,
-        grades_with_names=grades_with_names
+        grades_with_names=grades_with_names,
+        dashboard_data=dashboard_data
     )
 
 @app.route('/dashboard/instructor-view', methods=['GET', 'POST'])
@@ -2569,7 +2718,7 @@ def RenderInstructorDashboard():
     
     if role != ROLE_INSTRUCTOR:
         flash('You must be an instructor to access this page.', 'popup')
-        return redirect(url_for('RenderStudentDashboard'))
+        return redirect(url_for('RedirectUser'))
     
     user_classes = get_classes(user_id)
     class_count = len(user_classes)
@@ -2696,8 +2845,8 @@ def RenderInstructorClasses():
     role = user['role_id']
     
     if role != ROLE_INSTRUCTOR:
-        flash('You must be an instructor to access this page.')
-        return redirect(url_for('RenderStudentDashboard'))
+        flash('You must be an instructor to access this page.', 'popup')
+        return redirect(url_for('RedirectUser'))
     
     user_classes = get_classes(user_id)
     courses = Courses.query.order_by(Courses.course_id).all()
@@ -2761,8 +2910,8 @@ def GenerateClassCode():
     role = user['role_id']
     
     if role != ROLE_INSTRUCTOR:
-        flash('You must be an instructor to access this page.')
-        return redirect(url_for('RenderStudentDashboard'))
+        flash('You must be an instructor to access this page.', 'popup')
+        return redirect(url_for('RedirectUser'))
     
     user_classes = get_classes(user_id)
     class_code = None
@@ -2899,8 +3048,8 @@ def RenderInstructorGradebook():
     role = user['role_id']
     
     if role != ROLE_INSTRUCTOR:
-        flash('You must be an instructor to access this page.')
-        return redirect(url_for('RenderStudentDashboard'))
+        flash('You must be an instructor to access this page.', 'popup')
+        return redirect(url_for('RedirectUser'))
     
     classes = get_classes(user_id)
     selected_class_id = request.args.get('class_id')
@@ -3295,9 +3444,9 @@ def RenderStudentRoadmap():
     user_id = user['user_id']
     role = user['role_id']
     
-    if role != ROLE_STUDENT:
-        flash('You must be a student to access this page.', 'popup')
-        return redirect(url_for('RenderStudentDashboard'))
+    if (role != ROLE_STUDENT):
+        flash('You must be an student to access this page.', 'popup')
+        return redirect(url_for('RedirectUser'))
 
     # Get only courses assigned to this student, ordered by section number
     student_courses = (
@@ -5026,6 +5175,28 @@ def RenderStudentCodeLogs(student_id):
                          totals=totals,
                          page_contexts=page_contexts,
                          page_durations=page_durations)
+
+@app.route('/dashboard')
+def RedirectUser():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.', 'popup')
+        return redirect(url_for('RenderHomepage'))
+
+    user_id = user['user_id'] 
+    role = user['role_id']
+    
+    if role == ROLE_INSTRUCTOR:
+        return redirect(url_for('RenderInstructorDashboard'))
+    if role == ROLE_ADMIN:
+        return redirect(url_for('RenderAdminDashboard'))
+    if role == ROLE_STUDENT:
+        return redirect(url_for('RenderStudentDashboard'))
+
+    return redirect(url_for('RenderHomeage'))
+
+
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False, FLASK_DEBUG=0)

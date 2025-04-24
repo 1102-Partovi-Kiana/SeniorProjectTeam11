@@ -1710,53 +1710,31 @@ h3 svg {
 
 .dashboard-row.one.grades{
     width: 100%;
-    height: 20%;
+    height: 30%;
 }
 
 .dashboard-row.two.grades{
     width: 100%;
-    height: 50%;
+    height: 70%;
 }
-
-.dashboard-row.three.grades{
-    display:flex;
-    width: 100%;
-    height: 30%;
-}
-
 .section-one.grades,
 .section-two.grades,
-.section-three.grades,
-.section-four.grades{
-    width: 25%;
+.section-three.grades{
+    width: 33%;
     height: 100%;
     padding: 20px;
 }
 
-.section-one.grades{
-    padding-left: 40px;
-}
-.section-four.grades{
-    padding-right: 40px;
-}
-
+.section-four.grades,
 .section-five.grades{
-    width: 100%;
-    height: 100%;
-    padding: 20px 40px;
-}
-
-
-.section-six.grades{
     width: 50%;
     height: 100%;
-    padding: 20px 40px;
+    padding: 20px;
 }
 
-.section-seven.grades{
-    width: 50%;
-    height: 100%;
-    padding: 20px 40px;
+.section-one.grades,
+.section-four.grades{
+    padding-left: 40px;
 }
 
 .section-eight.grades{
@@ -1769,9 +1747,7 @@ h3 svg {
 .dashboard-card.two.grades,
 .dashboard-card.three.grades,
 .dashboard-card.four.grades,
-.dashboard-card.five.grades,
-.dashboard-card.six.grades,
-.dashboard-card.seven.grades{
+.dashboard-card.five.grades{
     width: 100%;
     height: 100%;
     background-color: #f8f9fa;
@@ -2173,4 +2149,21 @@ h3 svg {
 
 .user-list-section-one.leaderboard{
     background-color: rgb(248, 249, 250) !important;
+}
+
+.graph-container.grades{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Prevents image from overflowing */
+}
+
+.responsive-graph.grades{
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain; /* Maintains aspect ratio */
 }
