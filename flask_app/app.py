@@ -4921,7 +4921,7 @@ def generate_certificate():
     draw = ImageDraw.Draw(image)
 
     name = "John Doe"
-    date = "2/3/2025"
+    date = "4/24/2025"
     text_color = (0, 0, 0)
     name_font_size = 100
     date_font_size = 50

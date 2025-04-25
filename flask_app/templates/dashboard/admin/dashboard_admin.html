@@ -93,20 +93,6 @@
                             <p class="dashboard-user-count">{{ users_stats.total_users | int }}</p>
                             <a href="#" class="dashboard-redirect-link">View More</a>
                         </div>
-                        <div class="dashboard-progress-container">
-                            <svg class="dashboard-progress-circle" width="140" height="140">
-                                <!-- Background Circle -->
-                                <circle class="progress-bg" cx="70" cy="70" r="60"></circle>
-                                <!-- Progress Circle -->
-                                <circle class="progress" cx="70" cy="70" r="60"></circle>
-                            </svg>
-                            <!-- Number and text inside the circle -->
-                            <div class="progress-text">
-                                <!-- Display Users Added Since -->
-                                <p class="number">+{{ users_stats.users_since | int }}</p>
-                                <p class="date">Since {{ users_stats.since_date.strftime('%m/%d') }}</p> 
-                            </div>
-                        </div>
                     </div>
                 </div>     
             </div>                 
@@ -124,20 +110,6 @@
                             <p class="dashboard-user-count">{{ classes_stats.total_classes | int }}</p>
                             <a href="#" class="dashboard-redirect-link">View More</a>
                         </div>
-                        <div class="dashboard-progress-container">
-                            <svg class="dashboard-progress-circle" width="140" height="140">
-                                <!-- Background Circle -->
-                                <circle class="progress-bg" cx="70" cy="70" r="60"></circle>
-                                <!-- Progress Circle -->
-                                <circle class="progress" cx="70" cy="70" r="60"></circle>
-                            </svg>
-                            <!-- Number and text inside the circle -->
-                            <div class="progress-text">
-                                <!-- Display Users Added Since -->
-                                <p class="number">+{{ classes_stats.classes_since | int }}</p>
-                                <p class="date">Since {{ classes_stats.since_date.strftime('%m/%d') }}</p> 
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -151,21 +123,8 @@
                                 </svg>
                                 Courses Completed
                             </h3>
-                            <p class="dashboard-user-count">1,250</p>
+                            <p class="dashboard-user-count">3</p>
                             <a href="#" class="dashboard-redirect-link">View More</a>
-                        </div>
-                        <div class="dashboard-progress-container">
-                            <svg class="dashboard-progress-circle" width="140" height="140">
-                                <!-- Background Circle -->
-                                <circle class="progress-bg" cx="70" cy="70" r="60"></circle>
-                                <!-- Progress Circle -->
-                                <circle class="progress" cx="70" cy="70" r="60"></circle>
-                            </svg>
-                            <!-- Number and text inside the circle -->
-                            <div class="progress-text">
-                                <p class="number">+45</p>
-                                <p class="date">Since 2/17</p>
-                            </div>
                         </div>
                     </div>
                 </div>
