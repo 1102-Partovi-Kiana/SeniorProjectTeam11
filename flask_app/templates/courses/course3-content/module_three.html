@@ -17,13 +17,26 @@
                 <a href="#objectives" class="course-link">Objectives</a>
             </li>
             <li class="course-item">
-                <a href="#overview" class="course-link">Fetch Reach</a>
+                <a href="{{ url_for ('module_three_fetch_reach') }}" class="course-link">Fetch Robots</a>
             </li>
             <li class="course-item">
-                <a href="#overview" class="course-link">Fetch Pick-and-Place</a>
+                <a href="{{ url_for('module_three_car') }}" class="course-link">Autonomous Car Robot</a>
+                <ul class="sub-list">
+                    <li><a href="#about-auto-car">About the Autonomous Car</a></li>
+                    <li><a href="#sensors-and-navigation">Sensors and Navigation</a></li>
+                    <li><a href="#decision-making">Decision-Making</a></li>
+                    <li><a href="#car-tasks">Real-World Tasks</a></li>
+                    <li><a href="#video">Real-World Autonmous Vehicle Video</a></li>
+                </ul>
             </li>
             <li class="course-item">
-                <a href="#overview" class="course-link">Fetch Organize with Sensor</a>
+                <a href="{{ url_for ('course3quiz3') }}" class="course-link">Quiz</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_three_download') }}" class="course-link">Cheat Sheet</a>
+            </li>
+            <li class="course-item">
+                <a href="{{ url_for ('module_three_certificate_meet') }}" class="course-link">Certificate</a>
             </li>
         </ul>
     </div> <!-- End of course-sidebar -->
@@ -32,89 +45,26 @@
     <div class="course-main-content">
         <!-- Title and Objectives Section -->
         <div class="container objectives-section">
-            <h1 class="module-h1-title">Introduction to Robotics</h1>
+            <h1 class="module-h1-title">Robots in CORE</h1>
             <h2 class="module1-section-title">What You Will Learn</h2>
             <p class="module1-section-subtitle">Here are the key skills and knowledge you'll gain from this module</p>
             <div class="row">
                 <div class="col-md-4">
                     <div class="objective-card">
                         <div class="icon">
-                            <img src="/static/img/book.png" alt="Definition and Overview">
+                            <img src="/static/img/inn.png" alt="Fetch Robots">
                         </div>
-                        <h4>Definition and Overview</h4>
-                        <p>Understand what robotics is and its fundamental concepts.</p>
+                        <h4>Fetch Robots</h4>
+                        <p>Understand the Fetch robots which define CORE.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="objective-card">
                         <div class="icon">
-                            <img src="/static/img/clock.png" alt="History of Robotics">
+                            <img src="/static/img/ad.png" alt="Autonomous Car">
                         </div>
-                        <h4>History of Robotics</h4>
-                        <p>Learn how robotics has evolved over time and its key milestones.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/humanoid.png" alt="Types of Robots">
-                        </div>
-                        <h4>Types of Robots</h4>
-                        <p>Explore different categories of robots and their purposes.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/earth.png" alt="Applications of Robots">
-                        </div>
-                        <h4>Importance and Applications</h4>
-                        <p>Discover how robots are transforming industries and daily life.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/robotarm.png" alt="Robot Anatomy">
-                        </div>
-                        <h4>Robot Anatomy</h4>
-                        <p>Understand the components and structure of modern robots.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/puzzle.png" alt="Challenges in Robotics">
-                        </div>
-                        <h4>Challenges in Robotics</h4>
-                        <p>Identify the technical, social, and ethical challenges robots face.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/coding.png" alt="Robot Programming">
-                        </div>
-                        <h4>Robot Programming</h4>
-                        <p>Learn to code and simulate robot behaviors.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/people.png" alt="Social and Ethical Implications">
-                        </div>
-                        <h4>Social & Ethical Implications</h4>
-                        <p>Understand the impact of robotics on society and ethics.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="objective-card">
-                        <div class="icon">
-                            <img src="/static/img/future.png" alt="Future Trends">
-                        </div>
-                        <h4>Future Trends</h4>
-                        <p>Explore emerging technologies and the future of robotics.</p>
+                        <h4>Autonomous Car</h4>
+                        <p>Learn how autonomous cars have evolved in CORE.</p>
                     </div>
                 </div>
             </div> <!-- End of row -->

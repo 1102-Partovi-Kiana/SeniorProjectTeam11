@@ -486,6 +486,26 @@ for _ in range(num_steps):
 
     codeEditor.setSize("100%", "calc(80vh - 100px)");
 
+    function showAutocompleteToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+
+        toast.innerHTML = `
+            <div class="toast-header">
+                Autocomplete
+                <button class="toast-close" onclick="this.parentElement.parentElement.remove()">×</button>
+            </div>
+            <div class="toast-body">${message}</div>
+        `;
+
+        const container = document.getElementById('light-mode-toast-container');
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 4000);
+    }
+
     // AUTOCOMPLETE
     function inputReadHandler(editor, change) {
         if (change.text[0] !== " ") {
@@ -549,7 +569,7 @@ for _ in range(num_steps):
 
         codeEditor.on("inputRead", inputReadHandler);
 
-        alert("Autocomplete enabled!");
+        showAutocompleteToast("Autocomplete enabled!");
     }
 
     function disableAutocomplete() {
@@ -558,7 +578,7 @@ for _ in range(num_steps):
         codeEditor.setOption("extraKeys", {});
         codeEditor.off("inputRead", inputReadHandler);
 
-        alert("Autocomplete disabled!");
+        showAutocompleteToast("Autocomplete disabled!");
     }
 
     document.getElementById("autocomplete").addEventListener("click", function() {
@@ -1037,6 +1057,27 @@ for _ in range(num_steps):
 
     window.addEventListener('load', updatePositions);
 
+    
+    function showPetToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+
+        toast.innerHTML = `
+            <div class="toast-header">
+                Coding Pet
+                <button class="toast-close" onclick="this.parentElement.parentElement.remove()">×</button>
+            </div>
+            <div class="toast-body">${message}</div>
+        `;
+
+        const container = document.getElementById('light-mode-toast-container');
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 4000);
+    }
+
     // CODING PETS
     const codingPetsButton = document.getElementById('coding-pets');
     const editorElement = document.querySelector('.code-editor');
@@ -1320,9 +1361,28 @@ for _ in range(num_steps):
         
         disablePetOption.style.display = "none";
 
-        alert("Pet has been disabled!");
+        showPetToast("Pet has been disabled!");
     });
 
+    function showSyntaxHighlightToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+
+        toast.innerHTML = `
+            <div class="toast-header">
+                Syntax Highlight
+                <button class="toast-close" onclick="this.parentElement.parentElement.remove()">×</button>
+            </div>
+            <div class="toast-body">${message}</div>
+        `;
+
+        const container = document.getElementById('light-mode-toast-container');
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 4000);
+    }
 
     // LIGHT MODE
     const darkModeThemes = [
@@ -1371,9 +1431,29 @@ for _ in range(num_steps):
                 event.preventDefault();
                 currentTheme = theme.value;
                 codeEditor.setOption("theme", currentTheme);
-                alert(`Syntax Highlighting changed to ${theme.name}`);
+                showSyntaxHighlightToast(`Syntax highlighting changed to ${theme.name}`);
             });
         });
+    }
+
+    function showLightModeToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification'; 
+
+        toast.innerHTML = `
+            <div class="toast-header">
+                Notification
+                <button class="toast-close" onclick="this.parentElement.parentElement.remove()">×</button>
+            </div>
+            <div class="toast-body">${message}</div>
+        `;
+
+        const container = document.getElementById('light-mode-toast-container');
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 4000);
     }
 
     const lightModeButton = document.getElementById("light-mode");
@@ -1399,7 +1479,8 @@ for _ in range(num_steps):
         }
         
         updateThemeOptions(isLightMode); 
-        alert(isLightMode ? "Light Mode Enabled!" : "Dark Mode Enabled!");
+        showLightModeToast(isLightMode ? "Light Mode Enabled!" : "Dark Mode Enabled!");
+       
     });
 
     // SYNTAX HIGHLIGHTING
@@ -1411,7 +1492,7 @@ for _ in range(num_steps):
             if (selectedTheme) {
                 currentTheme = selectedTheme; 
                 codeEditor.setOption("theme", currentTheme); 
-                alert(`Syntax Highlighting changed to ${currentTheme}`);
+                showSyntaxHighlightToast(`Syntax highlighting changed to ${currentTheme}`);
             }
         });
     });
@@ -1419,4 +1500,56 @@ for _ in range(num_steps):
     document.getElementById("syntax-highlight").addEventListener("click", toggleSyntaxHighlighting);
 
 </script>
+
+<style>
+    .toast-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 280px;
+        background: white;
+        color: #333;
+        font-family: 'Poppins', sans-serif;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+        overflow: hidden;
+        animation: fadeInOut 4s forwards;
+    }
+    
+    .toast-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 16px;
+        font-weight: bold;
+        background-color: transparent;
+        border-bottom: 1px solid #eee;
+        font-size: 16px;
+    }
+    
+    .toast-body {
+        padding: 16px;
+        font-size: 14px;
+    }
+    
+    .toast-close {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: #888;
+    }
+    
+    @keyframes fadeInOut {
+        0% { opacity: 0; transform: translateY(-20px); }
+        10% { opacity: 1; transform: translateY(0); }
+        90% { opacity: 1; transform: translateY(0); }
+        100% { opacity: 0; transform: translateY(-20px); }
+    }
+    </style>
+    
+<div id="light-mode-toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+
 {% endblock %}
