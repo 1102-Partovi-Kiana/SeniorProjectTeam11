@@ -1489,7 +1489,7 @@
 }
 
 .login-form-container {
-    background-color: rgba(255, 255, 255, 0.2); 
+    background-color: rgba(255, 255, 255, 1); 
     backdrop-filter: blur(10px); 
     -webkit-backdrop-filter: blur(15px); 
     border: 1.9px solid rgba(255, 255, 255, 0.7); 
@@ -1502,7 +1502,7 @@
 }
 
 .signup-form-wrapper {
-    background-color: rgba(255, 255, 255, 0.2); 
+    background-color: rgba(255, 255, 255, 1); 
     backdrop-filter: blur(10px); 
     -webkit-backdrop-filter: blur(15px); 
     border: 1.9px solid rgba(255, 255, 255, 0.7); 
@@ -1573,19 +1573,19 @@
 .form-control {
     background-color: transparent;
     border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.7); 
+    border-bottom: 1px solid #004085; 
     border-radius: 0;
     padding: 10px 5px; 
     font-size: 1rem;
     margin-bottom: 1rem;
-    color: #fff; 
+    color: #000; 
 }
 
 .form-control:focus {
     background-color: transparent;
     outline: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.9); 
-    color: #fff;
+    border-bottom: 1px solid #004085; 
+    color: #000
 }
 
 .signup-link {
@@ -1699,70 +1699,60 @@
     --blur: 0px;
 }
 
+/* From Uiverse.io by barisdogansutcu */
 .aesthetic-button {
-    --hue2: 210deg; 
-    --sat2: 30%;
-    --clr: hsl(var(--hue), var(--sat), 98%); 
-    --clr2: hsl(var(--hue2), var(--sat2), 85%); 
-    --text: hsla(210, 20%, 20%, 0.9); 
-    --gradoffset: 45%;
-    --gradgap: 30%;
-    
-    text-decoration: none;
-    font-size: 1.2rem;
-    color: var(--text);
-    font-weight: 500;
-    letter-spacing: -0.025em;
-    background-color: var(--clr);
-    background-image: linear-gradient(180deg, var(--clr2) var(--gradgap), transparent calc(100% - var(--gradgap)));
-    background-repeat: no-repeat;
-    background-position: center var(--gradoffset);
-    background-size: 100% 200%;
-    padding: 0.5em 3em; 
-    min-width: 200px;
-    border-radius: 2em;
-    border: none;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
-    position: relative;
+    padding: 17px 40px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: 0;
+    background-color: #0d6efd;
+    box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 15px;
     transition: all 0.5s ease;
+    /* Added to match original element */
+    text-decoration: none;
+    color: var(--text, #fff); /* Fallback if --text isn't defined */
+    font-weight: 500;
+    min-width: 200px;
+    text-align: center;
+    position: relative;
     outline: none;
-}
+  } 
+  
+  /* Remove the pseudo-elements if they're not needed */
+  .aesthetic-button::before,
+  .aesthetic-button::after {
+    content: none;
+  }
 
-.aesthetic-button::before, .aesthetic-button::after {
-    content: "";
-    inset: 0;
-    position: absolute;
-    border-radius: 5em;
-}
-
-.aesthetic-button::before {
-    background-image: radial-gradient(ellipse, hsla(var(--hue), 100%, 98%, 0.8) 20%, transparent 50%, transparent 200%), linear-gradient(90deg, hsl(210, 10%, 25%) -10%, transparent 30%, transparent 70%, hsl(210, 10%, 25%) 110%);
-    box-shadow: inset 0 .25em .75em hsla(0deg, 0%, 0%, 0.8), inset 0 -.05em .2em rgba(255, 255, 255, 0.4), inset 0 -1px 3px hsla(var(--hue), 80%, 50%, 0.75);
-    background-blend-mode: overlay;
-    background-repeat: no-repeat;
-    background-size: 200% 80%, cover;
-    background-position: center 220%;
-    mix-blend-mode: overlay;
-    filter: blur(calc(var(--blur) * 0.5));
-}
-
-.aesthetic-button::after {
-    background: linear-gradient(180deg, hsla(var(--hue2),100%,90%,0.9), hsla(var(--hue2),calc(var(--sat2)*0.7),50%,0.75) 40%, transparent 80%);
-    top: 0.075em;
-    left: 0.75em;
-    right: 0.75em;
-    bottom: 1.4em;
-    filter: blur(var(--blur));
-    mix-blend-mode: screen;
-}
-
-.aesthetic-button:hover, .aesthetic-button:focus {
+  .aesthetic-button-white {
+    padding: 17px 40px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: 0;
+    background-color: #fff;
+    box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 15px;
+    transition: all 0.5s ease;
+    /* Added to match original element */
+    text-decoration: none;
+    color: var(--text, #005a9e); /* Fallback if --text isn't defined */
+    font-weight: 500;
+    min-width: 200px;
+    text-align: center;
+    position: relative;
     outline: none;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    background-position: center calc(var(--gradoffset) - 0.75em);
-    background: linear-gradient(180deg, hsl(210, 30%, 98%), hsl(210, 30%, 90%)); 
-}
+  } 
+  
+  /* Remove the pseudo-elements if they're not needed */
+  .aesthetic-button-white::before,
+  .aesthetic-button-white::after {
+    content: none;
+  }
 
 :root {
     --hue-green: 120deg; 
@@ -5034,6 +5024,15 @@ code {
     border-color: #007bff;
     box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
 }
+
+.back-btn.icon-only {
+    padding: 8px;
+    min-width: auto;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 16px;
+  }
 
 .contact-page-btn {
     padding: 12px;
