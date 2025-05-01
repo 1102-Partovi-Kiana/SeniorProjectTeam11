@@ -3211,11 +3211,11 @@ def RenderCourses():
     if is_student:
         return(redirect(url_for('RenderStudentRoadmap')))
 
-    return render_template("courses.html", courses=filtered_course_catalog, query=query, user=user, complete_percentage=complete_percentage, is_student=is_student)
+    return render_template("courses.html", courses=filtered_course_catalog, query=query, user=user, complete_percentage=complete_percentage, is_student=is_student, is_course_page=True)
 
 @app.route('/playground')
 def RenderPlayground():
-    return render_template('playground.html')
+    return render_template('playground.html', is_course_page=True)
 
 @app.route('/module1/introduction/overview')
 def overview():
@@ -4019,7 +4019,7 @@ def RenderFetchReachRobotSimulation():
     close_current_env()
     time.sleep(.1)
     env = ReachEnv()
-    return render_template('robotic_environment.html', time_log_id=time_log.time_log_id)
+    return render_template('robotic_environment.html', time_log_id=time_log.time_log_id, is_course_page=True)
 
 @app.route('/update-time-log', methods=['POST'])
 def update_time_log():
@@ -4044,43 +4044,133 @@ def update_time_log():
 
 @app.route('/PickAndPlacePage')
 def RenderPickAndPlaceEnv():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+    
+    user_id = user['user_id']
+
+    time_log = UserTimeLogs(
+        page_context="Fetch Pick and Place",
+        start_time=datetime.utcnow(),
+        end_time=None,
+        duration=None,
+        user_id=user_id
+    )
+    db.session.add(time_log)
+    db.session.commit()
+    db.session.refresh(time_log)
+
     global env
     close_current_env()
     time.sleep(.1)
     env = FetchPickAndPlaceEnv()
-    return render_template('robotic_pick_and_place_environment.html')
+    return render_template('robotic_pick_and_place_environment.html', time_log_id=time_log.time_log_id, is_course_page=True)
 
 @app.route('/FetchStackPage')
 def RenderFetchStackEnv():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+    
+    user_id = user['user_id']
+
+    time_log = UserTimeLogs(
+        page_context="Fetch Stack",
+        start_time=datetime.utcnow(),
+        end_time=None,
+        duration=None,
+        user_id=user_id
+    )
+    db.session.add(time_log)
+    db.session.commit()
+    db.session.refresh(time_log)
+
     global env
     close_current_env()
     time.sleep(.1)
     env = FetchStackEnv()
-    return render_template('fetch_stack_environment.html')
+    return render_template('fetch_stack_environment.html', time_log_id=time_log.time_log_id, is_course_page=True)
 
 @app.route('/CarPage')
 def RenderCarEnv():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+    
+    user_id = user['user_id']
+
+    time_log = UserTimeLogs(
+        page_context="Car",
+        start_time=datetime.utcnow(),
+        end_time=None,
+        duration=None,
+        user_id=user_id
+    )
+    db.session.add(time_log)
+    db.session.commit()
+    db.session.refresh(time_log)
+    
     global env
     close_current_env()
     time.sleep(.1)
     env = CarEnv()
-    return render_template('robotic_car_environment.html')
+    return render_template('robotic_car_environment.html', time_log_id=time_log.time_log_id, is_course_page=True)
 
 @app.route('/FetchOrganizeSensorsPage')
 def RenderFetchOrganizeSensorsEnv():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+    
+    user_id = user['user_id']
+
+    time_log = UserTimeLogs(
+        page_context="Fetch Sensors",
+        start_time=datetime.utcnow(),
+        end_time=None,
+        duration=None,
+        user_id=user_id
+    )
+    db.session.add(time_log)
+    db.session.commit()
+    db.session.refresh(time_log)
+
     global env
     close_current_env()
     time.sleep(.1)
     env = FetchOrganizeSensorsEnv()
-    return render_template('robotic_organize_sensors_environment.html')
+    return render_template('robotic_organize_sensors_environment.html', time_log_id=time_log.time_log_id, is_course_page=True)
 
 @app.route('/FetchOrganizePage')
 def RenderFetchOrganizeEnv():
+    user = session.get('user')
+    if not user:
+        flash('You must be logged in to access this page.')
+        return redirect(url_for('RenderLogin'))
+    
+    user_id = user['user_id']
+
+    time_log = UserTimeLogs(
+        page_context="Fetch Organize",
+        start_time=datetime.utcnow(),
+        end_time=None,
+        duration=None,
+        user_id=user_id
+    )
+    db.session.add(time_log)
+    db.session.commit()
+    db.session.refresh(time_log)
+
     global env
     close_current_env()
     time.sleep(.1)
     env = FetchOrganizeEnv()
-    return render_template('robotic_organize_environment.html')
+    return render_template('robotic_organize_environment.html', time_log_id=time_log.time_log_id, is_course_page=True)
 
 def close_current_env():
     global env
