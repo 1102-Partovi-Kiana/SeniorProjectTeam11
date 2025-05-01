@@ -2,7 +2,7 @@ $(document).ready(function () {
     
     let state = {
         questions_served: 0,
-        score: 0,
+        score: -1,
         difficulty: 'easy',
         used_questions: [],
         last_correct: true  
@@ -11,7 +11,7 @@ $(document).ready(function () {
     function startQuiz() {
         state = {
             questions_served: 0,
-            score: 0,
+            score: -1,
             difficulty: 'easy',
             used_questions: [],
             last_correct: true
@@ -68,6 +68,7 @@ $(document).ready(function () {
                         </div>
                     `).join("")}
                 </div>
+                <div class="current-score mt-2">Current Score: ${state.score}/${state.questions_served}</div>
                 <button id="submit-btn" class="btn btn-primary mt-3">Submit</button>
             </div>
         `);
@@ -75,11 +76,8 @@ $(document).ready(function () {
         $("#submit-btn").click(function () {
             const selected = $("input[name='question']:checked").val();
             if (selected !== undefined) {
-                const selectedIndex = parseInt(selected);
+                const selectedIndex = parseInt(selected, 10); // Explicitly convert to number
                 const isCorrect = selectedIndex === correctAnswerIndex;
-                if (isCorrect) {
-                    state.score += 1;
-                }
                 state.last_correct = isCorrect;
                 fetchNextQuestion();
             } else {

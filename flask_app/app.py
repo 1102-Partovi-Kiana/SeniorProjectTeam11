@@ -3375,6 +3375,7 @@ def submit_quiz():
     data = request.json
     student_id = user['user_id']
     score = data.get('score', 0)
+    print(score)
     total_questions = 10
     percentage_grade = round((score / total_questions) * 100, 2)  # Convert score to percentage
     subsection_number = data.get('subsection_number')
