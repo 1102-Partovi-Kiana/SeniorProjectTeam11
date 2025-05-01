@@ -68,7 +68,6 @@ $(document).ready(function () {
                         </div>
                     `).join("")}
                 </div>
-                <div class="current-score mt-2">Current Score: ${state.score}/${state.questions_served}</div>
                 <button id="submit-btn" class="btn btn-primary mt-3">Submit</button>
             </div>
         `);
