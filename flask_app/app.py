@@ -3459,6 +3459,10 @@ def RenderStudentRoadmap():
         .all()
     )
 
+    print("\n=== Student Courses ===")
+    for course, student_course in student_courses:
+        print(f"Course: {course.course_name} | Section: {course.section_number}")
+
     # If no courses are assigned, return empty roadmap
     if not student_courses:
         return render_template(
@@ -3657,6 +3661,10 @@ def course3_card():
 @app.route('/module4/start-page-4')
 def course4_card():
     return render_template('courses/course4-content/module_four.html', is_course_page=True) 
+
+@app.route('/module5/start-page-5')
+def module_five():
+    return render_template('courses/course5-content/module_five.html', is_course_page=True) 
 
 @app.route('/module6/start-page-6')
 def course6_card():

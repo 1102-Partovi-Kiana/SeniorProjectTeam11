@@ -54,9 +54,17 @@
             
             <h2>
                 {% if not course.locked %}
-                    <a href="/module{{ course.section_number|int }}/{% if course.section_number == 1 %}start-page{% else %}start-page-{{ course.section_number|int }}{% endif %}">
-                        {{ course.course_name }}
-                    </a>
+                    {% if course.section_number == 4 %}
+                        <!-- Hardcoded link for Module 5 -->
+                        <a href="/module5/start-page-5">
+                            {{ course.course_name }}
+                        </a>
+                    {% else %}
+                        <!-- Dynamic link for other modules -->
+                        <a href="/module{{ course.section_number|int }}/{% if course.section_number == 1 %}start-page{% else %}start-page-{{ course.section_number|int }}{% endif %}">
+                            {{ course.course_name }}
+                        </a>
+                    {% endif %}
                 {% else %}
                     {{ course.course_name }}
                 {% endif %}

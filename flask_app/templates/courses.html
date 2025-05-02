@@ -31,7 +31,15 @@
             <div class="card-header">
                 <span class="course-type">{{ course.level }} Level</span>
             </div>
-            <h2><a href="{{ url_for(course.route) }}">{{ course.course_name }}</a></h2>
+            <h2>
+                {% if course.section_number == 4 %}
+                    <!-- Hardcoded link for Section 4 → Module 5 -->
+                    <a href="/module5/start-page-5">{{ course.course_name }}</a>
+                {% else %}
+                    <!-- Original dynamic link for other sections -->
+                    <a href="{{ url_for(course.route) }}">{{ course.course_name }}</a>
+                {% endif %}
+            </h2>
             <p>{{ course.course_desc }}</p>
 
             <!--
